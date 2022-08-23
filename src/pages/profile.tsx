@@ -5,25 +5,19 @@
  * 2022 papercraft club
  */
 
-import { NextPage } from "next";
+import { NextPage, NextPageContext } from "next";
 import Head from "next/head";
-import { Auth, CognitoUser } from '@aws-amplify/auth'
-import NavBar from "../components/NavBar/NavBar";
+import { withSSRContext } from "aws-amplify";
+import { Auth } from "@aws-amplify/auth";
 import styles from "../styles/Home.module.css";
-import { withAuthenticator } from "@aws-amplify/ui-react";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
-const Profile: NextPage = () => {
-  const [user, setUser] = useState<CognitoUser | null>(null)
-  const router = useRouter()
-  useEffect(() => {
-    Auth.currentAuthenticatedUser()
-      .then(user => setUser(user))
-      // if there is no authenticated user, redirect to login page
-      .catch(() => router.push('/login?redirect=profile'))
-  }, []);
-  if (!user) return null;
+type ProfilePageProps = {
+  username: string;
+};
+
+const Profile: NextPage<ProfilePageProps> = ({ username }) => {
+  const router = useRouter();
   return (
     <>
       <Head>
@@ -31,9 +25,36 @@ const Profile: NextPage = () => {
         <meta name="description" content="your profile page." />
       </Head>
       <h1 className={styles.title}>this is the profile page.</h1>
-      <p>your username is: {user.getUsername()}</p>
+      <p>your username is: {username}</p>
+      <div
+        onClick={() =>
+          Auth.signOut().then(() => {
+            router.push("/");
+          })
+        }
+      >
+        click here to sign out
+      </div>
     </>
   );
 };
+
+export async function getServerSideProps(context: NextPageContext) {
+  const { Auth } = withSSRContext(context);
+  try {
+    const user = await Auth.currentAuthenticatedUser();
+    return {
+      props: {
+        username: user.username,
+      },
+    };
+  } catch (err) {
+    return {
+      redirect: {
+        destination: "/login?redirect=/profile",
+      },
+    };
+  }
+}
 
 export default Profile;

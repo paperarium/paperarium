@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@aws-amplify/ui-react": "^3.4.1",
     "@types/react-transition-group": "^4.4.5",
     "aws-amplify": "^4.3.32",
     "hamburger-react": "^2.5.0",
@@ -21,6 +20,7 @@
     "sass": "^1.54.5"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^12.2.5",
     "@types/node": "18.7.11",
     "@types/react": "18.0.17",
     "@types/react-dom": "18.0.6",

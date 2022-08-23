@@ -9,8 +9,6 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import s from "../styles/Home.module.css";
-import { Authenticator } from "@aws-amplify/ui-react";
-import "@aws-amplify/ui-react/styles.css";
 
 const LoginPage: NextPage = () => {
   const [user, setUser] = useState(null);
@@ -22,7 +20,7 @@ const LoginPage: NextPage = () => {
         <meta name="description" content="login" />
       </Head>
       <div className={s.page_container}>
-        <Authenticator />
+        <div>authenticator goes here...</div>
       </div>
     </>
   );

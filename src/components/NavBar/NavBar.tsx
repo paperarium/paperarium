@@ -1,9 +1,9 @@
 import Hamburger from "hamburger-react";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavLink from "../NavLink/NavLink";
 import NavMenu from "../NavMenu/NavMenu";
-import { useAuthenticator } from "@aws-amplify/ui-react";
+import { Auth } from '@aws-amplify/auth';
 import { RiScissorsCutLine } from "react-icons/ri";
 import s from "./NavBar.module.scss";
 import { useRouter } from "next/router";
@@ -11,7 +11,15 @@ import { useRouter } from "next/router";
 const NavBar: React.FC = function NavBar() {
   const router = useRouter();
   const [navOpen, setNavOpen] = useState(false);
-  const { user, signOut } = useAuthenticator((context) => [context.user]);
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    Auth.currentAuthenticatedUser().then((user) => {
+      setUser(user);
+    }).catch(() => {
+      setUser(null);
+    })
+  }, []);
+  // const { user, signOut } = useAuthenticator((context) => [context.user]);
   return (
     <>
       <NavMenu toggled={navOpen} />
