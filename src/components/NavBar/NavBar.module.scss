@@ -1,0 +1,112 @@
+@import "../../styles/mixins";
+
+.container {
+  width: 100%;
+  pointer-events: all;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  top: 0px;
+  gap: 20px;
+  z-index: 2;
+
+  height: var(--header-height);
+  padding: var(--header-vert-padding) 15px;
+  padding-right: 5px;
+  background-color: $background;
+
+  @include respond-to("small") {
+    padding: var(--header-vert-padding) 24px;
+    padding-right: 14px;
+  }
+}
+
+.title_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  vertical-align: middle;
+  font-weight: 700;
+  font-size: calc(var(--header-height) - var(--header-vert-padding) * 2 - 10px);
+  white-space: nowrap;
+}
+
+.links_container {
+  height: 100%;
+  flex: 1;
+  display: none;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+
+  @include respond-to("small") {
+    display: flex;
+  }
+}
+
+.spacer {
+  flex: 1;
+}
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: right;
+  position: relative;
+  // transform: translate(11px, -11px);
+  cursor: pointer;
+
+  @include respond-to("small") {
+    display: none;
+  }
+}
+
+.menu_text {
+  display: none;
+  @include respond-to("small") {
+    display: block;
+  }
+}
+
+.profile_buttons {
+  display: none;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  gap: 10px;
+  padding: 2px 0px;
+
+  @include respond-to("small") {
+    display: flex;
+  }
+}
+
+.login_button {
+  height: 100%;
+  padding: 5px 10px;
+  font-size: 100%;
+  border: $border;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+
+  &:last-of-type {
+    background-color: $highlight;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}

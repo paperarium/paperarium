@@ -1,0 +1,59 @@
+@import "../../styles/mixins";
+
+.nav_menu_container {
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  position: fixed;
+  width: 100vw;
+  // height: calc(100vh - var(--header-height));
+  top: var(--header-height);
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  min-height: 300px;
+  transform: translateY(calc(-100% + var(--notice-bar-height)));
+
+  &[class~="exit"] {
+    transition: transform 0.3s ease-in-out;
+  }
+
+  &[class~="enter-active"] {
+    transition: transform 0.3s ease-in-out;
+    transform: translateY(0px);
+  }
+
+  &[class~="enter-done"] {
+    transform: translateY(0px);
+  }
+}
+
+.nav_menu_content {
+  padding: 10px;
+}
+
+.notice_bar {
+  width: 100%;
+  border-top: $border;
+  border-bottom: $border;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+
+  height: var(--notice-bar-height);
+  padding: var(--notice-bar-vert-padding) 3px;
+  font-size: calc(
+    var(--notice-bar-height) - var(--notice-bar-vert-padding) * 2
+  );
+  line-height: 1;
+  background-color: $background;
+}
+
+.notice_bar_content {
+  &:after {
+    white-space: nowrap;
+    content: "┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘";
+  }
+}

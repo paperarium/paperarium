@@ -4,20 +4,19 @@ import Image from "next/image";
 import NavBar from "../components/NavBar/NavBar";
 import styles from "../styles/Home.module.css";
 
-const Home: NextPage = () => {
+const HowToPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>papercraft club</title>
+        <title>how to - papercraft club</title>
         <meta
           name="description"
-          content="cut, fold, and glue 3d models into the real world!"
+          content="a guide on how to build nice papercrafts!"
         />
       </Head>
-
-      <h1 className={styles.title}>welcome to the papercraft club!</h1>
+      <h1 className={styles.title}>this is the how-to page.</h1>
     </>
   );
 };
 
-export default Home;
+export default HowToPage;
