@@ -1,5 +1,6 @@
 .page_container {
-  padding: 10px;
+  padding: 20px 10px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;

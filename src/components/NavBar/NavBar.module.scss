@@ -9,7 +9,7 @@
   justify-content: space-between;
   position: fixed;
   top: 0px;
-  gap: 20px;
+  gap: 10px;
   z-index: 2;
 
   height: var(--header-height);
@@ -20,6 +20,10 @@
   @include respond-to("small") {
     padding: var(--header-vert-padding) 24px;
     padding-right: 14px;
+  }
+
+  @include respond-to("large") {
+    gap: 20px;
   }
 }
 
@@ -42,10 +46,14 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
 
   @include respond-to("small") {
     display: flex;
+  }
+
+  @include respond-to("large") {
+    gap: 10px;
   }
 }
 
@@ -101,6 +109,7 @@
   align-items: center;
   cursor: pointer;
   transition: transform 0.1s ease-in-out;
+  white-space: nowrap;
 
   &:last-of-type {
     background-color: $highlight;

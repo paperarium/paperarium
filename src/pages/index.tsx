@@ -8,14 +8,14 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>papercraft club</title>
+        <title>papercraft place</title>
         <meta
           name="description"
           content="cut, fold, and glue 3d models into the real world!"
         />
       </Head>
 
-      <h1 className={styles.title}>welcome to the papercraft club!</h1>
+      <h1 className={styles.title}>welcome to the papercraft place!</h1>
     </>
   );
 };

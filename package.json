@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-amplify/ui-react": "^3.4.1",
     "@types/react-transition-group": "^4.4.5",
     "aws-amplify": "^4.3.32",
     "hamburger-react": "^2.5.0",

@@ -6,19 +6,13 @@ import NavMenu from "../NavMenu/NavMenu";
 import { Auth } from '@aws-amplify/auth';
 import { RiScissorsCutLine } from "react-icons/ri";
 import s from "./NavBar.module.scss";
+import { useAuthenticator } from '@aws-amplify/ui-react';
 import { useRouter } from "next/router";
 
 const NavBar: React.FC = function NavBar() {
   const router = useRouter();
   const [navOpen, setNavOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  useEffect(() => {
-    Auth.currentAuthenticatedUser().then((user) => {
-      setUser(user);
-    }).catch(() => {
-      setUser(null);
-    })
-  }, []);
+  const { user } = useAuthenticator((context) => [context.user]);
   // const { user, signOut } = useAuthenticator((context) => [context.user]);
   return (
     <>
@@ -28,7 +22,7 @@ const NavBar: React.FC = function NavBar() {
           <a className={s.title_container}>
             <RiScissorsCutLine />
             {/* <Image src={LOGOTEXT} layout="fill" objectFit="contain" /> */}
-            <span>papercraft club!</span>
+            <span>papercraft place!</span>
           </a>
         </Link>
         <div className={s.links_container}>
@@ -57,7 +51,12 @@ const NavBar: React.FC = function NavBar() {
                   <a>login</a>
                 </div>
               </Link>
-              <div className={s.login_button}>sign up</div>
+              or
+              <Link href={`/login?redirect=${encodeURI(router.asPath)}`}>
+                <div className={s.login_button}>
+                  <a>sign up</a>
+                </div>
+              </Link>
             </>
           )}
         </div>
