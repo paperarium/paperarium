@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-papercraftclub-dev-144303-authRole",
+      "UnauthRoleArn": "arn:aws:iam::096169568185:role/amplify-papercraftclub-dev-144303-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::096169568185:role/amplify-papercraftclub-dev-144303-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-papercraftclub-dev-144303-deployment",
+      "UnauthRoleName": "amplify-papercraftclub-dev-144303-unauthRole",
+      "StackName": "amplify-papercraftclub-dev-144303",
+      "StackId": "arn:aws:cloudformation:us-east-1:096169568185:stack/amplify-papercraftclub-dev-144303/22f10440-22e1-11ed-9453-0a87db62bdd5",
+      "AmplifyAppId": "d3sscaze96v6a3"
+    },
+    "categories": {
+      "auth": {
+        "papercraftclub783d8fae": {}
+      }
+    }
+  }
+}
