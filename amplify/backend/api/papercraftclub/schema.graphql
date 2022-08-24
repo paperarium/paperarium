@@ -8,6 +8,11 @@ type User
   username: String!
   email: String @auth(rules: [{ allow: owner }])
   papercrafts: [Papercraft!]! @hasMany
+  profile_picture: S3Object
+  description: String
+  website: String
+  instagram: String
+  twitter: String
 }
 
 type Papercraft
@@ -19,6 +24,7 @@ type Papercraft
   pdf_lineless: S3Object
   pdf_lined: S3Object!
   tags: [Tag!]! @manyToMany(relationName: "PapercraftTags")
+  verified: Boolean
 }
 
 type Tag

@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "lib": ["dom", "esnext"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "downlevelIteration": true,
+    "outDir": "../src",
+    "baseUrl": "./",
+    "paths": {
+      "src": ["./"]
+    },
+    "rootDir": "./"
+  },
+  "include": ["./*.ts", "./package.json", "./yarn.lock"],
+  "exclude": ["node_modules", "deprecated"]
+}

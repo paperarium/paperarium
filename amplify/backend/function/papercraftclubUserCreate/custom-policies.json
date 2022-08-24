@@ -1,0 +1,7 @@
+[
+  {
+    "Action": ["dynamodb:PutItem"],
+    "Resource": ["arn:aws:dynamodb:*:096169568185:table/*"],
+    "Effect": "Allow"
+  }
+]

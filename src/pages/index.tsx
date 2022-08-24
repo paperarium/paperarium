@@ -39,8 +39,7 @@ const Home: NextPage = () => {
               have written guides to help you on your way.
             </p>
             <p>
-              are you interested to see the catalog? click here and we will show
-              you ❦
+              are you interested to see the catalog? click here and check it out ❦
             </p>
             <Link href="/explore">
                 <div className={s.continue_button}>EXPLORE</div>

@@ -1,8 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
-import NavBar from '../components/NavBar/NavBar'
-import styles from '../styles/Home.module.scss'
+import PapercraftCard from '../components/PapercraftCard/PapercraftCard';
+import s from '../styles/Explore.module.scss'
 
 const ExplorePage: NextPage = () => {
   return (
@@ -14,7 +13,21 @@ const ExplorePage: NextPage = () => {
           content="see other papercrafts from the community."
         />
       </Head>
-      <h1 className={styles.title}>this is the explore page.</h1>
+      <div className={s.search_container}>
+        search
+        <input type="text" className={s.search_bar} placeholder="Search" />
+        filter by tag
+      </div>
+      <div className={s.main_grid}>
+        <PapercraftCard />
+        <PapercraftCard />
+        <PapercraftCard />
+        <PapercraftCard />
+        <PapercraftCard />
+        <PapercraftCard />
+        <PapercraftCard />
+        <PapercraftCard />
+      </div>
     </>
   );
 };

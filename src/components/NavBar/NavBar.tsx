@@ -40,7 +40,7 @@ const NavBar: React.FC = function NavBar() {
             <>
             <Link href={`/profile`}>
               <div className={s.login_button}>
-                <a>profile</a>
+                <a>upload</a>
               </div>
             </Link>
             </>

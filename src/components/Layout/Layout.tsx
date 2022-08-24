@@ -26,7 +26,7 @@ const Layout: React.FC<LayoutProps> = function Layout({ children }) {
           target="_blank"
           rel="noopener noreferrer"
         >
-          designed by evan kirkiles
+          website designed by evan kirkiles
         </a>
       </footer>
     </>
