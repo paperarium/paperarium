@@ -26,7 +26,7 @@ const NavBar: React.FC = function NavBar() {
           </a>
         </Link>
         <div className={s.links_container}>
-          <NavLink href={"/explore"}>explore</NavLink>
+          <NavLink href={"/catalog"}>catalog</NavLink>
           <NavLink href={"/howto"}>guides</NavLink>
           <NavLink href={"/about"}>history</NavLink>
         </div>
@@ -38,7 +38,7 @@ const NavBar: React.FC = function NavBar() {
         <div className={s.profile_buttons}>
           {user ? (
             <>
-            <Link href={`/profile`}>
+            <Link href={`/upload`}>
               <div className={s.login_button}>
                 <a>upload</a>
               </div>

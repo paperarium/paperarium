@@ -13,12 +13,13 @@
     },
     "categories": {
       "auth": {
-        "papercraftclub783d8fae": {}
+        "papercraftclub783d8fae": {},
+        "true": {}
       },
       "function": {
         "papercraftclubUserCreate": {
           "deploymentBucketName": "amplify-papercraftclub-dev-144303-deployment",
-          "s3Key": "amplify-builds/papercraftclubUserCreate-455463516f37436d3332-build.zip"
+          "s3Key": "amplify-builds/papercraftclubUserCreate-65616f2b3342555a372b-build.zip"
         }
       }
     }

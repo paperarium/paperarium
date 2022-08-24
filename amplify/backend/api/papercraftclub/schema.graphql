@@ -4,10 +4,16 @@
 
 type User
   @model
-  @auth(rules: [{ allow: public, operations: [read] }, { allow: owner }]) {
+  @auth(
+    rules: [
+      { allow: public, operations: [read] }
+      { allow: owner, operations: [read, update, delete] }
+    ]
+  ) {
   username: String!
   email: String @auth(rules: [{ allow: owner }])
   papercrafts: [Papercraft!]! @hasMany
+  builds: [Build!]! @hasMany
   profile_picture: S3Object
   description: String
   website: String
@@ -24,12 +30,20 @@ type Papercraft
   pdf_lineless: S3Object
   pdf_lined: S3Object!
   tags: [Tag!]! @manyToMany(relationName: "PapercraftTags")
+  builds: [Build!]! @hasMany
   verified: Boolean
 }
 
-type Tag
+type Build
   @model
   @auth(rules: [{ allow: public, operations: [read] }, { allow: owner }]) {
+  user: User! @belongsTo
+  papercraft: Papercraft @belongsTo
+  pictures: [S3Object!]!
+  verified: Boolean
+}
+
+type Tag @model @auth(rules: [{ allow: public, operations: [read] }]) {
   title: String!
   papercrafts: [Papercraft!]! @manyToMany(relationName: "PapercraftTags")
 }

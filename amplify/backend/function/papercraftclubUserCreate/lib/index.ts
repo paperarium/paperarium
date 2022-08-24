@@ -23,6 +23,7 @@ export const handler = async (event: any, context: Context, callback: any) => {
         username: { S: event.userName },
         email: { S: event.request.userAttributes.email },
         papercrafts: { L: [] },
+        builds: { L: [] },
       },
       TableName: `User-${process.env.API_PAPERCRAFTCLUB_GRAPHQLAPIIDOUTPUT}-${process.env.ENV}`,
     };

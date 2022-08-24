@@ -11,10 +11,10 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          {/* <link
+          <link
             href="https://fonts.googleapis.com/css2?family=Kosugi+Maru:wght@400&display=optional"
             rel="stylesheet"
-          /> */}
+          />
           <link rel="icon" href="/favicon.ico" />
           <meta name="title" content="papercraft club"></meta>
           <meta name="description" content="big brains in little bodies, from an art space with cyber qualities. bridging the gap between the digital world and the physical world, one byte at a time."></meta>

@@ -62,7 +62,8 @@ var handler = function (event, context, callback) { return __awaiter(void 0, voi
                         owner: { S: event.request.userAttributes.sub },
                         username: { S: event.userName },
                         email: { S: event.request.userAttributes.email },
-                        papercrafts: { L: [] }
+                        papercrafts: { L: [] },
+                        builds: { L: [] }
                     },
                     TableName: "User-".concat(process.env.API_PAPERCRAFTCLUB_GRAPHQLAPIIDOUTPUT, "-").concat(process.env.ENV)
                 };

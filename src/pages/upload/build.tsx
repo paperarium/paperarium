@@ -1,10 +1,8 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
-import NavBar from "../components/NavBar/NavBar";
-import styles from "../styles/Home.module.scss";
+import styles from "../../styles/Home.module.scss";
 
-const UploadPage: NextPage = () => {
+const UploadBuildPage: NextPage = () => {
   return (
     <>
       <Head>
@@ -14,9 +12,9 @@ const UploadPage: NextPage = () => {
           content="submit a papercraft for publication!"
         />
       </Head>
-      <h1 className={styles.title}>this is the upload page.</h1>
+      <h1 className={styles.title}>this is the build upload page.</h1>
     </>
   );
 };
 
-export default UploadPage;
+export default UploadBuildPage;
