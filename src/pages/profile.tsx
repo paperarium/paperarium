@@ -9,7 +9,7 @@ import { NextPage, NextPageContext } from "next";
 import Head from "next/head";
 import { withSSRContext } from "aws-amplify";
 import { Auth } from "@aws-amplify/auth";
-import styles from "../styles/Home.module.css";
+import styles from "../styles/Home.module.scss";
 import { useRouter } from "next/router";
 
 type ProfilePageProps = {

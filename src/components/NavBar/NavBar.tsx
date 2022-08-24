@@ -27,8 +27,8 @@ const NavBar: React.FC = function NavBar() {
         </Link>
         <div className={s.links_container}>
           <NavLink href={"/explore"}>explore</NavLink>
-          <NavLink href={"/howto"}>how-to</NavLink>
-          <NavLink href={"/about"}>about</NavLink>
+          <NavLink href={"/howto"}>guides</NavLink>
+          <NavLink href={"/about"}>history</NavLink>
         </div>
         <div className={s.spacer}></div>
         <div className={s.menu} onClick={() => setNavOpen(!navOpen)}>

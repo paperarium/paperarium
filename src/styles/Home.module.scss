@@ -1,0 +1,83 @@
+@import "./mixins";
+
+.page_container {
+  padding: 20px 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.login_page_container {
+  padding: 20px 10px;
+  width: 100%;
+  min-height: calc(100vh - var(--header-height) - var(--notice-bar-height));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.page_row {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: auto;
+  min-height: auto;
+
+  @include respond-to("small") {
+    flex-direction: row-reverse;
+    min-height: 500px;
+    height: calc(100vh - var(--header-height) - var(--notice-bar-height));
+  }
+}
+
+.page_col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  width: 100%;
+
+  &:first-of-type {
+    border-left: $border;
+  }
+
+  @include respond-to("small") {
+    height: 100%;
+    width: auto;
+    flex: 1;
+  }
+}
+
+.content_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 20px;
+  border-top: $border;
+  width: 100%;
+}
+
+.continue_button {
+  width: 100%;
+  padding: 10px;
+  background-color: $highlight;
+  border: $border;
+  border-radius: 10px;
+  text-align: center;
+  letter-spacing: 2px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+
+  &:hover {
+    transform: scale(1.02);
+    background-color: $highlight-2;
+    letter-spacing: 4px;
+  }
+}

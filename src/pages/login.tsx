@@ -8,8 +8,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import s from "../styles/Home.module.css";
-import { Authenticator } from "@aws-amplify/ui-react";
+import s from "../styles/Home.module.scss";
 import AuthCard from "../components/AuthCard/AuthCard";
 
 const LoginPage: NextPage = () => {
@@ -21,7 +20,7 @@ const LoginPage: NextPage = () => {
         <title>login - papercraft club</title>
         <meta name="description" content="login" />
       </Head>
-      <div className={s.page_container}>
+      <div className={s.login_page_container}>
         <AuthCard />
       </div>
     </>
