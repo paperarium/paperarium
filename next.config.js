@@ -12,19 +12,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withBundleAnalyzer({
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.module.rules.push({
-        test: /\.jsx?$/,
-        resolve: {
-          fallback: {
-            crypto: false,
-          },
-          fullySpecified: false,
-        },
-      });
-    }
-    return config;
-  },
-});
+module.exports = withBundleAnalyzer(nextConfig);

@@ -1,17 +1,15 @@
+// @ts-nocheck
 import type { NextPage } from "next";
 import Head from "next/head";
 import s from "../../styles/Upload.module.scss";
 import TextareaAutosize from "react-textarea-autosize";
 import { API } from "@aws-amplify/api";
-import { Auth } from "@aws-amplify/auth";
 import { graphqlOperation, GraphQLResult } from "@aws-amplify/api-graphql";
 import { listTags } from "../../graphql/custom-queries";
 import * as APIt from "../../API";
-import { Tag } from "../../models";
 import { useRef, useState } from "react";
 import { debounce } from "ts-debounce";
 import dynamic from "next/dynamic";
-import { createTag } from "../../graphql/mutations";
 import FileUpload from "../../components/FileUpload/FileUpload";
 
 const AsyncSelect = dynamic(
@@ -77,7 +75,7 @@ const UploadDesignPage: NextPage = () => {
         <div className={s.upload_col}>
           <div className={s.column_header}>
             <b>upload a papercraft design!</b> after filling in all of the required fields,
-            the submit button will turn green and you may post your papercraft
+            the submit button will turn green and you can post your papercraft
             to our website. 
           </div>
           <div className={s.spacer}></div>
