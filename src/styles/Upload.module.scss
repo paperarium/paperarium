@@ -35,7 +35,7 @@ $completion_bar_height: 50px;
   justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
-  height: calc(
+  min-height: calc(
     100vh - var(--header-height) - var(--notice-bar-height) -
       $completion_bar_height
   );

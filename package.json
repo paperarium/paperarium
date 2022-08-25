@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "amplify:papercraftclubUserCreate": "cd amplify/backend/function/papercraftclubUserCreate/lib && tsc -p ./tsconfig.json && cd -"
+    "amplify:papercraftclubUserCreate": "cd amplify/backend/function/papercraftclubUserCreate/lib && npm install && tsc -p ./tsconfig.json && cd -"
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^3.4.1",
