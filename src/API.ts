@@ -4,7 +4,6 @@
 
 export type ModelTagFilterInput = {
   title?: ModelStringInput | null,
-  title_encoded?: ModelStringInput | null,
   and?: Array< ModelTagFilterInput | null > | null,
   or?: Array< ModelTagFilterInput | null > | null,
   not?: ModelTagFilterInput | null,
@@ -59,12 +58,10 @@ export type ModelTagConnection = {
 export type Tag = {
   __typename: "Tag",
   title: string,
-  title_encoded: string,
   papercrafts?: ModelPapercraftTagsConnection | null,
   id: string,
   createdAt: string,
   updatedAt: string,
-  owner?: string | null,
 };
 
 export type ModelPapercraftTagsConnection = {
@@ -282,13 +279,11 @@ export type DeleteBuildInput = {
 
 export type CreateTagInput = {
   title: string,
-  title_encoded: string,
   id?: string | null,
 };
 
 export type ModelTagConditionInput = {
   title?: ModelStringInput | null,
-  title_encoded?: ModelStringInput | null,
   and?: Array< ModelTagConditionInput | null > | null,
   or?: Array< ModelTagConditionInput | null > | null,
   not?: ModelTagConditionInput | null,
@@ -296,7 +291,6 @@ export type ModelTagConditionInput = {
 
 export type UpdateTagInput = {
   title?: string | null,
-  title_encoded?: string | null,
   id: string,
 };
 
@@ -346,12 +340,199 @@ export type ModelUserConnection = {
   nextToken?: string | null,
 };
 
+export type SearchableUserFilterInput = {
+  username?: SearchableStringFilterInput | null,
+  email?: SearchableStringFilterInput | null,
+  description?: SearchableStringFilterInput | null,
+  website?: SearchableStringFilterInput | null,
+  instagram?: SearchableStringFilterInput | null,
+  twitter?: SearchableStringFilterInput | null,
+  id?: SearchableIDFilterInput | null,
+  createdAt?: SearchableStringFilterInput | null,
+  updatedAt?: SearchableStringFilterInput | null,
+  and?: Array< SearchableUserFilterInput | null > | null,
+  or?: Array< SearchableUserFilterInput | null > | null,
+  not?: SearchableUserFilterInput | null,
+};
+
+export type SearchableStringFilterInput = {
+  ne?: string | null,
+  gt?: string | null,
+  lt?: string | null,
+  gte?: string | null,
+  lte?: string | null,
+  eq?: string | null,
+  match?: string | null,
+  matchPhrase?: string | null,
+  matchPhrasePrefix?: string | null,
+  multiMatch?: string | null,
+  exists?: boolean | null,
+  wildcard?: string | null,
+  regexp?: string | null,
+  range?: Array< string | null > | null,
+};
+
+export type SearchableIDFilterInput = {
+  ne?: string | null,
+  gt?: string | null,
+  lt?: string | null,
+  gte?: string | null,
+  lte?: string | null,
+  eq?: string | null,
+  match?: string | null,
+  matchPhrase?: string | null,
+  matchPhrasePrefix?: string | null,
+  multiMatch?: string | null,
+  exists?: boolean | null,
+  wildcard?: string | null,
+  regexp?: string | null,
+  range?: Array< string | null > | null,
+};
+
+export type SearchableUserSortInput = {
+  field?: SearchableUserSortableFields | null,
+  direction?: SearchableSortDirection | null,
+};
+
+export enum SearchableUserSortableFields {
+  username = "username",
+  email = "email",
+  description = "description",
+  website = "website",
+  instagram = "instagram",
+  twitter = "twitter",
+  id = "id",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+}
+
+
+export enum SearchableSortDirection {
+  asc = "asc",
+  desc = "desc",
+}
+
+
+export type SearchableUserAggregationInput = {
+  name: string,
+  type: SearchableAggregateType,
+  field: SearchableUserAggregateField,
+};
+
+export enum SearchableAggregateType {
+  terms = "terms",
+  avg = "avg",
+  min = "min",
+  max = "max",
+  sum = "sum",
+}
+
+
+export enum SearchableUserAggregateField {
+  username = "username",
+  email = "email",
+  description = "description",
+  website = "website",
+  instagram = "instagram",
+  twitter = "twitter",
+  id = "id",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+}
+
+
+export type SearchableUserConnection = {
+  __typename: "SearchableUserConnection",
+  items:  Array<User | null >,
+  nextToken?: string | null,
+  total?: number | null,
+  aggregateItems:  Array<SearchableAggregateResult | null >,
+};
+
+export type SearchableAggregateResult = {
+  __typename: "SearchableAggregateResult",
+  name: string,
+  result?: SearchableAggregateGenericResult | null,
+};
+
+export type SearchableAggregateGenericResult = SearchableAggregateScalarResult | SearchableAggregateBucketResult
+
+
+export type SearchableAggregateScalarResult = {
+  __typename: "SearchableAggregateScalarResult",
+  value: number,
+};
+
+export type SearchableAggregateBucketResult = {
+  __typename: "SearchableAggregateBucketResult",
+  buckets?:  Array<SearchableAggregateBucketResultItem | null > | null,
+};
+
+export type SearchableAggregateBucketResultItem = {
+  __typename: "SearchableAggregateBucketResultItem",
+  key: string,
+  doc_count: number,
+};
+
 export type ModelPapercraftFilterInput = {
   verified?: ModelBooleanInput | null,
   and?: Array< ModelPapercraftFilterInput | null > | null,
   or?: Array< ModelPapercraftFilterInput | null > | null,
   not?: ModelPapercraftFilterInput | null,
   userPapercraftsId?: ModelIDInput | null,
+};
+
+export type SearchablePapercraftFilterInput = {
+  verified?: SearchableBooleanFilterInput | null,
+  id?: SearchableIDFilterInput | null,
+  createdAt?: SearchableStringFilterInput | null,
+  updatedAt?: SearchableStringFilterInput | null,
+  userPapercraftsId?: SearchableIDFilterInput | null,
+  and?: Array< SearchablePapercraftFilterInput | null > | null,
+  or?: Array< SearchablePapercraftFilterInput | null > | null,
+  not?: SearchablePapercraftFilterInput | null,
+};
+
+export type SearchableBooleanFilterInput = {
+  eq?: boolean | null,
+  ne?: boolean | null,
+};
+
+export type SearchablePapercraftSortInput = {
+  field?: SearchablePapercraftSortableFields | null,
+  direction?: SearchableSortDirection | null,
+};
+
+export enum SearchablePapercraftSortableFields {
+  verified = "verified",
+  id = "id",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+  userPapercraftsId = "userPapercraftsId",
+}
+
+
+export type SearchablePapercraftAggregationInput = {
+  name: string,
+  type: SearchableAggregateType,
+  field: SearchablePapercraftAggregateField,
+};
+
+export enum SearchablePapercraftAggregateField {
+  verified = "verified",
+  id = "id",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+  userPapercraftsId = "userPapercraftsId",
+}
+
+
+export type SearchablePapercraftConnection = {
+  __typename: "SearchablePapercraftConnection",
+  items:  Array<Papercraft | null >,
+  nextToken?: string | null,
+  total?: number | null,
+  aggregateItems:  Array<SearchableAggregateResult | null >,
 };
 
 export type ModelBuildFilterInput = {
@@ -361,6 +542,102 @@ export type ModelBuildFilterInput = {
   not?: ModelBuildFilterInput | null,
   userBuildsId?: ModelIDInput | null,
   papercraftBuildsId?: ModelIDInput | null,
+};
+
+export type SearchableBuildFilterInput = {
+  verified?: SearchableBooleanFilterInput | null,
+  id?: SearchableIDFilterInput | null,
+  createdAt?: SearchableStringFilterInput | null,
+  updatedAt?: SearchableStringFilterInput | null,
+  userBuildsId?: SearchableIDFilterInput | null,
+  papercraftBuildsId?: SearchableIDFilterInput | null,
+  and?: Array< SearchableBuildFilterInput | null > | null,
+  or?: Array< SearchableBuildFilterInput | null > | null,
+  not?: SearchableBuildFilterInput | null,
+};
+
+export type SearchableBuildSortInput = {
+  field?: SearchableBuildSortableFields | null,
+  direction?: SearchableSortDirection | null,
+};
+
+export enum SearchableBuildSortableFields {
+  verified = "verified",
+  id = "id",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+  userBuildsId = "userBuildsId",
+  papercraftBuildsId = "papercraftBuildsId",
+}
+
+
+export type SearchableBuildAggregationInput = {
+  name: string,
+  type: SearchableAggregateType,
+  field: SearchableBuildAggregateField,
+};
+
+export enum SearchableBuildAggregateField {
+  verified = "verified",
+  id = "id",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+  userBuildsId = "userBuildsId",
+  papercraftBuildsId = "papercraftBuildsId",
+}
+
+
+export type SearchableBuildConnection = {
+  __typename: "SearchableBuildConnection",
+  items:  Array<Build | null >,
+  nextToken?: string | null,
+  total?: number | null,
+  aggregateItems:  Array<SearchableAggregateResult | null >,
+};
+
+export type SearchableTagFilterInput = {
+  title?: SearchableStringFilterInput | null,
+  id?: SearchableIDFilterInput | null,
+  createdAt?: SearchableStringFilterInput | null,
+  updatedAt?: SearchableStringFilterInput | null,
+  and?: Array< SearchableTagFilterInput | null > | null,
+  or?: Array< SearchableTagFilterInput | null > | null,
+  not?: SearchableTagFilterInput | null,
+};
+
+export type SearchableTagSortInput = {
+  field?: SearchableTagSortableFields | null,
+  direction?: SearchableSortDirection | null,
+};
+
+export enum SearchableTagSortableFields {
+  title = "title",
+  id = "id",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+}
+
+
+export type SearchableTagAggregationInput = {
+  name: string,
+  type: SearchableAggregateType,
+  field: SearchableTagAggregateField,
+};
+
+export enum SearchableTagAggregateField {
+  title = "title",
+  id = "id",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+}
+
+
+export type SearchableTagConnection = {
+  __typename: "SearchableTagConnection",
+  items:  Array<Tag | null >,
+  nextToken?: string | null,
+  total?: number | null,
+  aggregateItems:  Array<SearchableAggregateResult | null >,
 };
 
 export type ModelPapercraftTagsFilterInput = {
@@ -384,7 +661,6 @@ export type ListTagsPCPQuery = {
     items:  Array< {
       __typename: "Tag",
       title: string,
-      title_encoded: string,
       id: string,
       createdAt: string,
       updatedAt: string,
@@ -405,29 +681,10 @@ export type CreateUserMutation = {
     email?: string | null,
     papercrafts?:  {
       __typename: "ModelPapercraftConnection",
-      items:  Array< {
-        __typename: "Papercraft",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userPapercraftsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     builds?:  {
       __typename: "ModelBuildConnection",
-      items:  Array< {
-        __typename: "Build",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userBuildsId: string,
-        papercraftBuildsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     profile_picture?:  {
@@ -459,29 +716,10 @@ export type UpdateUserMutation = {
     email?: string | null,
     papercrafts?:  {
       __typename: "ModelPapercraftConnection",
-      items:  Array< {
-        __typename: "Papercraft",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userPapercraftsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     builds?:  {
       __typename: "ModelBuildConnection",
-      items:  Array< {
-        __typename: "Build",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userBuildsId: string,
-        papercraftBuildsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     profile_picture?:  {
@@ -513,29 +751,10 @@ export type DeleteUserMutation = {
     email?: string | null,
     papercrafts?:  {
       __typename: "ModelPapercraftConnection",
-      items:  Array< {
-        __typename: "Papercraft",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userPapercraftsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     builds?:  {
       __typename: "ModelBuildConnection",
-      items:  Array< {
-        __typename: "Build",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userBuildsId: string,
-        papercraftBuildsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     profile_picture?:  {
@@ -567,20 +786,6 @@ export type CreatePapercraftMutation = {
       __typename: "User",
       username: string,
       email?: string | null,
-      papercrafts?:  {
-        __typename: "ModelPapercraftConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
-      profile_picture?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
       description?: string | null,
       website?: string | null,
       instagram?: string | null,
@@ -616,29 +821,10 @@ export type CreatePapercraftMutation = {
     },
     tags?:  {
       __typename: "ModelPapercraftTagsConnection",
-      items:  Array< {
-        __typename: "PapercraftTags",
-        id: string,
-        papercraftID: string,
-        tagID: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     builds?:  {
       __typename: "ModelBuildConnection",
-      items:  Array< {
-        __typename: "Build",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userBuildsId: string,
-        papercraftBuildsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     verified?: boolean | null,
@@ -662,20 +848,6 @@ export type UpdatePapercraftMutation = {
       __typename: "User",
       username: string,
       email?: string | null,
-      papercrafts?:  {
-        __typename: "ModelPapercraftConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
-      profile_picture?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
       description?: string | null,
       website?: string | null,
       instagram?: string | null,
@@ -711,29 +883,10 @@ export type UpdatePapercraftMutation = {
     },
     tags?:  {
       __typename: "ModelPapercraftTagsConnection",
-      items:  Array< {
-        __typename: "PapercraftTags",
-        id: string,
-        papercraftID: string,
-        tagID: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     builds?:  {
       __typename: "ModelBuildConnection",
-      items:  Array< {
-        __typename: "Build",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userBuildsId: string,
-        papercraftBuildsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     verified?: boolean | null,
@@ -757,20 +910,6 @@ export type DeletePapercraftMutation = {
       __typename: "User",
       username: string,
       email?: string | null,
-      papercrafts?:  {
-        __typename: "ModelPapercraftConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
-      profile_picture?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
       description?: string | null,
       website?: string | null,
       instagram?: string | null,
@@ -806,29 +945,10 @@ export type DeletePapercraftMutation = {
     },
     tags?:  {
       __typename: "ModelPapercraftTagsConnection",
-      items:  Array< {
-        __typename: "PapercraftTags",
-        id: string,
-        papercraftID: string,
-        tagID: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     builds?:  {
       __typename: "ModelBuildConnection",
-      items:  Array< {
-        __typename: "Build",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userBuildsId: string,
-        papercraftBuildsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     verified?: boolean | null,
@@ -852,20 +972,6 @@ export type CreateBuildMutation = {
       __typename: "User",
       username: string,
       email?: string | null,
-      papercrafts?:  {
-        __typename: "ModelPapercraftConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
-      profile_picture?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
       description?: string | null,
       website?: string | null,
       instagram?: string | null,
@@ -877,51 +983,6 @@ export type CreateBuildMutation = {
     },
     papercraft?:  {
       __typename: "Papercraft",
-      user:  {
-        __typename: "User",
-        username: string,
-        email?: string | null,
-        description?: string | null,
-        website?: string | null,
-        instagram?: string | null,
-        twitter?: string | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      },
-      glb?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdo?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lineless?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lined:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      },
-      tags?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -957,20 +1018,6 @@ export type UpdateBuildMutation = {
       __typename: "User",
       username: string,
       email?: string | null,
-      papercrafts?:  {
-        __typename: "ModelPapercraftConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
-      profile_picture?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
       description?: string | null,
       website?: string | null,
       instagram?: string | null,
@@ -982,51 +1029,6 @@ export type UpdateBuildMutation = {
     },
     papercraft?:  {
       __typename: "Papercraft",
-      user:  {
-        __typename: "User",
-        username: string,
-        email?: string | null,
-        description?: string | null,
-        website?: string | null,
-        instagram?: string | null,
-        twitter?: string | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      },
-      glb?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdo?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lineless?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lined:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      },
-      tags?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -1062,20 +1064,6 @@ export type DeleteBuildMutation = {
       __typename: "User",
       username: string,
       email?: string | null,
-      papercrafts?:  {
-        __typename: "ModelPapercraftConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
-      profile_picture?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
       description?: string | null,
       website?: string | null,
       instagram?: string | null,
@@ -1087,51 +1075,6 @@ export type DeleteBuildMutation = {
     },
     papercraft?:  {
       __typename: "Papercraft",
-      user:  {
-        __typename: "User",
-        username: string,
-        email?: string | null,
-        description?: string | null,
-        website?: string | null,
-        instagram?: string | null,
-        twitter?: string | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      },
-      glb?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdo?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lineless?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lined:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      },
-      tags?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -1164,24 +1107,13 @@ export type CreateTagMutation = {
   createTag?:  {
     __typename: "Tag",
     title: string,
-    title_encoded: string,
     papercrafts?:  {
       __typename: "ModelPapercraftTagsConnection",
-      items:  Array< {
-        __typename: "PapercraftTags",
-        id: string,
-        papercraftID: string,
-        tagID: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     id: string,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1194,24 +1126,13 @@ export type UpdateTagMutation = {
   updateTag?:  {
     __typename: "Tag",
     title: string,
-    title_encoded: string,
     papercrafts?:  {
       __typename: "ModelPapercraftTagsConnection",
-      items:  Array< {
-        __typename: "PapercraftTags",
-        id: string,
-        papercraftID: string,
-        tagID: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     id: string,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1224,24 +1145,13 @@ export type DeleteTagMutation = {
   deleteTag?:  {
     __typename: "Tag",
     title: string,
-    title_encoded: string,
     papercrafts?:  {
       __typename: "ModelPapercraftTagsConnection",
-      items:  Array< {
-        __typename: "PapercraftTags",
-        id: string,
-        papercraftID: string,
-        tagID: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     id: string,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1258,51 +1168,6 @@ export type CreatePapercraftTagsMutation = {
     tagID: string,
     papercraft:  {
       __typename: "Papercraft",
-      user:  {
-        __typename: "User",
-        username: string,
-        email?: string | null,
-        description?: string | null,
-        website?: string | null,
-        instagram?: string | null,
-        twitter?: string | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      },
-      glb?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdo?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lineless?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lined:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      },
-      tags?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -1313,15 +1178,9 @@ export type CreatePapercraftTagsMutation = {
     tag:  {
       __typename: "Tag",
       title: string,
-      title_encoded: string,
-      papercrafts?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
       id: string,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,
@@ -1342,51 +1201,6 @@ export type UpdatePapercraftTagsMutation = {
     tagID: string,
     papercraft:  {
       __typename: "Papercraft",
-      user:  {
-        __typename: "User",
-        username: string,
-        email?: string | null,
-        description?: string | null,
-        website?: string | null,
-        instagram?: string | null,
-        twitter?: string | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      },
-      glb?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdo?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lineless?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lined:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      },
-      tags?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -1397,15 +1211,9 @@ export type UpdatePapercraftTagsMutation = {
     tag:  {
       __typename: "Tag",
       title: string,
-      title_encoded: string,
-      papercrafts?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
       id: string,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,
@@ -1426,51 +1234,6 @@ export type DeletePapercraftTagsMutation = {
     tagID: string,
     papercraft:  {
       __typename: "Papercraft",
-      user:  {
-        __typename: "User",
-        username: string,
-        email?: string | null,
-        description?: string | null,
-        website?: string | null,
-        instagram?: string | null,
-        twitter?: string | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      },
-      glb?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdo?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lineless?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lined:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      },
-      tags?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -1481,15 +1244,9 @@ export type DeletePapercraftTagsMutation = {
     tag:  {
       __typename: "Tag",
       title: string,
-      title_encoded: string,
-      papercrafts?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
       id: string,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,
@@ -1508,29 +1265,10 @@ export type GetUserQuery = {
     email?: string | null,
     papercrafts?:  {
       __typename: "ModelPapercraftConnection",
-      items:  Array< {
-        __typename: "Papercraft",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userPapercraftsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     builds?:  {
       __typename: "ModelBuildConnection",
-      items:  Array< {
-        __typename: "Build",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userBuildsId: string,
-        papercraftBuildsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     profile_picture?:  {
@@ -1563,20 +1301,6 @@ export type ListUsersQuery = {
       __typename: "User",
       username: string,
       email?: string | null,
-      papercrafts?:  {
-        __typename: "ModelPapercraftConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
-      profile_picture?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
       description?: string | null,
       website?: string | null,
       instagram?: string | null,
@@ -1587,6 +1311,52 @@ export type ListUsersQuery = {
       owner?: string | null,
     } | null >,
     nextToken?: string | null,
+  } | null,
+};
+
+export type SearchUsersQueryVariables = {
+  filter?: SearchableUserFilterInput | null,
+  sort?: Array< SearchableUserSortInput | null > | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  from?: number | null,
+  aggregates?: Array< SearchableUserAggregationInput | null > | null,
+};
+
+export type SearchUsersQuery = {
+  searchUsers?:  {
+    __typename: "SearchableUserConnection",
+    items:  Array< {
+      __typename: "User",
+      username: string,
+      email?: string | null,
+      description?: string | null,
+      website?: string | null,
+      instagram?: string | null,
+      twitter?: string | null,
+      id: string,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+    total?: number | null,
+    aggregateItems:  Array< {
+      __typename: "SearchableAggregateResult",
+      name: string,
+      result: ( {
+          __typename: "SearchableAggregateScalarResult",
+          value: number,
+        } | {
+          __typename: "SearchableAggregateBucketResult",
+          buckets?:  Array< {
+            __typename: string,
+            key: string,
+            doc_count: number,
+          } | null > | null,
+        }
+      ) | null,
+    } | null >,
   } | null,
 };
 
@@ -1601,20 +1371,6 @@ export type GetPapercraftQuery = {
       __typename: "User",
       username: string,
       email?: string | null,
-      papercrafts?:  {
-        __typename: "ModelPapercraftConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
-      profile_picture?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
       description?: string | null,
       website?: string | null,
       instagram?: string | null,
@@ -1650,29 +1406,10 @@ export type GetPapercraftQuery = {
     },
     tags?:  {
       __typename: "ModelPapercraftTagsConnection",
-      items:  Array< {
-        __typename: "PapercraftTags",
-        id: string,
-        papercraftID: string,
-        tagID: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     builds?:  {
       __typename: "ModelBuildConnection",
-      items:  Array< {
-        __typename: "Build",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userBuildsId: string,
-        papercraftBuildsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     verified?: boolean | null,
@@ -1695,51 +1432,6 @@ export type ListPapercraftsQuery = {
     __typename: "ModelPapercraftConnection",
     items:  Array< {
       __typename: "Papercraft",
-      user:  {
-        __typename: "User",
-        username: string,
-        email?: string | null,
-        description?: string | null,
-        website?: string | null,
-        instagram?: string | null,
-        twitter?: string | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      },
-      glb?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdo?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lineless?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lined:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      },
-      tags?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -1748,6 +1440,48 @@ export type ListPapercraftsQuery = {
       owner?: string | null,
     } | null >,
     nextToken?: string | null,
+  } | null,
+};
+
+export type SearchPapercraftsQueryVariables = {
+  filter?: SearchablePapercraftFilterInput | null,
+  sort?: Array< SearchablePapercraftSortInput | null > | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  from?: number | null,
+  aggregates?: Array< SearchablePapercraftAggregationInput | null > | null,
+};
+
+export type SearchPapercraftsQuery = {
+  searchPapercrafts?:  {
+    __typename: "SearchablePapercraftConnection",
+    items:  Array< {
+      __typename: "Papercraft",
+      verified?: boolean | null,
+      id: string,
+      createdAt: string,
+      updatedAt: string,
+      userPapercraftsId: string,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+    total?: number | null,
+    aggregateItems:  Array< {
+      __typename: "SearchableAggregateResult",
+      name: string,
+      result: ( {
+          __typename: "SearchableAggregateScalarResult",
+          value: number,
+        } | {
+          __typename: "SearchableAggregateBucketResult",
+          buckets?:  Array< {
+            __typename: string,
+            key: string,
+            doc_count: number,
+          } | null > | null,
+        }
+      ) | null,
+    } | null >,
   } | null,
 };
 
@@ -1762,20 +1496,6 @@ export type GetBuildQuery = {
       __typename: "User",
       username: string,
       email?: string | null,
-      papercrafts?:  {
-        __typename: "ModelPapercraftConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
-      profile_picture?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
       description?: string | null,
       website?: string | null,
       instagram?: string | null,
@@ -1787,51 +1507,6 @@ export type GetBuildQuery = {
     },
     papercraft?:  {
       __typename: "Papercraft",
-      user:  {
-        __typename: "User",
-        username: string,
-        email?: string | null,
-        description?: string | null,
-        website?: string | null,
-        instagram?: string | null,
-        twitter?: string | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      },
-      glb?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdo?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lineless?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lined:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      },
-      tags?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -1866,34 +1541,6 @@ export type ListBuildsQuery = {
     __typename: "ModelBuildConnection",
     items:  Array< {
       __typename: "Build",
-      user:  {
-        __typename: "User",
-        username: string,
-        email?: string | null,
-        description?: string | null,
-        website?: string | null,
-        instagram?: string | null,
-        twitter?: string | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      },
-      papercraft?:  {
-        __typename: "Papercraft",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userPapercraftsId: string,
-        owner?: string | null,
-      } | null,
-      pictures:  Array< {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } >,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -1906,6 +1553,49 @@ export type ListBuildsQuery = {
   } | null,
 };
 
+export type SearchBuildsQueryVariables = {
+  filter?: SearchableBuildFilterInput | null,
+  sort?: Array< SearchableBuildSortInput | null > | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  from?: number | null,
+  aggregates?: Array< SearchableBuildAggregationInput | null > | null,
+};
+
+export type SearchBuildsQuery = {
+  searchBuilds?:  {
+    __typename: "SearchableBuildConnection",
+    items:  Array< {
+      __typename: "Build",
+      verified?: boolean | null,
+      id: string,
+      createdAt: string,
+      updatedAt: string,
+      userBuildsId: string,
+      papercraftBuildsId: string,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+    total?: number | null,
+    aggregateItems:  Array< {
+      __typename: "SearchableAggregateResult",
+      name: string,
+      result: ( {
+          __typename: "SearchableAggregateScalarResult",
+          value: number,
+        } | {
+          __typename: "SearchableAggregateBucketResult",
+          buckets?:  Array< {
+            __typename: string,
+            key: string,
+            doc_count: number,
+          } | null > | null,
+        }
+      ) | null,
+    } | null >,
+  } | null,
+};
+
 export type GetTagQueryVariables = {
   id: string,
 };
@@ -1914,24 +1604,13 @@ export type GetTagQuery = {
   getTag?:  {
     __typename: "Tag",
     title: string,
-    title_encoded: string,
     papercrafts?:  {
       __typename: "ModelPapercraftTagsConnection",
-      items:  Array< {
-        __typename: "PapercraftTags",
-        id: string,
-        papercraftID: string,
-        tagID: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     id: string,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -1947,17 +1626,51 @@ export type ListTagsQuery = {
     items:  Array< {
       __typename: "Tag",
       title: string,
-      title_encoded: string,
-      papercrafts?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
       id: string,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     } | null >,
     nextToken?: string | null,
+  } | null,
+};
+
+export type SearchTagsQueryVariables = {
+  filter?: SearchableTagFilterInput | null,
+  sort?: Array< SearchableTagSortInput | null > | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  from?: number | null,
+  aggregates?: Array< SearchableTagAggregationInput | null > | null,
+};
+
+export type SearchTagsQuery = {
+  searchTags?:  {
+    __typename: "SearchableTagConnection",
+    items:  Array< {
+      __typename: "Tag",
+      title: string,
+      id: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+    total?: number | null,
+    aggregateItems:  Array< {
+      __typename: "SearchableAggregateResult",
+      name: string,
+      result: ( {
+          __typename: "SearchableAggregateScalarResult",
+          value: number,
+        } | {
+          __typename: "SearchableAggregateBucketResult",
+          buckets?:  Array< {
+            __typename: string,
+            key: string,
+            doc_count: number,
+          } | null > | null,
+        }
+      ) | null,
+    } | null >,
   } | null,
 };
 
@@ -1973,51 +1686,6 @@ export type GetPapercraftTagsQuery = {
     tagID: string,
     papercraft:  {
       __typename: "Papercraft",
-      user:  {
-        __typename: "User",
-        username: string,
-        email?: string | null,
-        description?: string | null,
-        website?: string | null,
-        instagram?: string | null,
-        twitter?: string | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      },
-      glb?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdo?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lineless?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lined:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      },
-      tags?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -2028,15 +1696,9 @@ export type GetPapercraftTagsQuery = {
     tag:  {
       __typename: "Tag",
       title: string,
-      title_encoded: string,
-      papercrafts?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
       id: string,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,
@@ -2058,24 +1720,6 @@ export type ListPapercraftTagsQuery = {
       id: string,
       papercraftID: string,
       tagID: string,
-      papercraft:  {
-        __typename: "Papercraft",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userPapercraftsId: string,
-        owner?: string | null,
-      },
-      tag:  {
-        __typename: "Tag",
-        title: string,
-        title_encoded: string,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      },
       createdAt: string,
       updatedAt: string,
       owner?: string | null,
@@ -2095,29 +1739,10 @@ export type OnCreateUserSubscription = {
     email?: string | null,
     papercrafts?:  {
       __typename: "ModelPapercraftConnection",
-      items:  Array< {
-        __typename: "Papercraft",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userPapercraftsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     builds?:  {
       __typename: "ModelBuildConnection",
-      items:  Array< {
-        __typename: "Build",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userBuildsId: string,
-        papercraftBuildsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     profile_picture?:  {
@@ -2148,29 +1773,10 @@ export type OnUpdateUserSubscription = {
     email?: string | null,
     papercrafts?:  {
       __typename: "ModelPapercraftConnection",
-      items:  Array< {
-        __typename: "Papercraft",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userPapercraftsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     builds?:  {
       __typename: "ModelBuildConnection",
-      items:  Array< {
-        __typename: "Build",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userBuildsId: string,
-        papercraftBuildsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     profile_picture?:  {
@@ -2201,29 +1807,10 @@ export type OnDeleteUserSubscription = {
     email?: string | null,
     papercrafts?:  {
       __typename: "ModelPapercraftConnection",
-      items:  Array< {
-        __typename: "Papercraft",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userPapercraftsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     builds?:  {
       __typename: "ModelBuildConnection",
-      items:  Array< {
-        __typename: "Build",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userBuildsId: string,
-        papercraftBuildsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     profile_picture?:  {
@@ -2254,20 +1841,6 @@ export type OnCreatePapercraftSubscription = {
       __typename: "User",
       username: string,
       email?: string | null,
-      papercrafts?:  {
-        __typename: "ModelPapercraftConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
-      profile_picture?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
       description?: string | null,
       website?: string | null,
       instagram?: string | null,
@@ -2303,29 +1876,10 @@ export type OnCreatePapercraftSubscription = {
     },
     tags?:  {
       __typename: "ModelPapercraftTagsConnection",
-      items:  Array< {
-        __typename: "PapercraftTags",
-        id: string,
-        papercraftID: string,
-        tagID: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     builds?:  {
       __typename: "ModelBuildConnection",
-      items:  Array< {
-        __typename: "Build",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userBuildsId: string,
-        papercraftBuildsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     verified?: boolean | null,
@@ -2348,20 +1902,6 @@ export type OnUpdatePapercraftSubscription = {
       __typename: "User",
       username: string,
       email?: string | null,
-      papercrafts?:  {
-        __typename: "ModelPapercraftConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
-      profile_picture?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
       description?: string | null,
       website?: string | null,
       instagram?: string | null,
@@ -2397,29 +1937,10 @@ export type OnUpdatePapercraftSubscription = {
     },
     tags?:  {
       __typename: "ModelPapercraftTagsConnection",
-      items:  Array< {
-        __typename: "PapercraftTags",
-        id: string,
-        papercraftID: string,
-        tagID: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     builds?:  {
       __typename: "ModelBuildConnection",
-      items:  Array< {
-        __typename: "Build",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userBuildsId: string,
-        papercraftBuildsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     verified?: boolean | null,
@@ -2442,20 +1963,6 @@ export type OnDeletePapercraftSubscription = {
       __typename: "User",
       username: string,
       email?: string | null,
-      papercrafts?:  {
-        __typename: "ModelPapercraftConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
-      profile_picture?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
       description?: string | null,
       website?: string | null,
       instagram?: string | null,
@@ -2491,29 +1998,10 @@ export type OnDeletePapercraftSubscription = {
     },
     tags?:  {
       __typename: "ModelPapercraftTagsConnection",
-      items:  Array< {
-        __typename: "PapercraftTags",
-        id: string,
-        papercraftID: string,
-        tagID: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     builds?:  {
       __typename: "ModelBuildConnection",
-      items:  Array< {
-        __typename: "Build",
-        verified?: boolean | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        userBuildsId: string,
-        papercraftBuildsId: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     verified?: boolean | null,
@@ -2536,20 +2024,6 @@ export type OnCreateBuildSubscription = {
       __typename: "User",
       username: string,
       email?: string | null,
-      papercrafts?:  {
-        __typename: "ModelPapercraftConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
-      profile_picture?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
       description?: string | null,
       website?: string | null,
       instagram?: string | null,
@@ -2561,51 +2035,6 @@ export type OnCreateBuildSubscription = {
     },
     papercraft?:  {
       __typename: "Papercraft",
-      user:  {
-        __typename: "User",
-        username: string,
-        email?: string | null,
-        description?: string | null,
-        website?: string | null,
-        instagram?: string | null,
-        twitter?: string | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      },
-      glb?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdo?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lineless?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lined:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      },
-      tags?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -2640,20 +2069,6 @@ export type OnUpdateBuildSubscription = {
       __typename: "User",
       username: string,
       email?: string | null,
-      papercrafts?:  {
-        __typename: "ModelPapercraftConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
-      profile_picture?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
       description?: string | null,
       website?: string | null,
       instagram?: string | null,
@@ -2665,51 +2080,6 @@ export type OnUpdateBuildSubscription = {
     },
     papercraft?:  {
       __typename: "Papercraft",
-      user:  {
-        __typename: "User",
-        username: string,
-        email?: string | null,
-        description?: string | null,
-        website?: string | null,
-        instagram?: string | null,
-        twitter?: string | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      },
-      glb?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdo?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lineless?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lined:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      },
-      tags?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -2744,20 +2114,6 @@ export type OnDeleteBuildSubscription = {
       __typename: "User",
       username: string,
       email?: string | null,
-      papercrafts?:  {
-        __typename: "ModelPapercraftConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
-      profile_picture?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
       description?: string | null,
       website?: string | null,
       instagram?: string | null,
@@ -2769,51 +2125,6 @@ export type OnDeleteBuildSubscription = {
     },
     papercraft?:  {
       __typename: "Papercraft",
-      user:  {
-        __typename: "User",
-        username: string,
-        email?: string | null,
-        description?: string | null,
-        website?: string | null,
-        instagram?: string | null,
-        twitter?: string | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      },
-      glb?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdo?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lineless?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lined:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      },
-      tags?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -2837,90 +2148,45 @@ export type OnDeleteBuildSubscription = {
   } | null,
 };
 
-export type OnCreateTagSubscriptionVariables = {
-  owner?: string | null,
-};
-
 export type OnCreateTagSubscription = {
   onCreateTag?:  {
     __typename: "Tag",
     title: string,
-    title_encoded: string,
     papercrafts?:  {
       __typename: "ModelPapercraftTagsConnection",
-      items:  Array< {
-        __typename: "PapercraftTags",
-        id: string,
-        papercraftID: string,
-        tagID: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     id: string,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
-};
-
-export type OnUpdateTagSubscriptionVariables = {
-  owner?: string | null,
 };
 
 export type OnUpdateTagSubscription = {
   onUpdateTag?:  {
     __typename: "Tag",
     title: string,
-    title_encoded: string,
     papercrafts?:  {
       __typename: "ModelPapercraftTagsConnection",
-      items:  Array< {
-        __typename: "PapercraftTags",
-        id: string,
-        papercraftID: string,
-        tagID: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     id: string,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
-};
-
-export type OnDeleteTagSubscriptionVariables = {
-  owner?: string | null,
 };
 
 export type OnDeleteTagSubscription = {
   onDeleteTag?:  {
     __typename: "Tag",
     title: string,
-    title_encoded: string,
     papercrafts?:  {
       __typename: "ModelPapercraftTagsConnection",
-      items:  Array< {
-        __typename: "PapercraftTags",
-        id: string,
-        papercraftID: string,
-        tagID: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      } | null >,
       nextToken?: string | null,
     } | null,
     id: string,
     createdAt: string,
     updatedAt: string,
-    owner?: string | null,
   } | null,
 };
 
@@ -2936,51 +2202,6 @@ export type OnCreatePapercraftTagsSubscription = {
     tagID: string,
     papercraft:  {
       __typename: "Papercraft",
-      user:  {
-        __typename: "User",
-        username: string,
-        email?: string | null,
-        description?: string | null,
-        website?: string | null,
-        instagram?: string | null,
-        twitter?: string | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      },
-      glb?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdo?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lineless?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lined:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      },
-      tags?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -2991,15 +2212,9 @@ export type OnCreatePapercraftTagsSubscription = {
     tag:  {
       __typename: "Tag",
       title: string,
-      title_encoded: string,
-      papercrafts?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
       id: string,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,
@@ -3019,51 +2234,6 @@ export type OnUpdatePapercraftTagsSubscription = {
     tagID: string,
     papercraft:  {
       __typename: "Papercraft",
-      user:  {
-        __typename: "User",
-        username: string,
-        email?: string | null,
-        description?: string | null,
-        website?: string | null,
-        instagram?: string | null,
-        twitter?: string | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      },
-      glb?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdo?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lineless?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lined:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      },
-      tags?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -3074,15 +2244,9 @@ export type OnUpdatePapercraftTagsSubscription = {
     tag:  {
       __typename: "Tag",
       title: string,
-      title_encoded: string,
-      papercrafts?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
       id: string,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,
@@ -3102,51 +2266,6 @@ export type OnDeletePapercraftTagsSubscription = {
     tagID: string,
     papercraft:  {
       __typename: "Papercraft",
-      user:  {
-        __typename: "User",
-        username: string,
-        email?: string | null,
-        description?: string | null,
-        website?: string | null,
-        instagram?: string | null,
-        twitter?: string | null,
-        id: string,
-        createdAt: string,
-        updatedAt: string,
-        owner?: string | null,
-      },
-      glb?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdo?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lineless?:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      } | null,
-      pdf_lined:  {
-        __typename: "S3Object",
-        bucket: string,
-        region: string,
-        key: string,
-      },
-      tags?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
-      builds?:  {
-        __typename: "ModelBuildConnection",
-        nextToken?: string | null,
-      } | null,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -3157,15 +2276,9 @@ export type OnDeletePapercraftTagsSubscription = {
     tag:  {
       __typename: "Tag",
       title: string,
-      title_encoded: string,
-      papercrafts?:  {
-        __typename: "ModelPapercraftTagsConnection",
-        nextToken?: string | null,
-      } | null,
       id: string,
       createdAt: string,
       updatedAt: string,
-      owner?: string | null,
     },
     createdAt: string,
     updatedAt: string,

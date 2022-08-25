@@ -32,10 +32,13 @@ $completion_bar_height: 50px;
 .upload_col {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
-  padding: 20px;
+  height: calc(
+    100vh - var(--header-height) - var(--notice-bar-height) -
+      $completion_bar_height
+  );
 
   &:last-of-type {
     border-top: $border;
@@ -51,6 +54,15 @@ $completion_bar_height: 50px;
       border-left: $border;
     }
   }
+}
+
+.input_form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 20px;
 }
 
 .annotation {
@@ -70,14 +82,6 @@ $completion_bar_height: 50px;
   overflow-x: scroll;
   padding-top: 5px;
   position: relative;
-  // border-bottom: $border;
-  &:after {
-    content: "title";
-    position: absolute;
-    top: 0;
-    right: 0;
-    color: blue;
-  }
 }
 
 .date_input {
@@ -126,4 +130,58 @@ $completion_bar_height: 50px;
   border: none;
   width: 100%;
   margin-top: 5px;
+}
+
+.file_row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+  height: 200px;
+}
+
+.file_col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex: 1;
+  height: 100%;
+  gap: 5px;
+
+  &:last-of-type {
+    flex: 2;
+  }
+}
+
+.file_input {
+  flex: 1;
+  width: 100%;
+  padding: 5px;
+  border: $border;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.column_header {
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
+  // border-bottom: $border;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.preview_header {
+  border-bottom: $border;
+  width: 100%;
+  padding: 10px;
+  font-size: 20px;
 }

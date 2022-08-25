@@ -8,26 +8,9 @@ export const getUser = /* GraphQL */ `
       username
       email
       papercrafts {
-        items {
-          verified
-          id
-          createdAt
-          updatedAt
-          userPapercraftsId
-          owner
-        }
         nextToken
       }
       builds {
-        items {
-          verified
-          id
-          createdAt
-          updatedAt
-          userBuildsId
-          papercraftBuildsId
-          owner
-        }
         nextToken
       }
       profile_picture {
@@ -56,17 +39,6 @@ export const listUsers = /* GraphQL */ `
       items {
         username
         email
-        papercrafts {
-          nextToken
-        }
-        builds {
-          nextToken
-        }
-        profile_picture {
-          bucket
-          region
-          key
-        }
         description
         website
         instagram
@@ -80,23 +52,60 @@ export const listUsers = /* GraphQL */ `
     }
   }
 `;
+export const searchUsers = /* GraphQL */ `
+  query SearchUsers(
+    $filter: SearchableUserFilterInput
+    $sort: [SearchableUserSortInput]
+    $limit: Int
+    $nextToken: String
+    $from: Int
+    $aggregates: [SearchableUserAggregationInput]
+  ) {
+    searchUsers(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+      from: $from
+      aggregates: $aggregates
+    ) {
+      items {
+        username
+        email
+        description
+        website
+        instagram
+        twitter
+        id
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      total
+      aggregateItems {
+        name
+        result {
+          ... on SearchableAggregateScalarResult {
+            value
+          }
+          ... on SearchableAggregateBucketResult {
+            buckets {
+              key
+              doc_count
+            }
+          }
+        }
+      }
+    }
+  }
+`;
 export const getPapercraft = /* GraphQL */ `
   query GetPapercraft($id: ID!) {
     getPapercraft(id: $id) {
       user {
         username
         email
-        papercrafts {
-          nextToken
-        }
-        builds {
-          nextToken
-        }
-        profile_picture {
-          bucket
-          region
-          key
-        }
         description
         website
         instagram
@@ -127,26 +136,9 @@ export const getPapercraft = /* GraphQL */ `
         key
       }
       tags {
-        items {
-          id
-          papercraftID
-          tagID
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       builds {
-        items {
-          verified
-          id
-          createdAt
-          updatedAt
-          userBuildsId
-          papercraftBuildsId
-          owner
-        }
         nextToken
       }
       verified
@@ -166,44 +158,6 @@ export const listPapercrafts = /* GraphQL */ `
   ) {
     listPapercrafts(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        user {
-          username
-          email
-          description
-          website
-          instagram
-          twitter
-          id
-          createdAt
-          updatedAt
-          owner
-        }
-        glb {
-          bucket
-          region
-          key
-        }
-        pdo {
-          bucket
-          region
-          key
-        }
-        pdf_lineless {
-          bucket
-          region
-          key
-        }
-        pdf_lined {
-          bucket
-          region
-          key
-        }
-        tags {
-          nextToken
-        }
-        builds {
-          nextToken
-        }
         verified
         id
         createdAt
@@ -215,23 +169,56 @@ export const listPapercrafts = /* GraphQL */ `
     }
   }
 `;
+export const searchPapercrafts = /* GraphQL */ `
+  query SearchPapercrafts(
+    $filter: SearchablePapercraftFilterInput
+    $sort: [SearchablePapercraftSortInput]
+    $limit: Int
+    $nextToken: String
+    $from: Int
+    $aggregates: [SearchablePapercraftAggregationInput]
+  ) {
+    searchPapercrafts(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+      from: $from
+      aggregates: $aggregates
+    ) {
+      items {
+        verified
+        id
+        createdAt
+        updatedAt
+        userPapercraftsId
+        owner
+      }
+      nextToken
+      total
+      aggregateItems {
+        name
+        result {
+          ... on SearchableAggregateScalarResult {
+            value
+          }
+          ... on SearchableAggregateBucketResult {
+            buckets {
+              key
+              doc_count
+            }
+          }
+        }
+      }
+    }
+  }
+`;
 export const getBuild = /* GraphQL */ `
   query GetBuild($id: ID!) {
     getBuild(id: $id) {
       user {
         username
         email
-        papercrafts {
-          nextToken
-        }
-        builds {
-          nextToken
-        }
-        profile_picture {
-          bucket
-          region
-          key
-        }
         description
         website
         instagram
@@ -242,44 +229,6 @@ export const getBuild = /* GraphQL */ `
         owner
       }
       papercraft {
-        user {
-          username
-          email
-          description
-          website
-          instagram
-          twitter
-          id
-          createdAt
-          updatedAt
-          owner
-        }
-        glb {
-          bucket
-          region
-          key
-        }
-        pdo {
-          bucket
-          region
-          key
-        }
-        pdf_lineless {
-          bucket
-          region
-          key
-        }
-        pdf_lined {
-          bucket
-          region
-          key
-        }
-        tags {
-          nextToken
-        }
-        builds {
-          nextToken
-        }
         verified
         id
         createdAt
@@ -310,31 +259,6 @@ export const listBuilds = /* GraphQL */ `
   ) {
     listBuilds(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        user {
-          username
-          email
-          description
-          website
-          instagram
-          twitter
-          id
-          createdAt
-          updatedAt
-          owner
-        }
-        papercraft {
-          verified
-          id
-          createdAt
-          updatedAt
-          userPapercraftsId
-          owner
-        }
-        pictures {
-          bucket
-          region
-          key
-        }
         verified
         id
         createdAt
@@ -347,26 +271,61 @@ export const listBuilds = /* GraphQL */ `
     }
   }
 `;
+export const searchBuilds = /* GraphQL */ `
+  query SearchBuilds(
+    $filter: SearchableBuildFilterInput
+    $sort: [SearchableBuildSortInput]
+    $limit: Int
+    $nextToken: String
+    $from: Int
+    $aggregates: [SearchableBuildAggregationInput]
+  ) {
+    searchBuilds(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+      from: $from
+      aggregates: $aggregates
+    ) {
+      items {
+        verified
+        id
+        createdAt
+        updatedAt
+        userBuildsId
+        papercraftBuildsId
+        owner
+      }
+      nextToken
+      total
+      aggregateItems {
+        name
+        result {
+          ... on SearchableAggregateScalarResult {
+            value
+          }
+          ... on SearchableAggregateBucketResult {
+            buckets {
+              key
+              doc_count
+            }
+          }
+        }
+      }
+    }
+  }
+`;
 export const getTag = /* GraphQL */ `
   query GetTag($id: ID!) {
     getTag(id: $id) {
       title
-      title_encoded
       papercrafts {
-        items {
-          id
-          papercraftID
-          tagID
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       id
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -379,16 +338,53 @@ export const listTags = /* GraphQL */ `
     listTags(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         title
-        title_encoded
-        papercrafts {
-          nextToken
-        }
         id
         createdAt
         updatedAt
-        owner
       }
       nextToken
+    }
+  }
+`;
+export const searchTags = /* GraphQL */ `
+  query SearchTags(
+    $filter: SearchableTagFilterInput
+    $sort: [SearchableTagSortInput]
+    $limit: Int
+    $nextToken: String
+    $from: Int
+    $aggregates: [SearchableTagAggregationInput]
+  ) {
+    searchTags(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+      from: $from
+      aggregates: $aggregates
+    ) {
+      items {
+        title
+        id
+        createdAt
+        updatedAt
+      }
+      nextToken
+      total
+      aggregateItems {
+        name
+        result {
+          ... on SearchableAggregateScalarResult {
+            value
+          }
+          ... on SearchableAggregateBucketResult {
+            buckets {
+              key
+              doc_count
+            }
+          }
+        }
+      }
     }
   }
 `;
@@ -399,44 +395,6 @@ export const getPapercraftTags = /* GraphQL */ `
       papercraftID
       tagID
       papercraft {
-        user {
-          username
-          email
-          description
-          website
-          instagram
-          twitter
-          id
-          createdAt
-          updatedAt
-          owner
-        }
-        glb {
-          bucket
-          region
-          key
-        }
-        pdo {
-          bucket
-          region
-          key
-        }
-        pdf_lineless {
-          bucket
-          region
-          key
-        }
-        pdf_lined {
-          bucket
-          region
-          key
-        }
-        tags {
-          nextToken
-        }
-        builds {
-          nextToken
-        }
         verified
         id
         createdAt
@@ -446,14 +404,9 @@ export const getPapercraftTags = /* GraphQL */ `
       }
       tag {
         title
-        title_encoded
-        papercrafts {
-          nextToken
-        }
         id
         createdAt
         updatedAt
-        owner
       }
       createdAt
       updatedAt
@@ -472,22 +425,6 @@ export const listPapercraftTags = /* GraphQL */ `
         id
         papercraftID
         tagID
-        papercraft {
-          verified
-          id
-          createdAt
-          updatedAt
-          userPapercraftsId
-          owner
-        }
-        tag {
-          title
-          title_encoded
-          id
-          createdAt
-          updatedAt
-          owner
-        }
         createdAt
         updatedAt
         owner

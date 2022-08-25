@@ -4,10 +4,12 @@
 
 type User
   @model
+  @searchable
   @auth(
     rules: [
       { allow: public, operations: [read] }
       { allow: owner, operations: [read, update, delete] }
+      { allow: groups, groups: ["Admins"] }
     ]
   ) {
   username: String!
@@ -23,7 +25,14 @@ type User
 
 type Papercraft
   @model
-  @auth(rules: [{ allow: public, operations: [read] }, { allow: owner }]) {
+  @searchable
+  @auth(
+    rules: [
+      { allow: public, operations: [read] }
+      { allow: groups, groups: ["Admins"] }
+      { allow: owner }
+    ]
+  ) {
   user: User! @belongsTo
   glb: S3Object
   pdo: S3Object
@@ -36,14 +45,29 @@ type Papercraft
 
 type Build
   @model
-  @auth(rules: [{ allow: public, operations: [read] }, { allow: owner }]) {
+  @searchable
+  @auth(
+    rules: [
+      { allow: public, operations: [read] }
+      { allow: groups, groups: ["Admins"] }
+      { allow: owner }
+    ]
+  ) {
   user: User! @belongsTo
   papercraft: Papercraft @belongsTo
   pictures: [S3Object!]!
   verified: Boolean
 }
 
-type Tag @model @auth(rules: [{ allow: public, operations: [read] }]) {
+type Tag
+  @model
+  @searchable
+  @auth(
+    rules: [
+      { allow: public, operations: [read] }
+      { allow: groups, groups: ["Admins"] }
+    ]
+  ) {
   title: String!
   papercrafts: [Papercraft!]! @manyToMany(relationName: "PapercraftTags")
 }

@@ -7,7 +7,6 @@ export const listTags = /* GraphQL */ `
     listTags(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         title
-        title_encoded
         id
         createdAt
         updatedAt

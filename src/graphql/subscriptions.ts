@@ -8,26 +8,9 @@ export const onCreateUser = /* GraphQL */ `
       username
       email
       papercrafts {
-        items {
-          verified
-          id
-          createdAt
-          updatedAt
-          userPapercraftsId
-          owner
-        }
         nextToken
       }
       builds {
-        items {
-          verified
-          id
-          createdAt
-          updatedAt
-          userBuildsId
-          papercraftBuildsId
-          owner
-        }
         nextToken
       }
       profile_picture {
@@ -52,26 +35,9 @@ export const onUpdateUser = /* GraphQL */ `
       username
       email
       papercrafts {
-        items {
-          verified
-          id
-          createdAt
-          updatedAt
-          userPapercraftsId
-          owner
-        }
         nextToken
       }
       builds {
-        items {
-          verified
-          id
-          createdAt
-          updatedAt
-          userBuildsId
-          papercraftBuildsId
-          owner
-        }
         nextToken
       }
       profile_picture {
@@ -96,26 +62,9 @@ export const onDeleteUser = /* GraphQL */ `
       username
       email
       papercrafts {
-        items {
-          verified
-          id
-          createdAt
-          updatedAt
-          userPapercraftsId
-          owner
-        }
         nextToken
       }
       builds {
-        items {
-          verified
-          id
-          createdAt
-          updatedAt
-          userBuildsId
-          papercraftBuildsId
-          owner
-        }
         nextToken
       }
       profile_picture {
@@ -140,17 +89,6 @@ export const onCreatePapercraft = /* GraphQL */ `
       user {
         username
         email
-        papercrafts {
-          nextToken
-        }
-        builds {
-          nextToken
-        }
-        profile_picture {
-          bucket
-          region
-          key
-        }
         description
         website
         instagram
@@ -181,26 +119,9 @@ export const onCreatePapercraft = /* GraphQL */ `
         key
       }
       tags {
-        items {
-          id
-          papercraftID
-          tagID
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       builds {
-        items {
-          verified
-          id
-          createdAt
-          updatedAt
-          userBuildsId
-          papercraftBuildsId
-          owner
-        }
         nextToken
       }
       verified
@@ -218,17 +139,6 @@ export const onUpdatePapercraft = /* GraphQL */ `
       user {
         username
         email
-        papercrafts {
-          nextToken
-        }
-        builds {
-          nextToken
-        }
-        profile_picture {
-          bucket
-          region
-          key
-        }
         description
         website
         instagram
@@ -259,26 +169,9 @@ export const onUpdatePapercraft = /* GraphQL */ `
         key
       }
       tags {
-        items {
-          id
-          papercraftID
-          tagID
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       builds {
-        items {
-          verified
-          id
-          createdAt
-          updatedAt
-          userBuildsId
-          papercraftBuildsId
-          owner
-        }
         nextToken
       }
       verified
@@ -296,17 +189,6 @@ export const onDeletePapercraft = /* GraphQL */ `
       user {
         username
         email
-        papercrafts {
-          nextToken
-        }
-        builds {
-          nextToken
-        }
-        profile_picture {
-          bucket
-          region
-          key
-        }
         description
         website
         instagram
@@ -337,26 +219,9 @@ export const onDeletePapercraft = /* GraphQL */ `
         key
       }
       tags {
-        items {
-          id
-          papercraftID
-          tagID
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       builds {
-        items {
-          verified
-          id
-          createdAt
-          updatedAt
-          userBuildsId
-          papercraftBuildsId
-          owner
-        }
         nextToken
       }
       verified
@@ -374,17 +239,6 @@ export const onCreateBuild = /* GraphQL */ `
       user {
         username
         email
-        papercrafts {
-          nextToken
-        }
-        builds {
-          nextToken
-        }
-        profile_picture {
-          bucket
-          region
-          key
-        }
         description
         website
         instagram
@@ -395,44 +249,6 @@ export const onCreateBuild = /* GraphQL */ `
         owner
       }
       papercraft {
-        user {
-          username
-          email
-          description
-          website
-          instagram
-          twitter
-          id
-          createdAt
-          updatedAt
-          owner
-        }
-        glb {
-          bucket
-          region
-          key
-        }
-        pdo {
-          bucket
-          region
-          key
-        }
-        pdf_lineless {
-          bucket
-          region
-          key
-        }
-        pdf_lined {
-          bucket
-          region
-          key
-        }
-        tags {
-          nextToken
-        }
-        builds {
-          nextToken
-        }
         verified
         id
         createdAt
@@ -461,17 +277,6 @@ export const onUpdateBuild = /* GraphQL */ `
       user {
         username
         email
-        papercrafts {
-          nextToken
-        }
-        builds {
-          nextToken
-        }
-        profile_picture {
-          bucket
-          region
-          key
-        }
         description
         website
         instagram
@@ -482,44 +287,6 @@ export const onUpdateBuild = /* GraphQL */ `
         owner
       }
       papercraft {
-        user {
-          username
-          email
-          description
-          website
-          instagram
-          twitter
-          id
-          createdAt
-          updatedAt
-          owner
-        }
-        glb {
-          bucket
-          region
-          key
-        }
-        pdo {
-          bucket
-          region
-          key
-        }
-        pdf_lineless {
-          bucket
-          region
-          key
-        }
-        pdf_lined {
-          bucket
-          region
-          key
-        }
-        tags {
-          nextToken
-        }
-        builds {
-          nextToken
-        }
         verified
         id
         createdAt
@@ -548,17 +315,6 @@ export const onDeleteBuild = /* GraphQL */ `
       user {
         username
         email
-        papercrafts {
-          nextToken
-        }
-        builds {
-          nextToken
-        }
-        profile_picture {
-          bucket
-          region
-          key
-        }
         description
         website
         instagram
@@ -569,44 +325,6 @@ export const onDeleteBuild = /* GraphQL */ `
         owner
       }
       papercraft {
-        user {
-          username
-          email
-          description
-          website
-          instagram
-          twitter
-          id
-          createdAt
-          updatedAt
-          owner
-        }
-        glb {
-          bucket
-          region
-          key
-        }
-        pdo {
-          bucket
-          region
-          key
-        }
-        pdf_lineless {
-          bucket
-          region
-          key
-        }
-        pdf_lined {
-          bucket
-          region
-          key
-        }
-        tags {
-          nextToken
-        }
-        builds {
-          nextToken
-        }
         verified
         id
         createdAt
@@ -630,71 +348,41 @@ export const onDeleteBuild = /* GraphQL */ `
   }
 `;
 export const onCreateTag = /* GraphQL */ `
-  subscription OnCreateTag($owner: String) {
-    onCreateTag(owner: $owner) {
+  subscription OnCreateTag {
+    onCreateTag {
       title
-      title_encoded
       papercrafts {
-        items {
-          id
-          papercraftID
-          tagID
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       id
       createdAt
       updatedAt
-      owner
     }
   }
 `;
 export const onUpdateTag = /* GraphQL */ `
-  subscription OnUpdateTag($owner: String) {
-    onUpdateTag(owner: $owner) {
+  subscription OnUpdateTag {
+    onUpdateTag {
       title
-      title_encoded
       papercrafts {
-        items {
-          id
-          papercraftID
-          tagID
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       id
       createdAt
       updatedAt
-      owner
     }
   }
 `;
 export const onDeleteTag = /* GraphQL */ `
-  subscription OnDeleteTag($owner: String) {
-    onDeleteTag(owner: $owner) {
+  subscription OnDeleteTag {
+    onDeleteTag {
       title
-      title_encoded
       papercrafts {
-        items {
-          id
-          papercraftID
-          tagID
-          createdAt
-          updatedAt
-          owner
-        }
         nextToken
       }
       id
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -705,44 +393,6 @@ export const onCreatePapercraftTags = /* GraphQL */ `
       papercraftID
       tagID
       papercraft {
-        user {
-          username
-          email
-          description
-          website
-          instagram
-          twitter
-          id
-          createdAt
-          updatedAt
-          owner
-        }
-        glb {
-          bucket
-          region
-          key
-        }
-        pdo {
-          bucket
-          region
-          key
-        }
-        pdf_lineless {
-          bucket
-          region
-          key
-        }
-        pdf_lined {
-          bucket
-          region
-          key
-        }
-        tags {
-          nextToken
-        }
-        builds {
-          nextToken
-        }
         verified
         id
         createdAt
@@ -752,14 +402,9 @@ export const onCreatePapercraftTags = /* GraphQL */ `
       }
       tag {
         title
-        title_encoded
-        papercrafts {
-          nextToken
-        }
         id
         createdAt
         updatedAt
-        owner
       }
       createdAt
       updatedAt
@@ -774,44 +419,6 @@ export const onUpdatePapercraftTags = /* GraphQL */ `
       papercraftID
       tagID
       papercraft {
-        user {
-          username
-          email
-          description
-          website
-          instagram
-          twitter
-          id
-          createdAt
-          updatedAt
-          owner
-        }
-        glb {
-          bucket
-          region
-          key
-        }
-        pdo {
-          bucket
-          region
-          key
-        }
-        pdf_lineless {
-          bucket
-          region
-          key
-        }
-        pdf_lined {
-          bucket
-          region
-          key
-        }
-        tags {
-          nextToken
-        }
-        builds {
-          nextToken
-        }
         verified
         id
         createdAt
@@ -821,14 +428,9 @@ export const onUpdatePapercraftTags = /* GraphQL */ `
       }
       tag {
         title
-        title_encoded
-        papercrafts {
-          nextToken
-        }
         id
         createdAt
         updatedAt
-        owner
       }
       createdAt
       updatedAt
@@ -843,44 +445,6 @@ export const onDeletePapercraftTags = /* GraphQL */ `
       papercraftID
       tagID
       papercraft {
-        user {
-          username
-          email
-          description
-          website
-          instagram
-          twitter
-          id
-          createdAt
-          updatedAt
-          owner
-        }
-        glb {
-          bucket
-          region
-          key
-        }
-        pdo {
-          bucket
-          region
-          key
-        }
-        pdf_lineless {
-          bucket
-          region
-          key
-        }
-        pdf_lined {
-          bucket
-          region
-          key
-        }
-        tags {
-          nextToken
-        }
-        builds {
-          nextToken
-        }
         verified
         id
         createdAt
@@ -890,14 +454,9 @@ export const onDeletePapercraftTags = /* GraphQL */ `
       }
       tag {
         title
-        title_encoded
-        papercrafts {
-          nextToken
-        }
         id
         createdAt
         updatedAt
-        owner
       }
       createdAt
       updatedAt
