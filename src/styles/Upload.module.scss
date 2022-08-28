@@ -22,7 +22,7 @@ $completion_bar_height: 50px;
 
   @include respond-to("small") {
     flex-direction: row;
-    height: calc(
+    min-height: calc(
       100vh - var(--header-height) - var(--notice-bar-height) -
         $completion_bar_height
     );
@@ -37,11 +37,11 @@ $completion_bar_height: 50px;
   width: 100%;
   min-height: calc(
     100vh - var(--header-height) - var(--notice-bar-height) -
-      $completion_bar_height
+      $completion_bar_height + 1px
   );
 
-  &:last-of-type {
-    border-top: $border;
+  &:first-of-type {
+    border-bottom: $border;
   }
 
   @include respond-to("small") {
@@ -49,8 +49,13 @@ $completion_bar_height: 50px;
     width: auto;
     flex: 1;
 
+    &:first-of-type {
+      border-bottom: none;
+      border-right: $border;
+      margin-right: -1px;
+    }
+
     &:last-of-type {
-      border-top: none;
       border-left: $border;
     }
   }
@@ -63,6 +68,26 @@ $completion_bar_height: 50px;
   justify-content: flex-end;
   align-items: flex-start;
   padding: 20px;
+  position: relative;
+}
+
+.input_outline {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
+  border: 1px dashed #303030;
+
+  &:before {
+    content: "INPUT FORM";
+    letter-spacing: 3px;
+    position: absolute;
+    top: 0px;
+    font-weight: 700;
+    left: 5px;
+    transform: translateY(-100%);
+  }
 }
 
 .annotation {
@@ -70,6 +95,7 @@ $completion_bar_height: 50px;
   opacity: 0.3;
   font-size: 10px;
   border-bottom: $border;
+  margin-top: 5px;
 }
 
 .title_input {
@@ -99,13 +125,14 @@ $completion_bar_height: 50px;
 }
 
 .completion_bar {
-  position: fixed;
+  position: sticky;
   bottom: 0;
   width: 100%;
   background-color: white;
   padding: 5px 10px;
   height: $completion_bar_height;
   border-top: $border;
+  border-bottom: $border;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -180,8 +207,12 @@ $completion_bar_height: 50px;
 }
 
 .preview_header {
+  position: sticky;
+  top: 0;
+  left: 0;
   border-bottom: $border;
   width: 100%;
-  padding: 10px;
+  padding: 3px 5px;
   font-size: 20px;
+  font-weight: 700;
 }

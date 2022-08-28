@@ -52,8 +52,8 @@ const getTags = debounce(
 // };
 
 const UploadDesignPage: NextPage = () => {
-  const titleRef = useRef<HTMLTextAreaElement>(null);
-  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const [tags, setTags] = useState<APIt.Tag[]>([]);
 
   const [images, setImages] = useState<FileList | null>(null);
@@ -74,12 +74,14 @@ const UploadDesignPage: NextPage = () => {
       <div className={s.upload_container}>
         <div className={s.upload_col}>
           <div className={s.column_header}>
-            <b>upload a papercraft design!</b> after filling in all of the required fields,
-            the submit button will turn green and you can post your papercraft
-            to our website. 
+            <b>upload a papercraft design!</b> after filling in all of the
+            required fields, the submit button will turn green and you can post
+            your papercraft to our website.
           </div>
           <div className={s.spacer}></div>
           <div className={s.input_form}>
+            <div className={s.input_outline}>
+            </div>
             <div className={s.annotation}>
               Title * –– <i>what is this papercraft of?</i>
             </div>
@@ -87,7 +89,10 @@ const UploadDesignPage: NextPage = () => {
               className={s.title_input}
               placeholder={"Write a title..."}
               spellCheck={false}
-              ref={titleRef}
+              value={title}
+              onChange={(event) => {
+                setTitle(event.target.value.replace(/  |\r\n|\n|\r/gm, ""));
+              }}
             ></TextareaAutosize>
             <div className={s.annotation}>
               Description * ––{" "}
@@ -95,9 +100,13 @@ const UploadDesignPage: NextPage = () => {
             </div>
             <TextareaAutosize
               className={s.description_input}
+              value={description}
               placeholder={"Write a description..."}
               spellCheck={false}
-              ref={descriptionRef}
+              minRows={3}
+              onChange={(event) => {
+                setDescription(event.target.value);
+              }}
             ></TextareaAutosize>
             <div className={s.annotation}>
               Tags ––{" "}
@@ -116,25 +125,58 @@ const UploadDesignPage: NextPage = () => {
                 <div className={s.annotation}>
                   Image * –– <i>what does the craft look like?</i>
                 </div>
-                <FileUpload files={images} setFiles={setImages} accept={"image/*"}>.PNG, .JPG...</FileUpload>
+                <FileUpload
+                  files={images}
+                  setFiles={setImages}
+                  accept={"image/*"}
+                >
+                  .PNG, .JPG...
+                </FileUpload>
               </div>
               <div className={s.file_col}>
                 <div className={s.annotation}>
                   Files * –– <i>the craft itself.</i>
                 </div>
-                <FileUpload files={pdo} setFiles={setPdo} accept={".pdo"} withIcon>.PDO</FileUpload>
-                <FileUpload files={pdfLineless} setFiles={setPdfLineless} accept={"application/pdf"} withIcon>.PDF - lineless</FileUpload>
-                <FileUpload files={pdfLined} setFiles={setPdfLined} accept={"application/pdf"} withIcon>.PDF - lined</FileUpload>
-                <FileUpload files={glb} setFiles={setGlb} accept={".glb"} withIcon>.GLB</FileUpload>
+                <FileUpload
+                  files={pdo}
+                  setFiles={setPdo}
+                  accept={".pdo"}
+                  withIcon
+                >
+                  .PDO
+                </FileUpload>
+                <FileUpload
+                  files={pdfLined}
+                  setFiles={setPdfLined}
+                  accept={"application/pdf"}
+                  withIcon
+                >
+                  .PDF - lined
+                </FileUpload>
+                <FileUpload
+                  files={pdfLineless}
+                  setFiles={setPdfLineless}
+                  accept={"application/pdf"}
+                  withIcon
+                >
+                  .PDF - lineless
+                </FileUpload>
+                <FileUpload
+                  files={glb}
+                  setFiles={setGlb}
+                  accept={".glb"}
+                  withIcon
+                >
+                  .GLB
+                </FileUpload>
               </div>
             </div>
           </div>
         </div>
         <div className={s.upload_col}>
-          <div className={s.preview_header}>
-            PREVIEW
-          </div>
-          <div className={s.spacer}></div></div>
+          <div className={s.preview_header}>PREVIEW</div>
+          <div className={s.spacer}></div>
+        </div>
       </div>
       <div className={s.completion_bar}>
         COMPLETION
