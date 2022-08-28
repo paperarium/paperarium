@@ -8,6 +8,14 @@ const nextConfig = {
   swcMinify: true,
   webpack: (config) => {
     config.resolve.extensions = [".web.js", ...config.resolve.extensions];
+    // for pdf viewer
+    config.module.rules.push({
+      test: /pdfjs-dist\/build\/pdf\.worker\.js$/,
+      type: "asset/resource",
+      generator: {
+        filename: "static/chunks/[name].[hash][ext]",
+      },
+    });
     return config;
   },
 };

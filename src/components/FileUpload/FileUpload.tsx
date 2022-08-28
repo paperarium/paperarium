@@ -9,19 +9,17 @@ import { FiX, FiCheckCircle, FiUpload } from "react-icons/fi";
 import { ChangeEventHandler, MouseEventHandler, useRef } from "react";
 
 type FileUploadProps = {
-  files: FileList | null;
-  setFiles: (newFile: FileList | null) => void;
-  multiple?: boolean;
+  file: File | null;
+  setFile: (newFile: File | null) => void;
   accept?: string;
   withIcon?: boolean;
   children?: React.ReactNode;
 };
 
 const FileUpload: React.FC<FileUploadProps> = function FileUpload({
-  files,
-  multiple,
+  file,
   accept,
-  setFiles,
+  setFile,
   children,
   withIcon,
 }) {
@@ -29,21 +27,21 @@ const FileUpload: React.FC<FileUploadProps> = function FileUpload({
   const onChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     if (!event.target.files) return;
     console.log(event.target.files);
-    setFiles(event.target.files);
+    setFile(event.target.files[0]);
   };
 
   const onClearClick: MouseEventHandler = (event) => {
     event.stopPropagation();
-    setFiles(null);
+    setFile(null);
     if (inputRef.current) inputRef.current.value = "";
   };
 
   return (
     <>
       <label
-        className={files ? s.file_input_filled : s.file_input}
+        className={file ? s.file_input_filled : s.file_input}
         onClick={
-          !files
+          !file
             ? () => {
                 if (!inputRef.current) return;
                 inputRef.current.click();
@@ -55,25 +53,25 @@ const FileUpload: React.FC<FileUploadProps> = function FileUpload({
         {withIcon ? (
           <>
             <div className={s.spacer}>
-              {files ? (
+              {file ? (
                 <>
                   <FiCheckCircle />
-                  {files[0].name}
+                  {file.name}
                 </>
               ) : null}
             </div>
             <div className={s.file_icon}>
-              {files ? <FiX onClick={onClearClick} /> : <FiUpload />}
+              {file ? <FiX onClick={onClearClick} /> : <FiUpload />}
             </div>
           </>
         ) : null}
       </label>
       <input
         type="file"
-        multiple={multiple}
+        multiple={false}
         ref={inputRef}
         accept={accept}
-        className={files ? s.file_input_real_populated : s.file_input_real}
+        className={file ? s.file_input_real_populated : s.file_input_real}
         onChange={onChange}
       />
     </>

@@ -1,5 +1,5 @@
-// @ts-nocheck
 import type { NextPage } from "next";
+import React, { useRef } from "react";
 import Head from "next/head";
 import s from "../../styles/Upload.module.scss";
 import TextareaAutosize from "react-textarea-autosize";
@@ -7,10 +7,16 @@ import { API } from "@aws-amplify/api";
 import { graphqlOperation, GraphQLResult } from "@aws-amplify/api-graphql";
 import { listTags } from "../../graphql/custom-queries";
 import * as APIt from "../../API";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { debounce } from "ts-debounce";
 import dynamic from "next/dynamic";
 import FileUpload from "../../components/FileUpload/FileUpload";
+import Image from "next/image";
+import Layout from "../../components/Layout/Layout";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Navigation } from "swiper";
+import MultiFileUpload from "../../components/MultiFileUpload/MultiFileUpload";
+import PDFDisplay from "../../components/PDFDisplay/PDFDisplay";
 
 const AsyncSelect = dynamic(
   () => import("react-select/async").then((mod) => mod.default),
@@ -39,28 +45,24 @@ const getTags = debounce(
   { maxWait: 1200 }
 );
 
-// const uploadTag = async (title: string, encoded: string) => {
-//   API.graphql({
-//     query: createTag,
-//     variables: {
-//       input: {
-//         title: title,
-//         id: encoded,
-//       },
-//     },
-//   });
-// };
+export type SerializedFile = {
+  file: File;
+  objectURL: string;
+};
 
 const UploadDesignPage: NextPage = () => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [tags, setTags] = useState<APIt.Tag[]>([]);
 
-  const [images, setImages] = useState<FileList | null>(null);
-  const [pdo, setPdo] = useState<FileList | null>(null);
-  const [pdfLined, setPdfLined] = useState<FileList | null>(null);
-  const [pdfLineless, setPdfLineless] = useState<FileList | null>(null);
-  const [glb, setGlb] = useState<FileList | null>(null);
+  const [images, setImages] = useState<File[] | null>(null);
+  const imageURLs = useRef<string[] | null>(null);
+  const [pdo, setPdo] = useState<File | null>(null);
+  const [pdfLined, setPdfLined] = useState<SerializedFile | null>(null);
+  const [pdfLineless, setPdfLineless] = useState<SerializedFile | null>(null);
+  const [glb, setGlb] = useState<File | null>(null);
+
+  const date = new Date();
 
   return (
     <>
@@ -80,8 +82,7 @@ const UploadDesignPage: NextPage = () => {
           </div>
           <div className={s.spacer}></div>
           <div className={s.input_form}>
-            <div className={s.input_outline}>
-            </div>
+            <div className={s.input_outline}></div>
             <div className={s.annotation}>
               Title * –– <i>what is this papercraft of?</i>
             </div>
@@ -100,9 +101,9 @@ const UploadDesignPage: NextPage = () => {
             </div>
             <TextareaAutosize
               className={s.description_input}
-              value={description}
               placeholder={"Write a description..."}
               spellCheck={false}
+              value={description}
               minRows={3}
               onChange={(event) => {
                 setDescription(event.target.value);
@@ -121,49 +122,78 @@ const UploadDesignPage: NextPage = () => {
               onChange={(tags) => setTags(tags as APIt.Tag[])}
             />
             <div className={s.file_row}>
-              <div className={s.file_col}>
+              <div className={s.file_col} style={{ flex: 1 }}>
                 <div className={s.annotation}>
                   Image * –– <i>what does the craft look like?</i>
                 </div>
-                <FileUpload
+                <MultiFileUpload
                   files={images}
-                  setFiles={setImages}
+                  setFiles={(images) => {
+                    setImages(images);
+                    if (images == null) {
+                      imageURLs.current = null;
+                    } else {
+                      const URLs = [];
+                      for (let i = 0; i < images.length; i++) {
+                        URLs.push(URL.createObjectURL(images[i]));
+                      }
+                      imageURLs.current = URLs;
+                    }
+                  }}
                   accept={"image/*"}
                 >
                   .PNG, .JPG...
-                </FileUpload>
+                </MultiFileUpload>
               </div>
-              <div className={s.file_col}>
+              <div className={s.file_col} style={{ flex: 2 }}>
                 <div className={s.annotation}>
                   Files * –– <i>the craft itself.</i>
                 </div>
                 <FileUpload
-                  files={pdo}
-                  setFiles={setPdo}
+                  file={pdo}
+                  setFile={setPdo}
                   accept={".pdo"}
                   withIcon
                 >
                   .PDO
                 </FileUpload>
                 <FileUpload
-                  files={pdfLined}
-                  setFiles={setPdfLined}
+                  file={pdfLined ? pdfLined.file : null}
+                  setFile={(newPdf) => {
+                    if (!newPdf) {
+                      setPdfLined(null);
+                      return;
+                    }
+                    setPdfLined({
+                      file: newPdf,
+                      objectURL: URL.createObjectURL(newPdf),
+                    });
+                  }}
                   accept={"application/pdf"}
                   withIcon
                 >
                   .PDF - lined
                 </FileUpload>
                 <FileUpload
-                  files={pdfLineless}
-                  setFiles={setPdfLineless}
+                  file={pdfLineless ? pdfLineless.file : null}
+                  setFile={(newPdf) => {
+                    if (!newPdf) {
+                      setPdfLineless(null);
+                      return;
+                    }
+                    setPdfLineless({
+                      file: newPdf,
+                      objectURL: URL.createObjectURL(newPdf),
+                    });
+                  }}
                   accept={"application/pdf"}
                   withIcon
                 >
                   .PDF - lineless
                 </FileUpload>
                 <FileUpload
-                  files={glb}
-                  setFiles={setGlb}
+                  file={glb}
+                  setFile={setGlb}
                   accept={".glb"}
                   withIcon
                 >
@@ -173,9 +203,66 @@ const UploadDesignPage: NextPage = () => {
             </div>
           </div>
         </div>
-        <div className={s.upload_col}>
+        <div className={s.divider}></div>
+        <div className={s.preview_col}>
           <div className={s.preview_header}>PREVIEW</div>
-          <div className={s.spacer}></div>
+          <div className={s.preview_container}>
+            <div className={s.preview_main_content}>
+              <Swiper
+                pagination={true}
+                navigation={true}
+                className={s.image_container}
+                modules={[Pagination, Navigation]}
+              >
+                {imageURLs.current ? (
+                  imageURLs.current.map((imgURL, i) => (
+                    <SwiperSlide key={`${imgURL}_${i}`}>
+                      <Image src={imgURL} layout={"fill"} objectFit={"cover"} />
+                    </SwiperSlide>
+                  ))
+                ) : (
+                  <SwiperSlide>
+                    <div className={s.preview_no_image_display}>
+                      images of your papercraft will go here
+                    </div>
+                  </SwiperSlide>
+                )}
+              </Swiper>
+              <div className={s.preview_content_container}>
+                <TextareaAutosize
+                  className={s.preview_title}
+                  value={title}
+                  placeholder={"Your title..."}
+                  spellCheck={false}
+                  readOnly={true}
+                ></TextareaAutosize>
+                <div className={s.date_input}>{new Date().toDateString()}</div>
+                <TextareaAutosize
+                  className={s.preview_description}
+                  value={description}
+                  placeholder={"Your description..."}
+                  spellCheck={false}
+                  minRows={3}
+                  readOnly={true}
+                ></TextareaAutosize>
+              </div>
+            </div>
+            <div className={s.preview_pdf_column}>
+              <div className={s.pdf_type_container}>
+                <div className={s.pdf_type}>LINED</div>
+                <div className={s.pdf_type}>LINELESS</div>
+              </div>
+              <div className={s.pdf_preview_container}>
+                {pdfLineless ? (
+                  <PDFDisplay pdf={pdfLineless} defaultWidth={230} />
+                ) : (
+                  <div className={s.preview_no_image_display}>
+                    your pdf will show here
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div className={s.completion_bar}>
@@ -185,5 +272,9 @@ const UploadDesignPage: NextPage = () => {
     </>
   );
 };
+
+(UploadDesignPage as any).getLayout = (page: React.ReactNode) => (
+  <Layout hideFooter>{page}</Layout>
+);
 
 export default UploadDesignPage;

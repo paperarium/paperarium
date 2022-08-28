@@ -10,9 +10,10 @@ import s from "./Layout.module.scss";
 
 type LayoutProps = {
   children: React.ReactNode;
+  hideFooter?: boolean;
 }
 
-const Layout: React.FC<LayoutProps> = function Layout({ children }) {
+const Layout: React.FC<LayoutProps> = function Layout({ children, hideFooter }) {
   return (
     <>
       <main className={s.main}>
@@ -20,6 +21,7 @@ const Layout: React.FC<LayoutProps> = function Layout({ children }) {
         {/* <Cursor /> */}
         {children}
       </main>
+      {!hideFooter ? 
       <footer className={s.footer}>
         <a
           href="https://evankirkiles.com"
@@ -28,7 +30,7 @@ const Layout: React.FC<LayoutProps> = function Layout({ children }) {
         >
           website designed by evan kirkiles
         </a>
-      </footer>
+      </footer> : null}
     </>
   );
 }

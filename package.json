@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^3.4.1",
+    "@types/react-pdf": "^5.7.2",
     "@types/react-transition-group": "^4.4.5",
     "aws-amplify": "^4.3.32",
     "hamburger-react": "^2.5.0",
@@ -18,10 +19,12 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.4.0",
+    "react-pdf": "^5.7.2",
     "react-select": "^5.4.0",
     "react-textarea-autosize": "^8.3.4",
     "react-transition-group": "^4.4.5",
     "sass": "^1.54.5",
+    "swiper": "^8.3.2",
     "ts-debounce": "^4.0.0"
   },
   "devDependencies": {

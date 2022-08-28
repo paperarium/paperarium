@@ -85,11 +85,14 @@ export type PapercraftTags = {
 export type Papercraft = {
   __typename: "Papercraft",
   user: User,
+  title: string,
+  description: string,
   glb?: S3Object | null,
   pdo?: S3Object | null,
   pdf_lineless?: S3Object | null,
   pdf_lined: S3Object,
   tags?: ModelPapercraftTagsConnection | null,
+  pictures:  Array<S3Object >,
   builds?: ModelBuildConnection | null,
   verified?: boolean | null,
   id: string,
@@ -132,6 +135,7 @@ export type Build = {
   __typename: "Build",
   user: User,
   papercraft?: Papercraft | null,
+  description?: string | null,
   pictures:  Array<S3Object >,
   verified?: boolean | null,
   id: string,
@@ -194,16 +198,21 @@ export type DeleteUserInput = {
 };
 
 export type CreatePapercraftInput = {
+  title: string,
+  description: string,
   glb?: S3ObjectInput | null,
   pdo?: S3ObjectInput | null,
   pdf_lineless?: S3ObjectInput | null,
   pdf_lined: S3ObjectInput,
+  pictures: Array< S3ObjectInput >,
   verified?: boolean | null,
   id?: string | null,
   userPapercraftsId: string,
 };
 
 export type ModelPapercraftConditionInput = {
+  title?: ModelStringInput | null,
+  description?: ModelStringInput | null,
   verified?: ModelBooleanInput | null,
   and?: Array< ModelPapercraftConditionInput | null > | null,
   or?: Array< ModelPapercraftConditionInput | null > | null,
@@ -235,10 +244,13 @@ export type ModelIDInput = {
 };
 
 export type UpdatePapercraftInput = {
+  title?: string | null,
+  description?: string | null,
   glb?: S3ObjectInput | null,
   pdo?: S3ObjectInput | null,
   pdf_lineless?: S3ObjectInput | null,
   pdf_lined?: S3ObjectInput | null,
+  pictures?: Array< S3ObjectInput > | null,
   verified?: boolean | null,
   id: string,
   userPapercraftsId: string,
@@ -249,6 +261,7 @@ export type DeletePapercraftInput = {
 };
 
 export type CreateBuildInput = {
+  description?: string | null,
   pictures: Array< S3ObjectInput >,
   verified?: boolean | null,
   id?: string | null,
@@ -257,6 +270,7 @@ export type CreateBuildInput = {
 };
 
 export type ModelBuildConditionInput = {
+  description?: ModelStringInput | null,
   verified?: ModelBooleanInput | null,
   and?: Array< ModelBuildConditionInput | null > | null,
   or?: Array< ModelBuildConditionInput | null > | null,
@@ -266,6 +280,7 @@ export type ModelBuildConditionInput = {
 };
 
 export type UpdateBuildInput = {
+  description?: string | null,
   pictures?: Array< S3ObjectInput > | null,
   verified?: boolean | null,
   id: string,
@@ -475,6 +490,8 @@ export type SearchableAggregateBucketResultItem = {
 };
 
 export type ModelPapercraftFilterInput = {
+  title?: ModelStringInput | null,
+  description?: ModelStringInput | null,
   verified?: ModelBooleanInput | null,
   and?: Array< ModelPapercraftFilterInput | null > | null,
   or?: Array< ModelPapercraftFilterInput | null > | null,
@@ -483,6 +500,8 @@ export type ModelPapercraftFilterInput = {
 };
 
 export type SearchablePapercraftFilterInput = {
+  title?: SearchableStringFilterInput | null,
+  description?: SearchableStringFilterInput | null,
   verified?: SearchableBooleanFilterInput | null,
   id?: SearchableIDFilterInput | null,
   createdAt?: SearchableStringFilterInput | null,
@@ -504,6 +523,8 @@ export type SearchablePapercraftSortInput = {
 };
 
 export enum SearchablePapercraftSortableFields {
+  title = "title",
+  description = "description",
   verified = "verified",
   id = "id",
   createdAt = "createdAt",
@@ -519,6 +540,8 @@ export type SearchablePapercraftAggregationInput = {
 };
 
 export enum SearchablePapercraftAggregateField {
+  title = "title",
+  description = "description",
   verified = "verified",
   id = "id",
   createdAt = "createdAt",
@@ -536,6 +559,7 @@ export type SearchablePapercraftConnection = {
 };
 
 export type ModelBuildFilterInput = {
+  description?: ModelStringInput | null,
   verified?: ModelBooleanInput | null,
   and?: Array< ModelBuildFilterInput | null > | null,
   or?: Array< ModelBuildFilterInput | null > | null,
@@ -545,6 +569,7 @@ export type ModelBuildFilterInput = {
 };
 
 export type SearchableBuildFilterInput = {
+  description?: SearchableStringFilterInput | null,
   verified?: SearchableBooleanFilterInput | null,
   id?: SearchableIDFilterInput | null,
   createdAt?: SearchableStringFilterInput | null,
@@ -562,6 +587,7 @@ export type SearchableBuildSortInput = {
 };
 
 export enum SearchableBuildSortableFields {
+  description = "description",
   verified = "verified",
   id = "id",
   createdAt = "createdAt",
@@ -578,6 +604,7 @@ export type SearchableBuildAggregationInput = {
 };
 
 export enum SearchableBuildAggregateField {
+  description = "description",
   verified = "verified",
   id = "id",
   createdAt = "createdAt",
@@ -795,6 +822,8 @@ export type CreatePapercraftMutation = {
       updatedAt: string,
       owner?: string | null,
     },
+    title: string,
+    description: string,
     glb?:  {
       __typename: "S3Object",
       bucket: string,
@@ -823,6 +852,12 @@ export type CreatePapercraftMutation = {
       __typename: "ModelPapercraftTagsConnection",
       nextToken?: string | null,
     } | null,
+    pictures:  Array< {
+      __typename: "S3Object",
+      bucket: string,
+      region: string,
+      key: string,
+    } >,
     builds?:  {
       __typename: "ModelBuildConnection",
       nextToken?: string | null,
@@ -857,6 +892,8 @@ export type UpdatePapercraftMutation = {
       updatedAt: string,
       owner?: string | null,
     },
+    title: string,
+    description: string,
     glb?:  {
       __typename: "S3Object",
       bucket: string,
@@ -885,6 +922,12 @@ export type UpdatePapercraftMutation = {
       __typename: "ModelPapercraftTagsConnection",
       nextToken?: string | null,
     } | null,
+    pictures:  Array< {
+      __typename: "S3Object",
+      bucket: string,
+      region: string,
+      key: string,
+    } >,
     builds?:  {
       __typename: "ModelBuildConnection",
       nextToken?: string | null,
@@ -919,6 +962,8 @@ export type DeletePapercraftMutation = {
       updatedAt: string,
       owner?: string | null,
     },
+    title: string,
+    description: string,
     glb?:  {
       __typename: "S3Object",
       bucket: string,
@@ -947,6 +992,12 @@ export type DeletePapercraftMutation = {
       __typename: "ModelPapercraftTagsConnection",
       nextToken?: string | null,
     } | null,
+    pictures:  Array< {
+      __typename: "S3Object",
+      bucket: string,
+      region: string,
+      key: string,
+    } >,
     builds?:  {
       __typename: "ModelBuildConnection",
       nextToken?: string | null,
@@ -983,6 +1034,8 @@ export type CreateBuildMutation = {
     },
     papercraft?:  {
       __typename: "Papercraft",
+      title: string,
+      description: string,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -990,6 +1043,7 @@ export type CreateBuildMutation = {
       userPapercraftsId: string,
       owner?: string | null,
     } | null,
+    description?: string | null,
     pictures:  Array< {
       __typename: "S3Object",
       bucket: string,
@@ -1029,6 +1083,8 @@ export type UpdateBuildMutation = {
     },
     papercraft?:  {
       __typename: "Papercraft",
+      title: string,
+      description: string,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -1036,6 +1092,7 @@ export type UpdateBuildMutation = {
       userPapercraftsId: string,
       owner?: string | null,
     } | null,
+    description?: string | null,
     pictures:  Array< {
       __typename: "S3Object",
       bucket: string,
@@ -1075,6 +1132,8 @@ export type DeleteBuildMutation = {
     },
     papercraft?:  {
       __typename: "Papercraft",
+      title: string,
+      description: string,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -1082,6 +1141,7 @@ export type DeleteBuildMutation = {
       userPapercraftsId: string,
       owner?: string | null,
     } | null,
+    description?: string | null,
     pictures:  Array< {
       __typename: "S3Object",
       bucket: string,
@@ -1168,6 +1228,8 @@ export type CreatePapercraftTagsMutation = {
     tagID: string,
     papercraft:  {
       __typename: "Papercraft",
+      title: string,
+      description: string,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -1201,6 +1263,8 @@ export type UpdatePapercraftTagsMutation = {
     tagID: string,
     papercraft:  {
       __typename: "Papercraft",
+      title: string,
+      description: string,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -1234,6 +1298,8 @@ export type DeletePapercraftTagsMutation = {
     tagID: string,
     papercraft:  {
       __typename: "Papercraft",
+      title: string,
+      description: string,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -1380,6 +1446,8 @@ export type GetPapercraftQuery = {
       updatedAt: string,
       owner?: string | null,
     },
+    title: string,
+    description: string,
     glb?:  {
       __typename: "S3Object",
       bucket: string,
@@ -1408,6 +1476,12 @@ export type GetPapercraftQuery = {
       __typename: "ModelPapercraftTagsConnection",
       nextToken?: string | null,
     } | null,
+    pictures:  Array< {
+      __typename: "S3Object",
+      bucket: string,
+      region: string,
+      key: string,
+    } >,
     builds?:  {
       __typename: "ModelBuildConnection",
       nextToken?: string | null,
@@ -1432,6 +1506,8 @@ export type ListPapercraftsQuery = {
     __typename: "ModelPapercraftConnection",
     items:  Array< {
       __typename: "Papercraft",
+      title: string,
+      description: string,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -1457,6 +1533,8 @@ export type SearchPapercraftsQuery = {
     __typename: "SearchablePapercraftConnection",
     items:  Array< {
       __typename: "Papercraft",
+      title: string,
+      description: string,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -1507,6 +1585,8 @@ export type GetBuildQuery = {
     },
     papercraft?:  {
       __typename: "Papercraft",
+      title: string,
+      description: string,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -1514,6 +1594,7 @@ export type GetBuildQuery = {
       userPapercraftsId: string,
       owner?: string | null,
     } | null,
+    description?: string | null,
     pictures:  Array< {
       __typename: "S3Object",
       bucket: string,
@@ -1541,6 +1622,7 @@ export type ListBuildsQuery = {
     __typename: "ModelBuildConnection",
     items:  Array< {
       __typename: "Build",
+      description?: string | null,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -1567,6 +1649,7 @@ export type SearchBuildsQuery = {
     __typename: "SearchableBuildConnection",
     items:  Array< {
       __typename: "Build",
+      description?: string | null,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -1686,6 +1769,8 @@ export type GetPapercraftTagsQuery = {
     tagID: string,
     papercraft:  {
       __typename: "Papercraft",
+      title: string,
+      description: string,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -1850,6 +1935,8 @@ export type OnCreatePapercraftSubscription = {
       updatedAt: string,
       owner?: string | null,
     },
+    title: string,
+    description: string,
     glb?:  {
       __typename: "S3Object",
       bucket: string,
@@ -1878,6 +1965,12 @@ export type OnCreatePapercraftSubscription = {
       __typename: "ModelPapercraftTagsConnection",
       nextToken?: string | null,
     } | null,
+    pictures:  Array< {
+      __typename: "S3Object",
+      bucket: string,
+      region: string,
+      key: string,
+    } >,
     builds?:  {
       __typename: "ModelBuildConnection",
       nextToken?: string | null,
@@ -1911,6 +2004,8 @@ export type OnUpdatePapercraftSubscription = {
       updatedAt: string,
       owner?: string | null,
     },
+    title: string,
+    description: string,
     glb?:  {
       __typename: "S3Object",
       bucket: string,
@@ -1939,6 +2034,12 @@ export type OnUpdatePapercraftSubscription = {
       __typename: "ModelPapercraftTagsConnection",
       nextToken?: string | null,
     } | null,
+    pictures:  Array< {
+      __typename: "S3Object",
+      bucket: string,
+      region: string,
+      key: string,
+    } >,
     builds?:  {
       __typename: "ModelBuildConnection",
       nextToken?: string | null,
@@ -1972,6 +2073,8 @@ export type OnDeletePapercraftSubscription = {
       updatedAt: string,
       owner?: string | null,
     },
+    title: string,
+    description: string,
     glb?:  {
       __typename: "S3Object",
       bucket: string,
@@ -2000,6 +2103,12 @@ export type OnDeletePapercraftSubscription = {
       __typename: "ModelPapercraftTagsConnection",
       nextToken?: string | null,
     } | null,
+    pictures:  Array< {
+      __typename: "S3Object",
+      bucket: string,
+      region: string,
+      key: string,
+    } >,
     builds?:  {
       __typename: "ModelBuildConnection",
       nextToken?: string | null,
@@ -2035,6 +2144,8 @@ export type OnCreateBuildSubscription = {
     },
     papercraft?:  {
       __typename: "Papercraft",
+      title: string,
+      description: string,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -2042,6 +2153,7 @@ export type OnCreateBuildSubscription = {
       userPapercraftsId: string,
       owner?: string | null,
     } | null,
+    description?: string | null,
     pictures:  Array< {
       __typename: "S3Object",
       bucket: string,
@@ -2080,6 +2192,8 @@ export type OnUpdateBuildSubscription = {
     },
     papercraft?:  {
       __typename: "Papercraft",
+      title: string,
+      description: string,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -2087,6 +2201,7 @@ export type OnUpdateBuildSubscription = {
       userPapercraftsId: string,
       owner?: string | null,
     } | null,
+    description?: string | null,
     pictures:  Array< {
       __typename: "S3Object",
       bucket: string,
@@ -2125,6 +2240,8 @@ export type OnDeleteBuildSubscription = {
     },
     papercraft?:  {
       __typename: "Papercraft",
+      title: string,
+      description: string,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -2132,6 +2249,7 @@ export type OnDeleteBuildSubscription = {
       userPapercraftsId: string,
       owner?: string | null,
     } | null,
+    description?: string | null,
     pictures:  Array< {
       __typename: "S3Object",
       bucket: string,
@@ -2202,6 +2320,8 @@ export type OnCreatePapercraftTagsSubscription = {
     tagID: string,
     papercraft:  {
       __typename: "Papercraft",
+      title: string,
+      description: string,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -2234,6 +2354,8 @@ export type OnUpdatePapercraftTagsSubscription = {
     tagID: string,
     papercraft:  {
       __typename: "Papercraft",
+      title: string,
+      description: string,
       verified?: boolean | null,
       id: string,
       createdAt: string,
@@ -2266,6 +2388,8 @@ export type OnDeletePapercraftTagsSubscription = {
     tagID: string,
     papercraft:  {
       __typename: "Papercraft",
+      title: string,
+      description: string,
       verified?: boolean | null,
       id: string,
       createdAt: string,

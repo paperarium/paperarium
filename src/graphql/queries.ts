@@ -115,6 +115,8 @@ export const getPapercraft = /* GraphQL */ `
         updatedAt
         owner
       }
+      title
+      description
       glb {
         bucket
         region
@@ -138,6 +140,11 @@ export const getPapercraft = /* GraphQL */ `
       tags {
         nextToken
       }
+      pictures {
+        bucket
+        region
+        key
+      }
       builds {
         nextToken
       }
@@ -158,6 +165,8 @@ export const listPapercrafts = /* GraphQL */ `
   ) {
     listPapercrafts(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
+        title
+        description
         verified
         id
         createdAt
@@ -187,6 +196,8 @@ export const searchPapercrafts = /* GraphQL */ `
       aggregates: $aggregates
     ) {
       items {
+        title
+        description
         verified
         id
         createdAt
@@ -229,6 +240,8 @@ export const getBuild = /* GraphQL */ `
         owner
       }
       papercraft {
+        title
+        description
         verified
         id
         createdAt
@@ -236,6 +249,7 @@ export const getBuild = /* GraphQL */ `
         userPapercraftsId
         owner
       }
+      description
       pictures {
         bucket
         region
@@ -259,6 +273,7 @@ export const listBuilds = /* GraphQL */ `
   ) {
     listBuilds(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
+        description
         verified
         id
         createdAt
@@ -289,6 +304,7 @@ export const searchBuilds = /* GraphQL */ `
       aggregates: $aggregates
     ) {
       items {
+        description
         verified
         id
         createdAt
@@ -395,6 +411,8 @@ export const getPapercraftTags = /* GraphQL */ `
       papercraftID
       tagID
       papercraft {
+        title
+        description
         verified
         id
         createdAt

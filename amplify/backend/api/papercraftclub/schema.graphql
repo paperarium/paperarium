@@ -34,11 +34,14 @@ type Papercraft
     ]
   ) {
   user: User! @belongsTo
+  title: String!
+  description: String!
   glb: S3Object
   pdo: S3Object
   pdf_lineless: S3Object
   pdf_lined: S3Object!
   tags: [Tag!]! @manyToMany(relationName: "PapercraftTags")
+  pictures: [S3Object!]!
   builds: [Build!]! @hasMany
   verified: Boolean
 }
@@ -55,6 +58,7 @@ type Build
   ) {
   user: User! @belongsTo
   papercraft: Papercraft @belongsTo
+  description: String
   pictures: [S3Object!]!
   verified: Boolean
 }

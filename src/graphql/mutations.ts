@@ -110,6 +110,8 @@ export const createPapercraft = /* GraphQL */ `
         updatedAt
         owner
       }
+      title
+      description
       glb {
         bucket
         region
@@ -132,6 +134,11 @@ export const createPapercraft = /* GraphQL */ `
       }
       tags {
         nextToken
+      }
+      pictures {
+        bucket
+        region
+        key
       }
       builds {
         nextToken
@@ -163,6 +170,8 @@ export const updatePapercraft = /* GraphQL */ `
         updatedAt
         owner
       }
+      title
+      description
       glb {
         bucket
         region
@@ -185,6 +194,11 @@ export const updatePapercraft = /* GraphQL */ `
       }
       tags {
         nextToken
+      }
+      pictures {
+        bucket
+        region
+        key
       }
       builds {
         nextToken
@@ -216,6 +230,8 @@ export const deletePapercraft = /* GraphQL */ `
         updatedAt
         owner
       }
+      title
+      description
       glb {
         bucket
         region
@@ -238,6 +254,11 @@ export const deletePapercraft = /* GraphQL */ `
       }
       tags {
         nextToken
+      }
+      pictures {
+        bucket
+        region
+        key
       }
       builds {
         nextToken
@@ -270,6 +291,8 @@ export const createBuild = /* GraphQL */ `
         owner
       }
       papercraft {
+        title
+        description
         verified
         id
         createdAt
@@ -277,6 +300,7 @@ export const createBuild = /* GraphQL */ `
         userPapercraftsId
         owner
       }
+      description
       pictures {
         bucket
         region
@@ -311,6 +335,8 @@ export const updateBuild = /* GraphQL */ `
         owner
       }
       papercraft {
+        title
+        description
         verified
         id
         createdAt
@@ -318,6 +344,7 @@ export const updateBuild = /* GraphQL */ `
         userPapercraftsId
         owner
       }
+      description
       pictures {
         bucket
         region
@@ -352,6 +379,8 @@ export const deleteBuild = /* GraphQL */ `
         owner
       }
       papercraft {
+        title
+        description
         verified
         id
         createdAt
@@ -359,6 +388,7 @@ export const deleteBuild = /* GraphQL */ `
         userPapercraftsId
         owner
       }
+      description
       pictures {
         bucket
         region
@@ -432,6 +462,8 @@ export const createPapercraftTags = /* GraphQL */ `
       papercraftID
       tagID
       papercraft {
+        title
+        description
         verified
         id
         createdAt
@@ -461,6 +493,8 @@ export const updatePapercraftTags = /* GraphQL */ `
       papercraftID
       tagID
       papercraft {
+        title
+        description
         verified
         id
         createdAt
@@ -490,6 +524,8 @@ export const deletePapercraftTags = /* GraphQL */ `
       papercraftID
       tagID
       papercraft {
+        title
+        description
         verified
         id
         createdAt
