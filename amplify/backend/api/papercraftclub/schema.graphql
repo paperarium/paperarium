@@ -37,13 +37,17 @@ type Papercraft
   title: String!
   description: String!
   glb: S3Object
-  pdo: S3Object
+  pdo: S3Object!
   pdf_lineless: S3Object
-  pdf_lined: S3Object!
+  pdf_lined: S3Object
   tags: [Tag!]! @manyToMany(relationName: "PapercraftTags")
   pictures: [S3Object!]!
   builds: [Build!]! @hasMany
-  verified: Boolean
+  difficulty: Difficulty!
+  width_in: Float
+  height_in: Float
+  length_in: Float
+  verified: Boolean!
 }
 
 type Build
@@ -76,10 +80,18 @@ type Tag
   papercrafts: [Papercraft!]! @manyToMany(relationName: "PapercraftTags")
 }
 
+enum Difficulty {
+  insane
+  hard
+  medium
+  easy
+}
+
 type S3Object {
   bucket: String!
   region: String!
   key: String!
+  identityId: String!
 }
 
 type Color {

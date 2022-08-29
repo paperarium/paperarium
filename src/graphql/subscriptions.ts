@@ -17,6 +17,7 @@ export const onCreateUser = /* GraphQL */ `
         bucket
         region
         key
+        identityId
       }
       description
       website
@@ -44,6 +45,7 @@ export const onUpdateUser = /* GraphQL */ `
         bucket
         region
         key
+        identityId
       }
       description
       website
@@ -71,6 +73,7 @@ export const onDeleteUser = /* GraphQL */ `
         bucket
         region
         key
+        identityId
       }
       description
       website
@@ -104,21 +107,25 @@ export const onCreatePapercraft = /* GraphQL */ `
         bucket
         region
         key
+        identityId
       }
       pdo {
         bucket
         region
         key
+        identityId
       }
       pdf_lineless {
         bucket
         region
         key
+        identityId
       }
       pdf_lined {
         bucket
         region
         key
+        identityId
       }
       tags {
         nextToken
@@ -127,10 +134,15 @@ export const onCreatePapercraft = /* GraphQL */ `
         bucket
         region
         key
+        identityId
       }
       builds {
         nextToken
       }
+      difficulty
+      width_in
+      height_in
+      length_in
       verified
       id
       createdAt
@@ -161,21 +173,25 @@ export const onUpdatePapercraft = /* GraphQL */ `
         bucket
         region
         key
+        identityId
       }
       pdo {
         bucket
         region
         key
+        identityId
       }
       pdf_lineless {
         bucket
         region
         key
+        identityId
       }
       pdf_lined {
         bucket
         region
         key
+        identityId
       }
       tags {
         nextToken
@@ -184,10 +200,15 @@ export const onUpdatePapercraft = /* GraphQL */ `
         bucket
         region
         key
+        identityId
       }
       builds {
         nextToken
       }
+      difficulty
+      width_in
+      height_in
+      length_in
       verified
       id
       createdAt
@@ -218,21 +239,25 @@ export const onDeletePapercraft = /* GraphQL */ `
         bucket
         region
         key
+        identityId
       }
       pdo {
         bucket
         region
         key
+        identityId
       }
       pdf_lineless {
         bucket
         region
         key
+        identityId
       }
       pdf_lined {
         bucket
         region
         key
+        identityId
       }
       tags {
         nextToken
@@ -241,10 +266,15 @@ export const onDeletePapercraft = /* GraphQL */ `
         bucket
         region
         key
+        identityId
       }
       builds {
         nextToken
       }
+      difficulty
+      width_in
+      height_in
+      length_in
       verified
       id
       createdAt
@@ -272,6 +302,10 @@ export const onCreateBuild = /* GraphQL */ `
       papercraft {
         title
         description
+        difficulty
+        width_in
+        height_in
+        length_in
         verified
         id
         createdAt
@@ -284,6 +318,7 @@ export const onCreateBuild = /* GraphQL */ `
         bucket
         region
         key
+        identityId
       }
       verified
       id
@@ -313,6 +348,10 @@ export const onUpdateBuild = /* GraphQL */ `
       papercraft {
         title
         description
+        difficulty
+        width_in
+        height_in
+        length_in
         verified
         id
         createdAt
@@ -325,6 +364,7 @@ export const onUpdateBuild = /* GraphQL */ `
         bucket
         region
         key
+        identityId
       }
       verified
       id
@@ -354,6 +394,10 @@ export const onDeleteBuild = /* GraphQL */ `
       papercraft {
         title
         description
+        difficulty
+        width_in
+        height_in
+        length_in
         verified
         id
         createdAt
@@ -366,6 +410,7 @@ export const onDeleteBuild = /* GraphQL */ `
         bucket
         region
         key
+        identityId
       }
       verified
       id
@@ -425,6 +470,10 @@ export const onCreatePapercraftTags = /* GraphQL */ `
       papercraft {
         title
         description
+        difficulty
+        width_in
+        height_in
+        length_in
         verified
         id
         createdAt
@@ -453,6 +502,10 @@ export const onUpdatePapercraftTags = /* GraphQL */ `
       papercraft {
         title
         description
+        difficulty
+        width_in
+        height_in
+        length_in
         verified
         id
         createdAt
@@ -481,6 +534,10 @@ export const onDeletePapercraftTags = /* GraphQL */ `
       papercraft {
         title
         description
+        difficulty
+        width_in
+        height_in
+        length_in
         verified
         id
         createdAt

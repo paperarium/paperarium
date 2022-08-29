@@ -17,6 +17,7 @@ export const getUser = /* GraphQL */ `
         bucket
         region
         key
+        identityId
       }
       description
       website
@@ -121,21 +122,25 @@ export const getPapercraft = /* GraphQL */ `
         bucket
         region
         key
+        identityId
       }
       pdo {
         bucket
         region
         key
+        identityId
       }
       pdf_lineless {
         bucket
         region
         key
+        identityId
       }
       pdf_lined {
         bucket
         region
         key
+        identityId
       }
       tags {
         nextToken
@@ -144,10 +149,15 @@ export const getPapercraft = /* GraphQL */ `
         bucket
         region
         key
+        identityId
       }
       builds {
         nextToken
       }
+      difficulty
+      width_in
+      height_in
+      length_in
       verified
       id
       createdAt
@@ -167,6 +177,10 @@ export const listPapercrafts = /* GraphQL */ `
       items {
         title
         description
+        difficulty
+        width_in
+        height_in
+        length_in
         verified
         id
         createdAt
@@ -198,6 +212,10 @@ export const searchPapercrafts = /* GraphQL */ `
       items {
         title
         description
+        difficulty
+        width_in
+        height_in
+        length_in
         verified
         id
         createdAt
@@ -242,6 +260,10 @@ export const getBuild = /* GraphQL */ `
       papercraft {
         title
         description
+        difficulty
+        width_in
+        height_in
+        length_in
         verified
         id
         createdAt
@@ -254,6 +276,7 @@ export const getBuild = /* GraphQL */ `
         bucket
         region
         key
+        identityId
       }
       verified
       id
@@ -413,6 +436,10 @@ export const getPapercraftTags = /* GraphQL */ `
       papercraft {
         title
         description
+        difficulty
+        width_in
+        height_in
+        length_in
         verified
         id
         createdAt

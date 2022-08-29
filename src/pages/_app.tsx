@@ -11,26 +11,33 @@ import "@aws-amplify/ui-react/styles.css"; // default theme
 import "../styles/globals.scss";
 import "../styles/fonts.scss";
 import "../components/AuthCard/AuthCard.scss";
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 import Layout from "../components/Layout/Layout";
 import { Authenticator } from "@aws-amplify/ui-react";
 import { NextPage } from "next";
 import React from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-// Configure Amplify + redux state listener
+// Configure Amplify
 Amplify.configure({
   ...awsExports,
   ssr: true,
 });
 
+// configure react-query
+const queryClient = new QueryClient();
+
 function MyApp({ Component, pageProps }: AppProps) {
   const getLayout =
-    (Component as any).getLayout || ((page: React.ReactNode) => <Layout>{page}</Layout>);
+    (Component as any).getLayout ||
+    ((page: React.ReactNode) => <Layout>{page}</Layout>);
   return (
     <Authenticator.Provider>
-      {getLayout(<Component {...pageProps} />)}
+      <QueryClientProvider client={queryClient} contextSharing={true}>
+        {getLayout(<Component {...pageProps} />)}
+      </QueryClientProvider>
     </Authenticator.Provider>
   );
 }

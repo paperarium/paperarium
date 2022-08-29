@@ -7,12 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "amplify:papercraftclubUserCreate": "cd amplify/backend/function/papercraftclubUserCreate/lib && npm install && tsc -p ./tsconfig.json && cd -"
+    "amplify:papercraftclubPapercraft": "cd amplify/backend/function/papercraftclubPapercraft/lib && yarn install && tsc -p ./tsconfig.json && cd -",
+    "amplify:papercraftclubUserCreate": "cd amplify/backend/function/papercraftclubUserCreate/lib && yarn install && tsc -p ./tsconfig.json && cd -"
   },
   "dependencies": {
     "@aws-amplify/ui-react": "^3.4.1",
-    "@types/react-pdf": "^5.7.2",
-    "@types/react-transition-group": "^4.4.5",
+    "@tanstack/react-query": "^4.2.3",
     "aws-amplify": "^4.3.32",
     "hamburger-react": "^2.5.0",
     "next": "12.2.5",
@@ -32,6 +32,9 @@
     "@types/node": "18.7.11",
     "@types/react": "18.0.17",
     "@types/react-dom": "18.0.6",
+    "@types/react-pdf": "^5.7.2",
+    "@types/react-transition-group": "^4.4.5",
+    "@types/uuid": "^8.3.4",
     "eslint": "8.22.0",
     "eslint-config-next": "12.2.5",
     "typescript": "4.7.4"

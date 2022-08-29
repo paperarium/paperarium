@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "auth": {
+      "papercraftclub783d8fae": [
+        "read"
+      ]
+    },
+    "api": {
+      "papercraftclub": [
+        "Query",
+        "Mutation"
+      ]
+    },
+    "storage": {
+      "papercraftclubstorage": [
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

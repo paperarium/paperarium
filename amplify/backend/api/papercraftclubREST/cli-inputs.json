@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "paths": {
+    "/papercraft": {
+      "name": "/papercraft",
+      "lambdaFunction": "papercraftclubPapercraft",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ]
+      }
+    }
+  }
+}

@@ -9,7 +9,8 @@
       "UnauthRoleName": "amplify-papercraftclub-dev-144303-unauthRole",
       "StackName": "amplify-papercraftclub-dev-144303",
       "StackId": "arn:aws:cloudformation:us-east-1:096169568185:stack/amplify-papercraftclub-dev-144303/22f10440-22e1-11ed-9453-0a87db62bdd5",
-      "AmplifyAppId": "d3sscaze96v6a3"
+      "AmplifyAppId": "d3sscaze96v6a3",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-papercraftclub-dev-144303-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
       "auth": {
@@ -21,6 +22,10 @@
         "papercraftclubUserCreate": {
           "deploymentBucketName": "amplify-papercraftclub-dev-144303-deployment",
           "s3Key": "amplify-builds/papercraftclubUserCreate-3369486c712f79654148-build.zip"
+        },
+        "papercraftclubPapercraft": {
+          "deploymentBucketName": "amplify-papercraftclub-dev-144303-deployment",
+          "s3Key": "amplify-builds/papercraftclubPapercraft-5248432b494474344633-build.zip"
         }
       }
     }
