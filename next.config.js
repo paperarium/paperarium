@@ -19,7 +19,7 @@ const nextConfig = {
         ? "https://papercraftplace.imgix.net"
         : "https://papercraftplace-dev.imgix.net",
   },
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
     config.resolve.extensions = [".web.js", ...config.resolve.extensions];
     // for pdf viewer
     config.module.rules.push({
@@ -29,6 +29,9 @@ const nextConfig = {
         filename: "static/chunks/[name].[hash][ext]",
       },
     });
+    if (isServer) {
+      config.resolve.alias.canvas = false;
+    }
     return config;
   },
 };
