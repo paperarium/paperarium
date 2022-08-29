@@ -2,5 +2,29 @@
 
 .container {
   border: $border;
-  padding: 5px;
+  position: relative;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+  border-radius: 10px;
+  overflow: hidden;
+
+  &:hover {
+    transform: scale(0.98);
+  }
+}
+
+.info_card {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  bottom: 0;
+  width: 100%;
+  background-color: white;
+  padding: 5px 10px;
+  font-family: "Kosugi Maru";
+  border-top: $border;
+  font-size: 15px;
 }

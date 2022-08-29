@@ -25,7 +25,6 @@ import {
 } from "../../components/misc/AsyncSelect";
 import { RiScissorsCutLine } from "react-icons/ri";
 import { useMutation } from "@tanstack/react-query";
-import { createPapercraft } from "../../graphql/mutations";
 import { v4 as uuidv4 } from "uuid";
 import { uploadToS3 } from "../../API_Serialize";
 

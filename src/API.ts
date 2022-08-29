@@ -166,6 +166,60 @@ export enum Difficulty {
 }
 
 
+export type ModelPapercraftFilterInput = {
+  title?: ModelStringInput | null,
+  description?: ModelStringInput | null,
+  difficulty?: ModelDifficultyInput | null,
+  width_in?: ModelFloatInput | null,
+  height_in?: ModelFloatInput | null,
+  length_in?: ModelFloatInput | null,
+  verified?: ModelBooleanInput | null,
+  and?: Array< ModelPapercraftFilterInput | null > | null,
+  or?: Array< ModelPapercraftFilterInput | null > | null,
+  not?: ModelPapercraftFilterInput | null,
+  userPapercraftsId?: ModelIDInput | null,
+};
+
+export type ModelDifficultyInput = {
+  eq?: Difficulty | null,
+  ne?: Difficulty | null,
+};
+
+export type ModelFloatInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
+export type ModelBooleanInput = {
+  ne?: boolean | null,
+  eq?: boolean | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
+export type ModelIDInput = {
+  ne?: string | null,
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  contains?: string | null,
+  notContains?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+  size?: ModelSizeInput | null,
+};
+
 export type CreateUserInput = {
   username: string,
   email?: string | null,
@@ -240,46 +294,6 @@ export type ModelPapercraftConditionInput = {
   or?: Array< ModelPapercraftConditionInput | null > | null,
   not?: ModelPapercraftConditionInput | null,
   userPapercraftsId?: ModelIDInput | null,
-};
-
-export type ModelDifficultyInput = {
-  eq?: Difficulty | null,
-  ne?: Difficulty | null,
-};
-
-export type ModelFloatInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-};
-
-export type ModelBooleanInput = {
-  ne?: boolean | null,
-  eq?: boolean | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-};
-
-export type ModelIDInput = {
-  ne?: string | null,
-  eq?: string | null,
-  le?: string | null,
-  lt?: string | null,
-  ge?: string | null,
-  gt?: string | null,
-  contains?: string | null,
-  notContains?: string | null,
-  between?: Array< string | null > | null,
-  beginsWith?: string | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-  size?: ModelSizeInput | null,
 };
 
 export type UpdatePapercraftInput = {
@@ -532,20 +546,6 @@ export type SearchableAggregateBucketResultItem = {
   doc_count: number,
 };
 
-export type ModelPapercraftFilterInput = {
-  title?: ModelStringInput | null,
-  description?: ModelStringInput | null,
-  difficulty?: ModelDifficultyInput | null,
-  width_in?: ModelFloatInput | null,
-  height_in?: ModelFloatInput | null,
-  length_in?: ModelFloatInput | null,
-  verified?: ModelBooleanInput | null,
-  and?: Array< ModelPapercraftFilterInput | null > | null,
-  or?: Array< ModelPapercraftFilterInput | null > | null,
-  not?: ModelPapercraftFilterInput | null,
-  userPapercraftsId?: ModelIDInput | null,
-};
-
 export type SearchablePapercraftFilterInput = {
   title?: SearchableStringFilterInput | null,
   description?: SearchableStringFilterInput | null,
@@ -759,6 +759,85 @@ export type ListTagsPCPQuery = {
       id: string,
       createdAt: string,
       updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type ListPapercraftsPCPQueryVariables = {
+  filter?: ModelPapercraftFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListPapercraftsPCPQuery = {
+  listPapercrafts?:  {
+    __typename: "ModelPapercraftConnection",
+    items:  Array< {
+      __typename: "Papercraft",
+      title: string,
+      description: string,
+      glb?:  {
+        __typename: "S3Object",
+        bucket: string,
+        region: string,
+        key: string,
+        identityId: string,
+      } | null,
+      pdo:  {
+        __typename: "S3Object",
+        bucket: string,
+        region: string,
+        key: string,
+        identityId: string,
+      },
+      pdf_lineless?:  {
+        __typename: "S3Object",
+        bucket: string,
+        region: string,
+        key: string,
+        identityId: string,
+      } | null,
+      pdf_lined?:  {
+        __typename: "S3Object",
+        bucket: string,
+        region: string,
+        key: string,
+        identityId: string,
+      } | null,
+      tags?:  {
+        __typename: "ModelPapercraftTagsConnection",
+        items:  Array< {
+          __typename: "PapercraftTags",
+          tagID: string,
+        } | null >,
+        nextToken?: string | null,
+      } | null,
+      pictures:  Array< {
+        __typename: "S3Object",
+        bucket: string,
+        region: string,
+        key: string,
+        identityId: string,
+      } >,
+      builds?:  {
+        __typename: "ModelBuildConnection",
+        items:  Array< {
+          __typename: "Build",
+          id: string,
+        } | null >,
+        nextToken?: string | null,
+      } | null,
+      difficulty: Difficulty,
+      width_in?: number | null,
+      height_in?: number | null,
+      length_in?: number | null,
+      verified: boolean,
+      id: string,
+      createdAt: string,
+      updatedAt: string,
+      userPapercraftsId: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
