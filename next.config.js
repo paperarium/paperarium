@@ -6,7 +6,7 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
     config.resolve.extensions = [".web.js", ...config.resolve.extensions];
     // for pdf viewer
     config.module.rules.push({
@@ -16,6 +16,9 @@ const nextConfig = {
         filename: "static/chunks/[name].[hash][ext]",
       },
     });
+    if (isServer) {
+      config.resolve.alias.canvas = false;
+    }
     return config;
   },
 };
