@@ -67,8 +67,8 @@
               "authenticationType": "API_KEY",
               "apiKeyConfig": {
                 "apiKeyExpirationDays": 365,
-                "apiKeyExpirationDate": "2023-08-23T12:45:47.469Z",
-                "description": "papercraftclub api key"
+                "apiKeyExpirationDate": "2023-08-30T01:16:54.167Z",
+                "description": "papercraftplace api key"
               }
             }
           ]

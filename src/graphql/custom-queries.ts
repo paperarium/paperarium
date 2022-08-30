@@ -16,6 +16,35 @@ export const listTags = /* GraphQL */ `
   }
 `;
 
+export const searchTags = /* GraphQL */ `
+  query SearchTagsPCP(
+    $filter: SearchableTagFilterInput
+    $sort: [SearchableTagSortInput]
+    $limit: Int
+    $nextToken: String
+    $from: Int
+    $aggregates: [SearchableTagAggregationInput]
+  ) {
+    searchTags(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+      from: $from
+      aggregates: $aggregates
+    ) {
+      items {
+        title
+        id
+        createdAt
+        updatedAt
+      }
+      nextToken
+      total
+    }
+  }
+`;
+
 export const listPapercrafts = /* GraphQL */ `
   query ListPapercraftsPCP(
     $filter: ModelPapercraftFilterInput

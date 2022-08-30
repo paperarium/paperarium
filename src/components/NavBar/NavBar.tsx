@@ -43,6 +43,13 @@ const NavBar: React.FC = function NavBar() {
                 <a>upload</a>
               </div>
             </Link>
+            <Link href={"/profile"}>
+              <div className={s.profile_container}>
+                <div className={s.profile_picture}>
+                  HI
+                </div>
+              </div>
+            </Link>
             </>
           ) : (
             <>

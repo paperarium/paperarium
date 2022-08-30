@@ -7,7 +7,7 @@ import { Storage } from "@aws-amplify/storage";
 import { API } from "@aws-amplify/api";
 import { Auth } from "@aws-amplify/auth";
 import { graphqlOperation, GraphQLResult } from "@aws-amplify/api-graphql";
-import { listTags } from "../../graphql/custom-queries";
+import { listTags, searchTags } from "../../graphql/custom-queries";
 import * as APIt from "../../API";
 import { useState } from "react";
 import { debounce } from "ts-debounce";
@@ -27,14 +27,25 @@ import { RiScissorsCutLine } from "react-icons/ri";
 import { useMutation } from "@tanstack/react-query";
 import { v4 as uuidv4 } from "uuid";
 import { uploadToS3 } from "../../API_Serialize";
+import authGetServerSideProps from "../../util/authGetServerSideProps";
 
 const getTags = debounce(
   async (search: string): Promise<APIt.Tag[]> => {
     const { data } = (await API.graphql(
-      graphqlOperation(listTags)
-    )) as GraphQLResult<APIt.ListTagsPCPQuery>;
-    if (data?.listTags) {
-      return data.listTags.items.reduce<APIt.Tag[]>((acc, t) => {
+      {
+        ...
+        graphqlOperation(searchTags, {
+          filter: {
+            title: {
+              match: search
+            }
+          }
+        }),
+        authMode: 'API_KEY'
+      }
+    )) as GraphQLResult<APIt.SearchTagsPCPQuery>;
+    if (data?.searchTags) {
+      return data.searchTags.items.reduce<APIt.Tag[]>((acc, t) => {
         if (t) acc.push(t);
         return acc;
       }, []);
@@ -568,5 +579,8 @@ const UploadDesignPage: NextPage = () => {
 (UploadDesignPage as any).getLayout = (page: React.ReactNode) => (
   <Layout hideFooter>{page}</Layout>
 );
+
+// use authentication on this page
+export const getServerSideProps = authGetServerSideProps;
 
 export default UploadDesignPage;

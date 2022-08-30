@@ -119,3 +119,31 @@
     transform: scale(1.1);
   }
 }
+
+.profile_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+}
+
+.profile_picture {
+  height: calc(var(--header-height) - var(--header-vert-padding) * 2);
+  width: calc(var(--header-height) - var(--header-vert-padding) * 2);
+  border-radius: 50%;
+  border: $border;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+  &:hover {
+    transform: scale(1.1);
+  }
+  background-color: $highlight;
+  font-family: "Kosugi Maru";
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

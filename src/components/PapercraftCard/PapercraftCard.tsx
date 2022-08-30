@@ -22,17 +22,19 @@ const PapercraftCard: React.FC<PapercraftCardProps> = function PapercraftCard({
   )}/${papercraft.pictures[0].key.replaceAll(" ", "+")}`;
   return (
     <div className={s.container}>
-      <Image
-        src={imageURL}
-        placeholder="blur"
-        blurDataURL={`${process.env.IMGIX}/${imageURL}?blur=2000`}
-        layout="fill"
-        objectFit="cover"
-        alt={papercraft.title}
-      />
-      <div className={s.info_card}>
-        <div>{papercraft.title}</div>
-        <div>@{papercraft.user.username}</div>
+      <div className={s.inner_container}>
+        <Image
+          src={imageURL}
+          placeholder="blur"
+          blurDataURL={`${process.env.IMGIX}/${imageURL}?blur=2000`}
+          layout="fill"
+          objectFit="cover"
+          alt={papercraft.title}
+        />
+        <div className={s.info_card}>
+          <div>{papercraft.title}</div>
+          <div>@{papercraft.user.username}</div>
+        </div>
       </div>
     </div>
   );

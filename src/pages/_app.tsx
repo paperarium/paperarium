@@ -10,13 +10,15 @@ import awsExports from "../aws-exports";
 import "@aws-amplify/ui-react/styles.css"; // default theme
 import "../styles/globals.scss";
 import "../styles/fonts.scss";
-import "../components/AuthCard/AuthCard.scss";
+import "../components/Authenticator/Authenticator.scss";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import Layout from "../components/Layout/Layout";
 import { Authenticator } from "@aws-amplify/ui-react";
 import { NextPage } from "next";
+import { Hub } from "@aws-amplify/core";
+import { Auth } from "@aws-amplify/auth";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -25,6 +27,20 @@ Amplify.configure({
   ...awsExports,
   ssr: true,
 });
+
+// on no user logged in, just use API key for requests
+// Hub.listen('auth', async (authState) => {
+//   try {
+//     await Auth.currentAuthenticatedUser();
+//     Amplify.configure({
+//       aws_appsync_authenticationType: "AMAZON_COGNITO_USER_POOLS"
+//     });
+//   } catch {
+//     Amplify.configure({
+//       aws_appsync_authenticationType: "API_KEY"
+//     });
+//   }
+// });
 
 // configure react-query
 const queryClient = new QueryClient();

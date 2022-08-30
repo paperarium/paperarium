@@ -12,8 +12,11 @@ import { listPapercrafts } from "../graphql/custom-queries";
 const ExplorePage: NextPage = () => {
   const papercrafts = useQuery([], async () => {
     const { data } = (await API.graphql(
-      graphqlOperation(listPapercrafts)
-    )) as GraphQLResult<APIt.ListPapercraftsPCPQuery>;
+      {
+        ...graphqlOperation(listPapercrafts),
+        authMode: "API_KEY"
+      }
+    ) as GraphQLResult<APIt.ListPapercraftsPCPQuery>);
     return data;
   });
 

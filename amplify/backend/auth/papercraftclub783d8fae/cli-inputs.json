@@ -32,7 +32,7 @@
       "email"
     ],
     "userpoolClientLambdaRole": "paperc783d8fae_userpoolclient_lambda_role",
-    "userpoolClientSetAttributes": true,
+    "userpoolClientSetAttributes": false,
     "sharedId": "783d8fae",
     "resourceName": "papercraftclub783d8fae",
     "authSelections": "identityPoolAndUserPool",
@@ -57,15 +57,15 @@
     },
     "breakCircularDependency": true,
     "dependsOn": [],
-    "thirdPartyAuth": false,
     "userPoolGroups": true,
     "adminQueries": false,
     "triggers": {},
     "hostedUI": false,
-    "authProviders": [],
     "parentStack": {
       "Ref": "AWS::StackId"
     },
-    "permissions": []
+    "permissions": [],
+    "authProviders": [],
+    "thirdPartyAuth": false
   }
 }

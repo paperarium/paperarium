@@ -166,6 +166,125 @@ export enum Difficulty {
 }
 
 
+export type SearchableTagFilterInput = {
+  title?: SearchableStringFilterInput | null,
+  id?: SearchableIDFilterInput | null,
+  createdAt?: SearchableStringFilterInput | null,
+  updatedAt?: SearchableStringFilterInput | null,
+  and?: Array< SearchableTagFilterInput | null > | null,
+  or?: Array< SearchableTagFilterInput | null > | null,
+  not?: SearchableTagFilterInput | null,
+};
+
+export type SearchableStringFilterInput = {
+  ne?: string | null,
+  gt?: string | null,
+  lt?: string | null,
+  gte?: string | null,
+  lte?: string | null,
+  eq?: string | null,
+  match?: string | null,
+  matchPhrase?: string | null,
+  matchPhrasePrefix?: string | null,
+  multiMatch?: string | null,
+  exists?: boolean | null,
+  wildcard?: string | null,
+  regexp?: string | null,
+  range?: Array< string | null > | null,
+};
+
+export type SearchableIDFilterInput = {
+  ne?: string | null,
+  gt?: string | null,
+  lt?: string | null,
+  gte?: string | null,
+  lte?: string | null,
+  eq?: string | null,
+  match?: string | null,
+  matchPhrase?: string | null,
+  matchPhrasePrefix?: string | null,
+  multiMatch?: string | null,
+  exists?: boolean | null,
+  wildcard?: string | null,
+  regexp?: string | null,
+  range?: Array< string | null > | null,
+};
+
+export type SearchableTagSortInput = {
+  field?: SearchableTagSortableFields | null,
+  direction?: SearchableSortDirection | null,
+};
+
+export enum SearchableTagSortableFields {
+  title = "title",
+  id = "id",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+}
+
+
+export enum SearchableSortDirection {
+  asc = "asc",
+  desc = "desc",
+}
+
+
+export type SearchableTagAggregationInput = {
+  name: string,
+  type: SearchableAggregateType,
+  field: SearchableTagAggregateField,
+};
+
+export enum SearchableAggregateType {
+  terms = "terms",
+  avg = "avg",
+  min = "min",
+  max = "max",
+  sum = "sum",
+}
+
+
+export enum SearchableTagAggregateField {
+  title = "title",
+  id = "id",
+  createdAt = "createdAt",
+  updatedAt = "updatedAt",
+}
+
+
+export type SearchableTagConnection = {
+  __typename: "SearchableTagConnection",
+  items:  Array<Tag | null >,
+  nextToken?: string | null,
+  total?: number | null,
+  aggregateItems:  Array<SearchableAggregateResult | null >,
+};
+
+export type SearchableAggregateResult = {
+  __typename: "SearchableAggregateResult",
+  name: string,
+  result?: SearchableAggregateGenericResult | null,
+};
+
+export type SearchableAggregateGenericResult = SearchableAggregateScalarResult | SearchableAggregateBucketResult
+
+
+export type SearchableAggregateScalarResult = {
+  __typename: "SearchableAggregateScalarResult",
+  value: number,
+};
+
+export type SearchableAggregateBucketResult = {
+  __typename: "SearchableAggregateBucketResult",
+  buckets?:  Array<SearchableAggregateBucketResultItem | null > | null,
+};
+
+export type SearchableAggregateBucketResultItem = {
+  __typename: "SearchableAggregateBucketResultItem",
+  key: string,
+  doc_count: number,
+};
+
 export type ModelPapercraftFilterInput = {
   title?: ModelStringInput | null,
   description?: ModelStringInput | null,
@@ -427,40 +546,6 @@ export type SearchableUserFilterInput = {
   not?: SearchableUserFilterInput | null,
 };
 
-export type SearchableStringFilterInput = {
-  ne?: string | null,
-  gt?: string | null,
-  lt?: string | null,
-  gte?: string | null,
-  lte?: string | null,
-  eq?: string | null,
-  match?: string | null,
-  matchPhrase?: string | null,
-  matchPhrasePrefix?: string | null,
-  multiMatch?: string | null,
-  exists?: boolean | null,
-  wildcard?: string | null,
-  regexp?: string | null,
-  range?: Array< string | null > | null,
-};
-
-export type SearchableIDFilterInput = {
-  ne?: string | null,
-  gt?: string | null,
-  lt?: string | null,
-  gte?: string | null,
-  lte?: string | null,
-  eq?: string | null,
-  match?: string | null,
-  matchPhrase?: string | null,
-  matchPhrasePrefix?: string | null,
-  multiMatch?: string | null,
-  exists?: boolean | null,
-  wildcard?: string | null,
-  regexp?: string | null,
-  range?: Array< string | null > | null,
-};
-
 export type SearchableUserSortInput = {
   field?: SearchableUserSortableFields | null,
   direction?: SearchableSortDirection | null,
@@ -479,26 +564,11 @@ export enum SearchableUserSortableFields {
 }
 
 
-export enum SearchableSortDirection {
-  asc = "asc",
-  desc = "desc",
-}
-
-
 export type SearchableUserAggregationInput = {
   name: string,
   type: SearchableAggregateType,
   field: SearchableUserAggregateField,
 };
-
-export enum SearchableAggregateType {
-  terms = "terms",
-  avg = "avg",
-  min = "min",
-  max = "max",
-  sum = "sum",
-}
-
 
 export enum SearchableUserAggregateField {
   username = "username",
@@ -519,31 +589,6 @@ export type SearchableUserConnection = {
   nextToken?: string | null,
   total?: number | null,
   aggregateItems:  Array<SearchableAggregateResult | null >,
-};
-
-export type SearchableAggregateResult = {
-  __typename: "SearchableAggregateResult",
-  name: string,
-  result?: SearchableAggregateGenericResult | null,
-};
-
-export type SearchableAggregateGenericResult = SearchableAggregateScalarResult | SearchableAggregateBucketResult
-
-
-export type SearchableAggregateScalarResult = {
-  __typename: "SearchableAggregateScalarResult",
-  value: number,
-};
-
-export type SearchableAggregateBucketResult = {
-  __typename: "SearchableAggregateBucketResult",
-  buckets?:  Array<SearchableAggregateBucketResultItem | null > | null,
-};
-
-export type SearchableAggregateBucketResultItem = {
-  __typename: "SearchableAggregateBucketResultItem",
-  key: string,
-  doc_count: number,
 };
 
 export type SearchablePapercraftFilterInput = {
@@ -690,51 +735,6 @@ export type SearchableBuildConnection = {
   aggregateItems:  Array<SearchableAggregateResult | null >,
 };
 
-export type SearchableTagFilterInput = {
-  title?: SearchableStringFilterInput | null,
-  id?: SearchableIDFilterInput | null,
-  createdAt?: SearchableStringFilterInput | null,
-  updatedAt?: SearchableStringFilterInput | null,
-  and?: Array< SearchableTagFilterInput | null > | null,
-  or?: Array< SearchableTagFilterInput | null > | null,
-  not?: SearchableTagFilterInput | null,
-};
-
-export type SearchableTagSortInput = {
-  field?: SearchableTagSortableFields | null,
-  direction?: SearchableSortDirection | null,
-};
-
-export enum SearchableTagSortableFields {
-  title = "title",
-  id = "id",
-  createdAt = "createdAt",
-  updatedAt = "updatedAt",
-}
-
-
-export type SearchableTagAggregationInput = {
-  name: string,
-  type: SearchableAggregateType,
-  field: SearchableTagAggregateField,
-};
-
-export enum SearchableTagAggregateField {
-  title = "title",
-  id = "id",
-  createdAt = "createdAt",
-  updatedAt = "updatedAt",
-}
-
-
-export type SearchableTagConnection = {
-  __typename: "SearchableTagConnection",
-  items:  Array<Tag | null >,
-  nextToken?: string | null,
-  total?: number | null,
-  aggregateItems:  Array<SearchableAggregateResult | null >,
-};
-
 export type ModelPapercraftTagsFilterInput = {
   id?: ModelIDInput | null,
   papercraftID?: ModelIDInput | null,
@@ -761,6 +761,30 @@ export type ListTagsPCPQuery = {
       updatedAt: string,
     } | null >,
     nextToken?: string | null,
+  } | null,
+};
+
+export type SearchTagsPCPQueryVariables = {
+  filter?: SearchableTagFilterInput | null,
+  sort?: Array< SearchableTagSortInput | null > | null,
+  limit?: number | null,
+  nextToken?: string | null,
+  from?: number | null,
+  aggregates?: Array< SearchableTagAggregationInput | null > | null,
+};
+
+export type SearchTagsPCPQuery = {
+  searchTags?:  {
+    __typename: "SearchableTagConnection",
+    items:  Array< {
+      __typename: "Tag",
+      title: string,
+      id: string,
+      createdAt: string,
+      updatedAt: string,
+    } | null >,
+    nextToken?: string | null,
+    total?: number | null,
   } | null,
 };
 
@@ -828,6 +852,10 @@ export type ListPapercraftsPCPQuery = {
         } | null >,
         nextToken?: string | null,
       } | null,
+      user:  {
+        __typename: "User",
+        username: string,
+      },
       difficulty: Difficulty,
       width_in?: number | null,
       height_in?: number | null,

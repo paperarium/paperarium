@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import s from "../../styles/Upload.module.scss";
+import authGetServerSideProps from "../../util/authGetServerSideProps";
 
 const UploadPage: NextPage = () => {
   return (
@@ -30,5 +31,8 @@ const UploadPage: NextPage = () => {
     </>
   );
 };
+
+// use authentication on this page
+export const getServerSideProps = authGetServerSideProps;
 
 export default UploadPage;

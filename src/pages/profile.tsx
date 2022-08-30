@@ -11,6 +11,7 @@ import { withSSRContext } from "aws-amplify";
 import { Auth } from "@aws-amplify/auth";
 import styles from "../styles/Home.module.scss";
 import { useRouter } from "next/router";
+import authGetServerSideProps from "../util/authGetServerSideProps";
 
 type ProfilePageProps = {
   username: string;
@@ -39,22 +40,7 @@ const Profile: NextPage<ProfilePageProps> = ({ username }) => {
   );
 };
 
-export async function getServerSideProps(context: NextPageContext) {
-  const { Auth } = withSSRContext(context);
-  try {
-    const user = await Auth.currentAuthenticatedUser();
-    return {
-      props: {
-        username: user.username,
-      },
-    };
-  } catch (err) {
-    return {
-      redirect: {
-        destination: "/login?redirect=/profile",
-      },
-    };
-  }
-}
+// use authentication on this page
+export const getServerSideProps = authGetServerSideProps;
 
 export default Profile;
