@@ -45,6 +45,58 @@ export const searchTags = /* GraphQL */ `
   }
 `;
 
+export const searchPapercrafts = /* GraphQL */ `
+  query SearchPapercraftsPCP(
+    $filter: SearchablePapercraftFilterInput
+    $sort: [SearchablePapercraftSortInput]
+    $limit: Int
+    $nextToken: String
+    $from: Int
+    $aggregates: [SearchablePapercraftAggregationInput]
+  ) {
+    searchPapercrafts(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+      from: $from
+      aggregates: $aggregates
+    ) {
+      items {
+        title
+        description
+        pictures {
+          bucket
+          region
+          key
+          identityId
+        }
+        builds {
+          items {
+            id
+          }
+          nextToken
+        }
+        user {
+          username
+        }
+        difficulty
+        width_in
+        height_in
+        length_in
+        verified
+        id
+        createdAt
+        updatedAt
+        userPapercraftsId
+        owner
+      }
+      nextToken
+      total
+    }
+  }
+`;
+
 export const listPapercrafts = /* GraphQL */ `
   query ListPapercraftsPCP(
     $filter: ModelPapercraftFilterInput

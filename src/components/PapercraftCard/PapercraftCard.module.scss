@@ -16,15 +16,15 @@ $total: 10;
   position: relative;
   cursor: pointer;
   transition: transform 0.1s ease-in-out;
-  opacity: 0;
-  animation: fadein 0.3s ease-in-out forwards;
-  animation-delay: $animation_length * $total;
+  // opacity: 0;
+  // animation: fadein 0.3s ease-in-out forwards;
+  // animation-delay: $animation_length * $total;
 
-  @for $i from 1 through $total {
-    &:nth-of-type(#{$i}) {
-      animation-delay: $i * 0.5 * $animation_length - $animation_length;
-    }
-  }
+  // @for $i from 1 through $total {
+  //   &:nth-of-type(#{$i}) {
+  //     animation-delay: $i * 0.5 * $animation_length - $animation_length;
+  //   }
+  // }
 }
 
 .inner_container {

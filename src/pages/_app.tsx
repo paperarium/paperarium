@@ -20,7 +20,11 @@ import { NextPage } from "next";
 import { Hub } from "@aws-amplify/core";
 import { Auth } from "@aws-amplify/auth";
 import React from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  Hydrate,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 
 // Configure Amplify
 Amplify.configure({
@@ -43,16 +47,18 @@ Amplify.configure({
 // });
 
 // configure react-query
-const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const [queryClient] = React.useState(() => new QueryClient());
   const getLayout =
     (Component as any).getLayout ||
     ((page: React.ReactNode) => <Layout>{page}</Layout>);
   return (
     <Authenticator.Provider>
       <QueryClientProvider client={queryClient} contextSharing={true}>
-        {getLayout(<Component {...pageProps} />)}
+        <Hydrate state={pageProps.dehydratedState}>
+          {getLayout(<Component {...pageProps} />)}
+        </Hydrate>
       </QueryClientProvider>
     </Authenticator.Provider>
   );
