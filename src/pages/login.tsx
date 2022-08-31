@@ -44,8 +44,8 @@ const LoginPage: NextPage = () => {
   );
 };
 
-(LoginPage as any).getLayout = (page: React.ReactNode) => (
-  <Layout hideFooter>{page}</Layout>
-);
+// (LoginPage as any).getLayout = (page: React.ReactNode) => (
+//   <Layout hideFooter>{page}</Layout>
+// );
 
 export default LoginPage;

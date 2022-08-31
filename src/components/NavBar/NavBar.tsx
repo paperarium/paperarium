@@ -32,10 +32,6 @@ const NavBar: React.FC = function NavBar() {
           <NavLink href={"/about"}>history</NavLink>
         </div>
         <div className={s.spacer}></div>
-        <div className={s.menu} onClick={() => setNavOpen(!navOpen)}>
-          <div className={s.menu_text}>{navOpen ? "CLOSE" : "MENU"}</div>
-          <Hamburger size={20} toggled={navOpen} toggle={setNavOpen} />
-        </div>
         <div className={s.profile_buttons}>
           {user ? (
             <>
@@ -65,6 +61,10 @@ const NavBar: React.FC = function NavBar() {
               </Link>
             </>
           )}
+        </div>
+        <div className={s.menu} onClick={() => setNavOpen(!navOpen)}>
+          <div className={s.menu_text}>{navOpen ? "CLOSE" : "MENU"}</div>
+          <Hamburger size={20} toggled={navOpen} toggle={setNavOpen} />
         </div>
       </nav>
     </>

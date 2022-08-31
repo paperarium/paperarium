@@ -1,0 +1,85 @@
+@import "../../styles/mixins";
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 20px 0;
+  width: 100%;
+  border-top: 1px solid #eaeaea;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+
+  @media screen and (max-width: 767px) {
+    padding: 20px 0 !important;
+  }
+}
+
+.footer_row {
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  max-width: 500px;
+}
+
+.socials_row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  max-width: 400px;
+  gap: 5px;
+  margin-bottom: 5px;
+  font-size: 20px;
+}
+
+.socials_line {
+  flex: 1;
+  height: 1px;
+  background-color: #303030;
+}
+
+.legal_row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  max-width: 500px;
+  gap: 20px;
+  margin-top: 5px;
+  font-size: 13px;
+}
+
+.legal_link {
+  border-bottom: $border;
+  cursor: pointer;
+  transition: opacity 0.1s ease-in-out;
+
+  &:hover {
+    opacity: 0.5;
+  }
+}
+
+.title {
+  font-weight: 700;
+  font-size: calc(var(--header-height) - var(--header-vert-padding) * 2 - 10px);
+  font-style: italic;
+  letter-spacing: -1px;
+}
+
+.credits {
+  opacity: 0.5;
+  font-size: 14px;
+
+  & a {
+    transition: all 0.1s ease-in-out;
+    margin: 0px 5px;
+    &:hover {
+      letter-spacing: 1px;
+      color: $highlight-dark;
+    }
+  }
+}

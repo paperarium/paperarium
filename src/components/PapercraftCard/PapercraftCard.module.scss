@@ -51,7 +51,12 @@ $total: 10;
   width: 100%;
   background-color: white;
   padding: 5px 10px;
-  font-family: "Courier New", Courier, monospace;
   border-top: $border;
   font-size: 15px;
+  gap: 3px;
+}
+
+.user_name {
+  opacity: 0.6;
+  font-style: italic;
 }

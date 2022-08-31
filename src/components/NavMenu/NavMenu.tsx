@@ -58,7 +58,7 @@ const NavMenu: React.FC<NavMenuProps> = function NavMenu({
                   <div className={s.profile_container} onClick={closeMenu}>
                     <div className={s.profile_picture}></div>
                     <div className={s.profile_name}>
-                      <span>@evan</span>
+                      <span className={s.user_name}>@evan</span>
                       <span>3 papercrafts</span>
                     </div>
                   </div>

@@ -29,7 +29,7 @@ const PapercraftCard: React.FC<PapercraftCardProps> = function PapercraftCard({
         />
         <div className={s.info_card}>
           <div>{papercraft.title}</div>
-          <div>@{papercraft.user.username}</div>
+          <div className={s.user_name}>@{papercraft.user.username}</div>
         </div>
       </div>
     </div>

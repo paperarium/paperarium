@@ -9,7 +9,6 @@
   justify-content: space-between;
   position: fixed;
   top: 0px;
-  gap: 10px;
   z-index: 2;
 
   height: var(--header-height);
@@ -19,6 +18,7 @@
 
   @include respond-to("small") {
     padding: var(--header-vert-padding) 14px;
+    gap: 10px;
   }
 
   @include respond-to("large") {
@@ -37,6 +37,7 @@
   font-size: calc(var(--header-height) - var(--header-vert-padding) * 2 - 10px);
   white-space: nowrap;
   font-style: italic;
+  letter-spacing: -1px;
 }
 
 .links_container {
@@ -48,7 +49,7 @@
   align-items: center;
   gap: 5px;
 
-  @include respond-to("small") {
+  @include respond-to("medium") {
     display: flex;
   }
 
@@ -71,14 +72,14 @@
   // transform: translate(11px, -11px);
   cursor: pointer;
 
-  @include respond-to("small") {
+  @include respond-to("medium") {
     display: none;
   }
 }
 
 .menu_text {
   display: none;
-  @include respond-to("small") {
+  @include respond-to("xsmall") {
     display: block;
   }
 }
@@ -92,7 +93,7 @@
   gap: 10px;
   padding: 2px 0px;
 
-  @include respond-to("small") {
+  @include respond-to("medium") {
     display: flex;
   }
 }

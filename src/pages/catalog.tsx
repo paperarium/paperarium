@@ -9,6 +9,7 @@ import {
   supabaseServerClient,
 } from "@supabase/auth-helpers-nextjs";
 import { Papercraft } from "../supabase/types";
+import Layout from "../components/Layout/Layout";
 
 const fetchPapercrafts = async (search: string) => {
   const { data: papercrafts, error } = await supabaseClient
@@ -91,5 +92,10 @@ export async function getStaticProps(context: any) {
     revalidate: 10,
   };
 }
+
+
+(ExplorePage as any).getLayout = (page: React.ReactNode) => (
+  <Layout footerMarginLeft={"var(--search-bar-width)"}>{page}</Layout>
+);
 
 export default ExplorePage;
