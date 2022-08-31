@@ -12,19 +12,15 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <link
-            href="https://fonts.googleapis.com/css2?family=Kosugi+Maru:wght@400&display=optional"
-            rel="stylesheet"
-          />
           <link rel="icon" href="/favicon.ico" />
-          <meta name="title" content="papercraft club"></meta>
+          <meta name="title" content="papercraft place"></meta>
           <meta
             name="description"
-            content="big brains in little bodies, from an art space with cyber qualities. bridging the gap between the digital world and the physical world, one byte at a time."
+            content="a modern compendium and community for everything papercrafting."
           ></meta>
           <meta
             name="keywords"
-            content="art, artist, painting, robots, tech, robots, automation, visuals, graphic design, blender, 3d, 2d, concept, sculpture, game, video, "
+            content="art, artist, painting, paper, papercraft, papercrafting, scissors, cut, glue, fold, visuals, graphic design, blender, 3d, 2d, concept, sculpture, game, video, videogame "
           ></meta>
           <meta name="robots" content="index, follow"></meta>
           <meta
@@ -42,11 +38,27 @@ class MyDocument extends Document {
             data-auto-block="on"
             data-website-uuid="f2ea0f83-ff36-4cd4-8567-feb699b6a45e"
           />
-          {/* <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-          <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-          <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+          <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="/apple-touch-icon.png"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/favicon-32x32.png"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/favicon-16x16.png"
+          />
           <link rel="manifest" href="/site.webmanifest" />
-          <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#ffffff" /> */}
+          <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#6b9a74" />
+          <meta name="msapplication-TileColor" content="#ffffff" />
+          <meta name="theme-color" content="#ffffff"></meta>
         </Head>
         <body>
           <Main />

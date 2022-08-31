@@ -67,7 +67,7 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
-  font-family: "Kosugi Maru";
+  font-family: "Courier New", Courier, monospace;
   position: relative;
   height: 200px;
   opacity: 0;
@@ -194,7 +194,7 @@
     transform: scale(1.1);
   }
   background-color: $highlight;
-  font-family: "Kosugi Maru";
+  font-family: "Courier New", Courier, monospace;
   display: flex;
   flex-direction: column;
   justify-content: center;
