@@ -20,24 +20,19 @@ import {
 import { RiScissorsCutLine } from "react-icons/ri";
 import { useMutation } from "@tanstack/react-query";
 import { v4 as uuidv4 } from "uuid";
-import {
-  Difficulty,
-  Papercraft,
-  PapercraftInput,
-  PapercraftsTags,
-  PapercraftsTagsInput,
-  Tag,
-} from "../../types/supabase";
+import * as APIt from "../../supabase/types";
 import {
   withPageAuth,
   User,
   supabaseClient,
 } from "@supabase/auth-helpers-nextjs";
+import { createPapercraft } from "../../supabase/api/papercrafts";
+import { createPapercraftsTags } from "../../supabase/api/papercraftstags";
 
 const fetchTags = debounce(
-  async (search: string): Promise<Tag[]> => {
+  async (search: string): Promise<APIt.Tag[]> => {
     const { data: tags, error } = await supabaseClient
-      .from<Tag>("tags")
+      .from<APIt.Tag>("tags")
       .select("*")
       .filter("code", "like", `%${search}%`);
     if (error) throw error;
@@ -75,14 +70,14 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
   // input form fields
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [tags, setTags] = useState<Tag[]>([]);
+  const [tags, setTags] = useState<APIt.Tag[]>([]);
   const [images, setImages] = useState<File[] | null>(null);
   const imageURLs = useRef<string[] | null>(null);
   const [pdo, setPdo] = useState<File | null>(null);
   const [pdfLined, setPdfLined] = useState<SerializedFile | null>(null);
   const [pdfLineless, setPdfLineless] = useState<SerializedFile | null>(null);
   const [glb, setGlb] = useState<File | null>(null);
-  const [difficulty, setDifficulty] = useState<Difficulty>(Difficulty.easy);
+  const [difficulty, setDifficulty] = useState<APIt.Difficulty>(APIt.Difficulty.easy);
   const [dimensions, setDimensions] = useState<PapercraftDimensions>({
     units: "in",
     width: "",
@@ -164,8 +159,8 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
     )}`;
     const pdo_url = await uploadFile(pdo_file, pdo);
 
-    // 3. build the input form
-    const papercraft_input: PapercraftInput = {
+    // 3. build the papercraft
+    const papercraft_id = (await createPapercraft({
       title,
       description,
       glb_url,
@@ -182,17 +177,10 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
           : undefined,
       verified: false,
       user_id: user.id,
-    };
+    }))[0].id;
 
-    // 4. build the papercraft
-    const res = await supabaseClient
-      .from<Papercraft>("papercrafts")
-      .insert(papercraft_input);
-    if (res.error) throw res.error;
-    const papercraft_id = res.data[0].id;
-
-    // 5. build the papercraft tags inputs
-    const papercraft_tags_input: PapercraftsTagsInput[] = [];
+    // 4. build the papercraft tags inputs
+    const papercraft_tags_input: APIt.PapercraftsTagsInput[] = [];
     for (const papercraft_tag of tags) {
       papercraft_tags_input.push({
         papercraft_id,
@@ -200,11 +188,8 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
       });
     }
 
-    // 6. bulk create the papercraft tags
-    const res2 = await supabaseClient
-      .from<PapercraftsTags>("papercrafts_tags")
-      .insert(papercraft_tags_input);
-    if (res.error) throw res2.error;
+    // 5. bulk create the papercraft tags
+    await createPapercraftsTags(papercraft_tags_input)
   });
 
   return (
@@ -262,10 +247,10 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
               isMulti
               loadOptions={async (search: string) => fetchTags(search)}
               className={s.tag_select}
-              getOptionLabel={(option: unknown) => (option as Tag).name}
-              getOptionValue={(option: unknown) => (option as Tag).id}
+              getOptionLabel={(option: unknown) => (option as APIt.Tag).name}
+              getOptionValue={(option: unknown) => (option as APIt.Tag).id}
               isOptionDisabled={() => tags.length >= 5}
-              onChange={(tags: Tag[]) => setTags(tags as Tag[])}
+              onChange={(tags: APIt.Tag[]) => setTags(tags as APIt.Tag[])}
               theme={getSelectTheme}
             />
             <div className={s.difficulty_row}>
@@ -278,10 +263,10 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
                   className={s.tag_select}
                   isClearable={false}
                   defaultValue={{
-                    value: Difficulty.easy,
+                    value: APIt.Difficulty.easy,
                     label: "easy",
                   }}
-                  options={Object.entries(Difficulty)
+                  options={Object.entries(APIt.Difficulty)
                     .filter(([key]) => !isNaN(Number(key)))
                     .map(([value, key]) => ({ value, label: key }))}
                   onChange={(difficulty: string) =>

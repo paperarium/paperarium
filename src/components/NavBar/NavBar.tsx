@@ -15,10 +15,10 @@ const NavBar: React.FC = function NavBar() {
 
   return (
     <>
-      <NavMenu toggled={navOpen} />
+      <NavMenu toggled={navOpen} setToggled={setNavOpen} />
       <nav className={s.container}>
         <Link href="/" passHref>
-          <a className={s.title_container}>
+          <a className={s.title_container} onClick={() => setNavOpen(false)}>
             <RiScissorsCutLine />
             <span>papercraft place!</span>
           </a>

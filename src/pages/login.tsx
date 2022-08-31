@@ -21,7 +21,7 @@ const LoginPage: NextPage = () => {
     if (user) {
       router.push('/');
     }
-  }, [user]);
+  }, [user, router]);
 
   return (
     <>

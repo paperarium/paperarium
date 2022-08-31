@@ -2,7 +2,7 @@
  * index.tsx
  * author: evan kirkiles
  * created on Mon Aug 15 2022
- * 2022 the nobot space, 
+ * 2022 the nobot space,
  */
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -14,19 +14,28 @@ type NavLinkProps = {
   exact?: boolean;
   children?: React.ReactNode;
   alternate?: boolean;
+  onClick?: () => void;
 };
 
 const NavLink: React.FC<NavLinkProps> = function NavLink({
   href,
   exact,
   children,
-  alternate
+  alternate,
+  onClick,
 }) {
   const { pathname } = useRouter();
   const isActive = exact ? pathname === href : pathname.startsWith(href);
   return (
     <Link href={href}>
-      <a className={`${alternate ? s.nav_link_alt : s.nav_link} ${isActive ? 'active' : ''}`}>{children}</a>
+      <a
+        className={`${alternate ? s.nav_link_alt : s.nav_link} ${
+          isActive ? "active" : ""
+        }`}
+        onClick={onClick}
+      >
+        {children}
+      </a>
     </Link>
   );
 };

@@ -8,7 +8,7 @@ import {
   supabaseClient,
   supabaseServerClient,
 } from "@supabase/auth-helpers-nextjs";
-import { Papercraft } from "../types/supabase";
+import { Papercraft } from "../supabase/types";
 
 const fetchPapercrafts = async (search: string) => {
   const { data: papercrafts, error } = await supabaseClient

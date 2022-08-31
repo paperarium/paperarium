@@ -1,5 +1,37 @@
 @import "../../styles/mixins";
 
+.nav_menu_backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+
+  &[class~="enter-active"] {
+    transform: translateY(0px);
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  &[class~="enter-done"] {
+    transform: translateY(0px);
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  @include respond-to("small") {
+    opacity: 0 !important;
+    pointer-events: none;
+  }
+}
+
 .nav_menu_container {
   z-index: 2;
   display: flex;
@@ -12,25 +44,100 @@
   top: var(--header-height);
   background-color: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(4px);
-  min-height: 300px;
   transform: translateY(calc(-100% + var(--notice-bar-height)));
-
-  &[class~="exit"] {
-    transition: transform 0.3s ease-in-out;
-  }
+  transition: transform 0.3s ease-in-out;
 
   &[class~="enter-active"] {
-    transition: transform 0.3s ease-in-out;
     transform: translateY(0px);
   }
 
   &[class~="enter-done"] {
     transform: translateY(0px);
   }
+
+  @include respond-to("small") {
+    transform: translateY(calc(-100% + var(--notice-bar-height))) !important;
+  }
 }
 
 .nav_menu_content {
   padding: 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  font-family: "Kosugi Maru";
+  position: relative;
+  height: 200px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+
+  div[class~="enter-active"] > & {
+    opacity: 1;
+  }
+
+  div[class~="enter-done"] > & {
+    opacity: 1;
+  }
+  // border-top: $border;
+  // margin-top: 15px;
+
+  // &:before {
+  //   content: "NAVIGATION";
+  //   position: absolute;
+  //   top: -5px;
+  //   left: 13px;
+  //   transform: translateY(-100%);
+  //   font-size: 10px;
+  // }
+}
+
+.nav_nav_column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 10px;
+  height: 100%;
+
+  &:last-of-type {
+    border-left: $border;
+    padding: 0px 10px 10px 20px;
+  }
+}
+
+.login_button {
+  width: 100%;
+  font-size: 15px;
+  border: $border;
+  border-radius: 5px;
+  padding: 10px 5px;
+  text-align: center;
+  cursor: pointer;
+  background-color: white;
+  transition: transform 0.1s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.signup_button {
+  width: 100%;
+  font-size: 15px;
+  border: $border;
+  border-radius: 5px;
+  padding: 10px 5px;
+  text-align: center;
+  cursor: pointer;
+  background-color: $highlight;
+  transition: transform 0.1s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 }
 
 .notice_bar {
@@ -55,5 +162,63 @@
   &:after {
     white-space: nowrap;
     content: "┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘ ┌( ಠ_ಠ)┘";
+  }
+}
+
+.profile_container {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+
+  @include respond-to("xsmall") {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+  }
+}
+
+.profile_picture {
+  height: 70px;
+  width: 70px;
+  min-width: 70px;
+  border-radius: 50%;
+  border: $border;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+  &:hover {
+    transform: scale(1.1);
+  }
+  background-color: $highlight;
+  font-family: "Kosugi Maru";
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  @include respond-to("xsmall") {
+    height: 50px;
+    width: 50px;
+    min-width: 50px;
+  }
+}
+
+.profile_name {
+  text-align: center;
+  width: 100%;
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+
+  @include respond-to("xsmall") {
+    text-align: left;
+    width: auto;
+    padding: 5px 0px;
+    margin-left: 8px;
   }
 }

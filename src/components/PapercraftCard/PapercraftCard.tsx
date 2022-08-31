@@ -7,7 +7,7 @@
 import React from "react";
 import s from "./PapercraftCard.module.scss";
 import Image from "next/image";
-import { Papercraft } from "../../types/supabase";
+import { Papercraft } from "../../supabase/types";
 
 type PapercraftCardProps = {
   papercraft: Papercraft;
