@@ -7,12 +7,12 @@
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-end;
-  background-image: linear-gradient($highlight 2px, transparent 2px),
-    linear-gradient(90deg, $highlight 2px, transparent 2px),
-    linear-gradient($highlight 1px, transparent 1px),
-    linear-gradient(90deg, $highlight 1px, white 1px);
-  background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
-  background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+  // background-image: linear-gradient($highlight 2px, transparent 2px),
+  //   linear-gradient(90deg, $highlight 2px, transparent 2px),
+  //   linear-gradient($highlight 1px, transparent 1px),
+  //   linear-gradient(90deg, $highlight 1px, white 1px);
+  // background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
+  // background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
 }
 
 .page_container {

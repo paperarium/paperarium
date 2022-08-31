@@ -147,3 +147,12 @@
   justify-content: center;
   align-items: center;
 }
+
+.logo {
+  display: flex;
+  height: calc(var(--header-height) - var(--header-vert-padding) * 2 + 5px);
+  width: calc(var(--header-height) - var(--header-vert-padding) * 2 + 5px);
+  position: relative;
+  margin-right: -5px;
+  margin-left: -10px;
+}

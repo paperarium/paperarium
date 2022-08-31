@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "analyze": "ANALYZE=true next build",
     "update-types": "source .env.local && npx openapi-typescript \"${NEXT_PUBLIC_SUPABASE_URL}/rest/v1\" --header \"apikey: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}\" --header \"Authorization: Bearer ${NEXT_PUBLIC_SUPABASE_ANON_KEY}\" --version=3 --output src/types/database.ts",
     "check-curl": "source .env.local && curl \"${NEXT_PUBLIC_SUPABASE_URL}/rest/v1?apiKey=${NEXT_PUBLIC_SUPABASE_ANON_KEY}\" -H \"apikey: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}\" -H \"Authorization: Bearer ${NEXT_PUBLIC_SUPABASE_ANON_KEY}\""
   },
