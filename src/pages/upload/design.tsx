@@ -37,8 +37,9 @@ import {
 const fetchTags = debounce(
   async (search: string): Promise<Tag[]> => {
     const { data: tags, error } = await supabaseClient
-      .from<Tag>("papercrafts")
-      .select("*");
+      .from<Tag>("tags")
+      .select("*")
+      .filter("code", "like", `%${search}%`);
     if (error) throw error;
     return tags;
   },
@@ -177,7 +178,7 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
     for (const papercraft_tag of tags) {
       papercraft_tags_input.push({
         papercraft_id,
-        tag_id: papercraft_tag.id,
+        tag_id: papercraft_tag.id
       });
     }
 
@@ -263,8 +264,8 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
                     label: "easy",
                   }}
                   options={Object.entries(Difficulty)
-                    .reverse()
-                    .map(([key, value]) => ({ value, label: key }))}
+                    .filter(([key]) => !isNaN(Number(key)))
+                    .map(([value, key]) => ({ value, label: key }))}
                   onChange={(difficulty: string) =>
                     setDifficulty((difficulty! as any).value)
                   }
@@ -328,34 +329,10 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
                       { value: "cm", label: "cm" },
                     ]}
                     onChange={(units: any) => {
-                      if (units!.value === dimensions.units) return;
-                      if (units!.value === "cm") {
-                        setDimensions({
-                          width: dimensions.width
-                            ? dimensions.width * 2.54
-                            : "",
-                          height: dimensions.height
-                            ? dimensions.height * 2.54
-                            : "",
-                          length: dimensions.length
-                            ? dimensions.length * 2.54
-                            : "",
-                          units: "cm",
-                        });
-                      } else {
-                        setDimensions({
-                          width: dimensions.width
-                            ? dimensions.width / 2.54
-                            : "",
-                          height: dimensions.height
-                            ? dimensions.height / 2.54
-                            : "",
-                          length: dimensions.length
-                            ? dimensions.length / 2.54
-                            : "",
-                          units: "in",
-                        });
-                      }
+                      setDimensions({
+                        ...dimensions,
+                        units,
+                      });
                     }}
                     theme={getSelectTheme}
                   />

@@ -17,9 +17,10 @@ type PapercraftCardProps = {
 const PapercraftCard: React.FC<PapercraftCardProps> = function PapercraftCard({
   papercraft,
 }) {
+  const [bucket, ...key] = papercraft.pictures[0].split('/');
   const { data } = supabaseClient.storage
-    .from("papercrafts")
-    .getPublicUrl(papercraft.pictures[0]);
+    .from(bucket)
+    .getPublicUrl(key.join('/'));
   const imageURL = data?.publicURL;
   return (
     <div className={s.container}>
@@ -27,8 +28,8 @@ const PapercraftCard: React.FC<PapercraftCardProps> = function PapercraftCard({
         {imageURL ? (
           <Image
             src={imageURL}
-            placeholder="blur"
-            blurDataURL={`${process.env.IMGIX}/${imageURL}?blur=2000`}
+            // placeholder="blur"
+            // blurDataURL={`${process.env.IMGIX}/${imageURL}?blur=2000`}
             layout="fill"
             objectFit="cover"
             alt={papercraft.title}
@@ -37,7 +38,7 @@ const PapercraftCard: React.FC<PapercraftCardProps> = function PapercraftCard({
 
         <div className={s.info_card}>
           <div>{papercraft.title}</div>
-          <div>@{papercraft.user_id}</div>
+          <div>@{papercraft.user.username}</div>
         </div>
       </div>
     </div>

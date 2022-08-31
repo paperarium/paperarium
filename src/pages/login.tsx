@@ -35,7 +35,9 @@ const LoginPage: NextPage = () => {
             supabaseClient={supabaseClient}
             providers={["google", "github"]}
             redirectTo={"/"}
-          />
+          >
+            HI
+          </Auth>
         </div>
       </div>
     </>

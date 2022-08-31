@@ -13,7 +13,10 @@ import { Papercraft } from "../types/supabase";
 const fetchPapercrafts = async (search: string) => {
   const { data: papercrafts, error } = await supabaseClient
     .from<Papercraft>("papercrafts")
-    .select("*")
+    .select(`
+      *,
+      user:profiles(username)
+    `)
     .order("created_at", { ascending: true });
   if (error) throw error;
   return papercrafts;

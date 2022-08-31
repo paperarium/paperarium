@@ -5,6 +5,11 @@
  * 2022 the nobot space,
  */
 
+export type User = {
+  id: string;
+  username: string;
+};
+
 export type Papercraft = {
   id: number;
   user_id: string;
@@ -19,9 +24,10 @@ export type Papercraft = {
   difficulty: number;
   dimensions_cm?: number[];
   verified: boolean;
+  user: User;
 };
 
-export type PapercraftInput = Omit<Papercraft, "id" | "created_at">;
+export type PapercraftInput = Omit<Papercraft, "id" | "created_at" | "user">;
 
 export type PapercraftsTags = {
   id: number;
