@@ -5,19 +5,17 @@
  * 2022 papercraft club
  */
 
-import { NextPage, NextPageContext } from "next";
+import { NextPage } from "next";
 import Head from "next/head";
-import { withSSRContext } from "aws-amplify";
-import { Auth } from "@aws-amplify/auth";
 import styles from "../styles/Home.module.scss";
 import { useRouter } from "next/router";
-import authGetServerSideProps from "../util/authGetServerSideProps";
+import { supabaseClient, withPageAuth, User } from '@supabase/auth-helpers-nextjs';
 
 type ProfilePageProps = {
-  username: string;
+  user: User;
 };
 
-const Profile: NextPage<ProfilePageProps> = ({ username }) => {
+const Profile: NextPage<ProfilePageProps> = ({ user }) => {
   const router = useRouter();
   return (
     <>
@@ -26,10 +24,10 @@ const Profile: NextPage<ProfilePageProps> = ({ username }) => {
         <meta name="description" content="your profile page." />
       </Head>
       <h1 className={styles.title}>this is the profile page.</h1>
-      <p>your username is: {username}</p>
+      <p>your username is: {user.email}</p>
       <div
         onClick={() =>
-          Auth.signOut().then(() => {
+          supabaseClient.auth.signOut().then(() => {
             router.push("/");
           })
         }
@@ -40,7 +38,6 @@ const Profile: NextPage<ProfilePageProps> = ({ username }) => {
   );
 };
 
-// use authentication on this page
-export const getServerSideProps = authGetServerSideProps;
+export const getServerSideProps = withPageAuth({redirectTo: '/login'});
 
 export default Profile;

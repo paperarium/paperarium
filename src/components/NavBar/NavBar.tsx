@@ -1,19 +1,18 @@
 import Hamburger from "hamburger-react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import NavLink from "../NavLink/NavLink";
 import NavMenu from "../NavMenu/NavMenu";
-import { Auth } from '@aws-amplify/auth';
 import { RiScissorsCutLine } from "react-icons/ri";
 import s from "./NavBar.module.scss";
-import { useAuthenticator } from '@aws-amplify/ui-react';
 import { useRouter } from "next/router";
+import { useUser } from '@supabase/auth-helpers-react';
 
 const NavBar: React.FC = function NavBar() {
   const router = useRouter();
   const [navOpen, setNavOpen] = useState(false);
-  const { user } = useAuthenticator((context) => [context.user]);
-  // const { user, signOut } = useAuthenticator((context) => [context.user]);
+  const { user } = useUser();
+
   return (
     <>
       <NavMenu toggled={navOpen} />
@@ -21,7 +20,6 @@ const NavBar: React.FC = function NavBar() {
         <Link href="/" passHref>
           <a className={s.title_container}>
             <RiScissorsCutLine />
-            {/* <Image src={LOGOTEXT} layout="fill" objectFit="contain" /> */}
             <span>papercraft place!</span>
           </a>
         </Link>
@@ -46,7 +44,6 @@ const NavBar: React.FC = function NavBar() {
             <Link href={"/profile"}>
               <div className={s.profile_container}>
                 <div className={s.profile_picture}>
-                  HI
                 </div>
               </div>
             </Link>

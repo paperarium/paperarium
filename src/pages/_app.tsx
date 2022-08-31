@@ -5,46 +5,21 @@
  * 2022 papercraft club
  */
 import type { AppProps } from "next/app";
-import { Amplify } from "@aws-amplify/core";
-import awsExports from "../aws-exports";
-import "@aws-amplify/ui-react/styles.css"; // default theme
 import "../styles/globals.scss";
 import "../styles/fonts.scss";
-import "../components/Authenticator/Authenticator.scss";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import { UserProvider } from '@supabase/auth-helpers-react'
+import { supabaseClient } from '@supabase/auth-helpers-nextjs'
 import Layout from "../components/Layout/Layout";
-import { Authenticator } from "@aws-amplify/ui-react";
 import { NextPage } from "next";
-import { Hub } from "@aws-amplify/core";
-import { Auth } from "@aws-amplify/auth";
 import React from "react";
 import {
   Hydrate,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-
-// Configure Amplify
-Amplify.configure({
-  ...awsExports,
-  ssr: true,
-});
-
-// on no user logged in, just use API key for requests
-// Hub.listen('auth', async (authState) => {
-//   try {
-//     await Auth.currentAuthenticatedUser();
-//     Amplify.configure({
-//       aws_appsync_authenticationType: "AMAZON_COGNITO_USER_POOLS"
-//     });
-//   } catch {
-//     Amplify.configure({
-//       aws_appsync_authenticationType: "API_KEY"
-//     });
-//   }
-// });
 
 // configure react-query
 
@@ -54,13 +29,13 @@ function MyApp({ Component, pageProps }: AppProps) {
     (Component as any).getLayout ||
     ((page: React.ReactNode) => <Layout>{page}</Layout>);
   return (
-    <Authenticator.Provider>
+    <UserProvider supabaseClient={supabaseClient}>
       <QueryClientProvider client={queryClient} contextSharing={true}>
         <Hydrate state={pageProps.dehydratedState}>
           {getLayout(<Component {...pageProps} />)}
         </Hydrate>
       </QueryClientProvider>
-    </Authenticator.Provider>
+    </UserProvider>
   );
 }
 

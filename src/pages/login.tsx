@@ -6,12 +6,10 @@
  */
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useRouter } from "next/router";
-import { useState } from "react";
+import { Auth } from "@supabase/ui";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import s from "../styles/Home.module.scss";
 import Layout from "../components/Layout/Layout";
-import Authenticator from "../components/Authenticator/Authenticator";
-import { Auth } from "aws-amplify";
 
 const LoginPage: NextPage = () => {
   return (
@@ -21,7 +19,13 @@ const LoginPage: NextPage = () => {
         <meta name="description" content="login" />
       </Head>
       <div className={s.login_page_container}>
-        <Authenticator>you should now be logged in!</Authenticator>
+        <div className={s.login_card}>
+          <Auth
+            supabaseClient={supabaseClient}
+            providers={["google", "github"]}
+            redirectTo={"/"}
+          />
+        </div>
       </div>
     </>
   );

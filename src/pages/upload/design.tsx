@@ -3,12 +3,6 @@ import React, { useRef } from "react";
 import Head from "next/head";
 import s from "../../styles/Upload.module.scss";
 import TextareaAutosize from "react-textarea-autosize";
-import { Storage } from "@aws-amplify/storage";
-import { API } from "@aws-amplify/api";
-import { Auth } from "@aws-amplify/auth";
-import { graphqlOperation, GraphQLResult } from "@aws-amplify/api-graphql";
-import { listTags, searchTags } from "../../graphql/custom-queries";
-import * as APIt from "../../API";
 import { useState } from "react";
 import { debounce } from "ts-debounce";
 import FileUpload from "../../components/FileUpload/FileUpload";
@@ -26,36 +20,43 @@ import {
 import { RiScissorsCutLine } from "react-icons/ri";
 import { useMutation } from "@tanstack/react-query";
 import { v4 as uuidv4 } from "uuid";
-import { uploadToS3 } from "../../API_Serialize";
-import authGetServerSideProps from "../../util/authGetServerSideProps";
+import {
+  Difficulty,
+  Papercraft,
+  PapercraftInput,
+  PapercraftsTags,
+  PapercraftsTagsInput,
+  Tag,
+} from "../../types/supabase";
+import {
+  withPageAuth,
+  User,
+  supabaseClient,
+} from "@supabase/auth-helpers-nextjs";
 
-const getTags = debounce(
-  async (search: string): Promise<APIt.Tag[]> => {
-    const { data } = (await API.graphql(
-      {
-        ...
-        graphqlOperation(searchTags, {
-          filter: {
-            title: {
-              match: search
-            }
-          }
-        }),
-        authMode: 'API_KEY'
-      }
-    )) as GraphQLResult<APIt.SearchTagsPCPQuery>;
-    if (data?.searchTags) {
-      return data.searchTags.items.reduce<APIt.Tag[]>((acc, t) => {
-        if (t) acc.push(t);
-        return acc;
-      }, []);
-    } else {
-      return [];
-    }
+const fetchTags = debounce(
+  async (search: string): Promise<Tag[]> => {
+    const { data: tags, error } = await supabaseClient
+      .from<Tag>("papercrafts")
+      .select("*");
+    if (error) throw error;
+    return tags;
   },
   300,
   { maxWait: 1200 }
 );
+
+const uploadFile = async (key: string, i_file: File) => {
+  const { data, error } = await supabaseClient.storage
+    .from("papercraftplace")
+    .upload(key, i_file, {
+      cacheControl: "3600",
+      upsert: false,
+    });
+  if (error) throw error;
+  if (!data) throw `no key when uploading file ${key}`;
+  return data?.Key;
+};
 
 export type SerializedFile = {
   file: File;
@@ -69,25 +70,23 @@ type PapercraftDimensions = {
   units: "in" | "cm";
 };
 
-const UploadDesignPage: NextPage = () => {
+const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
   // input form fields
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [tags, setTags] = useState<APIt.Tag[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
   const [images, setImages] = useState<File[] | null>(null);
   const imageURLs = useRef<string[] | null>(null);
   const [pdo, setPdo] = useState<File | null>(null);
   const [pdfLined, setPdfLined] = useState<SerializedFile | null>(null);
   const [pdfLineless, setPdfLineless] = useState<SerializedFile | null>(null);
   const [glb, setGlb] = useState<File | null>(null);
-  const [difficulty, setDifficulty] = useState<APIt.Difficulty>(
-    APIt.Difficulty.medium
-  );
+  const [difficulty, setDifficulty] = useState<Difficulty>(Difficulty.easy);
   const [dimensions, setDimensions] = useState<PapercraftDimensions>({
     units: "in",
     width: "",
     height: "",
-    length: ""
+    length: "",
   });
 
   // keep track of "percentage" of form done
@@ -109,118 +108,84 @@ const UploadDesignPage: NextPage = () => {
     if (!pdfLined && !pdfLineless) throw "missing a pdf!";
 
     // first, upload all of the resources, this may take a while.
-    const PAPERCRAFT_KEY_PREFIX = `papercrafts/${title}_${uuidv4()}`;
-
-    // 0. pre-load the identityid of the user for use in s3
-    const user = await Auth.currentUserInfo();
-    const creds = await Auth.currentCredentials();
-    console.log(user);
-    console.log(creds);
+    const PAPERCRAFT_KEY_PREFIX = `${user.id}/papercrafts/${title}_${uuidv4()}`;
 
     // 1. upload the images of the papercraft
-    const i_pictures: APIt.S3ObjectInput[] = [];
+    const pictures: string[] = [];
     for (let i = 0; i < images.length; i++) {
       const i_file = images[i];
       const { name } = i_file;
       const fileName = `${PAPERCRAFT_KEY_PREFIX}/IMAGE_${i}_${name}`;
-      const file_input = await uploadToS3(i_file, fileName, "protected", creds);
-      i_pictures.push(file_input);
+      pictures.push(await uploadFile(fileName, i_file));
     }
     console.log("uploaded pictures");
-    console.log(i_pictures);
+    console.log(pictures);
 
     // 2. upload the papercraft files
 
     // GLB - for in-browser 3d view
-    let i_glb: APIt.S3ObjectInput | undefined = undefined;
+    let glb_url: string | undefined = undefined;
     if (glb) {
       const glb_file = `${PAPERCRAFT_KEY_PREFIX}/${glb.name}`;
-      i_glb = await uploadToS3(glb, glb_file, "protected", creds);
-      console.log("uploaded glb");
-      console.log(i_glb);
+      pictures.push(await uploadFile(glb_file, glb));
     }
     // PDF (lined) - for more beginner papercrafting
-    let i_pdf_lined: APIt.S3ObjectInput | undefined = undefined;
+    let pdf_lined_url: string | undefined = undefined;
     if (pdfLined) {
       const pdf_lined_file = `${PAPERCRAFT_KEY_PREFIX}/${pdfLined.file.name}`;
-      i_pdf_lined = await uploadToS3(
-        pdfLined.file,
-        pdf_lined_file,
-        "protected",
-        creds
-      );
-      console.log("uploaded pdf lined");
-      console.log(i_pdf_lined);
+      pdf_lined_url = await uploadFile(pdf_lined_file, pdfLined.file);
     }
     // PDF (lineless) - for the usual papercrafter
-    let i_pdf_lineless: APIt.S3ObjectInput | undefined = undefined;
+    let pdf_lineless_url: string | undefined = undefined;
     if (pdfLineless) {
       const pdf_lineless_file = `${PAPERCRAFT_KEY_PREFIX}/${pdfLineless.file.name}`;
-      i_pdf_lineless = await uploadToS3(
-        pdfLineless.file,
-        pdf_lineless_file,
-        "protected",
-        creds
-      );
-      console.log("uploaded pdf lineless");
-      console.log(i_pdf_lineless);
+      pdf_lineless_url = await uploadFile(pdf_lineless_file, pdfLineless.file);
     }
     // PDO - a guide for how to put together the papercraft
     const pdo_file = `${PAPERCRAFT_KEY_PREFIX}/${pdo.name}`;
-    const i_pdo = await uploadToS3(pdo, pdo_file, "protected", creds);
-    console.log("uploaded pdo");
-    console.log(i_pdo);
+    const pdo_url = await uploadFile(pdo_file, pdo);
 
     // 3. build the input form
-    const papercraft_input: APIt.CreatePapercraftInput = {
+    const papercraft_input: PapercraftInput = {
       title,
       description,
-      glb: i_glb,
-      pdo: i_pdo,
-      pdf_lineless: i_pdf_lineless,
-      pdf_lined: i_pdf_lined,
-      pictures: i_pictures,
+      glb_url,
+      pdo_url,
+      pdf_lined_url,
+      pdf_lineless_url,
+      pictures,
       difficulty,
-      width_in: dimensions.width
-        ? dimensions.width * (dimensions.units === "in" ? 1 : 0.393701)
-        : undefined,
-      length_in: dimensions.length
-        ? dimensions.length * (dimensions.units === "in" ? 1 : 0.393701)
-        : undefined,
-      height_in: dimensions.height
-        ? dimensions.height * (dimensions.units === "in" ? 1 : 0.393701)
-        : undefined,
+      dimensions_cm:
+        dimensions.width && dimensions.length && dimensions.height
+          ? [dimensions.width, dimensions.length, dimensions.height].map(
+              (val) => val * (dimensions.units === "cm" ? 1 : 2.54)
+            )
+          : undefined,
       verified: false,
-      userPapercraftsId: user.attributes["sub"],
+      user_id: user.id,
     };
 
-    // 4. build the papercraft tags inputs
-    const papercraft_tags_input: APIt.CreatePapercraftTagsInput[] = [];
+    // 4. build the papercraft
+    const res = await supabaseClient
+      .from<Papercraft>("papercrafts")
+      .insert(papercraft_input);
+    if (res.error) throw res.error;
+    const papercraft_id = res.data[0].id;
+
+    // 5. build the papercraft tags inputs
+    const papercraft_tags_input: PapercraftsTagsInput[] = [];
     for (const papercraft_tag of tags) {
       papercraft_tags_input.push({
-        papercraftID: "",
-        tagID: papercraft_tag.id,
+        papercraft_id,
+        tag_id: papercraft_tag.id,
       });
     }
 
-    // 4. now build the request body
-    const req = {
-      headers: {
-        "Content-Type": "application/json; charset=UTF-8",
-        Authorization: `${(await Auth.currentSession())
-          .getIdToken()
-          .getJwtToken()}`,
-      },
-      body: {
-        papercraft: papercraft_input,
-        papercraftTags: papercraft_tags_input,
-      },
-    };
-    console.log("final request");
-    console.log(req);
-
-    // post the papercraft create to the lambda
-    return API.post("papercraftclubREST", "/papercraft/upload", req);
+    // 6. bulk create the papercraft tags
+    const res2 = await supabaseClient
+      .from<PapercraftsTags>("papercrafts_tags")
+      .insert(papercraft_tags_input);
+    if (res.error) throw res2.error;
   });
 
   return (
@@ -276,12 +241,12 @@ const UploadDesignPage: NextPage = () => {
             </div>
             <AsyncSelect
               isMulti
-              loadOptions={async (search: string) => getTags(search)}
+              loadOptions={async (search: string) => fetchTags(search)}
               className={s.tag_select}
-              getOptionLabel={(option: unknown) => (option as APIt.Tag).title}
-              getOptionValue={(option: unknown) => (option as APIt.Tag).id}
+              getOptionLabel={(option: unknown) => (option as Tag).name}
+              getOptionValue={(option: unknown) => (option as Tag).id}
               isOptionDisabled={() => tags.length >= 5}
-              onChange={(tags: APIt.Tag[]) => setTags(tags as APIt.Tag[])}
+              onChange={(tags: Tag[]) => setTags(tags as Tag[])}
               theme={getSelectTheme}
             />
             <div className={s.difficulty_row}>
@@ -294,12 +259,12 @@ const UploadDesignPage: NextPage = () => {
                   className={s.tag_select}
                   isClearable={false}
                   defaultValue={{
-                    value: APIt.Difficulty.easy,
-                    label: APIt.Difficulty.easy,
+                    value: Difficulty.easy,
+                    label: "easy",
                   }}
-                  options={Object.values(APIt.Difficulty)
+                  options={Object.entries(Difficulty)
                     .reverse()
-                    .map((value) => ({ value, label: value }))}
+                    .map(([key, value]) => ({ value, label: key }))}
                   onChange={(difficulty: string) =>
                     setDifficulty((difficulty! as any).value)
                   }
@@ -494,7 +459,12 @@ const UploadDesignPage: NextPage = () => {
                 {imageURLs.current ? (
                   imageURLs.current.map((imgURL, i) => (
                     <SwiperSlide key={`${imgURL}_${i}`}>
-                      <Image src={imgURL} layout={"fill"} objectFit={"cover"} alt={`papercraft preview image ${i}`}/>
+                      <Image
+                        src={imgURL}
+                        layout={"fill"}
+                        objectFit={"cover"}
+                        alt={`papercraft preview image ${i}`}
+                      />
                     </SwiperSlide>
                   ))
                 ) : (
@@ -525,7 +495,7 @@ const UploadDesignPage: NextPage = () => {
                 <div className={s.tags_container}>
                   {tags.map((tag) => (
                     <div key={tag.id} className={s.tag}>
-                      {tag.title}
+                      {tag.name}
                     </div>
                   ))}
                 </div>
@@ -581,6 +551,6 @@ const UploadDesignPage: NextPage = () => {
 );
 
 // use authentication on this page
-export const getServerSideProps = authGetServerSideProps;
+export const getServerSideProps = withPageAuth({ redirectTo: "/login" });
 
 export default UploadDesignPage;

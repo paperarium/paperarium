@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import s from "../../styles/Upload.module.scss";
-import authGetServerSideProps from "../../util/authGetServerSideProps";
+import { withPageAuth } from '@supabase/auth-helpers-nextjs';
 
 const UploadPage: NextPage = () => {
   return (
@@ -33,6 +33,6 @@ const UploadPage: NextPage = () => {
 };
 
 // use authentication on this page
-export const getServerSideProps = authGetServerSideProps;
+export const getServerSideProps = withPageAuth({redirectTo: '/login'});
 
 export default UploadPage;
