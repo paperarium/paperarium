@@ -22,7 +22,7 @@ const Home: NextPage = () => {
           </div>
           <div className={s.page_col}>
             <div className={s.content_container}>
-              <h1>welcome to our paper world.</h1>
+              <i><h1>welcome to our paper world.</h1></i>
               <p>
                 here you can explore original or unofficial fan-made 3d models
                 you can print out and assemble in real life, for free. after

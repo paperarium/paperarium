@@ -18,8 +18,7 @@
   background-color: $background;
 
   @include respond-to("small") {
-    padding: var(--header-vert-padding) 24px;
-    padding-right: 14px;
+    padding: var(--header-vert-padding) 14px;
   }
 
   @include respond-to("large") {
@@ -37,6 +36,7 @@
   font-weight: 700;
   font-size: calc(var(--header-height) - var(--header-vert-padding) * 2 - 10px);
   white-space: nowrap;
+  font-style: italic;
 }
 
 .links_container {
@@ -154,5 +154,5 @@
   width: calc(var(--header-height) - var(--header-vert-padding) * 2 + 5px);
   position: relative;
   margin-right: -5px;
-  margin-left: -10px;
+  margin-left: -5px;
 }

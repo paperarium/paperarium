@@ -90,12 +90,12 @@ $completion_bar_height: 50px;
   position: relative;
   margin-top: 20px;
   background-color: white;
-  background-image: linear-gradient($highlight 2px, transparent 2px),
-    linear-gradient(90deg, $highlight 2px, transparent 2px),
-    linear-gradient($highlight 1px, transparent 1px),
-    linear-gradient(90deg, $highlight 1px, white 1px);
-  background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
-  background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+  // background-image: linear-gradient($highlight 2px, transparent 2px),
+  //   linear-gradient(90deg, $highlight 2px, transparent 2px),
+  //   linear-gradient($highlight 1px, transparent 1px),
+  //   linear-gradient(90deg, $highlight 1px, white 1px);
+  // background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
+  // background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
 }
 
 .input_outline {
@@ -121,7 +121,7 @@ $completion_bar_height: 50px;
 
 .annotation {
   width: 100%;
-  opacity: 0.9;
+  opacity: 0.6;
   font-size: 11px;
   border-bottom: $border;
   margin-top: 5px;
@@ -593,12 +593,10 @@ $preview_header_height: 38px;
   right: -5px;
   transform: translateX(100%) translateY(-50%);
   color: white;
-  font-family: "Courier New", Courier, monospace;
 }
 
 .submit_button {
   height: 100%;
-  font-family: "Courier New", Courier, monospace;
   border: $border;
   background-color: #303030;
   color: #606060;

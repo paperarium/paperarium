@@ -98,6 +98,10 @@
   border-top: $border;
   width: 100%;
   background-color: white;
+
+  & p {
+    font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  }
 }
 
 .continue_button {
