@@ -7,11 +7,22 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { Auth } from "@supabase/ui";
+import { useUser } from "@supabase/auth-helpers-react";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import s from "../styles/Home.module.scss";
 import Layout from "../components/Layout/Layout";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 const LoginPage: NextPage = () => {
+  const router = useRouter();
+  const { user } = useUser();
+  useEffect(() => {
+    if (user) {
+      router.push('/');
+    }
+  }, [user]);
+
   return (
     <>
       <Head>
