@@ -109,14 +109,20 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
     if (!pdfLined && !pdfLineless) throw "missing a pdf!";
 
     // first, upload all of the resources, this may take a while.
-    const PAPERCRAFT_KEY_PREFIX = `${user.id}/papercrafts/${title}_${uuidv4()}`;
+    const PAPERCRAFT_KEY_PREFIX = `${user.id}/papercrafts/${title.replace(
+      /[^a-zA-Z0-9-_\.]/g,
+      ""
+    )}_${uuidv4()}`;
 
     // 1. upload the images of the papercraft
     const pictures: string[] = [];
     for (let i = 0; i < images.length; i++) {
       const i_file = images[i];
       const { name } = i_file;
-      const fileName = `${PAPERCRAFT_KEY_PREFIX}/IMAGE_${i}_${name}`;
+      const fileName = `${PAPERCRAFT_KEY_PREFIX}/IMAGE_${i}_${name.replace(
+        /[^a-zA-Z0-9-_\.]/g,
+        ""
+      )}`;
       pictures.push(await uploadFile(fileName, i_file));
     }
     console.log("uploaded pictures");
@@ -127,23 +133,35 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
     // GLB - for in-browser 3d view
     let glb_url: string | undefined = undefined;
     if (glb) {
-      const glb_file = `${PAPERCRAFT_KEY_PREFIX}/${glb.name}`;
+      const glb_file = `${PAPERCRAFT_KEY_PREFIX}/${glb.name.replace(
+        /[^a-zA-Z0-9-_\.]/g,
+        ""
+      )}`;
       pictures.push(await uploadFile(glb_file, glb));
     }
     // PDF (lined) - for more beginner papercrafting
     let pdf_lined_url: string | undefined = undefined;
     if (pdfLined) {
-      const pdf_lined_file = `${PAPERCRAFT_KEY_PREFIX}/${pdfLined.file.name}`;
+      const pdf_lined_file = `${PAPERCRAFT_KEY_PREFIX}/${pdfLined.file.name.replace(
+        /[^a-zA-Z0-9-_\.]/g,
+        ""
+      )}`;
       pdf_lined_url = await uploadFile(pdf_lined_file, pdfLined.file);
     }
     // PDF (lineless) - for the usual papercrafter
     let pdf_lineless_url: string | undefined = undefined;
     if (pdfLineless) {
-      const pdf_lineless_file = `${PAPERCRAFT_KEY_PREFIX}/${pdfLineless.file.name}`;
+      const pdf_lineless_file = `${PAPERCRAFT_KEY_PREFIX}/${pdfLineless.file.name.replace(
+        /[^a-zA-Z0-9-_\.]/g,
+        ""
+      )}`;
       pdf_lineless_url = await uploadFile(pdf_lineless_file, pdfLineless.file);
     }
     // PDO - a guide for how to put together the papercraft
-    const pdo_file = `${PAPERCRAFT_KEY_PREFIX}/${pdo.name}`;
+    const pdo_file = `${PAPERCRAFT_KEY_PREFIX}/${pdo.name.replace(
+      /[^a-zA-Z0-9-_\.]/g,
+      ""
+    )}`;
     const pdo_url = await uploadFile(pdo_file, pdo);
 
     // 3. build the input form
@@ -178,7 +196,7 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
     for (const papercraft_tag of tags) {
       papercraft_tags_input.push({
         papercraft_id,
-        tag_id: papercraft_tag.id
+        tag_id: papercraft_tag.id,
       });
     }
 

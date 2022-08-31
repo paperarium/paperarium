@@ -25,7 +25,6 @@ const PDFDisplay: React.FC<PDFDisplayProps> = function PDFDisplay({ pdf, default
     const onResize = () => {
       if (!docRef.current) return;
       const { width, height } = docRef.current.getBoundingClientRect();
-      console.log(width, height);
     }
     onResize();
     window.addEventListener('resize', onResize, false);

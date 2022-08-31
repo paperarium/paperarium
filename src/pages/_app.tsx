@@ -13,15 +13,12 @@ import "swiper/css/navigation";
 import { UserProvider } from '@supabase/auth-helpers-react'
 import { supabaseClient } from '@supabase/auth-helpers-nextjs'
 import Layout from "../components/Layout/Layout";
-import { NextPage } from "next";
 import React from "react";
 import {
   Hydrate,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-
-// configure react-query
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = React.useState(() => new QueryClient());

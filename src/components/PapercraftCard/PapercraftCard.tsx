@@ -8,7 +8,6 @@ import React from "react";
 import s from "./PapercraftCard.module.scss";
 import Image from "next/image";
 import { Papercraft } from "../../types/supabase";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 
 type PapercraftCardProps = {
   papercraft: Papercraft;
@@ -17,25 +16,17 @@ type PapercraftCardProps = {
 const PapercraftCard: React.FC<PapercraftCardProps> = function PapercraftCard({
   papercraft,
 }) {
-  const [bucket, ...key] = papercraft.pictures[0].split('/');
-  const { data } = supabaseClient.storage
-    .from(bucket)
-    .getPublicUrl(key.join('/'));
-  const imageURL = data?.publicURL;
   return (
     <div className={s.container}>
       <div className={s.inner_container}>
-        {imageURL ? (
-          <Image
-            src={imageURL}
-            // placeholder="blur"
-            // blurDataURL={`${process.env.IMGIX}/${imageURL}?blur=2000`}
-            layout="fill"
-            objectFit="cover"
-            alt={papercraft.title}
-          />
-        ) : null}
-
+        <Image
+          src={`/${papercraft.pictures[0]}`}
+          placeholder="blur"
+          blurDataURL={`${process.env.IMGIX}/${papercraft.pictures[0]}?blur=2000`}
+          layout="fill"
+          objectFit="cover"
+          alt={papercraft.title}
+        />
         <div className={s.info_card}>
           <div>{papercraft.title}</div>
           <div>@{papercraft.user.username}</div>

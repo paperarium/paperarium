@@ -60,27 +60,26 @@ const ExplorePage: NextPage = () => {
               <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
             ))
           : null}
-        {papercrafts.data
-          ? papercrafts.data.map((papercraft) => (
-              <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
-            ))
-          : null}
       </div>
     </>
   );
 };
 
 /**
- * Run the intiial papercraft query on the server.
+ * Run the intiial papercraft query on the server. This only queries for public
+ * papercrafts, not worrying about RLS.
  * @param context
  * @returns
  */
 export async function getStaticProps(context: any) { 
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(["papercrafts", ""], async () => {
-    const { data: papercrafts, error } = await supabaseServerClient(context)
+    const { data: papercrafts, error } = await supabaseClient
       .from<Papercraft>("papercrafts")
-      .select("*")
+      .select(`
+        *,
+        user:profiles(username)
+      `)
       .order("created_at", { ascending: true });
     if (error) throw error;
     return papercrafts;

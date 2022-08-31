@@ -9,19 +9,13 @@ const nextConfig = {
   images: {
     domains: ["wcdvzivrzlrhqqewtlem.supabase.co"],
   },
-  // env: {
-  //   IMGIX:
-  //     process.env.USER_BRANCH && process.env.USER_BRANCH === "production"
-  //       ? "https://papercraftplace.imgix.net"
-  //       : "https://papercraftplace-dev.imgix.net",
-  // },
-  // images: {
-  //   loader: "imgix",
-  //   path:
-  //     process.env.USER_BRANCH && process.env.USER_BRANCH === "production"
-  //       ? "https://papercraftplace.imgix.net"
-  //       : "https://papercraftplace-dev.imgix.net",
-  // },
+  env: {
+    IMGIX: "https://papercraftplace.imgix.net",
+  },
+  images: {
+    loader: "imgix",
+    path: "https://papercraftplace.imgix.net",
+  },
   webpack: (config, { isServer }) => {
     config.resolve.extensions = [".web.js", ...config.resolve.extensions];
     // for pdf viewer
