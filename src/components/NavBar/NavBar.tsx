@@ -23,7 +23,7 @@ const NavBar: React.FC = function NavBar() {
           <a className={s.title_container} onClick={() => setNavOpen(false)}>
             {/* <RiScissorsCutLine /> */}
             <img src={LOGO.src} alt={"logo"} className={s.logo} />
-            <span>papercraft place</span>
+            <span>paperarium</span>
           </a>
         </Link>
         <div className={s.links_container}>

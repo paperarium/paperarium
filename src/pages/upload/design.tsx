@@ -204,7 +204,7 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
       <div className={s.upload_container}>
         <div className={s.upload_col}>
           <div className={s.column_header}>
-            <b>upload a papercraft design!</b> after filling in all of the
+            <b>upload a papercraft design slip!</b> after filling in all of the
             required fields, the submit button will turn green and you can post
             your papercraft to our website.
           </div>

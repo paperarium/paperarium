@@ -1,9 +1,15 @@
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import PapercraftCard from "../components/PapercraftCard/PapercraftCard";
 import s from "../styles/Home.module.scss";
+import { listPapercrafts } from "../supabase/api/papercrafts";
+import { Papercraft } from "../supabase/types";
 
 const Home: NextPage = () => {
+  const papercrafts = useQuery(["papercrafts", ""], () => listPapercrafts());
   return (
     <>
       <Head>
@@ -17,12 +23,24 @@ const Home: NextPage = () => {
         <div className={s.page_row}>
           <div className={s.page_col}>
             <div className={s.content_container}>
-              some more content goes here.
+              some more content goes here
+              {/* <div className={s.main_grid}>
+                {papercrafts.data
+                  ? papercrafts.data.map((papercraft) => (
+                      <PapercraftCard
+                        key={papercraft!.id}
+                        papercraft={papercraft}
+                      />
+                    ))
+                  : null}
+              </div> */}
             </div>
           </div>
           <div className={s.page_col}>
             <div className={s.content_container}>
-              <i><h1>welcome to our paper world.</h1></i>
+              <i>
+                <h1>welcome to our paper world.</h1>
+              </i>
               <p>
                 here you can explore original or unofficial fan-made 3d models
                 you can print out and assemble in real life, for free. after
@@ -53,5 +71,24 @@ const Home: NextPage = () => {
     </>
   );
 };
+
+/**
+ * Run the intiial papercraft query on the server. This only queries for public
+ * papercrafts, not worrying about RLS.
+ * @param context
+ * @returns
+ */
+export async function getStaticProps(context: any) {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(["papercrafts", ""], async () => {
+    return await listPapercrafts();
+  });
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+    revalidate: 10,
+  };
+}
 
 export default Home;

@@ -13,7 +13,7 @@ class MyDocument extends Document {
       <Html>
         <Head>
           <link rel="icon" href="/favicon.ico" />
-          <meta name="title" content="papercraft place"></meta>
+          <meta name="title" content="paperarium"></meta>
           <meta
             name="description"
             content="a modern compendium and community for everything papercrafting."
@@ -37,6 +37,7 @@ class MyDocument extends Document {
             src="https://app.termly.io/embed.min.js"
             data-auto-block="on"
             data-website-uuid="f2ea0f83-ff36-4cd4-8567-feb699b6a45e"
+            strategy="beforeInteractive"
           />
           <link
             rel="apple-touch-icon"

@@ -9,11 +9,11 @@ import s from "./Footer.module.scss";
 
 type FooterProps = {
   marginLeft?: string;
-}
+};
 
-const Footer: React.FC<FooterProps> = function Footer({marginLeft}) {
+const Footer: React.FC<FooterProps> = function Footer({ marginLeft }) {
   return (
-    <footer className={s.footer} style={{paddingLeft: marginLeft}}>
+    <footer className={s.footer} style={{ paddingLeft: marginLeft }}>
       <div className={s.socials_row}>
         <div className={s.socials_line}></div>
         <RiInstagramLine />
@@ -21,21 +21,24 @@ const Footer: React.FC<FooterProps> = function Footer({marginLeft}) {
         <RiMailLine />
         <div className={s.socials_line}></div>
       </div>
-      <div className={s.title}>papercraft place</div>
+      <div className={s.title}>paperarium</div>
       <div className={s.credits}>
-        ·:·*.✧ 
+        ·:·*.✧
         <a
           href="https://evankirkiles.com"
           target="_blank"
           rel="noopener noreferrer"
         >
-        by evan
+          by evan
         </a>
         ✧.*·:·
       </div>
       <div className={s.legal_row}>
         <div className={s.legal_link}>Legal</div>
-        <div className={s.legal_link}>Cookies</div>
+        {/* @ts-ignore */}
+        <div className={s.legal_link} onClick={() => displayPreferenceModal()}>
+          Cookies
+        </div>
       </div>
       {/* <button
         className="termly-cookie-preference-button"

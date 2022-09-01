@@ -10,24 +10,13 @@ import {
 } from "@supabase/auth-helpers-nextjs";
 import { Papercraft } from "../supabase/types";
 import Layout from "../components/Layout/Layout";
-
-const fetchPapercrafts = async (search: string) => {
-  const { data: papercrafts, error } = await supabaseClient
-    .from<Papercraft>("papercrafts")
-    .select(`
-      *,
-      user:profiles(username)
-    `)
-    .order("created_at", { ascending: true });
-  if (error) throw error;
-  return papercrafts;
-};
+import { listPapercrafts, searchPapercrafts } from "../supabase/api/papercrafts";
 
 const ExplorePage: NextPage = () => {
   const [search, setSearch] = useState<string>("");
   const [currentSearch, setCurrentSearch] = useState<string>(search);
   const papercrafts = useQuery(["papercrafts", currentSearch], () =>
-    fetchPapercrafts(currentSearch)
+    searchPapercrafts(currentSearch)
   );
 
   return (
@@ -74,17 +63,7 @@ const ExplorePage: NextPage = () => {
  */
 export async function getStaticProps(context: any) { 
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["papercrafts", ""], async () => {
-    const { data: papercrafts, error } = await supabaseClient
-      .from<Papercraft>("papercrafts")
-      .select(`
-        *,
-        user:profiles(username)
-      `)
-      .order("created_at", { ascending: true });
-    if (error) throw error;
-    return papercrafts;
-  });
+  await queryClient.prefetchQuery(["papercrafts", ""], listPapercrafts);
   return {
     props: {
       dehydratedState: dehydrate(queryClient),

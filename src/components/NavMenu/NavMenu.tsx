@@ -59,6 +59,7 @@ const NavMenu: React.FC<NavMenuProps> = function NavMenu({
                     <div className={s.profile_picture}></div>
                     <div className={s.profile_name}>
                       <span className={s.user_name}>@evan</span>
+                      <span>4 builds</span>
                       <span>3 papercrafts</span>
                     </div>
                   </div>

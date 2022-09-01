@@ -4,7 +4,8 @@
   --header-vert-padding: 10px;
   --notice-bar-height: 20px;
   --notice-bar-vert-padding: 5px;
-  --search-bar-width: 250px;
+  --search-bar-width: 200px;
+  --profile-bar-width: 250px;
   --background-color: white;
   --highlight-color: #dbf6d2;
   --highlight-color-25: #dbf6d225;
@@ -70,4 +71,24 @@ a {
 
 ::-webkit-scrollbar {
   display: none; /* for Chrome, Safari, and Opera */
+}
+
+div[class*="termly-styles-logo"] {
+  display: none;
+}
+
+div[class*="termly-styles-root"] {
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0) !important;
+
+  & span,
+  & button {
+    font-family: "FT88" !important;
+  }
+}
+
+div[class*="termly-styles-main"] {
+  padding: 10px;
+  background-color: var(--highlight-dark-color);
+  border: 3px dashed white;
 }

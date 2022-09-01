@@ -7,37 +7,103 @@
 
 import { NextPage } from "next";
 import Head from "next/head";
-import styles from "../styles/Home.module.scss";
+import es from "../styles/Explore.module.scss";
+import s from "../styles/Profile.module.scss";
 import { useRouter } from "next/router";
-import { supabaseClient, withPageAuth, User } from '@supabase/auth-helpers-nextjs';
+import {
+  supabaseClient,
+  withPageAuth,
+  User,
+} from "@supabase/auth-helpers-nextjs";
+import { useState } from "react";
+import PapercraftCard from "../components/PapercraftCard/PapercraftCard";
+import Layout from "../components/Layout/Layout";
+import { useQuery } from "@tanstack/react-query";
+import { searchUserPapercrafts } from "../supabase/api/papercrafts";
 
 type ProfilePageProps = {
   user: User;
 };
 
-const Profile: NextPage<ProfilePageProps> = ({ user }) => {
+const ProfilePage: NextPage<ProfilePageProps> = ({ user }) => {
   const router = useRouter();
+  const [search, setSearch] = useState<string>("");
+  const [currentSearch, setCurrentSearch] = useState<string>(search);
+  const papercrafts = useQuery(["papercrafts", currentSearch], () =>
+    searchUserPapercrafts(user.id, true, currentSearch)
+  );
+
   return (
     <>
       <Head>
         <title>my profile - papercraft club</title>
-        <meta name="description" content="your profile page." />
       </Head>
-      <h1 className={styles.title}>this is the profile page.</h1>
-      <p>your username is: {user.email}</p>
-      <div
-        onClick={() =>
-          supabaseClient.auth.signOut().then(() => {
-            router.push("/");
-          })
-        }
-      >
-        click here to sign out
+      <div className={s.profile_container}>
+        <div className={s.profile_bar}>
+          <div className={s.profile_information}>
+            <div className={s.profile_picture}>
+              EK
+            </div>
+          </div>
+          profile
+          filter by tag
+        </div>
+        <div className={s.search_bar}>
+          search
+          <input
+            type="text"
+            className={es.search_bar}
+            placeholder="Search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                setCurrentSearch(search);
+              }
+            }}
+          />
+        </div>
+        <div className={s.main_grid}>
+          {papercrafts.data
+          ? papercrafts.data.map((papercraft) => (
+              <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
+            ))
+          : null}
+          {/* {papercrafts.data
+          ? papercrafts.data.map((papercraft) => (
+              <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
+            ))
+          : null}
+          {papercrafts.data
+          ? papercrafts.data.map((papercraft) => (
+              <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
+            ))
+          : null}
+          {papercrafts.data
+          ? papercrafts.data.map((papercraft) => (
+              <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
+            ))
+          : null}
+          {papercrafts.data
+          ? papercrafts.data.map((papercraft) => (
+              <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
+            ))
+          : null}
+          {papercrafts.data
+          ? papercrafts.data.map((papercraft) => (
+              <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
+            ))
+          : null} */}
+        </div>
       </div>
     </>
   );
 };
 
-export const getServerSideProps = withPageAuth({redirectTo: '/login'});
+export const getServerSideProps = withPageAuth({ redirectTo: "/login" });
 
-export default Profile;
+(ProfilePage as any).getLayout = (page: React.ReactNode) => (
+  <Layout footerMarginLeft={"var(--search-bar-width)"}>{page}</Layout>
+);
+
+export default ProfilePage;

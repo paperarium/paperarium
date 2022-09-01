@@ -6,7 +6,7 @@
   left: 0;
   height: 100vh;
   width: 100vw;
-  z-index: 1;
+  z-index: 3;
   background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(10px);
   pointer-events: none;
@@ -33,7 +33,7 @@
 }
 
 .nav_menu_container {
-  z-index: 2;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -42,7 +42,7 @@
   width: 100vw;
   // height: calc(100vh - var(--header-height));
   top: var(--header-height);
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: white;
   backdrop-filter: blur(4px);
   transform: translateY(calc(-100% + var(--notice-bar-height)));
   transition: transform 0.3s ease-in-out;
@@ -212,7 +212,7 @@
   white-space: nowrap;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 1px;
 
   @include respond-to("xsmall") {
     text-align: left;

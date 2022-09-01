@@ -48,6 +48,29 @@ export const searchPapercrafts = async (search: string) => {
   return papercrafts;
 };
 
+/**
+ * Lists a user's papercrafts from the database.
+ * @returns A list of papercrafts
+ */
+export const searchUserPapercrafts = async (
+  usernameOrId: string,
+  useId?: boolean,
+  search?: string
+) => {
+  const { data: papercrafts, error } = await supabaseClient
+    .from<APIt.Papercraft>("papercrafts")
+    .select(
+      `
+      *,
+      user:profiles(username)
+    `
+    )
+    .eq(useId ? "user_id" : ("user.username" as any), usernameOrId)
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  return papercrafts;
+};
+
 /* -------------------------------------------------------------------------- */
 /*                                  MUTATIONS                                 */
 /* -------------------------------------------------------------------------- */
