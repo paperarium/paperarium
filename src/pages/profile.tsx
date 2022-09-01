@@ -20,6 +20,7 @@ import PapercraftCard from "../components/PapercraftCard/PapercraftCard";
 import Layout from "../components/Layout/Layout";
 import { useQuery } from "@tanstack/react-query";
 import { searchUserPapercrafts } from "../supabase/api/papercrafts";
+import { AiOutlineDownSquare } from 'react-icons/ai';
 
 type ProfilePageProps = {
   user: User;
@@ -42,11 +43,24 @@ const ProfilePage: NextPage<ProfilePageProps> = ({ user }) => {
         <div className={s.profile_bar}>
           <div className={s.profile_information}>
             <div className={s.profile_picture}>
-              EK
+              LS
+            </div>
+            <div className={s.profile_name}>
+              <span className={s.user_name}>@lordstingray</span>
+              <span>Lord Stingray</span>
+              <span className={s.user_stat}>4 builds</span>
+              <span className={s.user_stat}>3 papercrafts</span>
             </div>
           </div>
-          profile
-          filter by tag
+          <div className={s.description}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+          </div>
+          <div className={s.profile_button}>
+            edit profile
+          </div>
+          <div className={s.joined_information}>
+            Joined on Aug 21, 2022
+          </div>
         </div>
         <div className={s.search_bar}>
           search
@@ -62,6 +76,7 @@ const ProfilePage: NextPage<ProfilePageProps> = ({ user }) => {
               }
             }}
           />
+          <AiOutlineDownSquare />
         </div>
         <div className={s.main_grid}>
           {papercrafts.data
@@ -69,11 +84,6 @@ const ProfilePage: NextPage<ProfilePageProps> = ({ user }) => {
               <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
             ))
           : null}
-          {/* {papercrafts.data
-          ? papercrafts.data.map((papercraft) => (
-              <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
-            ))
-          : null}
           {papercrafts.data
           ? papercrafts.data.map((papercraft) => (
               <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
@@ -93,7 +103,12 @@ const ProfilePage: NextPage<ProfilePageProps> = ({ user }) => {
           ? papercrafts.data.map((papercraft) => (
               <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
             ))
-          : null} */}
+          : null}
+          {papercrafts.data
+          ? papercrafts.data.map((papercraft) => (
+              <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
+            ))
+          : null}
         </div>
       </div>
     </>
@@ -103,7 +118,7 @@ const ProfilePage: NextPage<ProfilePageProps> = ({ user }) => {
 export const getServerSideProps = withPageAuth({ redirectTo: "/login" });
 
 (ProfilePage as any).getLayout = (page: React.ReactNode) => (
-  <Layout footerMarginLeft={"var(--search-bar-width)"}>{page}</Layout>
+  <Layout footerMarginLeft={"var(--profile-bar-width)"}>{page}</Layout>
 );
 
 export default ProfilePage;

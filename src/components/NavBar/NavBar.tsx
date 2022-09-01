@@ -21,7 +21,7 @@ const NavBar: React.FC = function NavBar() {
       <nav className={s.container}>
         <Link href="/" passHref>
           <a className={s.title_container} onClick={() => setNavOpen(false)}>
-            {/* <RiScissorsCutLine /> */}
+            {/* eslint-disable @next/next/no-img-element */}
             <img src={LOGO.src} alt={"logo"} className={s.logo} />
             <span>paperarium</span>
           </a>
