@@ -58,6 +58,9 @@ const ProfilePage: NextPage<ProfilePageProps> = ({ user }) => {
           <div className={s.profile_button}>
             edit profile
           </div>
+          <div className={s.profile_button} onClick={() => supabaseClient.auth.signOut().then(() => router.push('/'))}>
+            sign out
+          </div>
           <div className={s.joined_information}>
             Joined on Aug 21, 2022
           </div>

@@ -56,10 +56,11 @@ const Home: NextPage = () => {
                 : null}
             </div>
           </div>
+          <div className={s.divider}></div>
           <div className={s.page_col}>
             <div className={s.content_container}>
               <i>
-                <h1>welcome to the paperarium.</h1>
+                <h1>welcome to the <br /><span className={s.title_big}>paperarium</span>.</h1>
               </i>
               <p>
                 here you can explore original or unofficial fan-made 3d models
@@ -81,8 +82,8 @@ const Home: NextPage = () => {
                 are you interested to see the catalog? click here and check it
                 out ❦
               </p>
-              <Link href="/explore">
-                <div className={s.continue_button}>EXPLORE</div>
+              <Link href="/catalog">
+                <div className={s.continue_button}>CATALOG</div>
               </Link>
             </div>
           </div>
