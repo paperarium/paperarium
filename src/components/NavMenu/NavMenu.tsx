@@ -97,30 +97,14 @@ const NavMenu: React.FC<NavMenuProps> = function NavMenu({
                     <div key={a.id}>˚◦○˚ ୧ .˚ₓ{a.text}ₓ˚. ୭ ˚○◦˚</div>
                   ))
                 : null}
-              {announcements.data
+                {announcements.data
                 ? announcements.data.map((a) => (
-                    <div>˚◦○˚ ୧ .˚ₓ{a.text}ₓ˚. ୭ ˚○◦˚</div>
+                    <div key={a.id}>˚◦○˚ ୧ .˚ₓ{a.text}ₓ˚. ୭ ˚○◦˚</div>
                   ))
                 : null}
-
-              {announcements.data
+                {announcements.data
                 ? announcements.data.map((a) => (
-                    <div>˚◦○˚ ୧ .˚ₓ{a.text}ₓ˚. ୭ ˚○◦˚</div>
-                  ))
-                : null}
-              {announcements.data
-                ? announcements.data.map((a) => (
-                    <div>˚◦○˚ ୧ .˚ₓ{a.text}ₓ˚. ୭ ˚○◦˚</div>
-                  ))
-                : null}
-              {announcements.data
-                ? announcements.data.map((a) => (
-                    <div>˚◦○˚ ୧ .˚ₓ{a.text}ₓ˚. ୭ ˚○◦˚</div>
-                  ))
-                : null}
-              {announcements.data
-                ? announcements.data.map((a) => (
-                    <div>˚◦○˚ ୧ .˚ₓ{a.text}ₓ˚. ୭ ˚○◦˚</div>
+                    <div key={a.id}>˚◦○˚ ୧ .˚ₓ{a.text}ₓ˚. ୭ ˚○◦˚</div>
                   ))
                 : null}
             </div>
