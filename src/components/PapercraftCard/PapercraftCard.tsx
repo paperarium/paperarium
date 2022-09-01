@@ -21,6 +21,7 @@ const PapercraftCard: React.FC<PapercraftCardProps> = function PapercraftCard({
       <div className={s.inner_container}>
         <Image
           src={`/${papercraft.pictures[0]}`}
+          className={s.inner_image}
           placeholder="blur"
           blurDataURL={`${process.env.IMGIX}/${papercraft.pictures[0]}?blur=2000`}
           layout="fill"

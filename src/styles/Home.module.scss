@@ -201,16 +201,28 @@
 
 .divider {
   width: 100%;
-  height: 10px;
-  background-color: $highlight;
+  height: 14px;
+  background-color: $background;
   border-top: $border;
   // opacity: 0.5;
+  position: relative;
+  overflow: hidden;
 
   @include respond-to("small") {
-    width: 10px;
+    width: 15px;
     height: 100%;
     border-top: none;
     border-left: $border;
+    writing-mode: vertical-lr;
+  }
+
+  &:after {
+    content: "୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧";
+    white-space: nowrap;
+    font-size: 10px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
   }
 }
 
