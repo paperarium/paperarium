@@ -34,10 +34,22 @@
   gap: 10px;
   vertical-align: middle;
   font-weight: 700;
-  font-size: calc(var(--header-height) - var(--header-vert-padding) * 2 - 10px);
+  font-size: calc(var(--header-height) - var(--header-vert-padding) * 2 - 5px);
   white-space: nowrap;
   font-style: italic;
   letter-spacing: -1px;
+
+  @include respond-to("xsmall") {
+    font-size: calc(
+      var(--header-height) - var(--header-vert-padding) * 2 - 7px
+    );
+  }
+
+  @include respond-to("small") {
+    font-size: calc(
+      var(--header-height) - var(--header-vert-padding) * 2 - 10px
+    );
+  }
 }
 
 .links_container {

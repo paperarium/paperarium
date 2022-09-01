@@ -27,6 +27,13 @@ export type Papercraft = {
   user: User;
 };
 
+export type Announcement = {
+  id: number;
+  created_at: string;
+  active: boolean;
+  text: string;
+};
+
 export type PapercraftInput = Omit<Papercraft, "id" | "created_at" | "user">;
 
 export type PapercraftsTags = {

@@ -5,10 +5,12 @@
  * 2022 the nobot space,
  */
 import { useUser } from "@supabase/auth-helpers-react";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useRef } from "react";
 import { CSSTransition } from "react-transition-group";
+import { listAnnouncements } from "../../supabase/api/announcements";
 import NavLink from "../NavLink/NavLink";
 import s from "./NavMenu.module.scss";
 
@@ -25,6 +27,7 @@ const NavMenu: React.FC<NavMenuProps> = function NavMenu({
   const menuRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const { user } = useUser();
+  const announcements = useQuery(["announcements"], listAnnouncements);
 
   const closeMenu = () => setToggled(false);
 
@@ -54,16 +57,16 @@ const NavMenu: React.FC<NavMenuProps> = function NavMenu({
             <div className={s.nav_nav_column}>
               {user ? (
                 <>
-                <Link href={"/profile"}>
-                  <div className={s.profile_container} onClick={closeMenu}>
-                    <div className={s.profile_picture}></div>
-                    <div className={s.profile_name}>
-                      <span className={s.user_name}>@evan</span>
-                      <span>4 builds</span>
-                      <span>3 papercrafts</span>
+                  <Link href={"/profile"}>
+                    <div className={s.profile_container} onClick={closeMenu}>
+                      <div className={s.profile_picture}></div>
+                      <div className={s.profile_name}>
+                        <span className={s.user_name}>@evan</span>
+                        <span>4 builds</span>
+                        <span>3 papercrafts</span>
+                      </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
                   <Link href={`/upload`}>
                     <div className={s.login_button} onClick={closeMenu}>
                       <a>upload</a>
@@ -74,17 +77,53 @@ const NavMenu: React.FC<NavMenuProps> = function NavMenu({
                 <>
                   join us and contribute!
                   <Link href={`/login?redirect=${encodeURI(router.basePath)}`}>
-                    <div className={s.login_button} onClick={closeMenu}>log in</div>
+                    <div className={s.login_button} onClick={closeMenu}>
+                      log in
+                    </div>
                   </Link>
                   <Link href={`/signup?redirect=${encodeURI(router.basePath)}`}>
-                    <div className={s.signup_button} onClick={closeMenu}>sign up</div>
+                    <div className={s.signup_button} onClick={closeMenu}>
+                      sign up
+                    </div>
                   </Link>
                 </>
               )}
             </div>
           </div>
           <div className={s.notice_bar}>
-            <div className={s.notice_bar_content}></div>
+            <div className={s.notice_bar_content}>
+              {announcements.data
+                ? announcements.data.map((a) => (
+                    <div key={a.id}>˚◦○˚ ୧ .˚ₓ{a.text}ₓ˚. ୭ ˚○◦˚</div>
+                  ))
+                : null}
+              {announcements.data
+                ? announcements.data.map((a) => (
+                    <div>˚◦○˚ ୧ .˚ₓ{a.text}ₓ˚. ୭ ˚○◦˚</div>
+                  ))
+                : null}
+
+              {announcements.data
+                ? announcements.data.map((a) => (
+                    <div>˚◦○˚ ୧ .˚ₓ{a.text}ₓ˚. ୭ ˚○◦˚</div>
+                  ))
+                : null}
+              {announcements.data
+                ? announcements.data.map((a) => (
+                    <div>˚◦○˚ ୧ .˚ₓ{a.text}ₓ˚. ୭ ˚○◦˚</div>
+                  ))
+                : null}
+              {announcements.data
+                ? announcements.data.map((a) => (
+                    <div>˚◦○˚ ୧ .˚ₓ{a.text}ₓ˚. ୭ ˚○◦˚</div>
+                  ))
+                : null}
+              {announcements.data
+                ? announcements.data.map((a) => (
+                    <div>˚◦○˚ ୧ .˚ₓ{a.text}ₓ˚. ୭ ˚○◦˚</div>
+                  ))
+                : null}
+            </div>
           </div>
         </div>
       </CSSTransition>

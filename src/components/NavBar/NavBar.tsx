@@ -9,6 +9,8 @@ import s from "./NavBar.module.scss";
 import { useRouter } from "next/router";
 import { useUser } from "@supabase/auth-helpers-react";
 import LOGO from "../../../public/img/logo.svg";
+import { useQuery } from "@tanstack/react-query";
+import { listAnnouncements } from "../../supabase/api/announcements";
 
 const NavBar: React.FC = function NavBar() {
   const router = useRouter();
