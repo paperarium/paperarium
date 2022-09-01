@@ -3,10 +3,11 @@
 .styled_container {
   min-height: 100%;
   flex: 1;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-end;
+  justify-content: flex-start;
+  align-items: flex-start;
   // background-image: linear-gradient($highlight 2px, transparent 2px),
   //   linear-gradient(90deg, $highlight 2px, transparent 2px),
   //   linear-gradient($highlight 1px, transparent 1px),
@@ -77,6 +78,8 @@
   justify-content: flex-end;
   align-items: flex-start;
   width: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
 
   &:first-of-type {
     border-left: $border;
@@ -92,7 +95,7 @@
 .content_container {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: flex-start;
   padding: 20px;
   border-top: $border;
@@ -124,35 +127,54 @@
 }
 
 .main_grid {
+  position: relative;
   width: 100%;
-  padding: 5px;
-  height: calc(100vh - var(--header-height) - var(--notice-bar-height));
-  display: grid;
+  height: 50vh;
+  padding: 10px;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  grid-template-rows: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-rows: 1fr;
+  display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
   gap: 10px;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  overflow-y: hidden;
+  overflow-x: scroll;
 
   & > div {
-    min-width: 150px;
-    min-height: 200px;
+    min-width: 200px;
+    height: 100%;
   }
 
-  @include respond-to("xsmall") {
+  // @include respond-to("xsmall") {
+  //   height: auto;
+  //   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  //   grid-template-rows: repeat(1, minmax(250px, 1fr));
+
+  @include respond-to("small") {
+    display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     grid-template-rows: repeat(auto-fit, minmax(250px, 1fr));
-
+    height: calc(100vh - var(--header-height) - var(--notice-bar-height));
     & > div {
       min-width: 200px;
+      height: auto;
       min-height: 250px;
     }
+    overflow-x: hidden;
+    overflow-y: scroll;
   }
 
   @include respond-to("small") {
+    display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-template-rows: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-rows: repeat(auto-fit, minmax(350px, 1fr));
+    height: calc(100vh - var(--header-height) - var(--notice-bar-height));
+    & > div {
+      min-width: 200px;
+      height: auto;
+      min-height: 350px;
+      height: 100%;
+    }
   }
 }

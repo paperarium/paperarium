@@ -22,24 +22,44 @@ const Home: NextPage = () => {
       <div className={s.styled_container}>
         <div className={s.page_row}>
           <div className={s.page_col}>
-            <div className={s.content_container}>
-              some more content goes here
-              {/* <div className={s.main_grid}>
+            <div className={s.main_grid}>
+              {papercrafts.data
+                ? papercrafts.data.map((papercraft, i) => (
+                    <PapercraftCard
+                      key={papercraft!.id}
+                      papercraft={papercraft}
+                    />))
+                : null}
                 {papercrafts.data
-                  ? papercrafts.data.map((papercraft) => (
-                      <PapercraftCard
-                        key={papercraft!.id}
-                        papercraft={papercraft}
-                      />
-                    ))
-                  : null}
-              </div> */}
+                ? papercrafts.data.map((papercraft) => (
+                    <PapercraftCard
+                      key={papercraft!.id}
+                      papercraft={papercraft}
+                    />
+                  ))
+                : null}
+                {papercrafts.data
+                ? papercrafts.data.map((papercraft) => (
+                    <PapercraftCard
+                      key={papercraft!.id}
+                      papercraft={papercraft}
+                    />
+                  ))
+                : null}
+                {papercrafts.data
+                ? papercrafts.data.map((papercraft) => (
+                    <PapercraftCard
+                      key={papercraft!.id}
+                      papercraft={papercraft}
+                    />
+                  ))
+                : null}
             </div>
           </div>
           <div className={s.page_col}>
             <div className={s.content_container}>
               <i>
-                <h1>welcome to our paper world.</h1>
+                <h1>welcome to the paperarium.</h1>
               </i>
               <p>
                 here you can explore original or unofficial fan-made 3d models
