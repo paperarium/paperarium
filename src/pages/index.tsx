@@ -28,7 +28,7 @@ const Home: NextPage = () => {
                     <PapercraftCard
                       key={papercraft!.id}
                       papercraft={papercraft}
-                      priority={i <= 2}
+                      priority={i <= 1}
                     />))
                 : null}
                 {papercrafts.data
