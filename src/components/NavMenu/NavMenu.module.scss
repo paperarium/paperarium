@@ -187,8 +187,9 @@
   display: flex;
   flex-direction: row;
   white-space: nowrap;
-  width: 200vw;
+  width: 100%;
   gap: 10px;
+  overflow: hidden;
   // font-family: "FT88 Gothic";
   // animation: scrollText 10s linear infinite;
   cursor: pointer;

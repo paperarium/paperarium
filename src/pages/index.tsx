@@ -13,7 +13,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>papercraft place</title>
+        <title>paperarium</title>
         <meta
           name="description"
           content="cut, fold, and glue 3d models into the real world!"

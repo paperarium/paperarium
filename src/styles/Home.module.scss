@@ -185,18 +185,18 @@
     overflow-y: scroll;
   }
 
-  // @include respond-to("medium") {
-  //   display: grid;
-  //   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  //   grid-template-rows: repeat(auto-fit, minmax(350px, 1fr));
-  //   height: calc(100vh - var(--header-height) - var(--notice-bar-height));
-  //   & > div {
-  //     min-width: 200px;
-  //     height: auto;
-  //     min-height: 350px;
-  //     height: 100%;
-  //   }
-  // }
+  @include respond-to("medium") {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-rows: repeat(auto-fit, minmax(350px, 1fr));
+    height: calc(100vh - var(--header-height) - var(--notice-bar-height));
+    & > div {
+      min-width: 200px;
+      height: auto;
+      min-height: 350px;
+      height: 100%;
+    }
+  }
 }
 
 .divider {
@@ -209,6 +209,7 @@
   overflow: hidden;
 
   @include respond-to("small") {
+    display: none;
     width: 15px;
     height: 100%;
     border-top: none;
