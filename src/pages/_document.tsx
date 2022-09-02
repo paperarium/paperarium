@@ -32,13 +32,13 @@ class MyDocument extends Document {
           <meta name="apple-mobile-web-app-title" content="papercraft club" />
           <meta name="application-name" content="papercraft club" />
           <meta name="msapplication-TileColor" content="#ffffff" />
-          <Script
+          {/* <Script
             type="text/javascript"
             src="https://app.termly.io/embed.min.js"
             data-auto-block="on"
             data-website-uuid="f2ea0f83-ff36-4cd4-8567-feb699b6a45e"
             strategy="beforeInteractive"
-          />
+          /> */}
           <link
             rel="apple-touch-icon"
             sizes="180x180"

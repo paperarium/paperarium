@@ -35,8 +35,9 @@ const Footer: React.FC<FooterProps> = function Footer({ marginLeft }) {
       </div>
       <div className={s.legal_row}>
         <div className={s.legal_link}>Legal</div>
-        {/* @ts-ignore */}
-        <div className={s.legal_link} onClick={() => displayPreferenceModal()}>
+        <div className={s.legal_link} 
+        // onClick={() => displayPreferenceModal()}
+        >
           Cookies
         </div>
       </div>
