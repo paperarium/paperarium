@@ -190,11 +190,11 @@
   width: 200vw;
   gap: 10px;
   // font-family: "FT88 Gothic";
-  animation: scrollText 10s linear infinite;
+  // animation: scrollText 10s linear infinite;
   cursor: pointer;
 
   @include respond-to("large") {
-    animation: scrollText 30s linear infinite;
+    // animation: scrollText 30s linear infinite;
   }
 
   // &:after {

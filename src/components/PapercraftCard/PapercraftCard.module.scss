@@ -36,6 +36,7 @@ $total: 10;
   overflow: hidden;
   position: relative;
   transition: transform 0.1s ease-in-out;
+  background-color: $background;
   &:hover {
     transform: scale(0.98) !important;
   }
