@@ -44,6 +44,10 @@ $total: 10;
 
 .inner_image {
   border-radius: 10px;
+  width: 100%;
+  position: relative;
+  height: unset;
+  object-fit: cover;
 }
 
 .info_card {
