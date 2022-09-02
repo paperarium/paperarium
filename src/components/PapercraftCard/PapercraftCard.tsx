@@ -11,10 +11,12 @@ import { Papercraft } from "../../supabase/types";
 
 type PapercraftCardProps = {
   papercraft: Papercraft;
+  priority?: boolean;
 };
 
 const PapercraftCard: React.FC<PapercraftCardProps> = function PapercraftCard({
   papercraft,
+  priority
 }) {
   return (
     <div className={s.container}>
@@ -27,6 +29,7 @@ const PapercraftCard: React.FC<PapercraftCardProps> = function PapercraftCard({
           layout="fill"
           objectFit="cover"
           alt={papercraft.title}
+          priority={priority}
         />
         <div className={s.info_card}>
           <div>{papercraft.title}</div>

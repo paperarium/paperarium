@@ -28,6 +28,7 @@ const Home: NextPage = () => {
                     <PapercraftCard
                       key={papercraft!.id}
                       papercraft={papercraft}
+                      priority={i <= 2}
                     />))
                 : null}
                 {papercrafts.data
@@ -63,7 +64,7 @@ const Home: NextPage = () => {
                 <h1>welcome to the <br /><span className={s.title_big}>paperarium</span>.</h1>
               </i>
               <p>
-                here you can explore original or unofficial fan-made 3d models
+                here you can explore both original and unofficial fan-made 3d models
                 you can print out and assemble in real life, for free. after
                 printing, just follow the three steps:
               </p>

@@ -12,6 +12,7 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <meta lang="en" />
           <link rel="icon" href="/favicon.ico" />
           <meta name="title" content="paperarium"></meta>
           <meta
