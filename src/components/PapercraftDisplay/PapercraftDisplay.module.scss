@@ -1,0 +1,228 @@
+@import "../../styles/mixins";
+
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-start;
+  align-items: center;
+
+  @include respond-to("small") {
+    height: 100%;
+    flex-direction: row;
+    overflow: hidden;
+  }
+}
+
+.display_column {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+
+  @include respond-to("small") {
+    flex: 1;
+    width: auto;
+    min-height: 100%;
+    border-right: $border;
+    overflow-y: scroll;
+  }
+}
+
+.picture_column {
+  width: 100%;
+  border-bottom: $border;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  position: relative;
+  height: 60vh;
+  padding: 0px;
+
+  @include respond-to("small") {
+    flex: 1;
+    width: auto;
+    height: 100%;
+    border-bottom: none;
+    overflow-y: scroll;
+  }
+}
+
+.preview_content_container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 3px;
+  color: #303030;
+  width: 100%;
+  position: relative;
+}
+
+.preview_content_outline {
+  position: absolute;
+  border: 2px solid white;
+  top: 5px;
+  left: 5px;
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
+  z-index: 1;
+  opacity: 0.5;
+}
+
+.preview_title {
+  border: none;
+  font-size: 40px;
+  outline: none;
+  font-weight: 700;
+  white-space: wrap;
+  width: 100%;
+  overflow-x: scroll;
+  position: relative;
+  border-radius: 5px;
+  border: none;
+  font-family: "FT88";
+  letter-spacing: -3px;
+}
+
+.date_input {
+  font-size: 17px;
+  opacity: 0.4;
+  font-style: italic;
+}
+
+.preview_description {
+  position: relative;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  resize: none;
+  width: 100%;
+  font-size: 15px;
+  font-family: "FT88";
+  letter-spacing: -1px;
+  opacity: 0.6;
+
+  @include respond-to("small") {
+    max-height: 300px;
+  }
+}
+
+.tags_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 5px 0px;
+  gap: 5px;
+  border-top: $border;
+  position: relative;
+
+  &:before {
+    content: "TAGS";
+    position: absolute;
+    white-space: nowrap;
+    top: 0px;
+    left: 0px;
+    transform: translateY(-75%);
+    padding: 0px 3px;
+    font-size: 10px;
+    opacity: 1;
+    background-color: white;
+    color: #303030;
+  }
+}
+
+.tag {
+  border-radius: 5px;
+  background-color: $highlight-dark;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+  padding: 3px 5px;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.image_container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+}
+
+.profile_container {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: 10px;
+  position: relative;
+  border-top: $border;
+  padding: 10px 0px;
+  margin-top: 10px;
+}
+
+.container_note {
+  position: absolute;
+  white-space: nowrap;
+  top: 0px;
+  left: 0px;
+  transform: translateY(-75%);
+  padding: 0px 3px;
+  font-size: 10px;
+  opacity: 1;
+  background-color: white;
+  color: #303030;
+}
+
+.profile_picture {
+  min-width: 70px;
+  border-radius: 50%;
+  border: $border;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+  &:hover {
+    transform: scale(1.1);
+  }
+  background-color: $highlight;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: 50px;
+  min-width: 50px;
+}
+
+.profile_name {
+  width: 100%;
+  height: 50px;
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+
+  @include respond-to("xsmall") {
+    text-align: left;
+    width: auto;
+    padding: 5px 0px;
+    margin-left: 8px;
+  }
+}
+
+.user_name {
+  opacity: 0.6;
+  font-style: italic;
+}

@@ -25,6 +25,7 @@ export type Papercraft = {
   dimensions_cm?: number[];
   verified: boolean;
   user: User;
+  tags: Tag[];
 };
 
 export type Announcement = {
@@ -34,7 +35,10 @@ export type Announcement = {
   text: string;
 };
 
-export type PapercraftInput = Omit<Papercraft, "id" | "created_at" | "user">;
+export type PapercraftInput = Omit<
+  Papercraft,
+  "id" | "created_at" | "user" | "tags"
+>;
 
 export type PapercraftsTags = {
   id: number;
@@ -51,8 +55,8 @@ export type Tag = {
 };
 
 export enum Difficulty {
-  easy = 0,
-  medium = 1,
-  hard = 2,
-  insane = 3,
+  Easy = 0,
+  Medium = 1,
+  Hard = 2,
+  InSaNe = 3,
 }

@@ -1,0 +1,22 @@
+@import "./mixins";
+
+$completion_bar_height: 50px;
+
+.upload_container {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  position: relative;
+
+  @include respond-to("small") {
+    flex-direction: row;
+    height: calc(
+      100vh - var(--header-height) - var(--notice-bar-height) -
+        $completion_bar_height
+    );
+    overflow: hidden;
+  }
+}

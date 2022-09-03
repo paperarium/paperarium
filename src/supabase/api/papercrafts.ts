@@ -22,7 +22,8 @@ export const listPapercrafts = async () => {
     .select(
       `
       *,
-      user:profiles(username)
+      user:profiles(username),
+      tags:tags(*)
     `
     )
     .order("created_at", { ascending: true });

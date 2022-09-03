@@ -11,14 +11,13 @@ import Layout from "../../components/Layout/Layout";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper";
 import MultiFileUpload from "../../components/MultiFileUpload/MultiFileUpload";
-import PDFDisplay from "../../components/PDFDisplay/PDFDisplay";
 import {
   AsyncSelect,
   Select,
   getSelectTheme,
 } from "../../components/misc/AsyncSelect";
 import { RiScissorsCutLine } from "react-icons/ri";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { v4 as uuidv4 } from "uuid";
 import * as APIt from "../../supabase/types";
 import {
@@ -26,8 +25,10 @@ import {
   User,
   supabaseClient,
 } from "@supabase/auth-helpers-nextjs";
-import { createPapercraft } from "../../supabase/api/papercrafts";
+import { createPapercraft, listPapercrafts } from "../../supabase/api/papercrafts";
 import { createPapercraftsTags } from "../../supabase/api/papercraftstags";
+import { CSSTransition } from "react-transition-group";
+import PapercraftDisplay from "../../components/PapercraftDisplay/PapercraftDisplay";
 
 const fetchTags = debounce(
   async (search: string): Promise<APIt.Tag[]> => {
@@ -77,7 +78,9 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
   const [pdfLined, setPdfLined] = useState<SerializedFile | null>(null);
   const [pdfLineless, setPdfLineless] = useState<SerializedFile | null>(null);
   const [glb, setGlb] = useState<File | null>(null);
-  const [difficulty, setDifficulty] = useState<APIt.Difficulty>(APIt.Difficulty.easy);
+  const [difficulty, setDifficulty] = useState<APIt.Difficulty>(
+    APIt.Difficulty.Easy
+  );
   const [dimensions, setDimensions] = useState<PapercraftDimensions>({
     units: "in",
     width: "",
@@ -160,24 +163,26 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
     const pdo_url = await uploadFile(pdo_file, pdo);
 
     // 3. build the papercraft
-    const papercraft_id = (await createPapercraft({
-      title,
-      description,
-      glb_url,
-      pdo_url,
-      pdf_lined_url,
-      pdf_lineless_url,
-      pictures,
-      difficulty,
-      dimensions_cm:
-        dimensions.width && dimensions.length && dimensions.height
-          ? [dimensions.width, dimensions.length, dimensions.height].map(
-              (val) => val * (dimensions.units === "cm" ? 1 : 2.54)
-            )
-          : undefined,
-      verified: false,
-      user_id: user.id,
-    }))[0].id;
+    const papercraft_id = (
+      await createPapercraft({
+        title,
+        description,
+        glb_url,
+        pdo_url,
+        pdf_lined_url,
+        pdf_lineless_url,
+        pictures,
+        difficulty,
+        dimensions_cm:
+          dimensions.width && dimensions.length && dimensions.height
+            ? [dimensions.width, dimensions.length, dimensions.height].map(
+                (val) => val * (dimensions.units === "cm" ? 1 : 2.54)
+              )
+            : undefined,
+        verified: false,
+        user_id: user.id
+      })
+    )[0].id;
 
     // 4. build the papercraft tags inputs
     const papercraft_tags_input: APIt.PapercraftsTagsInput[] = [];
@@ -189,8 +194,13 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
     }
 
     // 5. bulk create the papercraft tags
-    await createPapercraftsTags(papercraft_tags_input)
+    await createPapercraftsTags(papercraft_tags_input);
   });
+
+  const formRef = useRef<HTMLDivElement>(null);
+  const papercrafts = useQuery(["papercrafts", ""], () => listPapercrafts());
+  const [papercraft, setPapercraft] = useState<APIt.Papercraft | null>(null);
+  const [inPreview, setInPreview] = useState(false);
 
   return (
     <>
@@ -201,232 +211,261 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
           content="submit a papercraft for publication!"
         />
       </Head>
-      <div className={s.upload_container}>
-        <div className={s.upload_col}>
-          <div className={s.column_header}>
-            <b>upload a papercraft design slip!</b> after filling in all of the
-            required fields, the submit button will turn green and you can post
-            your papercraft to our website.
-          </div>
-          <div className={s.spacer}></div>
-          <div className={s.input_form}>
-            <div className={s.input_outline}></div>
-            <div className={s.annotation}>
-              Title * –– <i>what is this papercraft of?</i>
+      <CSSTransition
+        in={inPreview}
+        nodeRef={formRef}
+        timeout={700}
+        classNames={"preview"}
+      >
+        <div className={s.upload_container} ref={formRef}>
+          <div className={s.upload_col}>
+            <div className={s.column_header}>
+              <b>upload a papercraft design slip!</b><br /> after filling in all of
+              the required fields, the submit button will turn green and you can
+              post your papercraft to our website.
             </div>
-            <TextareaAutosize
-              className={s.title_input}
-              placeholder={"Write a title..."}
-              spellCheck={false}
-              value={title}
-              onChange={(event) => {
-                setTitle(event.target.value.replace(/  |\r\n|\n|\r/gm, ""));
-              }}
-            ></TextareaAutosize>
-            <div className={s.annotation}>
-              Description * ––{" "}
-              <i>background information on the character / papercraft?</i>
-            </div>
-            <TextareaAutosize
-              className={s.description_input}
-              placeholder={"Write a description..."}
-              spellCheck={false}
-              value={description}
-              minRows={3}
-              onChange={(event) => {
-                setDescription(event.target.value);
-              }}
-            ></TextareaAutosize>
-            <div className={s.annotation}>
-              Tags ––{" "}
-              <i>
-                select up to 5 relevant tags so people can find your papercraft!
-              </i>
-            </div>
-            <AsyncSelect
-              isMulti
-              loadOptions={async (search: string) => fetchTags(search)}
-              className={s.tag_select}
-              getOptionLabel={(option: unknown) => (option as APIt.Tag).name}
-              getOptionValue={(option: unknown) => (option as APIt.Tag).id}
-              isOptionDisabled={() => tags.length >= 5}
-              onChange={(tags: APIt.Tag[]) => setTags(tags as APIt.Tag[])}
-              theme={getSelectTheme}
-            />
-            <div className={s.difficulty_row}>
-              <div className={s.difficulty_col}>
-                <div className={s.annotation}>
-                  Difficulty * –– <i>how hard is this papercraft?</i>
-                </div>
-                <Select
-                  instanceId={"tag_select"}
-                  className={s.tag_select}
-                  isClearable={false}
-                  defaultValue={{
-                    value: APIt.Difficulty.easy,
-                    label: "easy",
+            <div className={s.spacer}></div>
+            <div className={s.input_form}>
+              <div className={s.input_outline}>
+                <div className={s.input_form_title}>INPUT FORM</div>
+                <div
+                  className={s.preview_show_button}
+                  onClick={() => {
+                    setInPreview(!inPreview);
                   }}
-                  options={Object.entries(APIt.Difficulty)
-                    .filter(([key]) => !isNaN(Number(key)))
-                    .map(([value, key]) => ({ value, label: key }))}
-                  onChange={(difficulty: string) =>
-                    setDifficulty((difficulty! as any).value)
-                  }
-                  theme={getSelectTheme}
-                />
-              </div>
-              <div className={s.difficulty_col}>
-                <div className={s.annotation}>
-                  Dimensions –– <i>and how big? width / depth / height</i>
+                >
+                  REVIEW
                 </div>
-                <div className={s.dimensions_row}>
-                  <input
-                    className={s.dimension_input}
-                    value={dimensions.width}
-                    min="0"
-                    type="number"
-                    placeholder={"w"}
-                    onChange={(e) => {
-                      setDimensions({
-                        ...dimensions,
-                        width: parseFloat(e.target.value),
-                      });
-                    }}
-                  />
-                  <input
-                    className={s.dimension_input}
-                    value={dimensions.length}
-                    min="0"
-                    type="number"
-                    placeholder={"d"}
-                    onChange={(e) => {
-                      setDimensions({
-                        ...dimensions,
-                        length: parseFloat(e.target.value),
-                      });
-                    }}
-                  />
-                  <input
-                    className={s.dimension_input}
-                    value={dimensions.height}
-                    min="0"
-                    type="number"
-                    placeholder={"h"}
-                    onChange={(e) => {
-                      setDimensions({
-                        ...dimensions,
-                        height: parseFloat(e.target.value),
-                      });
-                    }}
-                  />
+              </div>
+              <div className={s.annotation}>
+                Title * –– <i>what is this papercraft of?</i>
+              </div>
+              <TextareaAutosize
+                className={s.title_input}
+                placeholder={"Write a title..."}
+                spellCheck={false}
+                value={title}
+                onChange={(event) => {
+                  setTitle(event.target.value.replace(/  |\r\n|\n|\r/gm, ""));
+                }}
+              ></TextareaAutosize>
+              <div className={s.annotation}>
+                Description * ––{" "}
+                <i>background information on the character / papercraft?</i>
+              </div>
+              <TextareaAutosize
+                className={s.description_input}
+                placeholder={"Write a description..."}
+                spellCheck={false}
+                value={description}
+                minRows={3}
+                onChange={(event) => {
+                  setDescription(event.target.value);
+                }}
+              ></TextareaAutosize>
+              <div className={s.annotation}>
+                Tags ––{" "}
+                <i>
+                  select up to 5 relevant tags so people can find your
+                  papercraft!
+                </i>
+              </div>
+              <AsyncSelect
+                isMulti
+                loadOptions={async (search: string) => fetchTags(search)}
+                className={s.tag_select}
+                getOptionLabel={(option: unknown) => (option as APIt.Tag).name}
+                getOptionValue={(option: unknown) => (option as APIt.Tag).id}
+                isOptionDisabled={() => tags.length >= 5}
+                onChange={(tags: APIt.Tag[]) => setTags(tags as APIt.Tag[])}
+                theme={getSelectTheme}
+              />
+              <div className={s.difficulty_row}>
+                <div className={s.difficulty_col}>
+                  <div className={s.annotation}>
+                    Difficulty * –– <i>how hard is this papercraft?</i>
+                  </div>
                   <Select
-                    instanceId={"dimensions_unit_select"}
-                    className={s.dimension_select}
+                    instanceId={"tag_select"}
+                    className={s.tag_select}
                     isClearable={false}
                     defaultValue={{
-                      value: dimensions.units,
-                      label: dimensions.units,
+                      value: APIt.Difficulty.Easy,
+                      label: "easy",
                     }}
-                    options={[
-                      { value: "in", label: "in" },
-                      { value: "cm", label: "cm" },
-                    ]}
-                    onChange={(units: any) => {
-                      setDimensions({
-                        ...dimensions,
-                        units,
-                      });
-                    }}
+                    options={Object.entries(APIt.Difficulty)
+                      .filter(([key]) => !isNaN(Number(key)))
+                      .map(([value, key]) => ({ value, label: key }))}
+                    onChange={(difficulty: string) =>
+                      setDifficulty((difficulty! as any).value)
+                    }
                     theme={getSelectTheme}
                   />
                 </div>
-              </div>
-            </div>
-            <div className={s.file_row}>
-              <div className={s.file_col} style={{ flex: 1 }}>
-                <div className={s.annotation}>
-                  Image * –– <i>what does the craft look like?</i>
+                <div className={s.difficulty_col}>
+                  <div className={s.annotation}>
+                    Dimensions –– <i>and how big? width / depth / height</i>
+                  </div>
+                  <div className={s.dimensions_row}>
+                    <input
+                      className={s.dimension_input}
+                      value={dimensions.width}
+                      min="0"
+                      type="number"
+                      placeholder={"w"}
+                      onChange={(e) => {
+                        setDimensions({
+                          ...dimensions,
+                          width: parseFloat(e.target.value),
+                        });
+                      }}
+                    />
+                    <input
+                      className={s.dimension_input}
+                      value={dimensions.length}
+                      min="0"
+                      type="number"
+                      placeholder={"d"}
+                      onChange={(e) => {
+                        setDimensions({
+                          ...dimensions,
+                          length: parseFloat(e.target.value),
+                        });
+                      }}
+                    />
+                    <input
+                      className={s.dimension_input}
+                      value={dimensions.height}
+                      min="0"
+                      type="number"
+                      placeholder={"h"}
+                      onChange={(e) => {
+                        setDimensions({
+                          ...dimensions,
+                          height: parseFloat(e.target.value),
+                        });
+                      }}
+                    />
+                    <Select
+                      instanceId={"dimensions_unit_select"}
+                      className={s.dimension_select}
+                      isClearable={false}
+                      defaultValue={{
+                        value: dimensions.units,
+                        label: dimensions.units,
+                      }}
+                      options={[
+                        { value: "in", label: "in" },
+                        { value: "cm", label: "cm" },
+                      ]}
+                      onChange={(units: any) => {
+                        setDimensions({
+                          ...dimensions,
+                          units,
+                        });
+                      }}
+                      theme={getSelectTheme}
+                    />
+                  </div>
                 </div>
-                <MultiFileUpload
-                  files={images}
-                  setFiles={(images) => {
-                    setImages(images);
-                    if (images == null) {
-                      imageURLs.current = null;
-                    } else {
-                      const URLs = [];
-                      for (let i = 0; i < images.length; i++) {
-                        URLs.push(URL.createObjectURL(images[i]));
+              </div>
+              <div className={s.file_row}>
+                <div className={s.file_col} style={{ flex: 1 }}>
+                  <div className={s.annotation}>
+                    Image * –– <i>what does the craft look like?</i>
+                  </div>
+                  <MultiFileUpload
+                    files={images}
+                    setFiles={(images) => {
+                      setImages(images);
+                      if (images == null) {
+                        imageURLs.current = null;
+                      } else {
+                        const URLs = [];
+                        for (let i = 0; i < images.length; i++) {
+                          URLs.push(URL.createObjectURL(images[i]));
+                        }
+                        imageURLs.current = URLs;
                       }
-                      imageURLs.current = URLs;
-                    }
-                  }}
-                  accept={"image/*"}
-                >
-                  .PNG, .JPG...
-                </MultiFileUpload>
-              </div>
-              <div className={s.file_col} style={{ flex: 2 }}>
-                <div className={s.annotation}>
-                  Files * –– <i>the craft itself.</i>
+                    }}
+                    accept={"image/*"}
+                  >
+                    .PNG, .JPG...
+                  </MultiFileUpload>
                 </div>
-                <FileUpload
-                  file={pdo}
-                  setFile={setPdo}
-                  accept={".pdo"}
-                  withIcon
-                >
-                  .PDO
-                </FileUpload>
-                <FileUpload
-                  file={pdfLineless ? pdfLineless.file : null}
-                  setFile={(newPdf) => {
-                    if (!newPdf) {
-                      setPdfLineless(null);
-                      return;
-                    }
-                    setPdfLineless({
-                      file: newPdf,
-                      objectURL: URL.createObjectURL(newPdf),
-                    });
-                  }}
-                  accept={"application/pdf"}
-                  withIcon
-                >
-                  .PDF - lineless
-                </FileUpload>
-                <FileUpload
-                  file={pdfLined ? pdfLined.file : null}
-                  setFile={(newPdf) => {
-                    if (!newPdf) {
-                      setPdfLined(null);
-                      return;
-                    }
-                    setPdfLined({
-                      file: newPdf,
-                      objectURL: URL.createObjectURL(newPdf),
-                    });
-                  }}
-                  accept={"application/pdf"}
-                  withIcon
-                >
-                  .PDF - lined
-                </FileUpload>
+                <div className={s.file_col} style={{ flex: 2 }}>
+                  <div className={s.annotation}>
+                    Files * –– <i>the craft itself.</i>
+                  </div>
+                  <FileUpload
+                    file={pdo}
+                    setFile={setPdo}
+                    accept={".pdo"}
+                    withIcon
+                  >
+                    .PDO
+                  </FileUpload>
+                  <FileUpload
+                    file={pdfLineless ? pdfLineless.file : null}
+                    setFile={(newPdf) => {
+                      if (!newPdf) {
+                        setPdfLineless(null);
+                        return;
+                      }
+                      setPdfLineless({
+                        file: newPdf,
+                        objectURL: URL.createObjectURL(newPdf),
+                      });
+                    }}
+                    accept={"application/pdf"}
+                    withIcon
+                  >
+                    .PDF - lineless
+                  </FileUpload>
+                  <FileUpload
+                    file={pdfLined ? pdfLined.file : null}
+                    setFile={(newPdf) => {
+                      if (!newPdf) {
+                        setPdfLined(null);
+                        return;
+                      }
+                      setPdfLined({
+                        file: newPdf,
+                        objectURL: URL.createObjectURL(newPdf),
+                      });
+                    }}
+                    accept={"application/pdf"}
+                    withIcon
+                  >
+                    .PDF - lined
+                  </FileUpload>
 
-                <FileUpload
-                  file={glb}
-                  setFile={setGlb}
-                  accept={".glb"}
-                  withIcon
-                >
-                  .GLB
-                </FileUpload>
+                  <FileUpload
+                    file={glb}
+                    setFile={setGlb}
+                    accept={".glb"}
+                    withIcon
+                  >
+                    .GLB
+                  </FileUpload>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className={s.divider}></div>
-        <div className={s.preview_col}>
+          <div className={s.preview_container}>
+            <div className={s.submit_button}>
+              SUBMIT
+            </div>
+            <div className={s.preview_hidden_container}>
+              {papercrafts.data ? (
+                <PapercraftDisplay papercraft={papercrafts.data[0]} />
+              ) : null}
+            </div>
+            <div className={s.preview_cover}></div>
+            <div className={s.preview_cover}></div>
+          </div>
+          {/* <div className={s.divider}></div> */}
+          {/* <div className={s.preview_col}>
           <div className={s.preview_header}>PREVIEW</div>
           <div className={s.preview_container}>
             <div className={s.preview_main_content}>
@@ -497,10 +536,15 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
               </div>
             </div>
           </div>
+        </div> */}
         </div>
-      </div>
+      </CSSTransition>
       <div className={s.completion_bar}>
-        <div className={s.completion_filler}>
+        ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭
+        ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭
+        ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭
+        ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚
+        {/* <div className={s.completion_filler}>
           <div
             className={`${s.completion_percentage} ${
               percent_complete === 100 ? "shimmer" : ""
@@ -520,15 +564,15 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
           onClick={() => submitPapercraft.mutate()}
         >
           SUBMIT
-        </div>
+        </div> */}
       </div>
     </>
   );
 };
 
-(UploadDesignPage as any).getLayout = (page: React.ReactNode) => (
-  <Layout hideFooter>{page}</Layout>
-);
+// (UploadDesignPage as any).getLayout = (page: React.ReactNode) => (
+//   <Layout hideFooter>{page}</Layout>
+// );
 
 // use authentication on this page
 export const getServerSideProps = withPageAuth({ redirectTo: "/login" });
