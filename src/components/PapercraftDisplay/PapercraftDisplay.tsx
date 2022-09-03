@@ -13,6 +13,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper";
 import * as APIt from "../../supabase/types";
 import Link from "next/link";
+import { BiArrowBack } from "react-icons/bi";
+import { FiShare } from "react-icons/fi";
 
 type PapercraftDisplayProps = {
   papercraft: Papercraft;
@@ -40,24 +42,40 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               minRows={3}
               readOnly={true}
             ></TextareaAutosize>
-            <div className={s.profile_container}>
-              <div className={s.container_note}>DESIGNED AND BUILT BY</div>
-              <div className={s.profile_picture}></div>
-              <div className={s.profile_name}>
-                <span className={s.user_name}>@evan</span>
-                <span>4 builds</span>
-                <span>3 papercrafts</span>
-              </div>
-            </div>
-            <div className={s.tags_container}>
-              <div className={s.tag}>
-                {Object.values(APIt.Difficulty)[papercraft.difficulty]}
-              </div>
-              {papercraft.tags.map((tag) => (
-                <div key={tag.id} className={s.tag}>
-                  {tag.name}
+            <div className={s.more_info_container}>
+              <div className={s.info_col}>
+                <div className={s.profile_container}>
+                  <div className={s.container_note}>DESIGNED AND BUILT BY</div>
+                  <div className={s.profile_picture}></div>
+                  <div className={s.profile_name}>
+                    <span className={s.user_name}>@evan</span>
+                    <span>4 builds</span>
+                    <span>3 papercrafts</span>
+                  </div>
                 </div>
-              ))}
+                <div className={s.tags_row}>
+                  <div className={s.tags_container}>
+                    <div className={s.tag}>
+                      {Object.values(APIt.Difficulty)[papercraft.difficulty]}
+                    </div>
+                    {papercraft.tags.map((tag) => (
+                      <div key={tag.id} className={s.tag}>
+                        {tag.name}
+                      </div>
+                    ))}
+                  </div>
+                  <div className={s.dimensions_container}>
+                      {`${papercraft.dimensions_cm?.join('cm x ')}cm`}
+                  </div>
+                </div>
+              </div>
+              <div className={s.info_col}>
+                <div className={s.download_container}>
+                  <div className={s.download_button}>.PDO</div>
+                  <div className={s.download_button}>.PDF - lined</div>
+                  <div className={s.download_button}>.PDF - lineless</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -85,6 +103,14 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               </SwiperSlide>
             ))}
           </Swiper>
+        </div>
+        <div className={s.sticky_header}>
+          <div className={s.go_back_button}>
+           <BiArrowBack />
+          </div>
+          <div className={s.share_button}>
+            <FiShare />
+          </div>
         </div>
       </div>
     );

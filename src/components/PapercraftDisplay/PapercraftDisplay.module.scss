@@ -6,6 +6,7 @@
   flex-direction: column-reverse;
   justify-content: flex-start;
   align-items: center;
+  position: relative;
 
   @include respond-to("small") {
     height: 100%;
@@ -105,10 +106,21 @@
   font-family: "FT88";
   letter-spacing: -1px;
   opacity: 0.6;
+  margin-bottom: 10px;
 
   @include respond-to("small") {
     max-height: 300px;
   }
+}
+
+.tags_row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .tags_container {
@@ -133,6 +145,36 @@
     opacity: 1;
     background-color: white;
     color: #303030;
+  }
+}
+
+.dimensions_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 5px 0px;
+  gap: 5px;
+  border-top: $border;
+  position: relative;
+  letter-spacing: -1px;
+  color: #707070;
+  font-family: "FT88 School";
+
+  &:before {
+    content: "DIMENSIONS";
+    position: absolute;
+    white-space: nowrap;
+    top: 0px;
+    left: 0px;
+    transform: translateY(-75%);
+    padding: 0px 3px;
+    font-size: 10px;
+    opacity: 1;
+    background-color: white;
+    color: #303030;
+    font-family: "FT88";
+    letter-spacing: 0px;
   }
 }
 
@@ -225,4 +267,139 @@
 .user_name {
   opacity: 0.6;
   font-style: italic;
+}
+
+.more_info_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+
+  @include respond-to("small") {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+.info_col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex: 1;
+  gap: 5px;
+}
+
+.download_container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 1fr);
+  grid-template-rows: repeat(auto-fit, minmax(40px, 1fr));
+  margin-top: 10px;
+  border-top: $border;
+  position: relative;
+  padding-top: 10px;
+  width: 100%;
+  gap: 10px;
+
+  &:before {
+    content: "DOWNLOADS";
+    position: absolute;
+    white-space: nowrap;
+    top: 0px;
+    left: 0px;
+    transform: translateY(-75%);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-rows: repeat(auto-fit, minmax(40px, 1fr));
+    padding: 0px 3px;
+    font-size: 10px;
+    opacity: 1;
+    background-color: white;
+    color: #303030;
+  }
+}
+
+.download_button {
+  width: 100%;
+  background-color: $highlight-dark;
+  padding: 10px;
+  min-height: 40px;
+  color: white;
+  overflow: hidden;
+  white-space: nowrap;
+  min-width: 50px;
+  transition: all 0.1s ease-in-out;
+  border-radius: 5px;
+  font-weight: 700;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+
+  &:hover {
+    transform: scale(0.95);
+    background-color: $highlight;
+    color: black;
+  }
+}
+
+.sticky_header {
+  position: sticky;
+  width: 100%;
+  padding: 10px;
+  top: 0;
+  left: 0;
+  margin-bottom: -30px;
+  height: 30px;
+  pointer-events: all;
+  z-index: 2;
+
+  @include respond-to("small") {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+  }
+}
+
+.go_back_button {
+  background-color: white;
+  border: $border;
+  padding: 5px 10px;
+  padding-bottom: 3px;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  transition: transform 0.1s ease-in-out;
+  cursor: pointer;
+  letter-spacing: -1px;
+  // font-family: "FT88 Gothic";
+  color: #404040;
+  font-size: 20px;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.share_button {
+  background-color: white;
+  border: $border;
+  padding: 5px 10px;
+  padding-bottom: 3px;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  transition: transform 0.1s ease-in-out;
+  cursor: pointer;
+  letter-spacing: -1px;
+  // font-family: "FT88 Gothic";
+  color: #404040;
+  font-size: 20px;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 }
