@@ -26,7 +26,7 @@ export const listPapercrafts = async () => {
       tags:tags(*)
     `
     )
-    .order("created_at", { ascending: true });
+    .order("created_at", { ascending: false });
   if (error) throw error;
   return papercrafts;
 };
@@ -44,7 +44,7 @@ export const searchPapercrafts = async (search: string) => {
       user:profiles(username)
     `
     )
-    .order("created_at", { ascending: true });
+    .order("created_at", { ascending: false });
   if (error) throw error;
   return papercrafts;
 };

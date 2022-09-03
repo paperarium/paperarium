@@ -33,6 +33,8 @@ import {
 import { createPapercraftsTags } from "../../supabase/api/papercraftstags";
 import { CSSTransition } from "react-transition-group";
 import PapercraftDisplay from "../../components/PapercraftDisplay/PapercraftDisplay";
+import BlinkEffect from "../../components/BlinkEffect/BlinkEffect";
+import { useRouter } from "next/router";
 
 const fetchTags = debounce(
   async (search: string): Promise<APIt.Tag[]> => {
@@ -60,9 +62,29 @@ const uploadFile = async (key: string, i_file: File) => {
 };
 
 const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
+  // router to redirect on submissions success
+  const router = useRouter();
+
   // reference to the form for CSS transitions
   const formRef = useRef<HTMLDivElement>(null);
-  const papercrafts = useQuery(["papercrafts", ""], () => listPapercrafts());
+  const backdropRef = useRef<HTMLDivElement>(null);
+
+  /* -------------------------------------------------------------------------- */
+  /*                                PREVIEW STATE                               */
+  /* -------------------------------------------------------------------------- */
+
+  // statefuls for the papercraft in the preview
+  const [papercraft, setPapercraft] = useState<APIt.Papercraft | null>(null);
+  const [inPreview, setInPreview] = useState(false);
+  const [inConfirm, setInConfirm] = useState(false);
+  const [submissionMessage, setSubmissionMessage] = useState<
+    string | undefined
+  >(undefined);
+
+  // checks if can show preview
+  const canShowPreview = () => {
+    return !!(title && description && !!pdo && (!!pdfLineless || !!pdfLined));
+  };
 
   /* -------------------------------------------------------------------------- */
   /*                                INPUT FIELDS                                */
@@ -86,15 +108,6 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
   const [dHeight, setDHeight] = useState<number | "">("");
   const [dUnits, setDUnits] = useState<"in" | "cm">("cm");
 
-  // keep track of "percentage" of form done
-  const percent_complete =
-    ((Number(!!title) +
-      Number(!!description) +
-      Number(!!images) +
-      Number(!!pdo)) /
-      4) *
-    100;
-
   /* -------------------------------------------------------------------------- */
   /*                                 SUBMISSION                                 */
   /* -------------------------------------------------------------------------- */
@@ -107,6 +120,9 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
     if (images === null) throw "missing images!";
     if (!pdo) throw "missing pdo!";
     if (!pdfLined && !pdfLineless) throw "missing a pdf!";
+
+    // set submitting message
+    setSubmissionMessage("Uploading pictures...");
 
     // first, upload all of the resources, this may take a while.
     const PAPERCRAFT_KEY_PREFIX = `${user.id}/papercrafts/${title.replace(
@@ -125,10 +141,9 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
       )}`;
       pictures.push(await uploadFile(fileName, i_file));
     }
-    console.log("uploaded pictures");
-    console.log(pictures);
 
     // 2. upload the papercraft files
+    setSubmissionMessage("Uploading files...");
 
     // GLB - for in-browser 3d view
     let glb_url: string | undefined = undefined;
@@ -165,26 +180,25 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
     const pdo_url = await uploadFile(pdo_file, pdo);
 
     // 3. build the papercraft
-    const papercraft_id = (
-      await createPapercraft({
-        title,
-        description,
-        glb_url,
-        pdo_url,
-        pdf_lined_url,
-        pdf_lineless_url,
-        pictures,
-        difficulty,
-        dimensions_cm:
-          dWidth && dDepth && dHeight
-            ? [dWidth, dDepth, dHeight].map(
-                (val) => val * (dUnits === "cm" ? 1 : 2.54)
-              )
-            : undefined,
-        verified: false,
-        user_id: user.id,
-      })
-    )[0].id;
+    setSubmissionMessage("Creating design entry...");
+    const papercraft_id = (await createPapercraft({
+      user_id: user.id,
+      title,
+      description,
+      glb_url,
+      pdo_url,
+      pdf_lineless_url,
+      pdf_lined_url,
+      pictures,
+      difficulty: difficulty,
+      dimensions_cm:
+        dWidth && dDepth && dHeight
+          ? [dWidth, dDepth, dHeight].map(
+              (val) => val * (dUnits === "cm" ? 1 : 2.54)
+            )
+          : undefined,
+      verified: false,
+    }))[0].id;
 
     // 4. build the papercraft tags inputs
     const papercraft_tags_input: APIt.PapercraftsTagsInput[] = [];
@@ -196,21 +210,13 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
     }
 
     // 5. bulk create the papercraft tags
+    setSubmissionMessage("Linking tags...");
     await createPapercraftsTags(papercraft_tags_input);
+
+    // 6. Finished!
+    setSubmissionMessage("Done!");
+    router.push(`/papercraft/${papercraft_id}`);
   });
-
-  /* -------------------------------------------------------------------------- */
-  /*                                PREVIEW STATE                               */
-  /* -------------------------------------------------------------------------- */
-
-  // statefuls for the papercraft in the preview
-  const [papercraft, setPapercraft] = useState<APIt.Papercraft | null>(null);
-  const [inPreview, setInPreview] = useState(false);
-
-  // checks if can show preview
-  const canShowPreview = () => {
-    return title && description && !!pdo && (!!pdfLineless || !!pdfLined);
-  };
 
   // builds a papercraft from the user's information
   const buildPapercraft = () => {
@@ -275,9 +281,21 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
             </div>
             <div className={s.spacer}></div>
             <div className={s.input_form}>
-              <div className={s.input_form_title}>INPUT FORM</div>
               <div
-                className={`${s.preview_show_button} ${!canShowPreview() ? 'disabled' : ''}`}
+                className={s.input_form_title}
+                onClick={() => {
+                  if (inPreview) {
+                    setInPreview(false);
+                    setInConfirm(false);
+                  }
+                }}
+              >
+                INPUT FORM
+              </div>
+              <div
+                className={`${s.preview_show_button} ${
+                  !canShowPreview() ? "disabled" : ""
+                }`}
                 onClick={() => {
                   if (!inPreview) {
                     if (canShowPreview()) {
@@ -286,14 +304,16 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
                     }
                   } else {
                     setInPreview(false);
+                    setInConfirm(false);
                   }
                 }}
               >
+                <BlinkEffect active={canShowPreview() && !inPreview} />
                 REVIEW
               </div>
               <div className={s.input_inner_container}>
                 {/* <div className={s.input_inner_container_2}> */}
-                <div className={s.annotation} style={{ marginTop: '0px' }}>
+                <div className={s.annotation} style={{ marginTop: "0px" }}>
                   Title * –– <i>what is this papercraft of?</i>
                 </div>
                 <TextareaAutosize
@@ -467,7 +487,6 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
                     >
                       .PDF - lined
                     </FileUpload>
-
                     <FileUpload
                       file={glb}
                       setFile={setGlb}
@@ -478,18 +497,60 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
                     </FileUpload>
                   </div>
                 </div>
-                </div>
+              </div>
               {/* </div> */}
             </div>
           </div>
           {/* SUBMISSION */}
           <div className={s.preview_container}>
-            <div className={s.submit_button}>SUBMIT</div>
+            <div
+              className={s.submit_button}
+              onClick={() => {
+                if (inConfirm) {
+                  submitPapercraft.mutate();
+                } else {
+                  setInConfirm(true);
+                }
+              }}
+            >
+              <BlinkEffect zIndex={-1} active={inPreview} />
+              SUBMIT
+            </div>
             <div className={s.preview_hidden_container}>
               {papercraft ? (
-                <PapercraftDisplay papercraft={papercraft} preview/>
+                <PapercraftDisplay papercraft={papercraft} preview />
               ) : null}
             </div>
+            <CSSTransition in={inConfirm} nodeRef={backdropRef} timeout={300}>
+              <div
+                className={s.confirm_backdrop}
+                ref={backdropRef}
+                onClick={() => {
+                  setInConfirm(false);
+                }}
+              >
+                <div className={s.confirm_text}>
+                  {submissionMessage ? (
+                    submissionMessage
+                  ) : (
+                    <>
+                      <h1>ready?</h1>
+                      click the submit button again to confirm your submission
+                      of the design
+                      <br />
+                      <br />
+                      <i className={s.confirm_title}>{title}</i>.
+                      <br />
+                      <br />
+                      <br />
+                      <small>
+                        or click anywhere else to return to editing.
+                      </small>
+                    </>
+                  )}
+                </div>
+              </div>
+            </CSSTransition>
             <div className={s.preview_cover}></div>
             <div className={s.preview_cover}></div>
           </div>
