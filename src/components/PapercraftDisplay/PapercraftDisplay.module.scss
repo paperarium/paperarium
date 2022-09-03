@@ -52,7 +52,7 @@
 }
 
 .preview_content_container {
-  padding: 20px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -61,6 +61,10 @@
   color: #303030;
   width: 100%;
   position: relative;
+
+  @include respond-to("xsmall") {
+    padding: 20px;
+  }
 }
 
 .preview_content_outline {
@@ -294,13 +298,14 @@
 .download_container {
   display: grid;
   grid-template-columns: repeat(auto-fit, 1fr);
-  grid-template-rows: repeat(auto-fit, minmax(40px, 1fr));
+  grid-template-rows: repeat(auto-fill, minmax(40px, 1fr));
   margin-top: 10px;
   border-top: $border;
   position: relative;
   padding-top: 10px;
   width: 100%;
   gap: 10px;
+  height: 100%;
 
   &:before {
     content: "DOWNLOADS";
@@ -337,6 +342,7 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  font-family: "FT88 Gothic";
 
   &:hover {
     transform: scale(0.95);

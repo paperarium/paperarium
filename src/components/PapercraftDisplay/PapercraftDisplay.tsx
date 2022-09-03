@@ -65,15 +65,19 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                     ))}
                   </div>
                   <div className={s.dimensions_container}>
-                      {`${papercraft.dimensions_cm?.join('cm x ')}cm`}
+                    {`${papercraft.dimensions_cm?.join("cm x ")}cm`}
                   </div>
                 </div>
               </div>
               <div className={s.info_col}>
                 <div className={s.download_container}>
                   <div className={s.download_button}>.PDO</div>
-                  <div className={s.download_button}>.PDF - lined</div>
-                  <div className={s.download_button}>.PDF - lineless</div>
+                  {papercraft.pdf_lined_url ? (
+                    <div className={s.download_button}>.PDF - lined</div>
+                  ) : null}
+                  {papercraft.pdf_lineless_url ? (
+                    <div className={s.download_button}>.PDF - lineless</div>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -106,7 +110,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
         </div>
         <div className={s.sticky_header}>
           <div className={s.go_back_button}>
-           <BiArrowBack />
+            <BiArrowBack />
           </div>
           <div className={s.share_button}>
             <FiShare />

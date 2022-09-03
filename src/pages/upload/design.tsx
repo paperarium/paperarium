@@ -464,79 +464,6 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
             <div className={s.preview_cover}></div>
             <div className={s.preview_cover}></div>
           </div>
-          {/* <div className={s.divider}></div> */}
-          {/* <div className={s.preview_col}>
-          <div className={s.preview_header}>PREVIEW</div>
-          <div className={s.preview_container}>
-            <div className={s.preview_main_content}>
-              <Swiper
-                pagination={true}
-                navigation={true}
-                className={s.image_container}
-                modules={[Pagination, Navigation]}
-              >
-                {imageURLs.current ? (
-                  imageURLs.current.map((imgURL, i) => (
-                    <SwiperSlide key={`${imgURL}_${i}`}>
-                      <Image
-                        src={imgURL}
-                        layout={"fill"}
-                        objectFit={"cover"}
-                        alt={`papercraft preview image ${i}`}
-                      />
-                    </SwiperSlide>
-                  ))
-                ) : (
-                  <SwiperSlide>
-                    <div className={s.preview_no_image_display}>
-                      images of your papercraft will go here
-                    </div>
-                  </SwiperSlide>
-                )}
-              </Swiper>
-              <div className={s.preview_content_container}>
-                <TextareaAutosize
-                  className={s.preview_title}
-                  value={title}
-                  placeholder={"Your title..."}
-                  spellCheck={false}
-                  readOnly={true}
-                ></TextareaAutosize>
-                <div className={s.date_input}>{new Date().toDateString()}</div>
-                <TextareaAutosize
-                  className={s.preview_description}
-                  value={description}
-                  placeholder={"Your description..."}
-                  spellCheck={false}
-                  minRows={3}
-                  readOnly={true}
-                ></TextareaAutosize>
-                <div className={s.tags_container}>
-                  {tags.map((tag) => (
-                    <div key={tag.id} className={s.tag}>
-                      {tag.name}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className={s.preview_pdf_column}>
-              <div className={s.pdf_type_container}>
-                <div className={s.pdf_type}>LINED</div>
-                <div className={s.pdf_type}>LINELESS</div>
-              </div>
-              <div className={s.pdf_preview_container}>
-                {pdfLineless ? (
-                  <PDFDisplay pdf={pdfLineless} defaultWidth={230} />
-                ) : (
-                  <div className={s.preview_no_image_display}>
-                    your pdf will show here
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div> */}
         </div>
       </CSSTransition>
       <div className={s.completion_bar}>
@@ -544,27 +471,6 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
         ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭
         ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭
         ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚ ୭ ˚○◦˚
-        {/* <div className={s.completion_filler}>
-          <div
-            className={`${s.completion_percentage} ${
-              percent_complete === 100 ? "shimmer" : ""
-            }`}
-            style={{ transform: `translateX(-${100 - percent_complete}%)` }}
-          >
-            <RiScissorsCutLine />
-            <div className={s.completion_percentage_label}>
-              {percent_complete}% complete
-            </div>
-          </div>
-        </div>
-        <div
-          className={`${s.submit_button} ${
-            percent_complete === 100 ? "enabled" : ""
-          }`}
-          onClick={() => submitPapercraft.mutate()}
-        >
-          SUBMIT
-        </div> */}
       </div>
     </>
   );
