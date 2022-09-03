@@ -18,10 +18,11 @@ import { FiShare } from "react-icons/fi";
 
 type PapercraftDisplayProps = {
   papercraft: Papercraft;
+  preview?: boolean;
 };
 
 const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
-  function PapercraftCard({ papercraft }) {
+  function PapercraftCard({ papercraft, preview }) {
     return (
       <div className={s.container}>
         <div className={s.display_column}>
@@ -44,15 +45,6 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
             ></TextareaAutosize>
             <div className={s.more_info_container}>
               <div className={s.info_col}>
-                <div className={s.profile_container}>
-                  <div className={s.container_note}>DESIGNED AND BUILT BY</div>
-                  <div className={s.profile_picture}></div>
-                  <div className={s.profile_name}>
-                    <span className={s.user_name}>@evan</span>
-                    <span>4 builds</span>
-                    <span>3 papercrafts</span>
-                  </div>
-                </div>
                 <div className={s.tags_row}>
                   <div className={s.tags_container}>
                     <div className={s.tag}>
@@ -64,8 +56,18 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                       </div>
                     ))}
                   </div>
+                  {papercraft.dimensions_cm ?
                   <div className={s.dimensions_container}>
                     {`${papercraft.dimensions_cm?.join("cm x ")}cm`}
+                  </div> : null}
+                </div>
+                <div className={s.profile_container}>
+                  <div className={s.container_note}>DESIGNED AND BUILT BY</div>
+                  <div className={s.profile_picture}></div>
+                  <div className={s.profile_name}>
+                    <span className={s.user_name}>@evan</span>
+                    <span>4 builds</span>
+                    <span>3 papercrafts</span>
                   </div>
                 </div>
               </div>
@@ -94,7 +96,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
             {papercraft.pictures.map((imgURL, i) => (
               <SwiperSlide key={`${imgURL}_${i}`}>
                 <Image
-                  src={`/${papercraft.pictures[0]}`}
+                  src={`${papercraft.pictures[i]}`}
                   className={s.inner_image}
                   placeholder="blur"
                   blurDataURL={`${process.env.IMGIX}/${papercraft.pictures[0]}?blur=2000`}
@@ -103,6 +105,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                   objectPosition="top center"
                   alt={papercraft.title}
                   priority={i == 0}
+                  unoptimized={preview}
                 />
               </SwiperSlide>
             ))}
