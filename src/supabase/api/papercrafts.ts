@@ -13,6 +13,25 @@ import * as APIt from "../types";
 /* -------------------------------------------------------------------------- */
 
 /**
+ * Gets a papercraf by its id
+ * @returns A list of papercrafts
+ */
+export const getPapercraft = async (pid: number) => {
+  const { data: papercrafts, error } = await supabaseClient
+    .from<APIt.Papercraft>("papercrafts")
+    .select(
+      `
+      *,
+      user:profiles(username),
+      tags:tags(*)
+    `
+    )
+    .eq("id", pid);
+  if (error) throw error;
+  return papercrafts[0];
+};
+
+/**
  * Lists the papercrafts from the supabase database.
  * @returns A list of papercrafts
  */

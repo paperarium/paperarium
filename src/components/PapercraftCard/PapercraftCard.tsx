@@ -8,6 +8,7 @@ import React from "react";
 import s from "./PapercraftCard.module.scss";
 import Image from "next/image";
 import { Papercraft } from "../../supabase/types";
+import { useRouter } from "next/router";
 
 type PapercraftCardProps = {
   papercraft: Papercraft;
@@ -18,8 +19,11 @@ const PapercraftCard: React.FC<PapercraftCardProps> = function PapercraftCard({
   papercraft,
   priority,
 }) {
+  const router = useRouter();
   return (
-    <div className={s.container}>
+    <div className={s.container} onClick={() => {
+      router.push(`/papercraft/${papercraft.id}`)
+    }}>
       <div className={s.inner_container}>
         <Image
           src={`/${papercraft.pictures[0]}`}

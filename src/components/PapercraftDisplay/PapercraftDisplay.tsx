@@ -15,21 +15,23 @@ import * as APIt from "../../supabase/types";
 import Link from "next/link";
 import { BiArrowBack } from "react-icons/bi";
 import { FiShare } from "react-icons/fi";
+import { Router, useRouter } from "next/router";
 
 type PapercraftDisplayProps = {
-  papercraft: Papercraft;
+  papercraft?: Papercraft;
   preview?: boolean;
 };
 
 const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
   function PapercraftCard({ papercraft, preview }) {
+    const router = useRouter();
     return (
       <div className={s.container}>
         <div className={s.display_column}>
           <div className={s.preview_content_container}>
             <TextareaAutosize
               className={s.preview_title}
-              value={papercraft.title}
+              value={papercraft?.title || ""}
               placeholder={"Your title..."}
               spellCheck={false}
               readOnly={true}
@@ -37,7 +39,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
             <div className={s.date_input}>{new Date().toDateString()}</div>
             <TextareaAutosize
               className={s.preview_description}
-              value={papercraft.description}
+              value={papercraft?.description || ""}
               placeholder={"Your description..."}
               spellCheck={false}
               minRows={3}
@@ -46,20 +48,23 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
             <div className={s.more_info_container}>
               <div className={s.info_col}>
                 <div className={s.tags_row}>
-                  <div className={s.tags_container}>
-                    <div className={s.tag}>
-                      {Object.values(APIt.Difficulty)[papercraft.difficulty]}
-                    </div>
-                    {papercraft.tags.map((tag) => (
-                      <div key={tag.id} className={s.tag}>
-                        {tag.name}
+                  {papercraft ? (
+                    <div className={s.tags_container}>
+                      <div className={s.tag}>
+                        {Object.values(APIt.Difficulty)[papercraft.difficulty]}
                       </div>
-                    ))}
-                  </div>
-                  {papercraft.dimensions_cm ?
-                  <div className={s.dimensions_container}>
-                    {`${papercraft.dimensions_cm?.join("cm x ")}cm`}
-                  </div> : null}
+                      {papercraft.tags.map((tag) => (
+                        <div key={tag.id} className={s.tag}>
+                          {tag.name}
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                  {papercraft?.dimensions_cm ? (
+                    <div className={s.dimensions_container}>
+                      {`${papercraft.dimensions_cm?.join("cm x ")}cm`}
+                    </div>
+                  ) : null}
                 </div>
                 <div className={s.profile_container}>
                   <div className={s.container_note}>DESIGNED AND BUILT BY</div>
@@ -74,10 +79,10 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               <div className={s.info_col}>
                 <div className={s.download_container}>
                   <div className={s.download_button}>.PDO</div>
-                  {papercraft.pdf_lined_url ? (
+                  {papercraft?.pdf_lined_url ? (
                     <div className={s.download_button}>.PDF - lined</div>
                   ) : null}
-                  {papercraft.pdf_lineless_url ? (
+                  {papercraft?.pdf_lineless_url ? (
                     <div className={s.download_button}>.PDF - lineless</div>
                   ) : null}
                 </div>
@@ -93,26 +98,31 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
             className={s.image_container}
             modules={[Pagination, Navigation]}
           >
-            {papercraft.pictures.map((imgURL, i) => (
-              <SwiperSlide key={`${imgURL}_${i}`}>
-                <Image
-                  src={`${papercraft.pictures[i]}`}
-                  className={s.inner_image}
-                  placeholder="blur"
-                  blurDataURL={`${process.env.IMGIX}/${papercraft.pictures[0]}?blur=2000`}
-                  layout="fill"
-                  objectFit="cover"
-                  objectPosition="top center"
-                  alt={papercraft.title}
-                  priority={i == 0}
-                  unoptimized={preview}
-                />
-              </SwiperSlide>
-            ))}
+            {papercraft
+              ? papercraft.pictures.map((imgURL, i) => (
+                  <SwiperSlide key={`${imgURL}_${i}`}>
+                    <Image
+                      src={`${papercraft.pictures[i]}`}
+                      className={s.inner_image}
+                      placeholder="blur"
+                      blurDataURL={`${process.env.IMGIX}/${papercraft.pictures[0]}?blur=2000`}
+                      layout="fill"
+                      objectFit="cover"
+                      objectPosition="top center"
+                      alt={papercraft.title}
+                      priority={i == 0}
+                      unoptimized={preview}
+                    />
+                  </SwiperSlide>
+                ))
+              : null}
           </Swiper>
         </div>
         <div className={s.sticky_header}>
-          <div className={s.go_back_button}>
+          <div
+            className={s.go_back_button}
+            onClick={!preview ? () => router.back() : undefined}
+          >
             <BiArrowBack />
           </div>
           <div className={s.share_button}>
