@@ -175,7 +175,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                     `}
                   />
                 ) : (
-                  <img src={papercraft.pictures[0]} className={s.inner_image} />
+                  <img src={papercraft.pictures[0]} className={s.inner_image} alt={papercraft.title} />
                 )}
               </SwiperSlide>
             ))}

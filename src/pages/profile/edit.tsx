@@ -79,7 +79,7 @@ const EditProfilePage: NextPage = () => {
   );
 
   // if no profile, gtfo
-  if (!profile) return <>"loading..."</>;
+  if (!profile) return <>loading...</>;
 
   // check if there is any necessary change
   const isTheSame =
@@ -118,7 +118,7 @@ const EditProfilePage: NextPage = () => {
             }}
           >
             {avatar_url ? (
-              <img src={avatar_url} className={s.inner_image} />
+              <img src={avatar_url} className={s.inner_image} alt="avatar" />
             ) : (
               <OptimizedImage
                 src={profile?.avatar_url}
