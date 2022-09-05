@@ -181,24 +181,26 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
 
     // 3. build the papercraft
     setSubmissionMessage("Creating design entry...");
-    const papercraft_id = (await createPapercraft({
-      user_id: user.id,
-      title,
-      description,
-      glb_url,
-      pdo_url,
-      pdf_lineless_url,
-      pdf_lined_url,
-      pictures,
-      difficulty: difficulty,
-      dimensions_cm:
-        dWidth && dDepth && dHeight
-          ? [dWidth, dDepth, dHeight].map(
-              (val) => val * (dUnits === "cm" ? 1 : 2.54)
-            )
-          : undefined,
-      verified: false,
-    }))[0].id;
+    const papercraft_id = (
+      await createPapercraft({
+        user_id: user.id,
+        title,
+        description,
+        glb_url,
+        pdo_url,
+        pdf_lineless_url,
+        pdf_lined_url,
+        pictures,
+        difficulty: difficulty,
+        dimensions_cm:
+          dWidth && dDepth && dHeight
+            ? [dWidth, dDepth, dHeight].map(
+                (val) => val * (dUnits === "cm" ? 1 : 2.54)
+              )
+            : undefined,
+        verified: false,
+      })
+    )[0].id;
 
     // 4. build the papercraft tags inputs
     const papercraft_tags_input: APIt.PapercraftsTagsInput[] = [];
@@ -246,6 +248,9 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
       user: {
         ...user,
         username: "me",
+        updated_at: "",
+        papercrafts: [{ count: 1 }],
+        builds: [{ count: 1 }],
       },
       tags: tags,
     };

@@ -9,16 +9,15 @@ import {
   GetStaticPaths,
   GetStaticProps,
   NextPage,
-  NextPageContext,
 } from "next";
 import Head from "next/head";
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import PapercraftDisplay from "../../components/PapercraftDisplay/PapercraftDisplay";
 import { getPapercraft } from "../../supabase/api/papercrafts";
 import s from "../../components/PapercraftDisplay/PapercraftDisplay.module.scss";
 import { ParsedUrlQuery } from "node:querystring";
 import { CSSTransition } from "react-transition-group";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPING                                   */
