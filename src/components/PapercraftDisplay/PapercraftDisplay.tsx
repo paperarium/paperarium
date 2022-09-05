@@ -16,6 +16,7 @@ import Link from "next/link";
 import { BiArrowBack } from "react-icons/bi";
 import { FiShare } from "react-icons/fi";
 import { Router, useRouter } from "next/router";
+import getPublicUrl from "../../util/getPublicUrl";
 
 type PapercraftDisplayProps = {
   papercraft?: Papercraft;
@@ -34,6 +35,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               value={papercraft?.title || ""}
               placeholder={"Your title..."}
               spellCheck={false}
+              disabled={true}
               readOnly={true}
             ></TextareaAutosize>
             <div className={s.date_input}>{new Date().toDateString()}</div>
@@ -43,6 +45,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               placeholder={"Your description..."}
               spellCheck={false}
               minRows={3}
+              disabled={true}
               readOnly={true}
             ></TextareaAutosize>
             <div className={s.more_info_container}>
@@ -78,12 +81,19 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               </div>
               <div className={s.info_col}>
                 <div className={s.download_container}>
-                  <div className={s.download_button}>.PDO</div>
+                  {papercraft? 
+                  <a href={getPublicUrl(papercraft?.pdo_url)} className={s.download_button} download>
+                    .PDO
+                  </a> : null}
                   {papercraft?.pdf_lined_url ? (
-                    <div className={s.download_button}>.PDF - lined</div>
+                    <a href={getPublicUrl(papercraft.pdf_lined_url)} target="_blank" className={s.download_button}>
+                      .PDF - lined
+                    </a>
                   ) : null}
                   {papercraft?.pdf_lineless_url ? (
-                    <div className={s.download_button}>.PDF - lineless</div>
+                    <a href={getPublicUrl(papercraft.pdf_lineless_url)} target="_blank" className={s.download_button}>
+                      .PDF - lineless
+                    </a>
                   ) : null}
                 </div>
               </div>
@@ -120,12 +130,15 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
         </div>
         <div className={s.sticky_header}>
           <div
-            className={s.go_back_button}
+            className={s.sticky_button}
             onClick={!preview ? () => router.back() : undefined}
           >
             <BiArrowBack />
           </div>
-          <div className={s.share_button}>
+          <div
+            className={s.sticky_button}
+            style={{ left: "unset", right: "15px" }}
+          >
             <FiShare />
           </div>
         </div>
