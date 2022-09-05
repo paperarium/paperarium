@@ -7,8 +7,8 @@
 
 import { NextPage } from "next";
 import Head from "next/head";
-import es from "../styles/Explore.module.scss";
-import s from "../styles/Profile.module.scss";
+import es from "../../styles/Explore.module.scss";
+import s from "../../styles/Profile.module.scss";
 import { useRouter } from "next/router";
 import {
   supabaseClient,
@@ -16,11 +16,15 @@ import {
   User,
 } from "@supabase/auth-helpers-nextjs";
 import { useState } from "react";
-import PapercraftCard from "../components/PapercraftCard/PapercraftCard";
-import Layout from "../components/Layout/Layout";
+import PapercraftCard from "../../components/PapercraftCard/PapercraftCard";
+import Layout from "../../components/Layout/Layout";
 import { useQuery } from "@tanstack/react-query";
-import { searchUserPapercrafts } from "../supabase/api/papercrafts";
-import { AiOutlineDownSquare } from 'react-icons/ai';
+import {
+  listPapercrafts,
+  searchUserPapercrafts,
+} from "../../supabase/api/papercrafts";
+import { AiOutlineDownSquare } from "react-icons/ai";
+import PapercraftGallery from "../../components/PapercraftGallery/PapercraftGallery";
 
 type ProfilePageProps = {
   user: User;
@@ -42,9 +46,7 @@ const ProfilePage: NextPage<ProfilePageProps> = ({ user }) => {
       <div className={s.profile_container}>
         <div className={s.profile_bar}>
           <div className={s.profile_information}>
-            <div className={s.profile_picture}>
-              LS
-            </div>
+            <div className={s.profile_picture}>LS</div>
             <div className={s.profile_name}>
               <span className={s.user_name}>@lordstingray</span>
               <span>Lord Stingray</span>
@@ -53,17 +55,19 @@ const ProfilePage: NextPage<ProfilePageProps> = ({ user }) => {
             </div>
           </div>
           <div className={s.description}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
           </div>
-          <div className={s.profile_button}>
-            edit profile
-          </div>
-          <div className={s.profile_button} onClick={() => supabaseClient.auth.signOut().then(() => router.push('/'))}>
+          <div className={s.profile_button}>edit profile</div>
+          <div
+            className={s.profile_button}
+            onClick={() =>
+              supabaseClient.auth.signOut().then(() => router.push("/"))
+            }
+          >
             sign out
           </div>
-          <div className={s.joined_information}>
-            Joined on Aug 21, 2022
-          </div>
+          <div className={s.joined_information}>Joined on Aug 21, 2022</div>
         </div>
         <div className={s.search_bar}>
           search
@@ -82,37 +86,24 @@ const ProfilePage: NextPage<ProfilePageProps> = ({ user }) => {
           <AiOutlineDownSquare />
         </div>
         <div className={s.main_grid}>
-          {papercrafts.data
-          ? papercrafts.data.map((papercraft) => (
-              <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
-            ))
-          : null}
-          {papercrafts.data
-          ? papercrafts.data.map((papercraft) => (
-              <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
-            ))
-          : null}
-          {papercrafts.data
-          ? papercrafts.data.map((papercraft) => (
-              <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
-            ))
-          : null}
-          {papercrafts.data
-          ? papercrafts.data.map((papercraft) => (
-              <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
-            ))
-          : null}
-          {papercrafts.data
-          ? papercrafts.data.map((papercraft) => (
-              <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
-            ))
-          : null}
-          {papercrafts.data
-          ? papercrafts.data.map((papercraft) => (
-              <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
-            ))
-          : null}
+          <PapercraftGallery>
+            {papercrafts.data
+              ? papercrafts.data.map((papercraft) => (
+                  <PapercraftCard
+                    key={papercraft!.id}
+                    papercraft={papercraft}
+                  />
+                ))
+              : null}
+          </PapercraftGallery>
         </div>
+        {/* <div className={s.main_grid}>
+          {papercrafts.data
+          ? papercrafts.data.map((papercraft) => (
+              <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
+            ))
+          : null}
+        </div> */}
       </div>
     </>
   );

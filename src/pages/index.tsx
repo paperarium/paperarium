@@ -4,6 +4,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import PapercraftCard from "../components/PapercraftCard/PapercraftCard";
+import PapercraftGallery from "../components/PapercraftGallery/PapercraftGallery";
 import s from "../styles/Home.module.scss";
 import { listPapercrafts } from "../supabase/api/papercrafts";
 import { Papercraft } from "../supabase/types";
@@ -23,15 +24,53 @@ const Home: NextPage = () => {
         <div className={s.page_row}>
           <div className={s.page_col}>
             <div className={s.main_grid}>
+              <PapercraftGallery>
+                {papercrafts.data
+                  ? papercrafts.data.map((papercraft, i) => (
+                      <PapercraftCard
+                        key={papercraft!.id}
+                        papercraft={papercraft}
+                        priority={i <= 1}
+                      />
+                    ))
+                  : null}
+                  {papercrafts.data
+                    ? papercrafts.data.map((papercraft, i) => (
+                        <PapercraftCard
+                          key={papercraft!.id}
+                          papercraft={papercraft}
+                          priority={i <= 1}
+                        />
+                      ))
+                    : null}
+                    {papercrafts.data
+                      ? papercrafts.data.map((papercraft, i) => (
+                          <PapercraftCard
+                            key={papercraft!.id}
+                            papercraft={papercraft}
+                            priority={i <= 1}
+                          />
+                        ))
+                      : null}
+                      {papercrafts.data
+                        ? papercrafts.data.map((papercraft, i) => (
+                            <PapercraftCard
+                              key={papercraft!.id}
+                              papercraft={papercraft}
+                              priority={i <= 1}
+                            />
+                          ))
+                        : null}
+              </PapercraftGallery>
+              {/* {papercrafts.data
+                ? papercrafts.data.map((papercraft) => (
+                    <PapercraftCard
+                      key={papercraft!.id}
+                      papercraft={papercraft}
+                    />
+                  ))
+                : null}
               {papercrafts.data
-                ? papercrafts.data.map((papercraft, i) => (
-                    <PapercraftCard
-                      key={papercraft!.id}
-                      papercraft={papercraft}
-                      priority={i <= 1}
-                    />))
-                : null}
-                {papercrafts.data
                 ? papercrafts.data.map((papercraft) => (
                     <PapercraftCard
                       key={papercraft!.id}
@@ -39,34 +78,29 @@ const Home: NextPage = () => {
                     />
                   ))
                 : null}
-                {papercrafts.data
+              {papercrafts.data
                 ? papercrafts.data.map((papercraft) => (
                     <PapercraftCard
                       key={papercraft!.id}
                       papercraft={papercraft}
                     />
                   ))
-                : null}
-                {papercrafts.data
-                ? papercrafts.data.map((papercraft) => (
-                    <PapercraftCard
-                      key={papercraft!.id}
-                      papercraft={papercraft}
-                    />
-                  ))
-                : null}
+                : null} */}
             </div>
           </div>
           <div className={s.divider}></div>
           <div className={s.page_col}>
             <div className={s.content_container}>
               <i>
-                <h1>welcome to the <br /><span className={s.title_big}>paperarium</span>.</h1>
+                <h1>
+                  welcome to the <br />
+                  <span className={s.title_big}>paperarium</span>.
+                </h1>
               </i>
               <p>
-                here you can explore both original and unofficial fan-made 3d models
-                you can print out and assemble in real life, for free. after
-                printing, just follow the three steps:
+                here you can explore both original and unofficial fan-made 3d
+                models you can print out and assemble in real life, for free.
+                after printing, just follow the three steps:
               </p>
               <ol>
                 <li>cut out each piece...</li>

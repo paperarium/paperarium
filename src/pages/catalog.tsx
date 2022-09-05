@@ -4,13 +4,12 @@ import Head from "next/head";
 import PapercraftCard from "../components/PapercraftCard/PapercraftCard";
 import s from "../styles/Explore.module.scss";
 import { useState } from "react";
-import {
-  supabaseClient,
-  supabaseServerClient,
-} from "@supabase/auth-helpers-nextjs";
-import { Papercraft } from "../supabase/types";
 import Layout from "../components/Layout/Layout";
-import { listPapercrafts, searchPapercrafts } from "../supabase/api/papercrafts";
+import {
+  listPapercrafts,
+  searchPapercrafts,
+} from "../supabase/api/papercrafts";
+import PapercraftGallery from "../components/PapercraftGallery/PapercraftGallery";
 
 const ExplorePage: NextPage = () => {
   const [search, setSearch] = useState<string>("");
@@ -45,11 +44,13 @@ const ExplorePage: NextPage = () => {
         filter by tag
       </div>
       <div className={s.main_grid}>
-        {papercrafts.data
-          ? papercrafts.data.map((papercraft) => (
-              <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
-            ))
-          : null}
+        <PapercraftGallery>
+          {papercrafts.data
+            ? papercrafts.data.map((papercraft) => (
+                <PapercraftCard key={papercraft!.id} papercraft={papercraft} />
+              ))
+            : null}
+        </PapercraftGallery>
       </div>
     </>
   );
@@ -61,7 +62,7 @@ const ExplorePage: NextPage = () => {
  * @param context
  * @returns
  */
-export async function getStaticProps(context: any) { 
+export async function getStaticProps(context: any) {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(["papercrafts", ""], listPapercrafts);
   return {
@@ -71,7 +72,6 @@ export async function getStaticProps(context: any) {
     revalidate: 10,
   };
 }
-
 
 (ExplorePage as any).getLayout = (page: React.ReactNode) => (
   <Layout footerMarginLeft={"var(--search-bar-width)"}>{page}</Layout>

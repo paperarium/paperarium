@@ -1,21 +1,22 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import styles from '../styles/Home.module.scss'
+import type { NextPage } from "next";
+import Head from "next/head";
+import PapercraftGallery from "../components/PapercraftGallery/PapercraftGallery";
+import styles from "../styles/Home.module.scss";
+import {
+  listPapercrafts,
+  searchPapercrafts,
+} from "../supabase/api/papercrafts";
 
 const AboutPage: NextPage = () => {
   return (
     <>
       <Head>
         <title>explore - paperarium</title>
-        <meta
-          name="description"
-          content="about us."
-        />
+        <meta name="description" content="about us." />
       </Head>
-      <h1 className={styles.title}>this is the about page.</h1>
+      <h1> about page</h1>
     </>
   );
 };
 
 export default AboutPage;
-

@@ -42,27 +42,32 @@ $total: 10;
   }
 }
 
+.image_container {
+  position: relative;
+  width: 100%;
+}
+
 .inner_image {
-  border-radius: 10px;
+  // border-radius: 10px;
+  // border-bottom-left-radius: 0px;
+  // border-bottom-right-radius: 0px;
   width: 100%;
   position: relative;
-  height: unset;
-  object-fit: cover;
+  margin-bottom: -5px;
 }
 
 .info_card {
-  position: absolute;
+  // position: absolute;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  bottom: 0;
   width: 100%;
   background-color: white;
-  padding: 5px 10px;
+  padding: 5px;
   border-top: $border;
   font-size: 15px;
-  gap: 3px;
+  gap: 2px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }

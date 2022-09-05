@@ -7,9 +7,12 @@
 import type { AppProps } from "next/app";
 import "../styles/globals.scss";
 import "../styles/fonts.scss";
+import "../styles/lazyloadimgs.scss";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import "lazysizes";
+import 'lazysizes/plugins/blur-up/ls.blur-up';
 import { UserProvider } from '@supabase/auth-helpers-react'
 import { supabaseClient } from '@supabase/auth-helpers-nextjs'
 import Layout from "../components/Layout/Layout";

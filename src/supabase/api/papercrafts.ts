@@ -86,7 +86,7 @@ export const searchUserPapercrafts = async (
     `
     )
     .eq(useId ? "user_id" : ("user.username" as any), usernameOrId)
-    .order("created_at", { ascending: true });
+    .order("created_at", { ascending: false });
   if (error) throw error;
   return papercrafts;
 };

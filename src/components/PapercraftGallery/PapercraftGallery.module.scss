@@ -1,0 +1,19 @@
+.container {
+  width: 100%;
+  min-height: calc(100vh - var(--header-height) - var(--notice-bar-height));
+}
+
+.mason_grid {
+  display: flex;
+  margin-left: -1px; /* gutter size offset */
+  width: 100%;
+  gap: 5px;
+  padding: 10px;
+  min-height: calc(100vh - var(--header-height) - var(--notice-bar-height));
+}
+
+.mason_grid_col {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
