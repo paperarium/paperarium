@@ -14,7 +14,7 @@ import PapercraftGallery from "../components/PapercraftGallery/PapercraftGallery
 const ExplorePage: NextPage = () => {
   const [search, setSearch] = useState<string>("");
   const [currentSearch, setCurrentSearch] = useState<string>(search);
-  const papercrafts = useQuery(["papercrafts", currentSearch], () =>
+  const papercrafts = useQuery(["papercrafts", { search: currentSearch }], () =>
     searchPapercrafts(currentSearch)
   );
 

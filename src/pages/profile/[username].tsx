@@ -18,7 +18,7 @@ import { CSSTransition } from "react-transition-group";
 import { useRef, useState } from "react";
 import { getProfile } from "../../supabase/api/profiles";
 import es from "../../styles/Explore.module.scss";
-import s from "../../styles/Profile.module.scss";
+import s from "../../styles/profile/Profile.module.scss";
 import PapercraftGallery from "../../components/PapercraftGallery/PapercraftGallery";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { AiOutlineDownSquare } from "react-icons/ai";
@@ -26,6 +26,8 @@ import PapercraftCard from "../../components/PapercraftCard/PapercraftCard";
 import { searchUserPapercrafts } from "../../supabase/api/papercrafts";
 import Layout from "../../components/Layout/Layout";
 import { useUser } from "@supabase/auth-helpers-react";
+import Link from "next/link";
+import OptimizedImage from "../../components/OptimizedImage/OptimizedImage";
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPING                                   */
@@ -62,12 +64,11 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
       enabled: !!username,
     }
   );
-  console.log(profile.data);
 
   return (
     <>
       <Head>
-        <title>{`@${profile.data?.username || null}`} - paperarium</title>
+        <title>{`@${username} - paperarium`}</title>
         <meta property="og:url" content={router.asPath} />
         <meta property="og:type" content="website" />
         {/* <meta property="fb:app_id" content="your fb id" /> */}
@@ -85,7 +86,15 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
       <div className={s.profile_container}>
         <div className={s.profile_bar}>
           <div className={s.profile_information}>
-            <div className={s.profile_picture}>LS</div>
+            <div className={s.profile_picture}>
+              {profile.data?.avatar_url ? (
+                <OptimizedImage
+                  src={profile.data.avatar_url}
+                  sizes={"20vw"}
+                  className={s.profile_pic_image}
+                />
+              ) : null}
+            </div>
             <div className={s.profile_name}>
               <span className={s.user_name}>@{username}</span>
               <span className={s.user_real_name}>{profile.data?.name}</span>
@@ -100,7 +109,9 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
           <div className={s.description}>{profile.data?.about}</div>
           {user && user.id === profile.data?.id ? (
             <>
-              <div className={s.profile_button}>edit profile</div>
+              <Link href="/profile/edit" passHref>
+                <a className={s.profile_button}>edit profile</a>
+              </Link>
               <div
                 className={s.profile_button}
                 onClick={() =>

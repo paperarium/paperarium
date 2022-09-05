@@ -12,14 +12,19 @@ import LOGO from "../../../public/img/logo.svg";
 import { useQuery } from "@tanstack/react-query";
 import { listAnnouncements } from "../../supabase/api/announcements";
 import { getSelf } from "../../supabase/api/profiles";
+import OptimizedImage from "../OptimizedImage/OptimizedImage";
 
 const NavBar: React.FC = function NavBar() {
   const router = useRouter();
   const [navOpen, setNavOpen] = useState(false);
   const { user } = useUser();
-  const { data: profile } = useQuery(["profileself"], () => getSelf(user!.id), {
-    enabled: !!user?.id,
-  });
+  const { data: profile } = useQuery(
+    ["profiles", { id: user?.id }],
+    () => getSelf(user!.id),
+    {
+      enabled: !!user?.id,
+    }
+  );
 
   return (
     <>
@@ -48,7 +53,15 @@ const NavBar: React.FC = function NavBar() {
               </Link>
               <Link href={`/profile/${profile.username}`}>
                 <div className={s.profile_container}>
-                  <div className={s.profile_picture}></div>
+                  <div className={s.profile_picture}>
+                    {profile.avatar_url ? (
+                      <OptimizedImage
+                        src={profile.avatar_url}
+                        sizes={"20vw"}
+                        className={s.profile_pic_image}
+                      />
+                    ) : null}
+                  </div>
                 </div>
               </Link>
             </>

@@ -19,6 +19,7 @@ import { BiArrowBack } from "react-icons/bi";
 import { FiShare } from "react-icons/fi";
 import { Router, useRouter } from "next/router";
 import getPublicUrl from "../../util/getPublicUrl";
+import OptimizedImage from "../OptimizedImage/OptimizedImage";
 
 type PapercraftDisplayProps = {
   papercraft: Papercraft;
@@ -28,11 +29,6 @@ type PapercraftDisplayProps = {
 const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
   function PapercraftCard({ papercraft, preview }) {
     const router = useRouter();
-    // initiate lazyload on client side
-    const [lazyload, setLazyLoad] = useState<string>("");
-    useEffect(() => {
-      setLazyLoad("lazyload");
-    }, []);
     return (
       <div className={s.container}>
         <div className={s.sticky_header}>
@@ -47,6 +43,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
             <div
               className={`${s.sticky_button} ${s.sticky_button_right}`}
               onClick={() => {
+                if (preview) return;
                 navigator
                   .share({
                     title: `${papercraft.title} on Paperarium`,
@@ -104,7 +101,15 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                 </div>
                 <div className={s.profile_container}>
                   <div className={s.container_note}>DESIGNED AND BUILT BY</div>
-                  <div className={s.profile_picture}></div>
+                  <div className={s.profile_picture}>
+                    {papercraft.user.avatar_url ? (
+                      <OptimizedImage
+                        src={papercraft.user.avatar_url}
+                        sizes={"20vw"}
+                        className={s.profile_pic_image}
+                      />
+                    ) : null}
+                  </div>
                   <div className={s.profile_name}>
                     <span className={s.user_name}>@evan</span>
                     <span>4 builds</span>
@@ -160,23 +165,18 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                 key={`${imgURL}_${i}`}
                 className={s.inner_image_container}
               >
-                <Imgix
-                  src={`${process.env.IMGIX}/${papercraft.pictures[0]}`}
-                  className={`${lazyload} ${s.inner_image}`}
-                  sizes={`
+                {!preview ? (
+                  <OptimizedImage
+                    src={papercraft.pictures[0]}
+                    className={s.inner_image}
+                    sizes={`
                     (max-width: 767px) 100vw,
                      50vw
                     `}
-                  attributeConfig={{
-                    src: "data-src",
-                    srcSet: "data-srcset",
-                    sizes: "data-sizes",
-                  }}
-                  htmlAttributes={{
-                    src: `${process.env.IMGIX}/${papercraft.pictures[0]}?auto=format&px=16&w=200`, // low quality image here
-                    "data-lowsrc": `${process.env.IMGIX}/${papercraft.pictures[0]}?auto=format&px=16&w=200`,
-                  }}
-                />
+                  />
+                ) : (
+                  <img src={papercraft.pictures[0]} className={s.inner_image} />
+                )}
               </SwiperSlide>
             ))}
           </Swiper>

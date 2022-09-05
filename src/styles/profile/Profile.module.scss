@@ -1,4 +1,4 @@
-@import "./mixins";
+@import "../mixins";
 
 .profile_container {
   display: flex;
@@ -68,45 +68,6 @@ $search_bar_visible_height: 40px;
     width: calc(100vw - var(--profile-bar-width));
   }
 }
-
-// .main_grid {
-//   width: 100%;
-//   padding: 5px;
-//   min-height: calc(100vh - var(--header-height) - var(--notice-bar-height));
-//   display: grid;
-//   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-//   grid-template-rows: repeat(auto-fit, minmax(200px, 1fr));
-//   flex-direction: row;
-//   flex-wrap: wrap;
-//   gap: 10px;
-//   padding: 10px;
-
-//   & > div {
-//     min-width: 150px;
-//     min-height: 200px;
-//   }
-
-//   @include respond-to("xsmall") {
-//     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-//     grid-template-rows: repeat(auto-fit, minmax(250px, 1fr));
-
-//     & > div {
-//       min-width: 200px;
-//       min-height: 250px;
-//     }
-//   }
-
-//   @include respond-to("small") {
-//     padding-top: calc($search_bar_visible_height + 10px);
-//     padding-left: calc(var(--profile-bar-width) + 10px);
-//     overflow-y: scroll;
-//     overflow-x: hidden;
-//     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-//     grid-template-rows: repeat(auto-fit, minmax(300px, 1fr));
-//     flex: 1;
-//     width: auto;
-//   }
-// }
 
 .main_grid {
   width: 100%;
@@ -283,4 +244,9 @@ $search_bar_visible_height: 40px;
     pointer-events: none;
     opacity: 0;
   }
+}
+
+.profile_pic_image {
+  width: 100%;
+  height: 100%;
 }

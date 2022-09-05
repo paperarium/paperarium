@@ -11,7 +11,9 @@ import { useRouter } from "next/router";
 import React, { useRef } from "react";
 import { CSSTransition } from "react-transition-group";
 import { listAnnouncements } from "../../supabase/api/announcements";
+import { getSelf } from "../../supabase/api/profiles";
 import NavLink from "../NavLink/NavLink";
+import OptimizedImage from "../OptimizedImage/OptimizedImage";
 import s from "./NavMenu.module.scss";
 
 type NavMenuProps = {
@@ -27,6 +29,13 @@ const NavMenu: React.FC<NavMenuProps> = function NavMenu({
   const menuRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const { user } = useUser();
+  const { data: profile } = useQuery(
+    ["profiles", { id: user?.id }],
+    () => getSelf(user!.id),
+    {
+      enabled: !!user?.id,
+    }
+  );
   const announcements = useQuery(["announcements"], listAnnouncements);
 
   const closeMenu = () => setToggled(false);
@@ -55,11 +64,19 @@ const NavMenu: React.FC<NavMenuProps> = function NavMenu({
               </NavLink>
             </div>
             <div className={s.nav_nav_column}>
-              {user ? (
+              {profile ? (
                 <>
-                  <Link href={"/profile"}>
+                  <Link href={`/profile/${profile.username}`}>
                     <div className={s.profile_container} onClick={closeMenu}>
-                      <div className={s.profile_picture}></div>
+                      <div className={s.profile_picture}>
+                        {profile.avatar_url ? (
+                          <OptimizedImage
+                            src={profile.avatar_url}
+                            sizes={"20vw"}
+                            className={s.profile_pic_image}
+                          />
+                        ) : null}
+                      </div>
                       <div className={s.profile_name}>
                         <span className={s.user_name}>@evan</span>
                         <span>4 builds</span>
@@ -97,12 +114,12 @@ const NavMenu: React.FC<NavMenuProps> = function NavMenu({
                     <div key={a.id}>˚◦○˚ ୧ .˚ₓ{a.text}ₓ˚. ୭ ˚○◦˚</div>
                   ))
                 : null}
-                {announcements.data
+              {announcements.data
                 ? announcements.data.map((a) => (
                     <div key={a.id}>˚◦○˚ ୧ .˚ₓ{a.text}ₓ˚. ୭ ˚○◦˚</div>
                   ))
                 : null}
-                {announcements.data
+              {announcements.data
                 ? announcements.data.map((a) => (
                     <div key={a.id}>˚◦○˚ ୧ .˚ₓ{a.text}ₓ˚. ୭ ˚○◦˚</div>
                   ))

@@ -12,6 +12,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "lazysizes";
+import { ImgixProvider } from "react-imgix";
 import { UserProvider } from "@supabase/auth-helpers-react";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import Layout from "../components/Layout/Layout";
@@ -33,13 +34,15 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>PAPERARIUM – a papercraft compendium.</title>
       </Head>
-      <UserProvider supabaseClient={supabaseClient}>
-        <QueryClientProvider client={queryClient} contextSharing={true}>
-          <Hydrate state={pageProps.dehydratedState}>
-            {getLayout(<Component {...pageProps} />)}
-          </Hydrate>
-        </QueryClientProvider>
-      </UserProvider>
+      <ImgixProvider domain={process.env.IMGIX}>
+        <UserProvider supabaseClient={supabaseClient}>
+          <QueryClientProvider client={queryClient} contextSharing={true}>
+            <Hydrate state={pageProps.dehydratedState}>
+              {getLayout(<Component {...pageProps} />)}
+            </Hydrate>
+          </QueryClientProvider>
+        </UserProvider>
+      </ImgixProvider>
     </>
   );
 }

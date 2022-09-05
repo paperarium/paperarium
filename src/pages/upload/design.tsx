@@ -35,6 +35,7 @@ import { CSSTransition } from "react-transition-group";
 import PapercraftDisplay from "../../components/PapercraftDisplay/PapercraftDisplay";
 import BlinkEffect from "../../components/BlinkEffect/BlinkEffect";
 import { useRouter } from "next/router";
+import { uploadFile } from "../../util/uploadFile";
 
 const fetchTags = debounce(
   async (search: string): Promise<APIt.Tag[]> => {
@@ -48,18 +49,6 @@ const fetchTags = debounce(
   300,
   { maxWait: 1200 }
 );
-
-const uploadFile = async (key: string, i_file: File) => {
-  const { data, error } = await supabaseClient.storage
-    .from("papercraftplace")
-    .upload(key, i_file, {
-      cacheControl: "3600",
-      upsert: false,
-    });
-  if (error) throw error;
-  if (!data) throw `no key when uploading file ${key}`;
-  return data?.Key;
-};
 
 const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
   // router to redirect on submissions success

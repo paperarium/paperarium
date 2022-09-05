@@ -11,7 +11,7 @@ export type Profile = {
   name?: string;
   website?: string;
   about?: string;
-  avatur_url?: string;
+  avatar_url?: string;
   papercrafts: { count: number }[];
   builds: { count: number }[];
   created_at: string;

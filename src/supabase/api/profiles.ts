@@ -48,3 +48,19 @@ export const getProfile = async (username: string) => {
   if (error) throw error;
   return profiles[0];
 };
+
+/* -------------------------------------------------------------------------- */
+/*                                  MUTATIONS                                 */
+/* -------------------------------------------------------------------------- */
+
+export const updateProfile = async (
+  id: string,
+  input: Partial<APIt.Profile>
+) => {
+  const { data: profiles, error } = await supabaseClient
+    .from<APIt.Profile>("profiles")
+    .update(input)
+    .match({ id });
+  if (error) throw error;
+  return profiles[0];
+};

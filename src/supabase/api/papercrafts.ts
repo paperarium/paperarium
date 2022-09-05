@@ -22,7 +22,7 @@ export const getPapercraft = async (pid: number) => {
     .select(
       `
       *,
-      user:profiles(username),
+      user:profiles(username,avatar_url),
       tags:tags(*)
     `
     )
@@ -41,7 +41,7 @@ export const listPapercrafts = async () => {
     .select(
       `
       *,
-      user:profiles(username),
+      user:profiles(username,avatar_url),
       tags:tags(*)
     `
     )
@@ -60,7 +60,7 @@ export const searchPapercrafts = async (search: string) => {
     .select(
       `
       *,
-      user:profiles(username)
+      user:profiles(username,avatar_url)
     `
     )
     .order("created_at", { ascending: false });
@@ -82,7 +82,7 @@ export const searchUserPapercrafts = async (
     .select(
       `
       *,
-      user:profiles(username)
+      user:profiles(username,avatar_url)
     `
     )
     .eq(useId ? "user_id" : ("user.username" as any), usernameOrId)

@@ -10,11 +10,7 @@ const nextConfig = {
     domains: ["wcdvzivrzlrhqqewtlem.supabase.co"],
   },
   env: {
-    IMGIX: "https://papercraftplace.imgix.net",
-  },
-  images: {
-    loader: "imgix",
-    path: "https://papercraftplace.imgix.net",
+    IMGIX: "papercraftplace.imgix.net",
   },
   webpack: (config, { isServer }) => {
     config.resolve.extensions = [".web.js", ...config.resolve.extensions];

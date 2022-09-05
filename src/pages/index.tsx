@@ -8,7 +8,7 @@ import s from "../styles/Home.module.scss";
 import { listPapercrafts } from "../supabase/api/papercrafts";
 
 const Home: NextPage = () => {
-  const papercrafts = useQuery(["papercrafts", ""], () => listPapercrafts());
+  const papercrafts = useQuery(["papercrafts", {}], () => listPapercrafts());
   return (
     <>
       <Head>
