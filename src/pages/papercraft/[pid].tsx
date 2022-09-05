@@ -52,17 +52,20 @@ const PapercraftPage: NextPage<PapercraftPageProps> = function PapercraftPage({
         <title>{} - papercraft club</title>
       </Head>
       <div className={s.page_container}>
-        <PapercraftDisplay papercraft={papercraft.data} />
-        {seeFallback.current ? 
-        <CSSTransition
-          in={router.isFallback}
-          nodeRef={fallbackRef}
-          timeout={300}
+        {papercraft.data ? (
+          <PapercraftDisplay papercraft={papercraft.data} />
+        ) : null}
+        {seeFallback.current ? (
+          <CSSTransition
+            in={router.isFallback}
+            nodeRef={fallbackRef}
+            timeout={300}
           >
             <div className={s.loading_indicator} ref={fallbackRef}>
               loading...
             </div>
-        </CSSTransition> : null}
+          </CSSTransition>
+        ) : null}
       </div>
     </>
   );

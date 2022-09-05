@@ -19,7 +19,7 @@ import { Router, useRouter } from "next/router";
 import getPublicUrl from "../../util/getPublicUrl";
 
 type PapercraftDisplayProps = {
-  papercraft?: Papercraft;
+  papercraft: Papercraft;
   preview?: boolean;
 };
 
@@ -32,38 +32,34 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
           <div className={s.preview_content_container}>
             <TextareaAutosize
               className={s.preview_title}
-              value={papercraft?.title || ""}
+              value={papercraft.title || ""}
               placeholder={"Your title..."}
               spellCheck={false}
-              disabled={true}
               readOnly={true}
             ></TextareaAutosize>
             <div className={s.date_input}>{new Date().toDateString()}</div>
             <TextareaAutosize
               className={s.preview_description}
-              value={papercraft?.description || ""}
+              value={papercraft.description || ""}
               placeholder={"Your description..."}
               spellCheck={false}
               minRows={3}
-              disabled={true}
               readOnly={true}
             ></TextareaAutosize>
             <div className={s.more_info_container}>
               <div className={s.info_col}>
                 <div className={s.tags_row}>
-                  {papercraft ? (
-                    <div className={s.tags_container}>
-                      <div className={s.tag}>
-                        {Object.values(APIt.Difficulty)[papercraft.difficulty]}
-                      </div>
-                      {papercraft.tags.map((tag) => (
-                        <div key={tag.id} className={s.tag}>
-                          {tag.name}
-                        </div>
-                      ))}
+                  <div className={s.tags_container}>
+                    <div className={s.tag}>
+                      {Object.values(APIt.Difficulty)[papercraft.difficulty]}
                     </div>
-                  ) : null}
-                  {papercraft?.dimensions_cm ? (
+                    {papercraft.tags.map((tag) => (
+                      <div key={tag.id} className={s.tag}>
+                        {tag.name}
+                      </div>
+                    ))}
+                  </div>
+                  {papercraft.dimensions_cm ? (
                     <div className={s.dimensions_container}>
                       {`${papercraft.dimensions_cm?.join("cm x ")}cm`}
                     </div>
@@ -81,17 +77,31 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               </div>
               <div className={s.info_col}>
                 <div className={s.download_container}>
-                  {papercraft? 
-                  <a href={getPublicUrl(papercraft?.pdo_url)} rel="noreferrer noopener" className={s.download_button} download>
+                  <a
+                    href={getPublicUrl(papercraft?.pdo_url)}
+                    rel="noreferrer noopener"
+                    className={s.download_button}
+                    download
+                  >
                     .PDO
-                  </a> : null}
-                  {papercraft?.pdf_lined_url ? (
-                    <a href={getPublicUrl(papercraft.pdf_lined_url)} target="_blank" rel="noreferrer noopener" className={s.download_button}>
+                  </a>
+                  {papercraft.pdf_lined_url ? (
+                    <a
+                      href={getPublicUrl(papercraft.pdf_lined_url)}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className={s.download_button}
+                    >
                       .PDF - lined
                     </a>
                   ) : null}
-                  {papercraft?.pdf_lineless_url ? (
-                    <a href={getPublicUrl(papercraft.pdf_lineless_url)} target="_blank" rel="noreferrer noopener" className={s.download_button}>
+                  {papercraft.pdf_lineless_url ? (
+                    <a
+                      href={getPublicUrl(papercraft.pdf_lineless_url)}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className={s.download_button}
+                    >
                       .PDF - lineless
                     </a>
                   ) : null}
@@ -100,32 +110,30 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
             </div>
           </div>
         </div>
+        <div className={s.divider}></div>
         <div className={s.picture_column}>
-          <div className={s.preview_content_outline}></div>
           <Swiper
             pagination={true}
             navigation={true}
             className={s.image_container}
             modules={[Pagination, Navigation]}
           >
-            {papercraft
-              ? papercraft.pictures.map((imgURL, i) => (
-                  <SwiperSlide key={`${imgURL}_${i}`}>
-                    <Image
-                      src={`${papercraft.pictures[i]}`}
-                      className={s.inner_image}
-                      placeholder="blur"
-                      blurDataURL={`${process.env.IMGIX}/${papercraft.pictures[0]}?blur=2000`}
-                      layout="fill"
-                      objectFit="cover"
-                      objectPosition="top center"
-                      alt={papercraft.title}
-                      priority={i == 0}
-                      unoptimized={preview}
-                    />
-                  </SwiperSlide>
-                ))
-              : null}
+            {papercraft.pictures.map((imgURL, i) => (
+              <SwiperSlide key={`${imgURL}_${i}`}>
+                <Image
+                  src={`${papercraft.pictures[i]}`}
+                  className={s.inner_image}
+                  placeholder="blur"
+                  blurDataURL={`${process.env.IMGIX}/${papercraft.pictures[0]}?blur=2000`}
+                  layout="fill"
+                  objectFit="cover"
+                  objectPosition="top center"
+                  alt={papercraft.title}
+                  priority={i == 0}
+                  unoptimized={preview}
+                />
+              </SwiperSlide>
+            ))}
           </Swiper>
         </div>
         <div className={s.sticky_header}>
@@ -135,12 +143,27 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
           >
             <BiArrowBack />
           </div>
-          <div
-            className={s.sticky_button}
-            style={{ left: "unset", right: "15px" }}
-          >
-            <FiShare />
-          </div>
+          {typeof navigator !== "undefined" && !!navigator.canShare ? (
+            <div
+              className={`${s.sticky_button} ${s.sticky_button_right}`}
+              onClick={() => {
+                navigator
+                  .share({
+                    title: `${papercraft.title} on Paperarium`,
+                    text: `check out this papercraft on paperarium (づ◔ ͜ʖ◔)づ`,
+                    url: `${window.location.hostname}/${router.asPath}`,
+                  })
+                  .then(() => {
+                    console.log("shared!");
+                  })
+                  .catch(() => {
+                    console.log("share cancelled.");
+                  });
+              }}
+            >
+              <FiShare />
+            </div>
+          ) : null}
         </div>
       </div>
     );

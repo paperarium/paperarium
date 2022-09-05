@@ -62,30 +62,6 @@ const Home: NextPage = () => {
                           ))
                         : null}
               </PapercraftGallery>
-              {/* {papercrafts.data
-                ? papercrafts.data.map((papercraft) => (
-                    <PapercraftCard
-                      key={papercraft!.id}
-                      papercraft={papercraft}
-                    />
-                  ))
-                : null}
-              {papercrafts.data
-                ? papercrafts.data.map((papercraft) => (
-                    <PapercraftCard
-                      key={papercraft!.id}
-                      papercraft={papercraft}
-                    />
-                  ))
-                : null}
-              {papercrafts.data
-                ? papercrafts.data.map((papercraft) => (
-                    <PapercraftCard
-                      key={papercraft!.id}
-                      papercraft={papercraft}
-                    />
-                  ))
-                : null} */}
             </div>
           </div>
           <div className={s.divider}></div>

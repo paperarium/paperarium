@@ -4,7 +4,7 @@
  * created on Wed Aug 24 2022
  * 2022 the nobot space,
  */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import s from "./PapercraftCard.module.scss";
 import Imgix from "react-imgix";
 import { Papercraft } from "../../supabase/types";
@@ -20,16 +20,19 @@ const PapercraftCard: React.FC<PapercraftCardProps> = function PapercraftCard({
   priority,
 }) {
   const router = useRouter();
+  const [clicked, setClicked] = useState(false);
+  const overlayRef = useRef<HTMLDivElement>(null);
   // initiate lazyload on client side
-  const [lazyload, setLazyLoad] = useState<string>('')
+  const [lazyload, setLazyLoad] = useState<string>("");
   useEffect(() => {
-    setLazyLoad('lazyload');
+    setLazyLoad("lazyload");
   }, []);
 
   return (
     <div
       className={s.container}
       onClick={() => {
+        setClicked(true);
         router.push(`/papercraft/${papercraft.id}`);
       }}
     >
@@ -45,23 +48,12 @@ const PapercraftCard: React.FC<PapercraftCardProps> = function PapercraftCard({
               sizes: "data-sizes",
             }}
             htmlAttributes={{
-              src: `${process.env.IMGIX}/${papercraft.pictures[0]}?auto=format&blur=200&px=16&w=150`, // low quality image here
-              // "data-lowsrc": `${process.env.IMGIX}/${papercraft.pictures[0]}?auto=format&blur=200&px=16&w=150`,
+              src: `${process.env.IMGIX}/${papercraft.pictures[0]}?auto=format&px=16&w=200`, // low quality image here
+              "data-lowsrc": `${process.env.IMGIX}/${papercraft.pictures[0]}?auto=format&px=16&w=200`,
             }}
           />
         </div>
-        {/* <img src={`${process.env.IMGIX}/${papercraft.pictures[0]}`} className={s.inner_image}/> */}
-        {/* // <Image
-        //   src={`/${papercraft.pictures[0]}`}
-        //   className={s.inner_image}
-        //   placeholder="blur"
-        //   blurDataURL={`${process.env.IMGIX}/${papercraft.pictures[0]}?blur=2000`}
-        //   layout="fill"
-        //   objectFit="contain"
-        //   // objectPosition="top center"
-        //   alt={papercraft.title}
-        //   priority={priority}
-        // /> */}
+        <div className={`${s.overlay} ${clicked ? `clicked` : ``}`}>...loading...<br/>[σ﹏σ]</div>
         <div className={s.info_card}>
           <div>{papercraft.title}</div>
           <div className={s.user_name}>@{papercraft.user.username}</div>
@@ -71,4 +63,4 @@ const PapercraftCard: React.FC<PapercraftCardProps> = function PapercraftCard({
   );
 };
 
-export default PapercraftCard;
+export default React.memo(PapercraftCard);
