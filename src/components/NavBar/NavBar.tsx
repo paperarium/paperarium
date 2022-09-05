@@ -11,11 +11,15 @@ import { useUser } from "@supabase/auth-helpers-react";
 import LOGO from "../../../public/img/logo.svg";
 import { useQuery } from "@tanstack/react-query";
 import { listAnnouncements } from "../../supabase/api/announcements";
+import { getSelf } from "../../supabase/api/profiles";
 
 const NavBar: React.FC = function NavBar() {
   const router = useRouter();
   const [navOpen, setNavOpen] = useState(false);
   const { user } = useUser();
+  const { data: profile } = useQuery(["profileself"], () => getSelf(user!.id), {
+    enabled: !!user?.id,
+  });
 
   return (
     <>
@@ -35,14 +39,14 @@ const NavBar: React.FC = function NavBar() {
         </div>
         <div className={s.spacer}></div>
         <div className={s.profile_buttons}>
-          {user ? (
+          {profile ? (
             <>
               <Link href={`/upload`}>
                 <div className={s.login_button}>
                   <a>upload</a>
                 </div>
               </Link>
-              <Link href={"/profile"}>
+              <Link href={`/profile/${profile.username}`}>
                 <div className={s.profile_container}>
                   <div className={s.profile_picture}></div>
                 </div>
@@ -50,17 +54,11 @@ const NavBar: React.FC = function NavBar() {
             </>
           ) : (
             <>
-              <Link
-                href={`/login`}
-                passHref
-              >
+              <Link href={`/login`} passHref>
                 <a className={s.login_button}>login</a>
               </Link>
               or
-              <Link
-                href={`/login`}
-                passHref
-              >
+              <Link href={`/login`} passHref>
                 <a className={s.login_button}>sign up</a>
               </Link>
             </>

@@ -177,18 +177,6 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                     "data-lowsrc": `${process.env.IMGIX}/${papercraft.pictures[0]}?auto=format&px=16&w=200`,
                   }}
                 />
-                {/* <Image
-                  src={`${papercraft.pictures[i]}`}
-                  className={s.inner_image}
-                  placeholder="blur"
-                  blurDataURL={`${process.env.IMGIX}/${papercraft.pictures[0]}?blur=2000`}
-                  layout="fill"
-                  objectFit="contain"
-                  objectPosition="center center"
-                  alt={papercraft.title}
-                  priority={i == 0}
-                  unoptimized={preview}
-                /> */}
               </SwiperSlide>
             ))}
           </Swiper>

@@ -49,7 +49,17 @@ const PapercraftPage: NextPage<PapercraftPageProps> = function PapercraftPage({
   return (
     <>
       <Head>
-        <title>{} - papercraft club</title>
+        <title>{papercraft.data?.title} - paperarium</title>
+        <meta property="og:url" content={router.asPath} />
+        <meta property="og:type" content="website" />
+        {/* <meta property="fb:app_id" content="your fb id" /> */}
+        <meta property="og:title" content={`${papercraft.data?.title} on paperarium`} />
+        <meta
+          property="og:description"
+          content="a modern compendium and community for everything papercrafting."
+        />
+        <meta name="twitter:card" content="summary" />
+        <meta property="og:image" content={`${process.env.IMGIX}/${papercraft.data?.pictures[0]}`} />
       </Head>
       <div className={s.page_container}>
         {papercraft.data ? (

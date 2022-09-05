@@ -5,9 +5,17 @@
  * 2022 the nobot space,
  */
 
-export type User = {
+export type Profile = {
   id: string;
   username: string;
+  name?: string;
+  website?: string;
+  about?: string;
+  avatur_url?: string;
+  papercrafts: { count: number }[];
+  builds: { count: number }[];
+  created_at: string;
+  updated_at: string;
 };
 
 export type Papercraft = {
@@ -24,7 +32,7 @@ export type Papercraft = {
   difficulty: number;
   dimensions_cm?: number[];
   verified: boolean;
-  user: User;
+  user: Profile;
   tags: Tag[];
 };
 

@@ -12,9 +12,8 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "lazysizes";
-import 'lazysizes/plugins/blur-up/ls.blur-up';
-import { UserProvider } from '@supabase/auth-helpers-react'
-import { supabaseClient } from '@supabase/auth-helpers-nextjs'
+import { UserProvider } from "@supabase/auth-helpers-react";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import Layout from "../components/Layout/Layout";
 import React from "react";
 import {
@@ -22,6 +21,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import Head from "next/head";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = React.useState(() => new QueryClient());
@@ -29,13 +29,18 @@ function MyApp({ Component, pageProps }: AppProps) {
     (Component as any).getLayout ||
     ((page: React.ReactNode) => <Layout>{page}</Layout>);
   return (
-    <UserProvider supabaseClient={supabaseClient}>
-      <QueryClientProvider client={queryClient} contextSharing={true}>
-        <Hydrate state={pageProps.dehydratedState}>
-          {getLayout(<Component {...pageProps} />)}
-        </Hydrate>
-      </QueryClientProvider>
-    </UserProvider>
+    <>
+      <Head>
+        <title>PAPERARIUM – a papercraft compendium.</title>
+      </Head>
+      <UserProvider supabaseClient={supabaseClient}>
+        <QueryClientProvider client={queryClient} contextSharing={true}>
+          <Hydrate state={pageProps.dehydratedState}>
+            {getLayout(<Component {...pageProps} />)}
+          </Hydrate>
+        </QueryClientProvider>
+      </UserProvider>
+    </>
   );
 }
 
