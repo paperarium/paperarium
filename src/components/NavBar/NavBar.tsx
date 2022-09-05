@@ -51,14 +51,14 @@ const NavBar: React.FC = function NavBar() {
           ) : (
             <>
               <Link
-                href={`/login?redirect=${encodeURI(router.asPath)}`}
+                href={`/login`}
                 passHref
               >
                 <a className={s.login_button}>login</a>
               </Link>
               or
               <Link
-                href={`/login?redirect=${encodeURI(router.asPath)}`}
+                href={`/login`}
                 passHref
               >
                 <a className={s.login_button}>sign up</a>

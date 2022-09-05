@@ -437,3 +437,33 @@
   object-fit: cover;
   object-position: top center;
 }
+
+.loading_indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  letter-spacing: 2px;
+  font-style: italic;
+  color: #707070;
+  pointer-events: all;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+
+  &[class~="exit-active"] {
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  &[class~="exit-done"] {
+    pointer-events: none;
+    opacity: 0;
+  }
+}

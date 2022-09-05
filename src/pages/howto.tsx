@@ -8,7 +8,7 @@ const HowToPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>how to - papercraft club</title>
+        <title>how to - paperarium</title>
         <meta
           name="description"
           content="a guide on how to build nice papercrafts!"

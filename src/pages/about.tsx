@@ -6,7 +6,7 @@ const AboutPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>explore - papercraft club</title>
+        <title>explore - paperarium</title>
         <meta
           name="description"
           content="about us."

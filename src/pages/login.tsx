@@ -26,7 +26,7 @@ const LoginPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>login - papercraft club</title>
+        <title>login - paperarium</title>
         <meta name="description" content="login" />
       </Head>
       <div className={s.login_page_container}>

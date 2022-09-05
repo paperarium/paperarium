@@ -37,7 +37,7 @@ const ProfilePage: NextPage<ProfilePageProps> = ({ user }) => {
   return (
     <>
       <Head>
-        <title>my profile - papercraft club</title>
+        <title>my profile - paperarium</title>
       </Head>
       <div className={s.profile_container}>
         <div className={s.profile_bar}>

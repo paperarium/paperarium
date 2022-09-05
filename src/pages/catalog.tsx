@@ -22,7 +22,7 @@ const ExplorePage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>explore - papercraft club</title>
+        <title>explore - paperarium</title>
         <meta
           name="description"
           content="see other papercrafts from the community."
