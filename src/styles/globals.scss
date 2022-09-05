@@ -14,6 +14,12 @@
   --highlight-very-dark-color: #334937;
   --border-color: #909090;
 
+  --b-xsmall: 480px;
+  --b-small: 767px;
+  --b-medium: 992px;
+  --b-large: 1200px;
+  --b-xl: 1500px;
+
   // suuuper small
   @media screen and (min-width: 480px) {
     --header-height: 55px;

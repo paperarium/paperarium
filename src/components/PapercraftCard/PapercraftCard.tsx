@@ -7,6 +7,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import s from "./PapercraftCard.module.scss";
 import Imgix from "react-imgix";
+import Image from "next/future/image";
 import { Papercraft } from "../../supabase/types";
 import { useRouter } from "next/router";
 
@@ -41,7 +42,12 @@ const PapercraftCard: React.FC<PapercraftCardProps> = function PapercraftCard({
           <Imgix
             src={`${process.env.IMGIX}/${papercraft.pictures[0]}`}
             className={`${lazyload} ${s.inner_image}`}
-            sizes="100vw"
+            sizes={`
+              (max-width: 480px) 50vw,
+              (max-width: 767px) 33vw,
+              (max-width: 992px) 25vw,
+              25vw 
+            `}
             attributeConfig={{
               src: "data-src",
               srcSet: "data-srcset",
@@ -53,7 +59,11 @@ const PapercraftCard: React.FC<PapercraftCardProps> = function PapercraftCard({
             }}
           />
         </div>
-        <div className={`${s.overlay} ${clicked ? `clicked` : ``}`}>...loading...<br/>[σ﹏σ]</div>
+        <div className={`${s.overlay} ${clicked ? `clicked` : ``}`}>
+          ...loading...
+          <br />
+          [σ﹏σ]
+        </div>
         <div className={s.info_card}>
           <div>{papercraft.title}</div>
           <div className={s.user_name}>@{papercraft.user.username}</div>

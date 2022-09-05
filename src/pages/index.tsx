@@ -1,4 +1,3 @@
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
 import type { NextPage } from "next";
 import Head from "next/head";
@@ -7,7 +6,6 @@ import PapercraftCard from "../components/PapercraftCard/PapercraftCard";
 import PapercraftGallery from "../components/PapercraftGallery/PapercraftGallery";
 import s from "../styles/Home.module.scss";
 import { listPapercrafts } from "../supabase/api/papercrafts";
-import { Papercraft } from "../supabase/types";
 
 const Home: NextPage = () => {
   const papercrafts = useQuery(["papercrafts", ""], () => listPapercrafts());
@@ -24,7 +22,14 @@ const Home: NextPage = () => {
         <div className={s.page_row}>
           <div className={s.page_col}>
             <div className={s.main_grid}>
-              <PapercraftGallery>
+              <PapercraftGallery
+                breakPointOverride={{
+                  default: 5,
+                  1600: 5,
+                  1392: 4,
+                  1167: 3,
+                  480: 2
+                }}>
                 {papercrafts.data
                   ? papercrafts.data.map((papercraft, i) => (
                       <PapercraftCard

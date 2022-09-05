@@ -5,24 +5,20 @@
  * 2022 the nobot space,
  */
 import React from "react";
-import * as APIt from "../../supabase/types";
 import s from "./PapercraftGallery.module.scss";
-import Masonry from "react-masonry-css";
-import { Papercraft } from "../../supabase/types";
-import { useRouter } from "next/router";
-import { useQuery } from "@tanstack/react-query";
-import PapercraftCard from "../PapercraftCard/PapercraftCard";
+import Masonry, { MasonryProps} from "react-masonry-css";
 
 const breakpointColumnsObj = {
-  default: 4,
-  1024: 3,
-  768: 2,
-  // 640: 1
+  default: 5,
+  1200: 5,
+  992: 4,
+  767: 3,
+  480: 2
 };
 
 type PapercraftGalleryProps = {
   children?: React.ReactNode;
-  breakPointOverride?: typeof breakpointColumnsObj;
+  breakPointOverride?: MasonryProps["breakpointCols"];
 };
 
 const PapercraftGallery: React.FC<PapercraftGalleryProps> =

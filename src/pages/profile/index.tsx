@@ -86,7 +86,14 @@ const ProfilePage: NextPage<ProfilePageProps> = ({ user }) => {
           <AiOutlineDownSquare />
         </div>
         <div className={s.main_grid}>
-          <PapercraftGallery>
+          <PapercraftGallery
+            breakPointOverride={{
+              default: 5,
+              1500: 5,
+              1292: 4,
+              1067: 3,
+              480: 2
+            }}>
             {papercrafts.data
               ? papercrafts.data.map((papercraft) => (
                   <PapercraftCard
