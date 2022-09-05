@@ -46,7 +46,7 @@ const PapercraftCard: React.FC<PapercraftCardProps> = function PapercraftCard({
             }}
             htmlAttributes={{
               src: `${process.env.IMGIX}/${papercraft.pictures[0]}?auto=format&blur=200&px=16&w=150`, // low quality image here
-              "data-lowsrc": `${process.env.IMGIX}/${papercraft.pictures[0]}?auto=format&blur=200&px=16&w=150`,
+              // "data-lowsrc": `${process.env.IMGIX}/${papercraft.pictures[0]}?auto=format&blur=200&px=16&w=150`,
             }}
           />
         </div>
