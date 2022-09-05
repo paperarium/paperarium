@@ -7,7 +7,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import s from "./PapercraftCard.module.scss";
 import Imgix from "react-imgix";
-import Image from "next/future/image";
 import { Papercraft } from "../../supabase/types";
 import { useRouter } from "next/router";
 
@@ -58,15 +57,18 @@ const PapercraftCard: React.FC<PapercraftCardProps> = function PapercraftCard({
               "data-lowsrc": `${process.env.IMGIX}/${papercraft.pictures[0]}?auto=format&px=16&w=200`,
             }}
           />
-        </div>
-        <div className={`${s.overlay} ${clicked ? `clicked` : ``}`}>
-          ...loading...
-          <br />
-          [σ﹏σ]
+          <div className={`${s.overlay} ${clicked ? `clicked` : ``}`}>
+            ...loading...
+            <br />
+            [σ﹏σ]
+          </div>
         </div>
         <div className={s.info_card}>
-          <div>{papercraft.title}</div>
-          <div className={s.user_name}>@{papercraft.user.username}</div>
+          <div className={s.profile_pic}>HI</div>
+          <div className={s.info_col}>
+            <div>{papercraft.title}</div>
+            <div className={s.user_name}>@{papercraft.user.username}</div>
+          </div>
         </div>
       </div>
     </div>

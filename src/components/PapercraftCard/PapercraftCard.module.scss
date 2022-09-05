@@ -28,7 +28,7 @@ $total: 10;
   pointer-events: none;
   z-index: 1;
   transition: opacity 0.3s ease-in-out;
-  border-radius: 10px;
+  // border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(5px);
   display: flex;
@@ -75,22 +75,44 @@ $total: 10;
   background-color: black;
 }
 
+.profile_pic {
+  height: 40px;
+  width: 40px;
+  background-color: $highlight;
+  border: $border;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .info_card {
   // position: absolute;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
   position: relative;
   width: 100%;
   background-color: white;
   padding: 5px;
   border-top: $border;
   font-size: 15px;
-  gap: 2px;
+  gap: 5px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   z-index: 1;
+}
+
+.info_col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  gap: 2px;
 }
 
 .user_name {

@@ -4,7 +4,7 @@
  * created on Fri Sep 2 2022
  * 2022 the nobot space,
  */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import s from "./PapercraftDisplay.module.scss";
 import Image from "next/image";
 import { Papercraft } from "../../supabase/types";
@@ -13,6 +13,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper";
 import * as APIt from "../../supabase/types";
 import Link from "next/link";
+import Imgix from "react-imgix";
+
 import { BiArrowBack } from "react-icons/bi";
 import { FiShare } from "react-icons/fi";
 import { Router, useRouter } from "next/router";
@@ -26,8 +28,43 @@ type PapercraftDisplayProps = {
 const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
   function PapercraftCard({ papercraft, preview }) {
     const router = useRouter();
+    // initiate lazyload on client side
+    const [lazyload, setLazyLoad] = useState<string>("");
+    useEffect(() => {
+      setLazyLoad("lazyload");
+    }, []);
     return (
       <div className={s.container}>
+        <div className={s.sticky_header}>
+          <div
+            className={s.sticky_button}
+            onClick={!preview ? () => router.back() : undefined}
+          >
+            <BiArrowBack />
+            BACK
+          </div>
+          {typeof navigator !== "undefined" && !!navigator.canShare ? (
+            <div
+              className={`${s.sticky_button} ${s.sticky_button_right}`}
+              onClick={() => {
+                navigator
+                  .share({
+                    title: `${papercraft.title} on Paperarium`,
+                    text: `check out this papercraft on paperarium (づ◔ ͜ʖ◔)づ`,
+                    url: router.asPath,
+                  })
+                  .then(() => {
+                    console.log("shared!");
+                  })
+                  .catch(() => {
+                    console.log("share cancelled.");
+                  });
+              }}
+            >
+              <FiShare />
+            </div>
+          ) : null}
+        </div>
         <div className={s.display_column}>
           <div className={s.preview_content_container}>
             <TextareaAutosize
@@ -119,51 +156,42 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
             modules={[Pagination, Navigation]}
           >
             {papercraft.pictures.map((imgURL, i) => (
-              <SwiperSlide key={`${imgURL}_${i}`}>
-                <Image
+              <SwiperSlide
+                key={`${imgURL}_${i}`}
+                className={s.inner_image_container}
+              >
+                <Imgix
+                  src={`${process.env.IMGIX}/${papercraft.pictures[0]}`}
+                  className={`${lazyload} ${s.inner_image}`}
+                  sizes={`
+                    (max-width: 767px) 100vw,
+                     50vw
+                    `}
+                  attributeConfig={{
+                    src: "data-src",
+                    srcSet: "data-srcset",
+                    sizes: "data-sizes",
+                  }}
+                  htmlAttributes={{
+                    src: `${process.env.IMGIX}/${papercraft.pictures[0]}?auto=format&px=16&w=200`, // low quality image here
+                    "data-lowsrc": `${process.env.IMGIX}/${papercraft.pictures[0]}?auto=format&px=16&w=200`,
+                  }}
+                />
+                {/* <Image
                   src={`${papercraft.pictures[i]}`}
                   className={s.inner_image}
                   placeholder="blur"
                   blurDataURL={`${process.env.IMGIX}/${papercraft.pictures[0]}?blur=2000`}
                   layout="fill"
-                  objectFit="cover"
-                  objectPosition="top center"
+                  objectFit="contain"
+                  objectPosition="center center"
                   alt={papercraft.title}
                   priority={i == 0}
                   unoptimized={preview}
-                />
+                /> */}
               </SwiperSlide>
             ))}
           </Swiper>
-        </div>
-        <div className={s.sticky_header}>
-          <div
-            className={s.sticky_button}
-            onClick={!preview ? () => router.back() : undefined}
-          >
-            <BiArrowBack />
-          </div>
-          {typeof navigator !== "undefined" && !!navigator.canShare ? (
-            <div
-              className={`${s.sticky_button} ${s.sticky_button_right}`}
-              onClick={() => {
-                navigator
-                  .share({
-                    title: `${papercraft.title} on Paperarium`,
-                    text: `check out this papercraft on paperarium (づ◔ ͜ʖ◔)づ`,
-                    url: `${window.location.hostname}/${router.asPath}`,
-                  })
-                  .then(() => {
-                    console.log("shared!");
-                  })
-                  .catch(() => {
-                    console.log("share cancelled.");
-                  });
-              }}
-            >
-              <FiShare />
-            </div>
-          ) : null}
         </div>
       </div>
     );

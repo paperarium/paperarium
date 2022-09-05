@@ -49,8 +49,10 @@
   justify-content: flex-end;
   align-items: flex-start;
   position: relative;
-  height: 60vh;
-  padding: 0px;
+  background-color: $highlight-very-dark;
+  background-image: linear-gradient(#707070 1px, transparent 1px),
+    linear-gradient(to right, #707070 1px, $highlight-very-dark 1px);
+  background-size: 20px 20px;
 
   @include respond-to("small") {
     flex: 1;
@@ -58,6 +60,7 @@
     height: 100%;
     border-bottom: none;
     overflow-y: scroll;
+    justify-content: center;
   }
 }
 
@@ -215,9 +218,17 @@
 
 .image_container {
   position: relative;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: auto;
   width: 100%;
   z-index: 0;
+
+  @include respond-to("small") {
+    padding: 20px;
+  }
 }
 
 .profile_container {
@@ -380,58 +391,80 @@
 .sticky_header {
   position: sticky;
   width: 100%;
-  padding: 10px;
-  top: calc(var(--header-height) + var(--notice-bar-height));
+  bottom: 0;
   left: 0;
-  margin-bottom: -30px;
-  height: 30px;
+  // height: 30px;
   pointer-events: all;
   z-index: 2;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  // border-bottom: $border;
+  padding: 10px;
+  padding-top: 0px;
 
   @include respond-to("small") {
     position: absolute;
     top: 0;
     left: 0;
+    bottom: unset;
+    padding-top: 10px;
     width: 50%;
   }
 }
 
 .sticky_button {
   background-color: white;
-  // border: $border;
-  // box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
   border: $border;
-  border-top: none;
-  border-left: none;
-  padding: 5px 10px;
-  padding-bottom: 3px;
-  position: absolute;
-  top: 0;
-  left: 1px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  // border: $border;
+  padding: 7px;
+  gap: 5px;
   // top: 5px;
   // left: 5px;
-  transition: transform 0.1s ease-in-out;
+  transition: letter-spacing 0.1s ease-in-out;
   cursor: pointer;
   letter-spacing: -1px;
   // font-family: "FT88 Gothic";
   color: #404040;
   font-size: 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
-    transform: scale(1.05);
+    letter-spacing: 2px;
   }
 }
 
 .sticky_button_right {
   left: unset;
-  border-left: $border;
-  border-right: none;
-  right: 1px;
+  right: 11px;
+}
+
+.inner_image_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .inner_image {
-  object-fit: cover;
-  object-position: top center;
+  width: 100%;
+
+  @include respond-to("small") {
+    border-radius: 5px;
+    border: $highlight-very-dark;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    max-height: calc(
+      100vh - var(--header-height) - var(--notice-bar-height) - 40px
+    );
+  }
+  // object-fit: cover;
+  // object-position: top center;
 }
 
 .loading_indicator {
