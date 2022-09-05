@@ -82,16 +82,16 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               <div className={s.info_col}>
                 <div className={s.download_container}>
                   {papercraft? 
-                  <a href={getPublicUrl(papercraft?.pdo_url)} className={s.download_button} download>
+                  <a href={getPublicUrl(papercraft?.pdo_url)} rel="noreferrer noopener" className={s.download_button} download>
                     .PDO
                   </a> : null}
                   {papercraft?.pdf_lined_url ? (
-                    <a href={getPublicUrl(papercraft.pdf_lined_url)} target="_blank" className={s.download_button}>
+                    <a href={getPublicUrl(papercraft.pdf_lined_url)} target="_blank" rel="noreferrer noopener" className={s.download_button}>
                       .PDF - lined
                     </a>
                   ) : null}
                   {papercraft?.pdf_lineless_url ? (
-                    <a href={getPublicUrl(papercraft.pdf_lineless_url)} target="_blank" className={s.download_button}>
+                    <a href={getPublicUrl(papercraft.pdf_lineless_url)} target="_blank" rel="noreferrer noopener" className={s.download_button}>
                       .PDF - lineless
                     </a>
                   ) : null}
