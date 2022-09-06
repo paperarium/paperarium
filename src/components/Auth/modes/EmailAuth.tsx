@@ -180,7 +180,7 @@ export function EmailAuth({
                 handleViewChange(VIEWS.SIGN_UP);
               }}
             >
-              Don't have an account? Sign up
+              Don&apos;t have an account? Sign up
             </Typography.Link>
           ) : (
             <Typography.Link
