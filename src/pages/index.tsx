@@ -39,32 +39,50 @@ const Home: NextPage = () => {
                     ))
                   : null}
                   {papercrafts.data
-                    ? papercrafts.data.map((papercraft, i) => (
-                        <PapercraftCard
-                          key={papercraft!.id}
-                          papercraft={papercraft}
-                          priority={i <= 1}
-                        />
-                      ))
-                    : null}
-                    {papercrafts.data
-                      ? papercrafts.data.map((papercraft, i) => (
-                          <PapercraftCard
-                            key={papercraft!.id}
-                            papercraft={papercraft}
-                            priority={i <= 1}
-                          />
-                        ))
-                      : null}
-                      {papercrafts.data
-                        ? papercrafts.data.map((papercraft, i) => (
-                            <PapercraftCard
-                              key={papercraft!.id}
-                              papercraft={papercraft}
-                              priority={i <= 1}
-                            />
-                          ))
-                        : null}
+                  ? papercrafts.data.map((papercraft, i) => (
+                      <PapercraftCard
+                        key={papercraft!.id}
+                        papercraft={papercraft}
+                        priority={i <= 1}
+                      />
+                    ))
+                  : null}
+                  {papercrafts.data
+                  ? papercrafts.data.map((papercraft, i) => (
+                      <PapercraftCard
+                        key={papercraft!.id}
+                        papercraft={papercraft}
+                        priority={i <= 1}
+                      />
+                    ))
+                  : null}
+                  {papercrafts.data
+                  ? papercrafts.data.map((papercraft, i) => (
+                      <PapercraftCard
+                        key={papercraft!.id}
+                        papercraft={papercraft}
+                        priority={i <= 1}
+                      />
+                    ))
+                  : null}
+                  {papercrafts.data
+                  ? papercrafts.data.map((papercraft, i) => (
+                      <PapercraftCard
+                        key={papercraft!.id}
+                        papercraft={papercraft}
+                        priority={i <= 1}
+                      />
+                    ))
+                  : null}
+                  {papercrafts.data
+                  ? papercrafts.data.map((papercraft, i) => (
+                      <PapercraftCard
+                        key={papercraft!.id}
+                        papercraft={papercraft}
+                        priority={i <= 1}
+                      />
+                    ))
+                  : null}
               </PapercraftGallery>
             </div>
           </div>

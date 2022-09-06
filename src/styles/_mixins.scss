@@ -1,4 +1,7 @@
 $background: var(--background-color);
+$foreground: var(--foreground-color);
+$background2: var(--background-2-color);
+$foreground2: var(--foreground-2-color);
 $highlight: var(--highlight-color);
 $highlight-2: var(--highlight-2-color);
 $highlight-dark: var(--highlight-dark-color);
@@ -6,10 +9,17 @@ $highlight-very-dark: var(--highlight-very-dark-color);
 $border: 1px solid #202020;
 
 @mixin grid-background {
-  background-image: linear-gradient(#101010 2px, transparent 2px),
-    linear-gradient(90deg, #101010 2px, transparent 2px),
-    linear-gradient(#101010 1px, transparent 1px),
-    linear-gradient(90deg, #101010 1px, black 1px);
+  background-image: linear-gradient(
+      var(--background-2-color) 2px,
+      transparent 2px
+    ),
+    linear-gradient(90deg, var(--background-2-color) 2px, transparent 2px),
+    linear-gradient(var(--background-2-color) 1px, transparent 1px),
+    linear-gradient(
+      90deg,
+      var(--background-2-color) 1px,
+      var(--background-color) 1px
+    );
   background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
   background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
 }

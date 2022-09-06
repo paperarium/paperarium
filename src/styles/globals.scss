@@ -6,15 +6,22 @@
   --notice-bar-vert-padding: 5px;
   --search-bar-width: 200px;
   --profile-bar-width: 300px;
+  --foreground-color: white;
+  --foreground-2-color: #d0d0d0;
   --background-color: black;
-  --background-2-color: black;
+  --background-2-color: #202020;
   --background-2-highlight: #202020;
   --highlight-color: #dbf6d2;
   --highlight-color-25: #dbf6d225;
   --highlight-2-color: #efdff0;
   --highlight-dark-color: #6b9a74;
   --highlight-very-dark-color: #334937;
-  --border-color: #909090;
+  --border-color: #101010;
+
+  --background-color: white;
+  --background-2-color: #e0e0e0;
+  --foreground-color: black;
+  --foreground-2-color: #202020;
 
   --b-xsmall: 480px;
   --b-small: 767px;
@@ -55,7 +62,7 @@ body,
   background-color: var(--background-color);
   scroll-padding-top: calc(var(--header-height) + var(--notice-bar-height));
   scroll-snap-type: y proximity;
-  color: white;
+  color: var(--foreground-color);
 
   @media screen and (min-width: 767px) {
     scroll-snap-type: none;

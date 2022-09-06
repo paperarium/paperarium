@@ -149,7 +149,7 @@
   width: calc(var(--header-height) - var(--header-vert-padding) * 2);
   border-radius: 50%;
   border: $border;
-  overflow: hidden;
+  // overflow: hidden;
   position: relative;
   cursor: pointer;
   transition: transform 0.1s ease-in-out;
@@ -162,6 +162,22 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  border: 1px solid $foreground;
+
+  & > img {
+    border-radius: 50%;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    width: calc(100% + 6px);
+    height: calc(100% + 6px);
+    border: 1px solid $foreground;
+    border-radius: 50%;
+  }
 }
 
 .logo {
