@@ -134,7 +134,7 @@ const Home: NextPage = () => {
  */
 export async function getStaticProps(context: any) {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["papercrafts", ""], async () => {
+  await queryClient.prefetchQuery(["papercrafts", {}], async () => {
     return await listPapercrafts();
   });
   return {
