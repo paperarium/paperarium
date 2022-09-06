@@ -23,7 +23,7 @@ const Footer: React.FC<FooterProps> = function Footer({ marginLeft }) {
         <div className={s.socials_line}></div>
       </div>
       <div className={s.title}>paperarium</div>
-      <div>a labor of love.</div>
+      <div>a personal project.</div>
       <div className={s.credits}>
         ·:·*.✧
         <a

@@ -128,7 +128,8 @@
   white-space: nowrap;
 
   &:last-of-type {
-    background-color: $highlight;
+    background-color: $foreground;
+    color: $background;
   }
 
   &:hover {
@@ -156,7 +157,7 @@
   &:hover {
     transform: scale(1.1);
   }
-  background-color: $highlight;
+  background-color: $background;
   font-family: "Courier New", Courier, monospace;
   display: flex;
   flex-direction: column;

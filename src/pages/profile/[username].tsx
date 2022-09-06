@@ -96,14 +96,14 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
               ) : null}
             </div>
             <div className={s.profile_name}>
-              <span className={s.user_name}>@{username}</span>
-              <span className={s.user_real_name}>{profile.data?.name}</span>
-              <span className={s.user_stat}>
+              <div className={s.user_name}>@{username}</div>
+              <div className={s.user_real_name}>{profile.data?.name}</div>
+              <div className={s.user_stat}>
                 {profile.data?.builds[0].count} builds
-              </span>
-              <span className={s.user_stat}>
+              </div>
+              <div className={s.user_stat}>
                 {profile.data?.papercrafts[0].count} papercrafts
-              </span>
+              </div>
             </div>
           </div>
           <div className={s.description}>{profile.data?.about}</div>

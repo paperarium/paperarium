@@ -6,10 +6,11 @@
  */
 import type { NextPage } from "next";
 import Head from "next/head";
-import { Auth } from "@supabase/ui";
+// import { Auth } from "@supabase/ui";
+import Auth from "../components/Auth/Auth";
 import { useUser } from "@supabase/auth-helpers-react";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import s from "../styles/Home.module.scss";
+import s from "../styles/Login.module.scss";
 import Layout from "../components/Layout/Layout";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
@@ -36,7 +37,6 @@ const LoginPage: NextPage = () => {
             providers={["google", "github"]}
             redirectTo={"/"}
           >
-            HI
           </Auth>
         </div>
       </div>

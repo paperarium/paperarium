@@ -78,7 +78,7 @@ const NavMenu: React.FC<NavMenuProps> = function NavMenu({
                         ) : null}
                       </div>
                       <div className={s.profile_name}>
-                        <span className={s.user_name}>@evan</span>
+                        <span className={s.user_name}>@{profile.username}</span>
                         <span>4 builds</span>
                         <span>3 papercrafts</span>
                       </div>

@@ -82,10 +82,10 @@ export const searchUserPapercrafts = async (
     .select(
       `
       *,
-      user:profiles(username,avatar_url)
+      user:profiles!inner(username,avatar_url)
     `
     )
-    .eq(useId ? "user_id" : ("user.username" as any), usernameOrId)
+    .eq(useId ? "user_id" : ("profiles.username" as any), usernameOrId)
     .order("created_at", { ascending: false });
   if (error) throw error;
   return papercrafts;

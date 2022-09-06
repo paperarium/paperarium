@@ -157,7 +157,7 @@ const EditProfilePage: NextPage = () => {
             type="text"
             className={s.input_field}
             placeholder={"Add a display name..."}
-            value={realname || profile.name}
+            value={realname || profile.name || ""}
             onChange={(e) => setRealName(e.target.value)}
           />
           <div className={s.annotation}>BIO</div>
@@ -165,7 +165,7 @@ const EditProfilePage: NextPage = () => {
             className={s.description_input}
             placeholder={"Write a bio..."}
             spellCheck={false}
-            value={about || profile.about}
+            value={about || profile.about || ""}
             minRows={3}
             onChange={(event) => {
               setAbout(event.target.value);
@@ -176,7 +176,7 @@ const EditProfilePage: NextPage = () => {
             type="text"
             className={s.input_field}
             placeholder={"Link your website..."}
-            value={website || profile.website}
+            value={website || profile.website || ""}
             onChange={(e) => setWebsite(e.target.value)}
           />
           <div
