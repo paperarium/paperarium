@@ -5,6 +5,7 @@
   flex-direction: column;
   flex: 1;
   padding: 20px 0;
+  padding-top: 0px;
   width: 100%;
   border-top: $border;
   justify-content: center;
@@ -15,6 +16,7 @@
 
   @media screen and (max-width: 767px) {
     padding: 20px 0 !important;
+    padding-top: 0px !important;
   }
 }
 
@@ -83,5 +85,24 @@
       letter-spacing: 1px;
       color: $highlight-dark;
     }
+  }
+}
+
+.divider {
+  width: 100%;
+  height: 14px;
+  background-color: $background;
+  border-bottom: $border;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 20px;
+
+  &:after {
+    content: "୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧";
+    white-space: nowrap;
+    font-size: 10px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
   }
 }

@@ -242,7 +242,8 @@ $completion_bar_height: 20px;
   position: sticky;
   bottom: 0;
   width: 100%;
-  background-color: white;
+  background-color: $background;
+  color: white;
   padding: 5px 10px;
   height: $completion_bar_height;
   border-top: $border;
@@ -352,7 +353,7 @@ $completion_bar_height: 20px;
   margin-top: 10px;
   // border-bottom: $border;
   transition: transform 0.3s ease-in-out;
-  background-color: white;
+  background-color: $background;
   border: $border;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
 
@@ -397,15 +398,7 @@ $completion_bar_height: 20px;
   height: 100%;
   z-index: 1;
   transition: transform 0.7s ease-in-out;
-  background-color: white;
-  background-image: linear-gradient($highlight 2px, transparent 2px),
-    linear-gradient(90deg, $highlight 2px, transparent 2px),
-    linear-gradient($highlight 1px, transparent 1px),
-    linear-gradient(90deg, $highlight 1px, white 1px);
-  background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
-  background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
-  border-right: 2px solid $highlight-dark;
-  backdrop-filter: blur(4px);
+  @include grid-background;
 
   // div[class~="preview-enter-active"] & {
   //   transform: translateX(calc(-100%));

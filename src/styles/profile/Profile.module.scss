@@ -73,10 +73,7 @@ $search_bar_visible_height: 40px;
   width: 100%;
   position: relative;
   min-height: calc(100vh - var(--header-height) - var(--notice-bar-height));
-  background-color: $highlight;
-  background-image: linear-gradient(white 1px, transparent 1px),
-    linear-gradient(to right, white 1px, $highlight 1px);
-  background-size: 20px 20px;
+  @include grid-background;
   @include respond-to("small") {
     padding-top: calc($search_bar_visible_height);
     padding-left: calc(var(--profile-bar-width));
@@ -156,8 +153,9 @@ $search_bar_visible_height: 40px;
 .profile_button {
   width: 100%;
   padding: 7px 10px;
-  background-color: $highlight;
-  border: $border;
+  background-color: $background;
+  border: 1px solid #707070;
+  color: white;
   font-size: 14px;
   text-align: center;
   border-radius: 5px;

@@ -14,6 +14,7 @@ type FooterProps = {
 const Footer: React.FC<FooterProps> = function Footer({ marginLeft }) {
   return (
     <footer className={s.footer} style={{ paddingLeft: marginLeft }}>
+      <div className={s.divider}></div>
       <div className={s.socials_row}>
         <div className={s.socials_line}></div>
         <RiInstagramLine />
@@ -22,6 +23,7 @@ const Footer: React.FC<FooterProps> = function Footer({ marginLeft }) {
         <div className={s.socials_line}></div>
       </div>
       <div className={s.title}>paperarium</div>
+      <div>a labor of love.</div>
       <div className={s.credits}>
         ·:·*.✧
         <a
@@ -35,8 +37,9 @@ const Footer: React.FC<FooterProps> = function Footer({ marginLeft }) {
       </div>
       <div className={s.legal_row}>
         <div className={s.legal_link}>Legal</div>
-        <div className={s.legal_link} 
-        // onClick={() => displayPreferenceModal()}
+        <div
+          className={s.legal_link}
+          // onClick={() => displayPreferenceModal()}
         >
           Cookies
         </div>
