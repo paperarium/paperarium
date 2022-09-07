@@ -1,3 +1,4 @@
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
 import type { NextPage } from "next";
 import Head from "next/head";
@@ -23,7 +24,9 @@ const Home: NextPage = () => {
             <div className={s.main_grid}>
               <PapercraftGallery
                 breakPointOverride={{
-                  default: 5,
+                  default: 4,
+                  3000: 7,
+                  2400: 6,
                   1600: 5,
                   1392: 4,
                   1167: 3,

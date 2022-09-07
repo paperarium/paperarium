@@ -49,6 +49,29 @@ export const getProfile = async (username: string) => {
   return profiles[0];
 };
 
+type ListProfilesQueryVariables = {
+  search?: string;
+};
+
+/**
+ * Lists a bunch of profiles from the database
+ * @returns A list of profiles
+ */
+export const listProfiles = async ({ search }: ListProfilesQueryVariables) => {
+  let req = (
+    search
+      ? supabaseClient.rpc<APIt.Profile>("search_profiles", {
+          username_term: search,
+        })
+      : supabaseClient.from<APIt.Profile>("profiles")
+  ).select(`*`);
+  const { data: profiles, error } = await req.order("created_at", {
+    ascending: false,
+  });
+  if (error) throw error;
+  return profiles;
+};
+
 /* -------------------------------------------------------------------------- */
 /*                                  MUTATIONS                                 */
 /* -------------------------------------------------------------------------- */

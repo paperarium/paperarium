@@ -18,21 +18,21 @@ class MyDocument extends Document {
           <meta name="author" content="evan kirkiles"></meta>
 
           {/* <!-- Primary Meta Tags --> */}
-          <meta name="title" content="PAPERARIUM – a papercraft compendium." />
+          <meta name="title" content="Paperarium – a papercraft compendium." />
           <meta name="description" content="a modern archive and community for everything papercrafting. cut, fold, and glue pieces together into figurines of all of your favorite characters!"/>
           <meta name="keywords" content="art, artist, painting, paper, papercraft, papercrafting, scissors, cut, glue, fold, visuals, graphic design, blender, 3d, 2d, concept, sculpture, game, video, videogame "></meta>
 
           {/* <!-- Open Graph / Facebook --> */}
           <meta property="og:type" content="website" />
           <meta property="og:url" content="https://www.paperarium.place/" />
-          <meta property="og:title" content="PAPERARIUM – a papercraft compendium." />
+          <meta property="og:title" content="Paperarium – a papercraft compendium." />
           <meta property="og:description" content="a modern archive and community for everything papercrafting. cut, fold, and glue pieces together into figurines of all of your favorite characters!" />
           <meta property="og:image" content="" />
 
           {/* <!-- Twitter --> */}
           <meta property="twitter:card" content="summary_large_image" />
           <meta property="twitter:url" content="https://www.paperarium.place/" />
-          <meta property="twitter:title" content="PAPERARIUM – a papercraft compendium."/>
+          <meta property="twitter:title" content="Paperarium – a papercraft compendium."/>
           <meta property="twitter:description" content="a modern archive and community for everything papercrafting. cut, fold, and glue pieces together into figurines of all of your favorite characters!"/>
           <meta property="twitter:image" content=""></meta>
 
@@ -48,7 +48,7 @@ class MyDocument extends Document {
           <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
           <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
           <link rel="manifest" href="/site.webmanifest" />
-          <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#6b9a74" />
+          <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
           <meta name="msapplication-TileColor" content="#ffffff" />
           <meta name="theme-color" content="#ffffff"></meta>
           {/* <Script

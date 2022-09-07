@@ -5,7 +5,10 @@
  * 2022 the nobot space,
  */
 
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import {
+  supabaseClient,
+  supabaseServerClient,
+} from "@supabase/auth-helpers-nextjs";
 import * as APIt from "../types";
 
 /* -------------------------------------------------------------------------- */
@@ -51,7 +54,7 @@ export const listPapercrafts = async ({
           papercraft_term: search,
         })
       : supabaseClient.from<APIt.Papercraft>("papercrafts")
-  ).select(`*,user:profiles(username,avatar_url),tags:tags(*)`);
+  ).select(`*,user:profiles!inner(username,avatar_url),tags:tags(*)`);
   if (username) req = req.eq("profiles.username" as any, username);
   const { data: papercrafts, error } = await req.order("created_at", {
     ascending: false,

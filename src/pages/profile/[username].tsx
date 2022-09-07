@@ -130,6 +130,8 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
           <PapercraftGallery
             breakPointOverride={{
               default: 5,
+              2900: 7,
+              2300: 6,
               1500: 5,
               1292: 4,
               1067: 3,

@@ -32,7 +32,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>PAPERARIUM – a papercraft compendium.</title>
+        <title>Paperarium – a papercraft compendium.</title>
       </Head>
       <ImgixProvider domain={process.env.IMGIX}>
         <UserProvider supabaseClient={supabaseClient}>

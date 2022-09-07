@@ -36,6 +36,17 @@ export type Papercraft = {
   tags: Tag[];
 };
 
+export type Build = {
+  id: number;
+  created_at: string;
+  user_id: string;
+  papercraft_id: string;
+  pictures: string[];
+  description: string;
+  verified: boolean;
+  papercraft: Papercraft;
+};
+
 export type Announcement = {
   id: number;
   created_at: string;
@@ -47,6 +58,8 @@ export type PapercraftInput = Omit<
   Papercraft,
   "id" | "created_at" | "user" | "tags"
 >;
+
+export type BuildInput = Omit<Build, "id" | "created_at" | "user">;
 
 export type PapercraftsTags = {
   id: number;

@@ -20,6 +20,7 @@ import { FiShare } from "react-icons/fi";
 import { Router, useRouter } from "next/router";
 import getPublicUrl from "../../util/getPublicUrl";
 import OptimizedImage from "../OptimizedImage/OptimizedImage";
+import rectifyDateFormat from "../../util/rectifyDateFormat";
 
 type PapercraftDisplayProps = {
   papercraft: Papercraft;
@@ -40,7 +41,11 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               spellCheck={false}
               readOnly={true}
             ></TextareaAutosize>
-            <div className={s.date_input}>{new Date().toDateString()}</div>
+            <div className={s.date_input}>
+              {new Date(
+                rectifyDateFormat(papercraft.created_at)
+              ).toDateString()}
+            </div>
             <TextareaAutosize
               className={s.preview_description}
               value={papercraft.description || ""}
@@ -144,7 +149,11 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                     `}
                   />
                 ) : (
-                  <img src={papercraft.pictures[0]} className={s.inner_image} alt={papercraft.title} />
+                  <img
+                    src={papercraft.pictures[0]}
+                    className={s.inner_image}
+                    alt={papercraft.title}
+                  />
                 )}
               </SwiperSlide>
             ))}
