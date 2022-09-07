@@ -25,21 +25,21 @@
   font-weight: 400;
   transition: opacity 0.3s ease-in-out, border 0.1s ease-in-out;
   cursor: pointer;
-  border: 1px solid $foreground;
+  border: 1px solid $background;
   padding: 8px;
   white-space: nowrap;
 
   &[class~="active"] {
     opacity: 1;
     font-weight: 700;
-    background-color: $background;
-    color: $foreground;
+    background-color: $foreground;
+    color: $background;
     border: 1px solid $background;
     animation: fadeinborder 0.3s ease-in-out;
   }
 
   &:hover {
     opacity: 1;
-    border: 1px solid black;
+    border: 1px solid $foreground;
   }
 }

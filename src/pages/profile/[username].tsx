@@ -23,7 +23,7 @@ import PapercraftGallery from "../../components/PapercraftGallery/PapercraftGall
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { AiOutlineDownSquare } from "react-icons/ai";
 import PapercraftCard from "../../components/PapercraftCard/PapercraftCard";
-import { searchUserPapercrafts } from "../../supabase/api/papercrafts";
+import { listPapercrafts } from "../../supabase/api/papercrafts";
 import Layout from "../../components/Layout/Layout";
 import { useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
@@ -49,20 +49,20 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
   // use a fallback loading indicator
   const router = useRouter();
   const { user } = useUser();
+  const loadingOverlayRef = useRef<HTMLDivElement>(null);
   const seeFallback = useRef(router.isFallback);
   const fallbackRef = useRef<HTMLDivElement>(null);
   const [search, setSearch] = useState<string>("");
   const [currentSearch, setCurrentSearch] = useState<string>(search);
-  // get the cached papercraft query. we will also re-get the papercraft likes
+  // get the user's profile and papercrafts
   const profile = useQuery(["profile", username], () => getProfile(username), {
     enabled: !!username,
   });
+  // get the cached papercraft query. we will also re-get the papercraft likes
   const papercrafts = useQuery(
-    ["papercraftsbyuser", username, currentSearch],
-    () => searchUserPapercrafts(username, false, currentSearch),
-    {
-      enabled: !!username,
-    }
+    ["papercrafts", { search: currentSearch, username }],
+    () => listPapercrafts({ search: currentSearch, username }),
+    { enabled: !!username }
   );
 
   return (
@@ -158,6 +158,16 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
                   />
                 ))
               : null}
+            <CSSTransition
+              appear
+              in={papercrafts.isPaused || papercrafts.isLoading}
+              nodeRef={loadingOverlayRef}
+              timeout={300}
+            >
+              <div className={s.loading_overlay} ref={loadingOverlayRef}>
+                loading...
+              </div>
+            </CSSTransition>
           </PapercraftGallery>
         </div>
         {seeFallback.current ? (
@@ -200,12 +210,15 @@ export const getStaticProps: GetStaticProps<
 > = async ({ params }) => {
   const queryClient = new QueryClient();
   const username = params!.username!;
-  await queryClient.prefetchQuery(["profile", username], () =>
-    getProfile(username)
-  );
-  await queryClient.prefetchQuery(["papercraftsbyuser", username], () =>
-    searchUserPapercrafts(username, false, "")
-  );
+  const requests = [
+    queryClient.prefetchQuery(["profile", username], () =>
+      getProfile(username)
+    ),
+    queryClient.prefetchQuery(["papercrafts", { search: "", username }], () =>
+      listPapercrafts({ search: "", username })
+    ),
+  ];
+  await Promise.all(requests);
   return {
     props: {
       dehydratedState: dehydrate(queryClient),

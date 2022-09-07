@@ -110,13 +110,13 @@
 .login_button {
   width: 100%;
   font-size: 15px;
-  border: 1px solid $background;
+  border: 1px solid $foreground;
   border-radius: 5px;
   padding: 10px 5px;
   text-align: center;
   cursor: pointer;
-  background-color: $foreground;
-  color: $background;
+  background-color: $background;
+  color: $foreground;
   transition: transform 0.1s ease-in-out;
 
   &:hover {

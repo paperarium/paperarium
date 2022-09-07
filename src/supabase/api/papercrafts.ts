@@ -31,21 +31,31 @@ export const getPapercraft = async (pid: number) => {
   return papercrafts[0];
 };
 
+type ListPapercraftsQueryVariables = {
+  search?: string;
+  username?: string;
+  tags?: number[];
+};
+
 /**
  * Lists the papercrafts from the supabase database.
  * @returns A list of papercrafts
  */
-export const listPapercrafts = async () => {
-  const { data: papercrafts, error } = await supabaseClient
-    .from<APIt.Papercraft>("papercrafts")
-    .select(
-      `
-      *,
-      user:profiles(username,avatar_url),
-      tags:tags(*)
-    `
-    )
-    .order("created_at", { ascending: false });
+export const listPapercrafts = async ({
+  search,
+  username,
+}: ListPapercraftsQueryVariables) => {
+  let req = (
+    search
+      ? supabaseClient.rpc<APIt.Papercraft>("search_papercrafts", {
+          papercraft_term: search,
+        })
+      : supabaseClient.from<APIt.Papercraft>("papercrafts")
+  ).select(`*,user:profiles(username,avatar_url),tags:tags(*)`);
+  if (username) req = req.eq("profiles.username" as any, username);
+  const { data: papercrafts, error } = await req.order("created_at", {
+    ascending: false,
+  });
   if (error) throw error;
   return papercrafts;
 };
@@ -54,42 +64,38 @@ export const listPapercrafts = async () => {
  * Searches papercrafts from the supabase database by title keywords.
  * @returns A list of papercrafts
  */
-export const searchPapercrafts = async (search: string) => {
-  const { data: papercrafts, error } = await supabaseClient
-    .from<APIt.Papercraft>("papercrafts")
-    .select(
-      `
-      *,
-      user:profiles(username,avatar_url)
-    `
-    )
-    .order("created_at", { ascending: false });
-  if (error) throw error;
-  return papercrafts;
-};
+// export const searchPapercrafts = async (search: string) => {
+//   if (search === "") return listPapercrafts();
+//   const { data: papercrafts, error } = await supabaseClient
+//     .rpc<APIt.Papercraft>("search_papercrafts", {
+//       papercraft_term: search,
+//     })
+//     .select(`*, user:profiles!inner(username,avatar_url)`)
+//     .order("created_at", { ascending: false });
+//   if (error) throw error;
+//   return papercrafts;
+// };
 
-/**
- * Lists a user's papercrafts from the database.
- * @returns A list of papercrafts
- */
-export const searchUserPapercrafts = async (
-  usernameOrId: string,
-  useId?: boolean,
-  search?: string
-) => {
-  const { data: papercrafts, error } = await supabaseClient
-    .from<APIt.Papercraft>("papercrafts")
-    .select(
-      `
-      *,
-      user:profiles!inner(username,avatar_url)
-    `
-    )
-    .eq(useId ? "user_id" : ("profiles.username" as any), usernameOrId)
-    .order("created_at", { ascending: false });
-  if (error) throw error;
-  return papercrafts;
-};
+// /**
+//  * Lists a user's papercrafts from the database.
+//  * @returns A list of papercrafts
+//  */
+// export const searchUserPapercrafts = async (
+//   usernameOrId: string,
+//   useId?: boolean,
+//   search?: string
+// ) => {
+//   const { data: papercrafts, error } = await supabaseClient
+//     .rpc<APIt.Papercraft>("search_papercrafts", {
+//       papercraft_term: search,
+//     })
+//     .select(`*, user:profiles!inner(username,avatar_url)`)
+//     .eq(useId ? "user_id" : ("profiles.username" as any), usernameOrId)
+//     .like("title", `%${search}%`)
+//     .order("created_at", { ascending: false });
+//   if (error) throw error;
+//   return papercrafts;
+// };
 
 /* -------------------------------------------------------------------------- */
 /*                                  MUTATIONS                                 */

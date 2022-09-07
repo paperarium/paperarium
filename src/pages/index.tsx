@@ -8,7 +8,7 @@ import s from "../styles/Home.module.scss";
 import { listPapercrafts } from "../supabase/api/papercrafts";
 
 const Home: NextPage = () => {
-  const papercrafts = useQuery(["papercrafts", {}], () => listPapercrafts());
+  const papercrafts = useQuery(["papercrafts", {}], () => listPapercrafts({}));
   return (
     <>
       <Head>
@@ -27,8 +27,9 @@ const Home: NextPage = () => {
                   1600: 5,
                   1392: 4,
                   1167: 3,
-                  480: 2
-                }}>
+                  480: 2,
+                }}
+              >
                 {papercrafts.data
                   ? papercrafts.data.map((papercraft, i) => (
                       <PapercraftCard
@@ -38,7 +39,7 @@ const Home: NextPage = () => {
                       />
                     ))
                   : null}
-                  {papercrafts.data
+                {papercrafts.data
                   ? papercrafts.data.map((papercraft, i) => (
                       <PapercraftCard
                         key={papercraft!.id}
@@ -47,7 +48,7 @@ const Home: NextPage = () => {
                       />
                     ))
                   : null}
-                  {papercrafts.data
+                {papercrafts.data
                   ? papercrafts.data.map((papercraft, i) => (
                       <PapercraftCard
                         key={papercraft!.id}
@@ -56,7 +57,7 @@ const Home: NextPage = () => {
                       />
                     ))
                   : null}
-                  {papercrafts.data
+                {papercrafts.data
                   ? papercrafts.data.map((papercraft, i) => (
                       <PapercraftCard
                         key={papercraft!.id}
@@ -65,7 +66,7 @@ const Home: NextPage = () => {
                       />
                     ))
                   : null}
-                  {papercrafts.data
+                {papercrafts.data
                   ? papercrafts.data.map((papercraft, i) => (
                       <PapercraftCard
                         key={papercraft!.id}
@@ -74,7 +75,7 @@ const Home: NextPage = () => {
                       />
                     ))
                   : null}
-                  {papercrafts.data
+                {papercrafts.data
                   ? papercrafts.data.map((papercraft, i) => (
                       <PapercraftCard
                         key={papercraft!.id}
@@ -135,7 +136,7 @@ const Home: NextPage = () => {
 export async function getStaticProps(context: any) {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(["papercrafts", {}], async () => {
-    return await listPapercrafts();
+    return await listPapercrafts({});
   });
   return {
     props: {

@@ -74,6 +74,7 @@ const EditProfilePage: NextPage = () => {
       // on success, we need to invalidate our previous profile queries
       onSuccess: () => {
         queryClient.invalidateQueries(["profiles", { id: user!.id }]);
+        router.back();
       },
     }
   );

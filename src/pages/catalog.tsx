@@ -5,17 +5,14 @@ import PapercraftCard from "../components/PapercraftCard/PapercraftCard";
 import s from "../styles/Explore.module.scss";
 import { useState } from "react";
 import Layout from "../components/Layout/Layout";
-import {
-  listPapercrafts,
-  searchPapercrafts,
-} from "../supabase/api/papercrafts";
+import { listPapercrafts } from "../supabase/api/papercrafts";
 import PapercraftGallery from "../components/PapercraftGallery/PapercraftGallery";
 
 const ExplorePage: NextPage = () => {
   const [search, setSearch] = useState<string>("");
   const [currentSearch, setCurrentSearch] = useState<string>(search);
   const papercrafts = useQuery(["papercrafts", { search: currentSearch }], () =>
-    searchPapercrafts(currentSearch)
+    listPapercrafts({ search: currentSearch })
   );
 
   return (
@@ -64,7 +61,9 @@ const ExplorePage: NextPage = () => {
  */
 export async function getStaticProps(context: any) {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["papercrafts", ""], listPapercrafts);
+  await queryClient.prefetchQuery(["papercrafts", { search: "" }], () =>
+    listPapercrafts({ search: "" })
+  );
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
