@@ -1,0 +1,104 @@
+@import "../../styles/mixins";
+
+.container {
+  position: sticky;
+  height: $search_bar_visible_height;
+  overflow: visible;
+  top: calc(var(--header-height) + var(--notice-bar-height) - 1px);
+  width: 100%;
+  gap: 10px;
+  z-index: 2;
+  pointer-events: none;
+
+  @include respond-to("small") {
+    z-index: 3;
+    position: fixed;
+    height: auto;
+    top: calc(var(--header-height) + var(--notice-bar-height) - 1px);
+    left: var(--profile-bar-width);
+    width: calc(100vw - var(--profile-bar-width));
+  }
+}
+
+.menu {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  background-color: $background;
+  border-bottom: $border;
+  height: auto;
+  pointer-events: all;
+  transition: transform 0.3s ease-in-out;
+  transform: translateY(calc(-100% + $search_bar_visible_height));
+
+  &[class~="enter-active"] {
+    transform: translateY(0px);
+  }
+
+  &[class~="enter-done"] {
+    transform: translateY(0px);
+  }
+}
+
+.menu_content {
+  height: 300px;
+  width: 100%;
+}
+
+.visible_bar {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: stretch;
+  align-items: center;
+  height: $search_bar_visible_height;
+  border-top: $border;
+  margin-top: -1px;
+  padding: 5px;
+  gap: 5px;
+  position: relative;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+  clip-path: inset(0px 0px -15px 0px);
+}
+
+.search_input {
+  flex: 1;
+  border-radius: 5px;
+  border: $border;
+  height: 100%;
+  outline: none;
+  padding-left: 30px;
+  font-family: "FT88";
+  font-size: 15px;
+  vertical-align: bottom;
+}
+
+.search_icon {
+  position: absolute;
+  top: 10px;
+  left: 13px;
+  font-size: 20px;
+  opacity: 0.5;
+}
+
+.filter_button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 0px 10px;
+  border: $border;
+  height: 100%;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+  border-radius: 3px;
+
+  &:hover {
+    background-color: $foreground;
+    color: $background;
+  }
+}

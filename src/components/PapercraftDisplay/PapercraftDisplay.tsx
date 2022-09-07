@@ -31,37 +31,6 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
     const router = useRouter();
     return (
       <div className={s.container}>
-        <div className={s.sticky_header}>
-          <div
-            className={s.sticky_button}
-            onClick={!preview ? () => router.back() : undefined}
-          >
-            <BiArrowBack />
-            BACK
-          </div>
-          {typeof navigator !== "undefined" && !!navigator.canShare ? (
-            <div
-              className={`${s.sticky_button} ${s.sticky_button_right}`}
-              onClick={() => {
-                if (preview) return;
-                navigator
-                  .share({
-                    title: `${papercraft.title} on Paperarium`,
-                    text: `check out this papercraft on paperarium (づ◔ ͜ʖ◔)づ`,
-                    url: router.asPath,
-                  })
-                  .then(() => {
-                    console.log("shared!");
-                  })
-                  .catch(() => {
-                    console.log("share cancelled.");
-                  });
-              }}
-            >
-              <FiShare />
-            </div>
-          ) : null}
-        </div>
         <div className={s.display_column}>
           <div className={s.preview_content_container}>
             <TextareaAutosize
@@ -180,6 +149,37 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               </SwiperSlide>
             ))}
           </Swiper>
+        </div>
+        <div className={s.sticky_header}>
+          <div
+            className={s.sticky_button}
+            onClick={!preview ? () => router.back() : undefined}
+          >
+            <BiArrowBack />
+            BACK
+          </div>
+          {typeof navigator !== "undefined" && !!navigator.canShare ? (
+            <div
+              className={`${s.sticky_button} ${s.sticky_button_right}`}
+              onClick={() => {
+                if (preview) return;
+                navigator
+                  .share({
+                    title: `${papercraft.title} on Paperarium`,
+                    text: `check out this papercraft on paperarium (づ◔ ͜ʖ◔)づ`,
+                    url: router.asPath,
+                  })
+                  .then(() => {
+                    console.log("shared!");
+                  })
+                  .catch(() => {
+                    console.log("share cancelled.");
+                  });
+              }}
+            >
+              <FiShare />
+            </div>
+          ) : null}
         </div>
       </div>
     );

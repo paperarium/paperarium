@@ -49,7 +49,7 @@
   justify-content: flex-end;
   align-items: flex-start;
   position: relative;
-  @include grid-background;
+  @include grid-background-alt;
   @include respond-to("small") {
     flex: 1;
     width: auto;
@@ -92,7 +92,7 @@
   background-color: $background;
   color: $foreground;
   font-family: "FT88";
-  letter-spacing: -3px;
+  letter-spacing: -4px;
   padding-left: 0px;
   margin-top: -5px;
 }
@@ -113,7 +113,7 @@
   width: 100%;
   font-size: 15px;
   font-family: "FT88";
-  letter-spacing: -1px;
+  letter-spacing: -2px;
   opacity: 0.6;
   margin-bottom: 10px;
   padding-left: 0px;
@@ -214,6 +214,7 @@
   height: auto;
   width: 100%;
   z-index: 0;
+  padding: 10px;
 
   @include respond-to("small") {
     padding: 20px;
@@ -380,9 +381,9 @@
 }
 
 .sticky_header {
-  position: sticky;
+  position: fixed;
   width: 100%;
-  bottom: 0;
+  top: calc(var(--header-height) + var(--notice-bar-height));
   left: 0;
   // height: 30px;
   pointer-events: all;
@@ -392,15 +393,14 @@
   justify-content: space-between;
   align-items: center;
   // border-bottom: $border;
-  padding: 10px;
-  padding-top: 0px;
+  padding: 5px;
 
   @include respond-to("small") {
     position: absolute;
     top: 0;
     left: 0;
     bottom: unset;
-    padding-top: 10px;
+    padding-top: 5px;
     width: 50%;
   }
 }
@@ -410,7 +410,7 @@
   border: 1px solid $foreground;
   color: $foreground;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
-  border-radius: 5px;
+  // border-radius: 5px;
   // border: $border;
   padding: 7px;
   gap: 5px;

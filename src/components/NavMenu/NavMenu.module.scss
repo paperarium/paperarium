@@ -6,7 +6,7 @@
   left: 0;
   height: 100vh;
   width: 100vw;
-  z-index: 3;
+  z-index: 4;
   background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(10px);
   pointer-events: none;
@@ -33,7 +33,7 @@
 }
 
 .nav_menu_container {
-  z-index: 3;
+  z-index: 4;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;

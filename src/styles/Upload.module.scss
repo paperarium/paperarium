@@ -385,9 +385,9 @@ $completion_bar_height: 20px;
   justify-content: center;
   align-items: center;
   z-index: 0;
-  background-color: $highlight-very-dark;
-  background-image: linear-gradient(#707070 1px, transparent 1px),
-    linear-gradient(to right, #707070 1px, $highlight-very-dark 1px);
+  background-color: $foreground;
+  background-image: linear-gradient($foreground2 1px, transparent 1px),
+    linear-gradient(to right, $foreground2 1px, $foreground 1px);
   background-size: 20px 20px;
   overflow: hidden;
   pointer-events: all;
@@ -428,7 +428,6 @@ $completion_bar_height: 20px;
   position: absolute;
   top: 0;
   left: 0;
-  // border: 1px solid $highlight-dark;
   background-color: white;
   transform: scale(0.91);
   transition: opacity 0.3s ease-in-out, transform 0.5s ease-in-out;

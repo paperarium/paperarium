@@ -1,11 +1,5 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import PapercraftGallery from "../components/PapercraftGallery/PapercraftGallery";
-import styles from "../styles/Home.module.scss";
-import {
-  listPapercrafts,
-  searchPapercrafts,
-} from "../supabase/api/papercrafts";
 
 const AboutPage: NextPage = () => {
   return (

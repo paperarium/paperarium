@@ -28,6 +28,7 @@ import Layout from "../../components/Layout/Layout";
 import { useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import OptimizedImage from "../../components/OptimizedImage/OptimizedImage";
+import FilterBar from "../../components/FilterBar/FilterBar";
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPING                                   */
@@ -124,22 +125,7 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
           ) : null}
           <div className={s.joined_information}>Joined on Aug 21, 2022</div>
         </div>
-        <div className={s.search_bar}>
-          search
-          <input
-            type="text"
-            className={es.search_bar}
-            placeholder="Search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onKeyPress={(e) => {
-              if (e.key === "Enter") {
-                setCurrentSearch(search);
-              }
-            }}
-          />
-          <AiOutlineDownSquare />
-        </div>
+        <FilterBar submitSearch={setCurrentSearch} />
         <div className={s.main_grid}>
           <PapercraftGallery
             breakPointOverride={{
@@ -151,6 +137,38 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
             }}
           >
             {papercrafts.data
+              ? papercrafts.data.map((papercraft) => (
+                  <PapercraftCard
+                    key={papercraft!.id}
+                    papercraft={papercraft}
+                  />
+                ))
+              : null}
+              {papercrafts.data
+              ? papercrafts.data.map((papercraft) => (
+                  <PapercraftCard
+                    key={papercraft!.id}
+                    papercraft={papercraft}
+                  />
+                ))
+              : null}
+              {papercrafts.data
+              ? papercrafts.data.map((papercraft) => (
+                  <PapercraftCard
+                    key={papercraft!.id}
+                    papercraft={papercraft}
+                  />
+                ))
+              : null}
+              {papercrafts.data
+              ? papercrafts.data.map((papercraft) => (
+                  <PapercraftCard
+                    key={papercraft!.id}
+                    papercraft={papercraft}
+                  />
+                ))
+              : null}
+              {papercrafts.data
               ? papercrafts.data.map((papercraft) => (
                   <PapercraftCard
                     key={papercraft!.id}
