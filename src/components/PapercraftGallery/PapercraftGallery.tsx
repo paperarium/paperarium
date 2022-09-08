@@ -52,7 +52,7 @@ const LAYOUT_ICONS: { [key in LayoutType]: JSX.Element } = {
 
 /* -------------------------------- entities -------------------------------- */
 
-enum EntityType {
+export enum EntityType {
   Papercrafts = "papercrafts",
   Builds = "builds",
 }
@@ -130,31 +130,11 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
             >
               {entities.data
                 ? entities.data.map((entity) => (
-                    <PapercraftCard key={entity!.id} entity={entity} />
-                  ))
-                : null}
-
-              {entities.data
-                ? entities.data.map((entity) => (
-                    <PapercraftCard key={entity!.id} entity={entity} />
-                  ))
-                : null}
-
-              {entities.data
-                ? entities.data.map((entity) => (
-                    <PapercraftCard key={entity!.id} entity={entity} />
-                  ))
-                : null}
-
-              {entities.data
-                ? entities.data.map((entity) => (
-                    <PapercraftCard key={entity!.id} entity={entity} />
-                  ))
-                : null}
-
-              {entities.data
-                ? entities.data.map((entity) => (
-                    <PapercraftCard key={entity!.id} entity={entity} />
+                    <PapercraftCard
+                      entityType={entityType}
+                      key={entity!.id}
+                      entity={entity}
+                    />
                   ))
                 : null}
             </Masonry>

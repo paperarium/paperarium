@@ -38,6 +38,7 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
               value={search}
               autoCorrect={"off"}
               autoCapitalize={"off"}
+              spellCheck={false}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {

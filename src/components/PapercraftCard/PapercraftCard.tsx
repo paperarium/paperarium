@@ -10,15 +10,17 @@ import * as APIt from "../../supabase/types";
 import { useRouter } from "next/router";
 import OptimizedImage from "../OptimizedImage/OptimizedImage";
 import Link from "next/link";
+import { EntityType } from "../PapercraftGallery/PapercraftGallery";
 
 interface PapercraftCardProps<T extends APIt.Papercraft | APIt.Build> {
   entity: T;
+  entityType: EntityType
   priority?: boolean;
 }
 
 const PapercraftCard = function PapercraftCard<
   T extends APIt.Papercraft | APIt.Build
->({ entity }: PapercraftCardProps<T>) {
+>({ entity, entityType }: PapercraftCardProps<T>) {
   // use router for navigating to page
   const router = useRouter();
   const [clicked, setClicked] = useState(false);
@@ -61,7 +63,7 @@ const PapercraftCard = function PapercraftCard<
             </div> */}
             <div className={s.info_col}>
               <div>
-                {Object.hasOwn(entity, "title")
+                {entityType === EntityType.Papercrafts
                   ? (entity as APIt.Papercraft).title!
                   : (entity as APIt.Build).papercraft.title}
               </div>
