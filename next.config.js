@@ -13,14 +13,10 @@ const nextConfig = {
     IMGIX: "papercraftplace.imgix.net",
   },
   webpack: (config, { isServer }) => {
-    config.resolve.extensions = [".web.js", ...config.resolve.extensions];
-    // for pdf viewer
     config.module.rules.push({
-      test: /pdfjs-dist\/build\/pdf\.worker\.js$/,
-      type: "asset/resource",
-      generator: {
-        filename: "static/chunks/[name].[hash][ext]",
-      },
+      // here doing the swiper loader and declaring no sideEffects
+      test: /swiper\.esm\.js/,
+      sideEffects: false,
     });
     if (isServer) {
       config.resolve.alias.canvas = false;

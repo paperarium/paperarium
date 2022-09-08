@@ -6,6 +6,7 @@ import Link from "next/link";
 import PapercraftCard from "../components/PapercraftCard/PapercraftCard";
 import PapercraftGallery from "../components/PapercraftGallery/PapercraftGallery";
 import s from "../styles/Home.module.scss";
+import { listAnnouncements } from "../supabase/api/announcements";
 import { listPapercrafts, papercraftKeys } from "../supabase/api/papercrafts";
 
 const Home: NextPage = () => {
@@ -82,9 +83,13 @@ const Home: NextPage = () => {
 export async function getStaticProps(context: any) {
   const queryClient = new QueryClient();
   const params = { search: "" };
-  await queryClient.prefetchQuery(papercraftKeys.list(params), async () => {
-    return await listPapercrafts(params);
-  });
+  const req = [
+    queryClient.prefetchQuery(papercraftKeys.list(params), async () => {
+      return await listPapercrafts(params);
+    }),
+    queryClient.prefetchQuery(["announcements"], listAnnouncements),
+  ];
+  await Promise.all(req);
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
