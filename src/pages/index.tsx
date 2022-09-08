@@ -61,7 +61,7 @@ const Home: NextPage = () => {
                 have written guides to help you on your way.
               </p>
               <p>
-                are you interested to see the catalog? click here and check it
+                want to see the full collection? click here and check it
                 out ❦
               </p>
               <Link href="/catalog">

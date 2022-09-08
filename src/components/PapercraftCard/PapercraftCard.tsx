@@ -6,38 +6,36 @@
  */
 import React, { useEffect, useRef, useState } from "react";
 import s from "./PapercraftCard.module.scss";
-import Imgix from "react-imgix";
-import { Papercraft } from "../../supabase/types";
+import * as APIt from "../../supabase/types";
 import { useRouter } from "next/router";
 import OptimizedImage from "../OptimizedImage/OptimizedImage";
 import Link from "next/link";
 
-type PapercraftCardProps = {
-  papercraft: Papercraft;
+interface PapercraftCardProps<T extends APIt.Papercraft | APIt.Build> {
+  entity: T;
   priority?: boolean;
-};
+}
 
-const PapercraftCard: React.FC<PapercraftCardProps> = function PapercraftCard({
-  papercraft,
-  priority,
-}) {
+const PapercraftCard = function PapercraftCard<
+  T extends APIt.Papercraft | APIt.Build
+>({ entity }: PapercraftCardProps<T>) {
   // use router for navigating to page
   const router = useRouter();
   const [clicked, setClicked] = useState(false);
 
   return (
-    <Link href={`/papercraft/${papercraft.id}`}>
+    <Link href={`/papercraft/${entity.id}`}>
       <a
         className={s.container}
         onClick={() => {
           setClicked(true);
-          router.push(`/papercraft/${papercraft.id}`);
+          router.push(`/papercraft/${entity.id}`);
         }}
       >
         <div className={s.inner_container}>
           <div className={s.image_container}>
             <OptimizedImage
-              src={papercraft.pictures[0]}
+              src={entity.pictures[0]}
               className={s.inner_image}
               sizes={`
               (max-width: 480px) 50vw,
@@ -62,8 +60,12 @@ const PapercraftCard: React.FC<PapercraftCardProps> = function PapercraftCard({
               : null}
             </div> */}
             <div className={s.info_col}>
-              <div>{papercraft.title}</div>
-              <div className={s.user_name}>@{papercraft.user.username}</div>
+              <div>
+                {Object.hasOwn(entity, "title")
+                  ? (entity as APIt.Papercraft).title!
+                  : (entity as APIt.Build).papercraft.title}
+              </div>
+              <div className={s.user_name}>@{entity.user.username}</div>
             </div>
           </div>
         </div>

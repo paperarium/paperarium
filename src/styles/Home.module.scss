@@ -96,8 +96,8 @@
 
   @include respond-to("small") {
     border-bottom: none;
-    border-top: 1px solid #505050;
-    border-right: 1px solid #505050;
+    border-top: $border;
+    // border-right: 1px solid #505050;
   }
 }
 

@@ -18,7 +18,7 @@ export type Profile = {
   updated_at: string;
 };
 
-export type Papercraft = {
+export interface Papercraft {
   id: number;
   user_id: string;
   created_at: string;
@@ -34,9 +34,9 @@ export type Papercraft = {
   verified: boolean;
   user: Profile;
   tags: Tag[];
-};
+}
 
-export type Build = {
+export interface Build {
   id: number;
   created_at: string;
   user_id: string;
@@ -45,7 +45,8 @@ export type Build = {
   description: string;
   verified: boolean;
   papercraft: Papercraft;
-};
+  user: Profile;
+}
 
 export type Announcement = {
   id: number;

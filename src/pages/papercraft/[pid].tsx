@@ -48,7 +48,7 @@ const PapercraftPage: NextPage<PapercraftPageProps> = function PapercraftPage({
   return (
     <>
       <Head>
-        <title>{papercraft.data?.title} - paperarium</title>
+        <title>{`${papercraft.data?.title} - paperarium`}</title>
         <meta property="og:url" content={router.asPath} />
         <meta property="og:type" content="website" />
         {/* <meta property="fb:app_id" content="your fb id" /> */}

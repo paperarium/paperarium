@@ -87,4 +87,4 @@ const NavBar: React.FC = function NavBar() {
   );
 };
 
-export default NavBar;
+export default React.memo(NavBar);

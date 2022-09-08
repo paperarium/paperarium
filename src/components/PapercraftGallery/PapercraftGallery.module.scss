@@ -30,18 +30,82 @@
   top: calc(var(--header-height) + var(--notice-bar-height));
   bottom: 0;
   background-color: white;
-  padding: 10px;
+  // padding: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
   clip-path: inset(0px -15px 0px 0px);
   z-index: 3;
-  height: $search_bar_visible_height;
+  height: $layout_bar_height;
   border-bottom: $border;
+  font-size: calc($layout_bar_height - 10px);
 
   @include respond-to("small") {
     height: calc(100vh - var(--header-height) - var(--notice-bar-height));
-    width: $search_bar_visible_height;
+    width: $layout_bar_height;
     flex-direction: column;
     border-bottom: none;
+  }
+}
+
+.layout_button {
+  padding: 5px;
+  border-left: $border;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  // font-family: "FT88 Gothic";
+  font-style: italic;
+  transition: all 0.2s ease-in-out;
+  color: $background2;
+  &:hover {
+    color: $foreground2;
+  }
+
+  @include respond-to("small") {
+    height: auto;
+    width: 100%;
+    border-left: none;
+    transform: scale(-1, -1);
+    border-bottom: $border;
+    writing-mode: vertical-lr;
+  }
+
+  &[class~="active"] {
+    color: $foreground;
+  }
+}
+
+.layout_type {
+  @extend .layout_button;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  font-size: calc($layout_bar_height - 15px);
+  line-height: 1;
+  vertical-align: -10%;
+  flex: 1;
+
+  @include respond-to("small") {
+    padding: 10px 5px;
+  }
+
+  &:first-of-type {
+    border: none;
+  }
+}
+
+.spacer {
+  border-left: $border;
+  height: 100%;
+  flex: 1;
+
+  @include respond-to("small") {
+    height: auto;
+    width: 100%;
+    border-left: none;
+    border-top: $border;
   }
 }
 
@@ -49,7 +113,6 @@
   display: flex;
   flex-direction: row;
   justify-content: stretch;
-  margin-left: -1px; /* gutter size offset */
   width: 100% !important;
   gap: 5px;
   padding: 10px;
@@ -59,9 +122,12 @@
 .mason_grid_col {
   display: flex;
   flex-direction: column;
-  max-width: 33%;
   flex: 1;
   gap: 5px;
+
+  @include respond-to("xsmall") {
+    max-width: 33%;
+  }
 }
 
 .loading_overlay {
@@ -90,4 +156,9 @@
     opacity: 1;
     pointer-events: all;
   }
+}
+
+.scroll_bar_container {
+  width: 10px;
+  height: calc(100vh - var(--header-height) - var(--notice-bar-height));
 }
