@@ -4,7 +4,9 @@
   position: sticky;
   height: $search_bar_visible_height;
   overflow: visible;
-  top: calc(var(--header-height) + var(--notice-bar-height) - 1px);
+  top: calc(
+    var(--header-height) + var(--notice-bar-height) + $search_bar_visible_height
+  );
   width: 100%;
   gap: 10px;
   z-index: 2;
@@ -12,11 +14,12 @@
 
   @include respond-to("small") {
     z-index: 3;
-    position: fixed;
-    height: auto;
-    top: calc(var(--header-height) + var(--notice-bar-height) - 1px);
-    left: var(--profile-bar-width);
-    width: calc(100vw - var(--profile-bar-width));
+    // position: fixed;
+    // height: auto;
+    top: calc(var(--header-height) + var(--notice-bar-height));
+    // left: var(--profile-bar-width);
+    // width: calc(100vw - var(--profile-bar-width));
+    width: 100%;
   }
 }
 
@@ -46,6 +49,7 @@
 .menu_content {
   height: 300px;
   width: 100%;
+  padding: 10px;
 }
 
 .visible_bar {

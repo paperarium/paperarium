@@ -11,6 +11,7 @@ import s from "../../../styles/admin/Admin.module.scss";
 import es from "../../../styles/Profile.module.scss";
 import { listProfiles } from "../../../supabase/api/profiles";
 import rectifyDateFormat from "../../../util/rectifyDateFormat";
+import FormEditProfile from "../../FormEditProfile/FormEditProfile";
 
 /**
  * The home page for admin activities
@@ -82,7 +83,11 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
             GENERATE A PROFILE
           </div>
         </div>
-        <div className={s.control_col}></div>
+        <div className={s.control_col}>
+          <div className={s.colored_background}>
+            {currProfile ? <FormEditProfile profile={currProfile} /> : null}
+          </div>
+        </div>
       </div>
     </>
   );

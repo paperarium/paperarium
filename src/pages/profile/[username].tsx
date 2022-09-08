@@ -125,7 +125,6 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
           ) : null}
           <div className={s.joined_information}>Joined on Aug 21, 2022</div>
         </div>
-        <FilterBar submitSearch={setCurrentSearch} />
         <div className={s.main_grid}>
           <PapercraftGallery
             breakPointOverride={{
@@ -137,58 +136,8 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
               1067: 3,
               480: 2,
             }}
-          >
-            {papercrafts.data
-              ? papercrafts.data.map((papercraft) => (
-                  <PapercraftCard
-                    key={papercraft!.id}
-                    papercraft={papercraft}
-                  />
-                ))
-              : null}
-              {papercrafts.data
-              ? papercrafts.data.map((papercraft) => (
-                  <PapercraftCard
-                    key={papercraft!.id}
-                    papercraft={papercraft}
-                  />
-                ))
-              : null}
-              {papercrafts.data
-              ? papercrafts.data.map((papercraft) => (
-                  <PapercraftCard
-                    key={papercraft!.id}
-                    papercraft={papercraft}
-                  />
-                ))
-              : null}
-              {papercrafts.data
-              ? papercrafts.data.map((papercraft) => (
-                  <PapercraftCard
-                    key={papercraft!.id}
-                    papercraft={papercraft}
-                  />
-                ))
-              : null}
-              {papercrafts.data
-              ? papercrafts.data.map((papercraft) => (
-                  <PapercraftCard
-                    key={papercraft!.id}
-                    papercraft={papercraft}
-                  />
-                ))
-              : null}
-            <CSSTransition
-              appear
-              in={papercrafts.isPaused || papercrafts.isLoading}
-              nodeRef={loadingOverlayRef}
-              timeout={300}
-            >
-              <div className={s.loading_overlay} ref={loadingOverlayRef}>
-                loading...
-              </div>
-            </CSSTransition>
-          </PapercraftGallery>
+            username={username}
+          />
         </div>
         {seeFallback.current ? (
           <CSSTransition

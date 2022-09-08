@@ -9,7 +9,6 @@ import s from "../styles/Home.module.scss";
 import { listPapercrafts } from "../supabase/api/papercrafts";
 
 const Home: NextPage = () => {
-  const papercrafts = useQuery(["papercrafts", {}], () => listPapercrafts({}));
   return (
     <>
       <Head>
@@ -33,60 +32,6 @@ const Home: NextPage = () => {
                   480: 2,
                 }}
               >
-                {papercrafts.data
-                  ? papercrafts.data.map((papercraft, i) => (
-                      <PapercraftCard
-                        key={papercraft!.id}
-                        papercraft={papercraft}
-                        priority={i <= 1}
-                      />
-                    ))
-                  : null}
-                {papercrafts.data
-                  ? papercrafts.data.map((papercraft, i) => (
-                      <PapercraftCard
-                        key={papercraft!.id}
-                        papercraft={papercraft}
-                        priority={i <= 1}
-                      />
-                    ))
-                  : null}
-                {papercrafts.data
-                  ? papercrafts.data.map((papercraft, i) => (
-                      <PapercraftCard
-                        key={papercraft!.id}
-                        papercraft={papercraft}
-                        priority={i <= 1}
-                      />
-                    ))
-                  : null}
-                {papercrafts.data
-                  ? papercrafts.data.map((papercraft, i) => (
-                      <PapercraftCard
-                        key={papercraft!.id}
-                        papercraft={papercraft}
-                        priority={i <= 1}
-                      />
-                    ))
-                  : null}
-                {papercrafts.data
-                  ? papercrafts.data.map((papercraft, i) => (
-                      <PapercraftCard
-                        key={papercraft!.id}
-                        papercraft={papercraft}
-                        priority={i <= 1}
-                      />
-                    ))
-                  : null}
-                {papercrafts.data
-                  ? papercrafts.data.map((papercraft, i) => (
-                      <PapercraftCard
-                        key={papercraft!.id}
-                        papercraft={papercraft}
-                        priority={i <= 1}
-                      />
-                    ))
-                  : null}
               </PapercraftGallery>
             </div>
           </div>

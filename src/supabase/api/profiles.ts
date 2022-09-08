@@ -76,6 +76,8 @@ export const listProfiles = async ({ search }: ListProfilesQueryVariables) => {
 /*                                  MUTATIONS                                 */
 /* -------------------------------------------------------------------------- */
 
+export const adminCreateProfile = async () => {};
+
 export const updateProfile = async (
   id: string,
   input: Partial<APIt.Profile>

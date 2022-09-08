@@ -32,7 +32,7 @@
   @include respond-to("small") {
     flex-direction: row-reverse;
     min-height: 500px;
-    height: calc(100vh - var(--header-height) - var(--notice-bar-height));
+    // height: calc(100vh - var(--header-height) - var(--notice-bar-height));
   }
 }
 
@@ -42,11 +42,12 @@
   justify-content: flex-end;
   align-items: flex-start;
   width: 100%;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  &:last-of-type {
+    z-index: 3;
+  }
 
   @include respond-to("small") {
-    height: 100%;
+    min-height: calc(100vh - var(--header-height) - var(--notice-bar-height));
     width: auto;
     flex: 1;
 
@@ -56,6 +57,9 @@
 
     &:last-of-type {
       max-width: 500px;
+      position: sticky;
+      top: calc(var(--header-height) + var(--notice-bar-height));
+      bottom: 0;
     }
   }
 }
@@ -118,13 +122,18 @@
 }
 
 .main_grid {
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   min-height: calc(100vh - var(--header-height) - var(--notice-bar-height));
+  width: 100%;
+  position: relative;
+  @include grid-background;
+
   @include respond-to("small") {
-    height: 100%;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    width: 100%;
+    display: block;
+    margin-top: 0px;
   }
 }
 
@@ -136,6 +145,7 @@
   // opacity: 0.5;
   position: relative;
   overflow: hidden;
+  z-index: 3;
 
   @include respond-to("small") {
     display: none;

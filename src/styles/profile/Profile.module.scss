@@ -30,8 +30,6 @@
   z-index: 3;
   padding: 10px;
   overflow-y: scroll;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
-  clip-path: inset(0px -15px 0px 0px);
 
   @include respond-to("small") {
     transform: none;
@@ -77,10 +75,7 @@ $search_bar_visible_height: 40px;
   min-height: calc(100vh - var(--header-height) - var(--notice-bar-height));
   @include grid-background;
   @include respond-to("small") {
-    padding-top: calc($search_bar_visible_height);
     padding-left: calc(var(--profile-bar-width));
-    overflow-y: scroll;
-    overflow-x: hidden;
     flex: 1;
   }
 }
