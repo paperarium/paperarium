@@ -50,7 +50,7 @@ export function EmailAuth({
     return () => {
       isMounted.current = false;
     };
-  }, [authView]);
+  }, [authView, defaultEmail, defaultPassword]);
 
   /* -------------------------------------------------------------------------- */
   /*                                SUBMIT EMAIL                                */
