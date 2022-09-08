@@ -9,14 +9,14 @@ import s from "./PapercraftGallery.module.scss";
 import Masonry, { MasonryProps } from "react-masonry-css";
 import FilterBar from "../FilterBar/FilterBar";
 import { QueryFunction, useQuery } from "@tanstack/react-query";
-import { listPapercrafts } from "../../supabase/api/papercrafts";
+import { listPapercrafts, papercraftKeys } from "../../supabase/api/papercrafts";
 import PapercraftCard from "../PapercraftCard/PapercraftCard";
 import { CSSTransition } from "react-transition-group";
 import { MdOutlineTableRows } from "react-icons/md";
 import { RiLayoutGridLine, RiLayoutBottomLine } from "react-icons/ri";
 import { IoCubeOutline, IoShapesOutline } from "react-icons/io5";
 import * as APIt from "../../supabase/types";
-import { listBuilds } from "../../supabase/api/builds";
+import { buildKeys, listBuilds } from "../../supabase/api/builds";
 
 const breakpointColumnsObj = {
   default: 5,
@@ -60,16 +60,19 @@ export enum EntityType {
 type EntityMeta = {
   icon: JSX.Element;
   query: typeof listPapercrafts | typeof listBuilds;
+  keys: typeof papercraftKeys | typeof buildKeys;
 };
 
 const ENTITY_MAP: { [key in EntityType]: EntityMeta } = {
   [EntityType.Papercrafts]: {
     icon: <IoShapesOutline />,
     query: listPapercrafts,
+    keys: papercraftKeys
   },
   [EntityType.Builds]: {
     icon: <IoCubeOutline />,
     query: listBuilds,
+    keys: buildKeys
   },
 };
 
@@ -85,9 +88,10 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
       EntityType.Papercrafts
     );
     const [currentSearch, setCurrentSearch] = useState<string>("");
+    const params = { search: currentSearch, username }
     const entities = useQuery<APIt.Papercraft[] | APIt.Build[]>(
-      [entityType, { search: currentSearch, username }],
-      () => ENTITY_MAP[entityType].query({ search: currentSearch, username })
+      ENTITY_MAP[entityType].keys.list(params),
+      () => ENTITY_MAP[entityType].query(params)
     );
 
     return (
@@ -129,6 +133,42 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
               columnClassName={s.mason_grid_col}
             >
               {entities.data
+                ? entities.data.map((entity) => (
+                    <PapercraftCard
+                      entityType={entityType}
+                      key={entity!.id}
+                      entity={entity}
+                    />
+                  ))
+                : null}
+                {entities.data
+                ? entities.data.map((entity) => (
+                    <PapercraftCard
+                      entityType={entityType}
+                      key={entity!.id}
+                      entity={entity}
+                    />
+                  ))
+                : null}
+                {entities.data
+                ? entities.data.map((entity) => (
+                    <PapercraftCard
+                      entityType={entityType}
+                      key={entity!.id}
+                      entity={entity}
+                    />
+                  ))
+                : null}
+                {entities.data
+                ? entities.data.map((entity) => (
+                    <PapercraftCard
+                      entityType={entityType}
+                      key={entity!.id}
+                      entity={entity}
+                    />
+                  ))
+                : null}
+                {entities.data
                 ? entities.data.map((entity) => (
                     <PapercraftCard
                       entityType={entityType}

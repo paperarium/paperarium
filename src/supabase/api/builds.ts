@@ -82,3 +82,14 @@ export const createBuild = async (
   if (error) throw error;
   return builds;
 };
+
+/* -------------------------------------------------------------------------- */
+/*                                 KEY FACTORY                                */
+/* -------------------------------------------------------------------------- */
+
+export const buildKeys = {
+  all: ["builds"] as const,
+  lists: () => [...buildKeys.all, "list"] as const,
+  list: (params: { search: string; username?: string }) =>
+    [...buildKeys.lists(), params] as const,
+};

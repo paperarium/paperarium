@@ -6,7 +6,7 @@ import Link from "next/link";
 import PapercraftCard from "../components/PapercraftCard/PapercraftCard";
 import PapercraftGallery from "../components/PapercraftGallery/PapercraftGallery";
 import s from "../styles/Home.module.scss";
-import { listPapercrafts } from "../supabase/api/papercrafts";
+import { listPapercrafts, papercraftKeys } from "../supabase/api/papercrafts";
 
 const Home: NextPage = () => {
   return (
@@ -31,8 +31,7 @@ const Home: NextPage = () => {
                   1167: 3,
                   480: 2,
                 }}
-              >
-              </PapercraftGallery>
+              ></PapercraftGallery>
             </div>
           </div>
           <div className={s.divider}></div>
@@ -61,8 +60,7 @@ const Home: NextPage = () => {
                 have written guides to help you on your way.
               </p>
               <p>
-                want to see the full collection? click here and check it
-                out ❦
+                want to see the full collection? click here and check it out ❦
               </p>
               <Link href="/catalog">
                 <div className={s.continue_button}>CATALOG</div>
@@ -83,8 +81,9 @@ const Home: NextPage = () => {
  */
 export async function getStaticProps(context: any) {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["papercrafts", {}], async () => {
-    return await listPapercrafts({});
+  const params = { search: "" };
+  await queryClient.prefetchQuery(papercraftKeys.list(params), async () => {
+    return await listPapercrafts(params);
   });
   return {
     props: {

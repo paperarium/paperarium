@@ -81,3 +81,14 @@ export const createPapercraft = async (
   if (error) throw error;
   return papercrafts;
 };
+
+/* -------------------------------------------------------------------------- */
+/*                                 KEY FACTORY                                */
+/* -------------------------------------------------------------------------- */
+
+export const papercraftKeys = {
+  all: ["papercrafts"] as const,
+  lists: () => [...papercraftKeys.all, "list"] as const,
+  list: (params: { search: string; username?: string }) =>
+    [...papercraftKeys.lists(), params] as const,
+};

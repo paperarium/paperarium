@@ -23,7 +23,10 @@ import PapercraftGallery from "../../components/PapercraftGallery/PapercraftGall
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { AiOutlineDownSquare } from "react-icons/ai";
 import PapercraftCard from "../../components/PapercraftCard/PapercraftCard";
-import { listPapercrafts } from "../../supabase/api/papercrafts";
+import {
+  listPapercrafts,
+  papercraftKeys,
+} from "../../supabase/api/papercrafts";
 import Layout from "../../components/Layout/Layout";
 import { useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
@@ -179,12 +182,13 @@ export const getStaticProps: GetStaticProps<
 > = async ({ params }) => {
   const queryClient = new QueryClient();
   const username = params!.username!;
+  const qparams = { search: "", username };
   const requests = [
     queryClient.prefetchQuery(["profile", username], () =>
       getProfile(username)
     ),
-    queryClient.prefetchQuery(["papercrafts", { search: "", username }], () =>
-      listPapercrafts({ search: "", username })
+    queryClient.prefetchQuery(papercraftKeys.list(qparams), () =>
+      listPapercrafts(qparams)
     ),
   ];
   await Promise.all(requests);
