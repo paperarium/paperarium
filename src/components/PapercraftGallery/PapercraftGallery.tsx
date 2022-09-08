@@ -118,42 +118,50 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
           ))}
         </div>
         <div className={s.container}>
-          <FilterBar submitSearch={setCurrentSearch} />
-          <Masonry
-            breakpointCols={breakPointOverride || breakpointColumnsObj}
-            className={s.mason_grid}
-            columnClassName={s.mason_grid_col}
-          >
-            {entities.data
-              ? entities.data.map((entity) => (
-                  <PapercraftCard key={entity!.id} entity={entity} />
-                ))
-              : null}
+          <FilterBar
+            currentSearch={currentSearch}
+            submitSearch={setCurrentSearch}
+          />
+          <div className={s.lower_container}>
+            <Masonry
+              breakpointCols={breakPointOverride || breakpointColumnsObj}
+              className={s.mason_grid}
+              columnClassName={s.mason_grid_col}
+            >
+              {entities.data
+                ? entities.data.map((entity) => (
+                    <PapercraftCard key={entity!.id} entity={entity} />
+                  ))
+                : null}
 
-            {entities.data
-              ? entities.data.map((entity) => (
-                  <PapercraftCard key={entity!.id} entity={entity} />
-                ))
-              : null}
+              {entities.data
+                ? entities.data.map((entity) => (
+                    <PapercraftCard key={entity!.id} entity={entity} />
+                  ))
+                : null}
 
-            {entities.data
-              ? entities.data.map((entity) => (
-                  <PapercraftCard key={entity!.id} entity={entity} />
-                ))
-              : null}
+              {entities.data
+                ? entities.data.map((entity) => (
+                    <PapercraftCard key={entity!.id} entity={entity} />
+                  ))
+                : null}
 
-            {entities.data
-              ? entities.data.map((entity) => (
-                  <PapercraftCard key={entity!.id} entity={entity} />
-                ))
-              : null}
+              {entities.data
+                ? entities.data.map((entity) => (
+                    <PapercraftCard key={entity!.id} entity={entity} />
+                  ))
+                : null}
 
-            {entities.data
-              ? entities.data.map((entity) => (
-                  <PapercraftCard key={entity!.id} entity={entity} />
-                ))
-              : null}
-          </Masonry>
+              {entities.data
+                ? entities.data.map((entity) => (
+                    <PapercraftCard key={entity!.id} entity={entity} />
+                  ))
+                : null}
+            </Masonry>
+            <div className={s.scroll_container}>
+              <div className={s.scroll_outline}></div>
+            </div>
+          </div>
           <CSSTransition
             appear
             in={entities.isPaused || entities.isLoading}

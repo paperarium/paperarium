@@ -9,12 +9,15 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { BsFilterCircle, BsFilterCircleFill } from "react-icons/bs";
 import { CSSTransition } from "react-transition-group";
 import s from "./FilterBar.module.scss";
+import { GrClose } from "react-icons/gr";
 
 type FilterBarProps = {
+  currentSearch?: string;
   submitSearch: (search: string) => void;
 };
 
 const FilterBar: React.FC<FilterBarProps> = function FilterBar({
+  currentSearch,
   submitSearch,
 }) {
   // statefuls
@@ -33,6 +36,8 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
               className={s.search_input}
               placeholder="Search"
               value={search}
+              autoCorrect={"off"}
+              autoCapitalize={"off"}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
@@ -51,6 +56,17 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
               {expanded ? <BsFilterCircleFill /> : <BsFilterCircle />}
             </div>
           </div>
+          {currentSearch ? (
+            <div className={s.search_contents}>
+              <AiOutlineSearch />
+              {currentSearch}
+              <GrClose
+                onClick={() => {
+                  submitSearch("");
+                }}
+              />
+            </div>
+          ) : null}
         </div>
       </CSSTransition>
     </div>

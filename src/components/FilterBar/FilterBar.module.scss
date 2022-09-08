@@ -116,3 +116,41 @@
     color: $background;
   }
 }
+
+@keyframes fadeleft {
+  from {
+    opacity: 0;
+    transform: translateX(20px) translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px) translateY(100%);
+  }
+}
+
+.search_contents {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  background-color: $background;
+  position: absolute;
+  bottom: -5px;
+  right: calc(16px + 5px);
+  transform: translateY(100%);
+  border: $border;
+  gap: 5px;
+  color: $foreground2;
+  animation: fadeleft 0.3s ease-in-out;
+  letter-spacing: -1px;
+
+  & > svg {
+    transition: transform 0.1s ease-in-out;
+    cursor: pointer;
+  }
+
+  & > svg:hover {
+    transform: rotate(10deg);
+  }
+}

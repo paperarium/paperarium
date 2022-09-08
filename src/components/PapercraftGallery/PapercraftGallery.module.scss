@@ -20,6 +20,50 @@
   min-height: calc(100vh - var(--header-height) - var(--notice-bar-height));
 }
 
+.lower_container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  min-height: calc(
+    100vh - var(--header-height) - var(--notice-bar-height) -
+      $search_bar_visible_height
+  );
+}
+
+.scroll_container {
+  position: sticky;
+  top: calc(
+    var(--header-height) + var(--notice-bar-height) + $search_bar_visible_height +
+      $layout_bar_height
+  );
+  height: calc(
+    100vh - var(--header-height) - var(--notice-bar-height) -
+      $search_bar_visible_height - $layout_bar_height
+  );
+  z-index: 1;
+  bottom: 0;
+  padding: 5px 3px;
+  width: 16px;
+
+  @include respond-to("small") {
+    top: calc(
+      var(--header-height) + var(--notice-bar-height) +
+        $search_bar_visible_height
+    );
+    height: calc(
+      100vh - var(--header-height) - var(--notice-bar-height) -
+        $search_bar_visible_height
+    );
+  }
+}
+
+.scroll_outline {
+  border: $border;
+  background-color: white;
+  height: 100%;
+  width: 100%;
+}
+
 .sidebar {
   position: sticky;
   display: flex;
@@ -116,6 +160,7 @@
   width: 100% !important;
   gap: 5px;
   padding: 10px;
+  padding-right: 0px;
   min-height: calc(100vh - var(--header-height) - var(--notice-bar-height));
 }
 
