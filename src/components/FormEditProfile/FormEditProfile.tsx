@@ -73,10 +73,10 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
           setIsLoading(true);
         },
         // on success, we need to invalidate our previous profile queries
-        onSuccess: () => {
+        onSuccess: (profile) => {
           queryClient.invalidateQueries(["profiles", { id: profile.id }]);
           if (redirectOnSuccess) {
-            router.back();
+            router.replace(`/profile/${profile.username}`);
           } else {
             setIsLoading(false);
           }

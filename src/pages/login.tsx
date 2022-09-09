@@ -34,7 +34,7 @@ const LoginPage: NextPage = () => {
         <div className={s.login_card}>
           <Auth
             supabaseClient={supabaseClient}
-            providers={["google", "github"]}
+            providers={["google"]}
             redirectTo={"/"}
           >
           </Auth>

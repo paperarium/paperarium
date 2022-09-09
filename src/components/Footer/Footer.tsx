@@ -42,12 +42,11 @@ const Footer: React.FC<FooterProps> = function Footer({ marginLeft }) {
           Privacy
           </a>
         </Link>
-        <div
-          className={s.legal_link}
-          // onClick={() => displayPreferenceModal()}
-        >
-          Cookies
-        </div>
+        <Link href="/policies/termsofuse" passHref>
+          <a className={s.legal_link}>
+          Terms of Use
+          </a>
+        </Link>
       </div>
     </footer>
   );
