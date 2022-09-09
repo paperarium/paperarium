@@ -4,12 +4,15 @@
  * created on Sun Sep 04 2022
  * 2022 the nobot space,
  */
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import s from "./PapercraftGallery.module.scss";
 import Masonry, { MasonryProps } from "react-masonry-css";
 import FilterBar from "../FilterBar/FilterBar";
 import { QueryFunction, useQuery } from "@tanstack/react-query";
-import { listPapercrafts, papercraftKeys } from "../../supabase/api/papercrafts";
+import {
+  listPapercrafts,
+  papercraftKeys,
+} from "../../supabase/api/papercrafts";
 import PapercraftCard from "../PapercraftCard/PapercraftCard";
 import { CSSTransition } from "react-transition-group";
 import { MdOutlineTableRows } from "react-icons/md";
@@ -67,12 +70,12 @@ const ENTITY_MAP: { [key in EntityType]: EntityMeta } = {
   [EntityType.Papercrafts]: {
     icon: <IoShapesOutline />,
     query: listPapercrafts,
-    keys: papercraftKeys
+    keys: papercraftKeys,
   },
   [EntityType.Builds]: {
     icon: <IoCubeOutline />,
     query: listBuilds,
-    keys: buildKeys
+    keys: buildKeys,
   },
 };
 
@@ -82,17 +85,80 @@ const ENTITY_MAP: { [key in EntityType]: EntityMeta } = {
 
 const PapercraftGallery: React.FC<PapercraftGalleryProps> =
   function PapercraftGallery({ breakPointOverride, username }) {
+    // refs
     const loadingOverlayRef = useRef<HTMLDivElement>(null);
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const scrollThumbRef = useRef<HTMLDivElement>(null);
+    const observer = useRef<ResizeObserver | null>(null);
+    const thumbHeight = useRef<number>(20);
+
+    // statefuls
     const [layoutType, setLayoutType] = useState<LayoutType>(LayoutType.Grid);
     const [entityType, setEntityType] = useState<EntityType>(
       EntityType.Papercrafts
     );
     const [currentSearch, setCurrentSearch] = useState<string>("");
-    const params = { search: currentSearch, username }
+    const params = { search: currentSearch, username };
     const entities = useQuery<APIt.Papercraft[] | APIt.Build[]>(
       ENTITY_MAP[entityType].keys.list(params),
       () => ENTITY_MAP[entityType].query(params)
     );
+
+    /* -------------------------------------------------------------------------- */
+    /*                                   SCROLL                                   */
+    /* -------------------------------------------------------------------------- */
+
+    function handleResize(
+      ref: HTMLDivElement,
+      thumbRef: HTMLDivElement,
+      trackSize: number
+    ) {
+      const { scrollHeight } = ref;
+      thumbHeight.current = Math.max(100 * (trackSize / scrollHeight), 20);
+      thumbRef.style.height = `${thumbHeight.current}%`;
+      handleThumbPosition();
+    }
+
+    // If the content and the scrollbar track exist, use a ResizeObserver to adjust height of thumb and listen for scroll event to move the thumb
+    useEffect(() => {
+      if (
+        scrollRef.current &&
+        scrollContainerRef.current &&
+        scrollThumbRef.current
+      ) {
+        const ref = scrollRef.current;
+        const thumbRef = scrollThumbRef.current;
+        const { scrollHeight: trackSize } = scrollContainerRef.current;
+        observer.current = new ResizeObserver(() => {
+          handleResize(ref, thumbRef, trackSize);
+        });
+        observer.current.observe(ref);
+        window.addEventListener("scroll", handleThumbPosition, false);
+        return () => {
+          observer.current?.unobserve(ref);
+          window.removeEventListener("scroll", handleThumbPosition, false);
+        };
+      }
+    }, []);
+
+    // scroll listener for scroll bar
+    const handleThumbPosition = useCallback(() => {
+      if (
+        !scrollRef.current ||
+        !scrollContainerRef.current ||
+        !scrollThumbRef.current
+      )
+        return;
+      const { scrollY } = window;
+      const rect = scrollRef.current.getBoundingClientRect();
+      const { height } = rect;
+      let newTop = (100 * scrollY) / height;
+      console.log(thumbHeight);
+      newTop = Math.min(Math.max(newTop, 0), 100 - thumbHeight.current);
+      const thumb = scrollThumbRef.current;
+      thumb.style.top = `${newTop}%`;
+    }, []);
 
     return (
       <div className={s.meta_container}>
@@ -126,7 +192,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
             currentSearch={currentSearch}
             submitSearch={setCurrentSearch}
           />
-          <div className={s.lower_container}>
+          <div className={s.lower_container} ref={scrollRef}>
             <Masonry
               breakpointCols={breakPointOverride || breakpointColumnsObj}
               className={s.mason_grid}
@@ -141,7 +207,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
                     />
                   ))
                 : null}
-                {entities.data
+              {entities.data
                 ? entities.data.map((entity) => (
                     <PapercraftCard
                       entityType={entityType}
@@ -150,7 +216,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
                     />
                   ))
                 : null}
-                {entities.data
+              {entities.data
                 ? entities.data.map((entity) => (
                     <PapercraftCard
                       entityType={entityType}
@@ -159,7 +225,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
                     />
                   ))
                 : null}
-                {entities.data
+              {entities.data
                 ? entities.data.map((entity) => (
                     <PapercraftCard
                       entityType={entityType}
@@ -168,7 +234,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
                     />
                   ))
                 : null}
-                {entities.data
+              {entities.data
                 ? entities.data.map((entity) => (
                     <PapercraftCard
                       entityType={entityType}
@@ -179,7 +245,9 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
                 : null}
             </Masonry>
             <div className={s.scroll_container}>
-              <div className={s.scroll_outline}></div>
+              <div className={s.scroll_outline} ref={scrollContainerRef}>
+                <div className={s.scroll_thumb} ref={scrollThumbRef}></div>
+              </div>
             </div>
           </div>
           <CSSTransition
