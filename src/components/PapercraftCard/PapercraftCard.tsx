@@ -14,7 +14,7 @@ import { EntityType } from "../PapercraftGallery/PapercraftGallery";
 
 interface PapercraftCardProps<T extends APIt.Papercraft | APIt.Build> {
   entity: T;
-  entityType: EntityType
+  entityType: EntityType;
   priority?: boolean;
 }
 
@@ -26,18 +26,26 @@ const PapercraftCard = function PapercraftCard<
   const [clicked, setClicked] = useState(false);
 
   return (
-    <Link href={`/papercraft/${entity.id}`}>
+    <Link
+      href={
+        entityType === EntityType.Builds
+          ? `/papercrafts/${(entity as APIt.Build).papercraft.id}?build=${
+              entity.id
+            }`
+          : `/papercrafts/${entity.id}`
+      }
+      passHref
+    >
       <a
         className={s.container}
         onClick={() => {
           setClicked(true);
-          router.push(`/papercraft/${entity.id}`);
         }}
       >
         <div className={s.inner_container}>
           <div className={s.image_container}>
             <OptimizedImage
-              src={entity.pictures[0]}
+              src={entity.pictures[0].key}
               className={s.inner_image}
               sizes={`
               (max-width: 480px) 50vw,

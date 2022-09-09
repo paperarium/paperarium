@@ -345,6 +345,28 @@ $completion_bar_height: 20px;
   align-items: flex-start;
 }
 
+.more_row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+
+  & > label {
+    font-size: 15px;
+    font-style: italic;
+    color: #606060;
+    cursor: pointer;
+  }
+
+  & > input {
+    outline: none;
+    font-family: "FT88";
+  }
+}
+
 .column_header {
   width: 100%;
   padding: 10px;

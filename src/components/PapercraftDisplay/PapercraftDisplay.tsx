@@ -42,9 +42,11 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               readOnly={true}
             ></TextareaAutosize>
             <div className={s.date_input}>
-              {new Date(
-                rectifyDateFormat(papercraft.created_at)
-              ).toDateString()}
+              {preview
+                ? papercraft.created_at
+                : new Date(
+                    rectifyDateFormat(papercraft.created_at)
+                  ).toDateString()}
             </div>
             <TextareaAutosize
               className={s.preview_description}
@@ -74,7 +76,28 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                   ) : null}
                 </div>
                 <div className={s.profile_container}>
-                  <div className={s.container_note}>DESIGNED AND BUILT BY</div>
+                  <div className={s.container_note}>{`DESIGNED${
+                    papercraft.user.id === papercraft.display_build?.user_id
+                      ? " AND BUILT"
+                      : ""
+                  } BY`}</div>
+                  <div className={s.profile_picture}>
+                    {papercraft.user.avatar_url ? (
+                      <OptimizedImage
+                        src={papercraft.user.avatar_url}
+                        sizes={"20vw"}
+                        className={s.profile_pic_image}
+                      />
+                    ) : null}
+                  </div>
+                  <div className={s.profile_name}>
+                    <span className={s.user_name}>@evan</span>
+                    <span>4 builds</span>
+                    <span>3 papercrafts</span>
+                  </div>
+                </div>
+                <div className={s.profile_container}>
+                  <div className={s.container_note}>BUILT BY</div>
                   <div className={s.profile_picture}>
                     {papercraft.user.avatar_url ? (
                       <OptimizedImage
@@ -93,14 +116,16 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               </div>
               <div className={s.info_col}>
                 <div className={s.download_container}>
-                  <a
-                    href={getPublicUrl(papercraft?.pdo_url)}
-                    rel="noreferrer noopener"
-                    className={s.download_button}
-                    download
-                  >
-                    .PDO
-                  </a>
+                  {papercraft.pdo_url ? (
+                    <a
+                      href={getPublicUrl(papercraft.pdo_url)}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className={s.download_button}
+                    >
+                      .PDO
+                    </a>
+                  ) : null}
                   {papercraft.pdf_lined_url ? (
                     <a
                       href={getPublicUrl(papercraft.pdf_lined_url)}
@@ -141,7 +166,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               >
                 {!preview ? (
                   <OptimizedImage
-                    src={papercraft.pictures[0]}
+                    src={papercraft.pictures[0].key}
                     className={s.inner_image}
                     sizes={`
                     (max-width: 767px) 100vw,
@@ -150,7 +175,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                   />
                 ) : (
                   <img
-                    src={papercraft.pictures[0]}
+                    src={papercraft.pictures[0].key}
                     className={s.inner_image}
                     alt={papercraft.title}
                   />

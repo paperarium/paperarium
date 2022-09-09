@@ -5,15 +5,11 @@
  * 2022 the nobot space,
  */
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
-import {
-  GetStaticPaths,
-  GetStaticProps,
-  NextPage,
-} from "next";
+import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import PapercraftDisplay from "../../components/PapercraftDisplay/PapercraftDisplay";
-import { getPapercraft } from "../../supabase/api/papercrafts";
+import { getPapercraft, papercraftKeys } from "../../supabase/api/papercrafts";
 import s from "../../components/PapercraftDisplay/PapercraftDisplay.module.scss";
 import { ParsedUrlQuery } from "node:querystring";
 import { CSSTransition } from "react-transition-group";
@@ -23,7 +19,7 @@ import { useRef } from "react";
 /*                                   TYPING                                   */
 /* -------------------------------------------------------------------------- */
 interface PapercraftPageProps {
-  pid: number;
+  pid: string;
 }
 interface QParams extends ParsedUrlQuery {
   pid?: string;
@@ -41,9 +37,13 @@ const PapercraftPage: NextPage<PapercraftPageProps> = function PapercraftPage({
   const seeFallback = useRef(router.isFallback);
   const fallbackRef = useRef<HTMLDivElement>(null);
   // get the cached papercraft query. we will also re-get the papercraft likes
-  const papercraft = useQuery(["papercraft", pid], () => getPapercraft(pid), {
-    enabled: !!pid,
-  });
+  const papercraft = useQuery(
+    papercraftKeys.get(pid),
+    () => getPapercraft(pid),
+    {
+      enabled: !!pid,
+    }
+  );
 
   return (
     <>
@@ -52,13 +52,19 @@ const PapercraftPage: NextPage<PapercraftPageProps> = function PapercraftPage({
         <meta property="og:url" content={router.asPath} />
         <meta property="og:type" content="website" />
         {/* <meta property="fb:app_id" content="your fb id" /> */}
-        <meta property="og:title" content={`${papercraft.data?.title} on paperarium`} />
+        <meta
+          property="og:title"
+          content={`${papercraft.data?.title} on paperarium`}
+        />
         <meta
           property="og:description"
           content="a modern compendium and community for everything papercrafting."
         />
         <meta name="twitter:card" content="summary" />
-        <meta property="og:image" content={`${process.env.IMGIX}/${papercraft.data?.pictures[0]}`} />
+        <meta
+          property="og:image"
+          content={`${process.env.IMGIX}/${papercraft.data?.pictures[0]}`}
+        />
       </Head>
       <div className={s.page_container}>
         {papercraft.data ? (
@@ -103,8 +109,8 @@ export const getStaticProps: GetStaticProps<
   QParams
 > = async ({ params }) => {
   const queryClient = new QueryClient();
-  const pid = parseFloat(params!.pid!);
-  await queryClient.prefetchQuery(["papercraft", pid], () =>
+  const pid = params!.pid!;
+  await queryClient.prefetchQuery(papercraftKeys.get(pid), () =>
     getPapercraft(pid)
   );
   return {

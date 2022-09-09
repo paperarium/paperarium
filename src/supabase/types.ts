@@ -5,6 +5,14 @@
  * 2022 the nobot space,
  */
 
+type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+
+type RowMetadata = "id" | "created_at" | "updated_at" | "user";
+
+/* -------------------------------------------------------------------------- */
+/*                                   PROFILE                                  */
+/* -------------------------------------------------------------------------- */
+
 export type Profile = {
   id: string;
   username: string;
@@ -18,31 +26,47 @@ export type Profile = {
   updated_at: string;
 };
 
+/* -------------------------------------------------------------------------- */
+/*                                 PAPERCRAFTS                                */
+/* -------------------------------------------------------------------------- */
+
 export interface Papercraft {
-  id: number;
+  id: string;
   user_id: string;
   created_at: string;
+  updated_at: string;
   title: string;
   description: string;
+  pdo_url?: string;
   glb_url?: string;
-  pdo_url: string;
   pdf_lineless_url?: string;
   pdf_lined_url?: string;
-  pictures: string[];
+  xlink?: string;
+  pictures: Picture[];
   difficulty: number;
   dimensions_cm?: number[];
   verified: boolean;
+  build_id?: string;
+  display_build?: Build;
   user: Profile;
   tags: Tag[];
 }
 
+export type PapercraftInput = PartialBy<Papercraft, RowMetadata | "tags">;
+
+/* -------------------------------------------------------------------------- */
+/*                                   BUILDS                                   */
+/* -------------------------------------------------------------------------- */
+
 export interface Build {
-  id: number;
+  id: string;
   created_at: string;
+  updated_at: string;
   user_id: string;
   papercraft_id: string;
-  pictures: string[];
-  description: string;
+  pictures: Picture[];
+  xlink?: string;
+  description?: string;
   verified: boolean;
   papercraft: Papercraft;
   user: Profile;
@@ -55,20 +79,17 @@ export type Announcement = {
   text: string;
 };
 
-export type PapercraftInput = Omit<
-  Papercraft,
-  "id" | "created_at" | "user" | "tags"
->;
+export type BuildInput = PartialBy<Build, RowMetadata | "papercraft">;
 
-export type BuildInput = Omit<Build, "id" | "created_at" | "user">;
+/* -------------------------------------------------------------------------- */
+/*                                    TAGS                                    */
+/* -------------------------------------------------------------------------- */
 
 export type PapercraftsTags = {
   id: number;
-  papercraft_id: number;
+  papercraft_id: string;
   tag_id: number;
 };
-
-export type PapercraftsTagsInput = Omit<PapercraftsTags, "id">;
 
 export type Tag = {
   id: number;
@@ -76,9 +97,21 @@ export type Tag = {
   code: string;
 };
 
+export type PapercraftsTagsInput = Omit<PapercraftsTags, "id">;
+
+/* -------------------------------------------------------------------------- */
+/*                                 PRIMITIVES                                 */
+/* -------------------------------------------------------------------------- */
+
 export enum Difficulty {
   Easy = 0,
   Medium = 1,
   Hard = 2,
   InSaNe = 3,
 }
+
+export type Picture = {
+  key: string;
+  width: number;
+  height: number;
+};

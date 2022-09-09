@@ -66,7 +66,7 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
                   >
                     <div className={s.result_pic}>
                       <OptimizedImage
-                        src={papercraft.pictures[0]}
+                        src={papercraft.pictures[0].key}
                         className={s.inner_image}
                         sizes={`20px`}
                       />

@@ -28,14 +28,16 @@ import {
 } from "@supabase/auth-helpers-nextjs";
 import {
   createPapercraft,
-  listPapercrafts,
+  updatePapercraft,
 } from "../../supabase/api/papercrafts";
 import { createPapercraftsTags } from "../../supabase/api/papercraftstags";
 import { CSSTransition } from "react-transition-group";
 import PapercraftDisplay from "../../components/PapercraftDisplay/PapercraftDisplay";
 import BlinkEffect from "../../components/BlinkEffect/BlinkEffect";
 import { useRouter } from "next/router";
-import { uploadFile } from "../../util/uploadFile";
+import { uploadFile, uploadImageFile } from "../../util/uploadFile";
+import { createBuild } from "../../supabase/api/builds";
+import { getSelf } from "../../supabase/api/profiles";
 
 const fetchTags = debounce(
   async (search: string): Promise<APIt.Tag[]> => {
@@ -92,10 +94,21 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
   const [difficulty, setDifficulty] = useState<APIt.Difficulty>(
     APIt.Difficulty.Easy
   );
+  const [dLength, setDLength] = useState<number | "">("");
   const [dWidth, setDWidth] = useState<number | "">("");
-  const [dDepth, setDDepth] = useState<number | "">("");
   const [dHeight, setDHeight] = useState<number | "">("");
   const [dUnits, setDUnits] = useState<"in" | "cm">("cm");
+  const [xLink, setXLink] = useState<string>("");
+  const [isBuild, setIsBuild] = useState(false);
+
+  // user profilie
+  const { data: profile } = useQuery(
+    ["profiles", { id: user?.id }],
+    () => getSelf(user!.id),
+    {
+      enabled: !!user?.id,
+    }
+  );
 
   /* -------------------------------------------------------------------------- */
   /*                                 SUBMISSION                                 */
@@ -107,7 +120,6 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
     if (!title) throw "missing title!";
     if (!description) throw "missing description!";
     if (images === null) throw "missing images!";
-    if (!pdo) throw "missing pdo!";
     if (!pdfLined && !pdfLineless) throw "missing a pdf!";
 
     // set submitting message
@@ -120,7 +132,7 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
     )}_${uuidv4()}`;
 
     // 1. upload the images of the papercraft
-    const pictures: string[] = [];
+    const pictures: APIt.Picture[] = [];
     for (let i = 0; i < images.length; i++) {
       const i_file = images[i];
       const { name } = i_file;
@@ -128,7 +140,7 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
         /[^a-zA-Z0-9-_\.]/g,
         ""
       )}`;
-      pictures.push(await uploadFile(fileName, i_file));
+      pictures.push(await uploadImageFile(fileName, i_file));
     }
 
     // 2. upload the papercraft files
@@ -141,7 +153,7 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
         /[^a-zA-Z0-9-_\.]/g,
         ""
       )}`;
-      pictures.push(await uploadFile(glb_file, glb));
+      glb_url = await uploadFile(glb_file, glb);
     }
     // PDF (lined) - for more beginner papercrafting
     let pdf_lined_url: string | undefined = undefined;
@@ -162,11 +174,14 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
       pdf_lineless_url = await uploadFile(pdf_lineless_file, pdfLineless);
     }
     // PDO - a guide for how to put together the papercraft
-    const pdo_file = `${PAPERCRAFT_KEY_PREFIX}/${pdo.name.replace(
-      /[^a-zA-Z0-9-_\.]/g,
-      ""
-    )}`;
-    const pdo_url = await uploadFile(pdo_file, pdo);
+    let pdo_url: string | undefined = undefined;
+    if (pdo) {
+      const pdo_file = `${PAPERCRAFT_KEY_PREFIX}/${pdo.name.replace(
+        /[^a-zA-Z0-9-_\.]/g,
+        ""
+      )}`;
+      pdo_url = await uploadFile(pdo_file, pdo);
+    }
 
     // 3. build the papercraft
     setSubmissionMessage("Creating design entry...");
@@ -181,15 +196,34 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
         pdf_lined_url,
         pictures,
         difficulty: difficulty,
+        xlink: xLink,
         dimensions_cm:
-          dWidth && dDepth && dHeight
-            ? [dWidth, dDepth, dHeight].map(
+          dLength && dWidth && dHeight
+            ? [dLength, dWidth, dHeight].map(
                 (val) => val * (dUnits === "cm" ? 1 : 2.54)
               )
             : undefined,
         verified: false,
       })
     )[0].id;
+
+    // 6. if this is a build, cross-post it to user's builds
+    if (isBuild) {
+      setSubmissionMessage("Creating build entry...");
+      const build_id = (
+        await createBuild({
+          user_id: user.id,
+          papercraft_id,
+          pictures,
+          xlink: xLink,
+          verified: false,
+        })
+      )[0].id;
+      setSubmissionMessage("Linking build entry to papercraft...");
+      await updatePapercraft(papercraft_id, {
+        build_id,
+      });
+    }
 
     // 4. build the papercraft tags inputs
     const papercraft_tags_input: APIt.PapercraftsTagsInput[] = [];
@@ -206,7 +240,7 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
 
     // 6. Finished!
     setSubmissionMessage("Done!");
-    router.push(`/papercraft/${papercraft_id}`);
+    router.push(`/papercrafts/${papercraft_id}`);
   });
 
   // builds a papercraft from the user's information
@@ -214,30 +248,36 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
     if (!pdo) throw "no PDO file!";
     if (!images) throw "no images!";
     const papercraft: APIt.Papercraft = {
-      id: 0,
+      id: "",
       user_id: user.id,
       created_at: new Date().toDateString(),
+      updated_at: new Date().toDateString(),
       title: title,
       description: description,
       glb_url: glb ? URL.createObjectURL(glb) : undefined,
-      pdo_url: URL.createObjectURL(pdo),
+      pdo_url: pdo ? URL.createObjectURL(pdo) : undefined,
       pdf_lineless_url: pdfLineless
         ? URL.createObjectURL(pdfLineless)
         : undefined,
       pdf_lined_url: pdfLined ? URL.createObjectURL(pdfLined) : undefined,
-      pictures: images.map(URL.createObjectURL),
+      pictures: images.map((img) => ({
+        key: URL.createObjectURL(img),
+        width: 0,
+        height: 0,
+      })),
       difficulty: difficulty,
       dimensions_cm:
-        dWidth && dDepth && dHeight
-          ? [dWidth, dDepth, dHeight].map(
+        dLength && dWidth && dHeight
+          ? [dLength, dWidth, dHeight].map(
               (val) => val * (dUnits === "cm" ? 1 : 2.54)
             )
           : undefined,
       verified: false,
       user: {
-        ...user,
         username: "me",
         updated_at: "",
+        ...user,
+        ...(profile ? profile : {}),
         papercrafts: [{ count: 1 }],
         builds: [{ count: 1 }],
       },
@@ -270,7 +310,7 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
             <div className={s.column_header}>
               <b>upload a papercraft design slip!</b>
               <br /> after filling in all of the required fields, the submit
-              button will turn green and you can post your papercraft to our
+              button will activate and you can post your papercraft to our
               website.
             </div>
             <div className={s.spacer}></div>
@@ -376,9 +416,19 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
                   </div>
                   <div className={s.difficulty_col}>
                     <div className={s.annotation}>
-                      Dimensions –– <i>and how big? width / depth / height</i>
+                      Dimensions –– <i>and how big? length / width / height</i>
                     </div>
                     <div className={s.dimensions_row}>
+                      <input
+                        className={s.dimension_input}
+                        value={dLength}
+                        min="0"
+                        type="number"
+                        placeholder={"l"}
+                        onChange={(e) => {
+                          setDLength(parseFloat(e.target.value));
+                        }}
+                      />
                       <input
                         className={s.dimension_input}
                         value={dWidth}
@@ -387,16 +437,6 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
                         placeholder={"w"}
                         onChange={(e) => {
                           setDWidth(parseFloat(e.target.value));
-                        }}
-                      />
-                      <input
-                        className={s.dimension_input}
-                        value={dDepth}
-                        min="0"
-                        type="number"
-                        placeholder={"d"}
-                        onChange={(e) => {
-                          setDDepth(parseFloat(e.target.value));
                         }}
                       />
                       <input
@@ -490,6 +530,33 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
                       .GLB
                     </FileUpload>
                   </div>
+                </div>
+                <div className={s.annotation}>
+                  Source link? ––{" "}
+                  <i>feel free to link your own hosted version here.</i>
+                </div>
+                <div className={s.more_row}>
+                  <input
+                    type="text"
+                    className={s.file_input}
+                    value={xLink}
+                    onChange={(e) => setXLink(e.target.value)}
+                  />
+                </div>
+                <div className={s.annotation}>
+                  Did you build this? ––{" "}
+                  <i>check to cross-upload the images as your own build.</i>
+                </div>
+                <div className={s.more_row}>
+                  <input
+                    type="checkbox"
+                    id="ibuiltthis"
+                    checked={isBuild}
+                    onChange={(e) => setIsBuild(e.target.checked)}
+                  />
+                  <label htmlFor="ibuiltthis">
+                    yes, i confirm that this is my build!
+                  </label>
                 </div>
               </div>
               {/* </div> */}

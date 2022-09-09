@@ -19,7 +19,7 @@ import * as APIt from "../types";
  * Gets a papercraf by its id
  * @returns A list of papercrafts
  */
-export const getPapercraft = async (pid: number) => {
+export const getPapercraft = async (pid: string) => {
   const { data: papercrafts, error } = await supabaseClient
     .from<APIt.Papercraft>("papercrafts")
     .select(
@@ -82,6 +82,23 @@ export const createPapercraft = async (
   return papercrafts;
 };
 
+/**
+ * Updates a papercraft in the supabase database.
+ * @param input
+ * @returns
+ */
+export const updatePapercraft = async (
+  id: string,
+  input: Partial<APIt.Papercraft>
+) => {
+  const { data: papercrafts, error } = await supabaseClient
+    .from<APIt.Papercraft>("papercrafts")
+    .update(input)
+    .match({ id });
+  if (error) throw error;
+  return papercrafts;
+};
+
 /* -------------------------------------------------------------------------- */
 /*                                 KEY FACTORY                                */
 /* -------------------------------------------------------------------------- */
@@ -91,4 +108,6 @@ export const papercraftKeys = {
   lists: () => [...papercraftKeys.all, "list"] as const,
   list: (params: { search: string; username?: string }) =>
     [...papercraftKeys.lists(), params] as const,
+  gets: () => [...papercraftKeys.all, "get"] as const,
+  get: (id: string) => [...papercraftKeys.gets(), id] as const,
 };
