@@ -16,10 +16,11 @@ const TermsOfUsePage: NextPage = () => {
         <meta name="description" content="about us." />
       </Head>
       <div className={s.container}>
-        <iframe
+        please be nice! 
+        {/* <iframe
           className={s.embed}
           src="https://app.termly.io/document/terms-of-use-for-website/ec5945d4-8b9a-4e12-b300-cfc80e3e1772"
-        ></iframe>
+        ></iframe> */}
       </div>
     </>
   );
