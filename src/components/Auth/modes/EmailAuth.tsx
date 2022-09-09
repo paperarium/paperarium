@@ -187,6 +187,7 @@ export function EmailAuth({
             size="large"
             icon={<IconLock size={21} />}
             loading={loading}
+            onClick={() => handleSubmit()}
             block
           >
             {authView === VIEWS.SIGN_IN ? "Sign in" : "Sign up"}

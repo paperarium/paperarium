@@ -25,7 +25,7 @@ export const getPapercraft = async (pid: string) => {
     .select(
       `
       *,
-      user:profiles(username,avatar_url),
+      user:profiles(username,avatar_url,builds(count),papercrafts(count)),
       tags:tags(*)
     `
     )

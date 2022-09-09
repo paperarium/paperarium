@@ -47,6 +47,10 @@ const PapercraftCard = function PapercraftCard<
             <OptimizedImage
               src={entity.pictures[0].key}
               className={s.inner_image}
+              dimensions={{
+                width: entity.pictures[0].width,
+                height: entity.pictures[0].height,
+              }}
               sizes={`
               (max-width: 480px) 50vw,
               (max-width: 767px) 33vw,

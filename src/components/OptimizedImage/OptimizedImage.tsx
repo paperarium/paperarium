@@ -9,6 +9,7 @@ import Imgix, { buildURL } from "react-imgix";
 
 type OptimizedImageProps = {
   src?: string;
+  dimensions?: { width: number, height: number };
   className?: string;
   sizes?: string;
 };
@@ -16,6 +17,7 @@ type OptimizedImageProps = {
 const OptimizedImage: React.FC<OptimizedImageProps> = function OptimizedImage({
   src,
   className,
+  dimensions,
   sizes,
 }) {
   // initiate lazyload on client side
@@ -39,6 +41,8 @@ const OptimizedImage: React.FC<OptimizedImageProps> = function OptimizedImage({
       src={src}
       className={`${lazyload} ${className}`}
       sizes={sizes}
+      // width={dimensions?.width}
+      // height={dimensions?.height}
       attributeConfig={{
         src: "data-src",
         srcSet: "data-srcset",

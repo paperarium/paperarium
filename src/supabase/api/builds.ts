@@ -25,7 +25,7 @@ export const getBuild = async (pid: string) => {
     .select(
       `
       *,
-      user:profiles(username,avatar_url),
+      user:profiles(username,avatar_url,builds(count),papercrafts(count)),
       papercraft:papercrafts!inner(id,title,description,pictures,user_id)
     `
     )
