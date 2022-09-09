@@ -64,7 +64,7 @@
   justify-content: flex-end;
   align-items: center;
   border-right: $border;
-  top: calc(var(--header-height) + var(--notice-bar-height));
+  top: calc(var(--header-height) + var(--notice-bar-height) - 1px);
   bottom: 0;
   background-color: white;
   // padding: 10px;
@@ -76,7 +76,7 @@
   font-size: calc($layout_bar_height - 10px);
 
   @include respond-to("small") {
-    height: calc(100vh - var(--header-height) - var(--notice-bar-height));
+    height: calc(100vh - var(--header-height) - var(--notice-bar-height) - 1px);
     width: $layout_bar_height;
     flex-direction: column;
     border-bottom: none;
@@ -153,7 +153,6 @@
   width: 100% !important;
   gap: 5px;
   padding: 10px;
-  padding-right: 0px;
   min-height: calc(100vh - var(--header-height) - var(--notice-bar-height));
 }
 

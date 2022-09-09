@@ -87,11 +87,6 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
   function PapercraftGallery({ breakPointOverride, username }) {
     // refs
     const loadingOverlayRef = useRef<HTMLDivElement>(null);
-    const scrollRef = useRef<HTMLDivElement>(null);
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const scrollThumbRef = useRef<HTMLDivElement>(null);
-    const observer = useRef<ResizeObserver | null>(null);
-    const thumbHeight = useRef<number>(20);
 
     // statefuls
     const [layoutType, setLayoutType] = useState<LayoutType>(LayoutType.Grid);
@@ -104,61 +99,6 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
       ENTITY_MAP[entityType].keys.list(params),
       () => ENTITY_MAP[entityType].query(params)
     );
-
-    /* -------------------------------------------------------------------------- */
-    /*                                   SCROLL                                   */
-    /* -------------------------------------------------------------------------- */
-
-    function handleResize(
-      ref: HTMLDivElement,
-      thumbRef: HTMLDivElement,
-      trackSize: number
-    ) {
-      const { scrollHeight } = ref;
-      thumbHeight.current = Math.max(100 * (trackSize / scrollHeight), 20);
-      thumbRef.style.height = `${thumbHeight.current}%`;
-      handleThumbPosition();
-    }
-
-    // If the content and the scrollbar track exist, use a ResizeObserver to adjust height of thumb and listen for scroll event to move the thumb
-    useEffect(() => {
-      if (
-        scrollRef.current &&
-        scrollContainerRef.current &&
-        scrollThumbRef.current
-      ) {
-        const ref = scrollRef.current;
-        const thumbRef = scrollThumbRef.current;
-        const { scrollHeight: trackSize } = scrollContainerRef.current;
-        observer.current = new ResizeObserver(() => {
-          handleResize(ref, thumbRef, trackSize);
-        });
-        observer.current.observe(ref);
-        window.addEventListener("scroll", handleThumbPosition, false);
-        return () => {
-          observer.current?.unobserve(ref);
-          window.removeEventListener("scroll", handleThumbPosition, false);
-        };
-      }
-    }, []);
-
-    // scroll listener for scroll bar
-    const handleThumbPosition = useCallback(() => {
-      if (
-        !scrollRef.current ||
-        !scrollContainerRef.current ||
-        !scrollThumbRef.current
-      )
-        return;
-      const { scrollY } = window;
-      const rect = scrollRef.current.getBoundingClientRect();
-      const { height } = rect;
-      let newTop = (100 * scrollY) / height;
-      console.log(thumbHeight);
-      newTop = Math.min(Math.max(newTop, 0), 100 - thumbHeight.current);
-      const thumb = scrollThumbRef.current;
-      thumb.style.top = `${newTop}%`;
-    }, []);
 
     return (
       <div className={s.meta_container}>
@@ -192,7 +132,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
             currentSearch={currentSearch}
             submitSearch={setCurrentSearch}
           />
-          <div className={s.lower_container} ref={scrollRef}>
+          <div className={s.lower_container}>
             <Masonry
               breakpointCols={breakPointOverride || breakpointColumnsObj}
               className={s.mason_grid}
@@ -244,11 +184,6 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
                   ))
                 : null}
             </Masonry>
-            <div className={s.scroll_container}>
-              <div className={s.scroll_outline} ref={scrollContainerRef}>
-                <div className={s.scroll_thumb} ref={scrollThumbRef}></div>
-              </div>
-            </div>
           </div>
           <CSSTransition
             appear
