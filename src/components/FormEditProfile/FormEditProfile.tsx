@@ -41,7 +41,7 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
     const updateProfileMutation = useMutation(
       async () => {
         // validate correct form inputs
-        if (username && username.length <= 3) throw "username too short!";
+        if (username && username.length <= 2) throw "username too short!";
         if (newAvatar && newAvatar.size / 1024 / 1024 > 5)
           throw "avatar must be less than 5 mb";
 
