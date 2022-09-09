@@ -5,9 +5,19 @@
  * 2022 the nobot space,
  */
 import { SupabaseClient } from "@supabase/supabase-js";
-import { Button, Checkbox, IconKey, IconLock, IconMail, Input, Space, Typography } from "@supabase/ui";
+import {
+  Button,
+  Checkbox,
+  IconKey,
+  IconLock,
+  IconMail,
+  Input,
+  Space,
+  Typography,
+} from "@supabase/ui";
 import { useEffect, useRef, useState } from "react";
 import { RedirectTo, VIEWS, ViewType } from "../Auth";
+import s from "../../../components/Auth/Auth.module.scss";
 
 type EmailAuthProps = {
   authView?: ViewType;
@@ -56,9 +66,10 @@ export function EmailAuth({
   /*                                SUBMIT EMAIL                                */
   /* -------------------------------------------------------------------------- */
   // submits login / signup with email
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setError("");
+    if (!email) { setError("Please fill out both fields!"); return; }
+    if (!password)  { setError("Please fill out both fields!"); return; }
     setLoading(true);
     switch (authView) {
       case "sign_in":
@@ -104,28 +115,49 @@ export function EmailAuth({
   };
 
   return (
-    <form id={id} onSubmit={handleSubmit}>
+    // <form id={id} onSubmit={handleSubmit}>
       <Space size={6} direction={"vertical"}>
         <Space size={3} direction={"vertical"}>
-          <Input
-            label="Email address"
-            autoComplete="email"
-            defaultValue={email}
-            icon={<IconMail size={21} stroke={"#666666"} />}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setEmail(e.target.value)
-            }
-          />
-          <Input
-            label="Password"
-            type="password"
-            defaultValue={password}
-            autoComplete="current-password"
-            icon={<IconKey size={21} stroke={"#666666"} />}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setPassword(e.target.value)
-            }
-          />
+          <label className={s.sbui_input_label_text} htmlFor={"userEmail"}>Email address</label>
+          <div className={s.input_container}>
+            <input
+              type="email"
+              aria-label="Email"
+              value={email}
+              className={s.sbui_input}
+              id="userEmail"
+              autoComplete="current-email"
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSubmit();
+                }
+              }}
+            />
+            <div className={s.sbui_input_label}>
+              <IconMail size={21} stroke={"#666666"} />
+            </div>
+          </div>
+          <label className={s.sbui_input_label_text} htmlFor={"userPassword"}>Password</label>
+          <div className={s.input_container}>
+            <input
+              type="password"
+              aria-label="Password"
+              value={password}
+              className={s.sbui_input}
+              id={"userPassword"}
+              autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSubmit();
+                }
+              }}
+            />
+            <div className={s.sbui_input_label}>
+              <IconKey size={21} stroke={"#666666"} />
+            </div>
+          </div>
         </Space>
         <Space direction="vertical" size={6}>
           <Space style={{ justifyContent: "space-between" }}>
@@ -197,6 +229,6 @@ export function EmailAuth({
           {error && <Typography.Text type="danger">{error}</Typography.Text>}
         </Space>
       </Space>
-    </form>
+    // </form>
   );
 }

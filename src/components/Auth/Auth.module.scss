@@ -1,3 +1,5 @@
+@import "../../styles/mixins";
+
 .sbui-auth {
   width: 100%;
 }
@@ -5,3 +7,52 @@
 // .sbui-auth-label {
 //   // @apply block text-sm text-gray-700 dark:text-gray-200 font-medium;
 // }
+
+.input_container {
+  position: relative;
+}
+
+.sbui_input {
+  display: block;
+  width: 100%;
+  border-radius: 0.375em;
+  --tw-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --tw-border-opacity: 1;
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 transparent),
+    var(--tw-ring-shadow, 0 0 transparent), var(--tw-shadow);
+  border: 1px solid $background2;
+  background-color: $background;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  transition: box-shadow 0.3s ease-in-out;
+  padding-left: 2.5rem;
+  color: rgba(75, 85, 99, 1);
+  outline: none;
+  font-family: "FT88";
+
+  &:focus {
+    --tw-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+}
+
+.sbui_input_label_text {
+  width: 100%;
+  color: rgba(75, 85, 99, 1);
+  font-size: 0.875rem;
+}
+
+.sbui_input_label {
+  box-sizing: border-box;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  padding-left: 0.75rem;
+  color: rgba(42, 42, 42, 1);
+  height: 100%;
+  padding-bottom: 2px;
+}

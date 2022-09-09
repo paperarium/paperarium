@@ -17,7 +17,7 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 10px;
+  padding: 7px;
   font-size: 25px;
   gap: 10px;
 }
@@ -25,9 +25,21 @@
 .pane_icon {
   cursor: pointer;
   transition: transform 0.1s ease-in-out;
+  border-radius: 5px;
+  border: 1px solid $background;
+  transition: transform 0.1s ease-in-out, border 0.1s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3px;
 
   &:hover {
-    transform: scale(1.1);
+    border: 1px dashed $background2;
+  }
+
+  &[class~="active"] {
+    border: 1px dashed $foreground;
   }
 }
 
@@ -77,6 +89,17 @@
   gap: 3px;
 }
 
+@keyframes fadeleft {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
 .result {
   cursor: pointer;
   transition: all 0.1s ease-in-out;
@@ -99,6 +122,8 @@
     background-color: $foreground;
     color: $background;
   }
+
+  animation: fadeleft 0.2s ease-in-out;
 }
 
 .result_pic {

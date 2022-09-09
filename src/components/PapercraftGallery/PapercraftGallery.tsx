@@ -4,11 +4,11 @@
  * created on Sun Sep 04 2022
  * 2022 the nobot space,
  */
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import s from "./PapercraftGallery.module.scss";
 import Masonry, { MasonryProps } from "react-masonry-css";
 import FilterBar from "../FilterBar/FilterBar";
-import { QueryFunction, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   listPapercrafts,
   papercraftKeys,
@@ -138,42 +138,6 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
               className={s.mason_grid}
               columnClassName={s.mason_grid_col}
             >
-              {entities.data
-                ? entities.data.map((entity) => (
-                    <PapercraftCard
-                      entityType={entityType}
-                      key={entity!.id}
-                      entity={entity}
-                    />
-                  ))
-                : null}
-              {entities.data
-                ? entities.data.map((entity) => (
-                    <PapercraftCard
-                      entityType={entityType}
-                      key={entity!.id}
-                      entity={entity}
-                    />
-                  ))
-                : null}
-              {entities.data
-                ? entities.data.map((entity) => (
-                    <PapercraftCard
-                      entityType={entityType}
-                      key={entity!.id}
-                      entity={entity}
-                    />
-                  ))
-                : null}
-              {entities.data
-                ? entities.data.map((entity) => (
-                    <PapercraftCard
-                      entityType={entityType}
-                      key={entity!.id}
-                      entity={entity}
-                    />
-                  ))
-                : null}
               {entities.data
                 ? entities.data.map((entity) => (
                     <PapercraftCard

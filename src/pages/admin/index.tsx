@@ -32,7 +32,13 @@ const AdminPage: NextPage = () => {
       <div className={s.container}>
         <div className={s.sidebar}>
           {Object.entries(ADMIN_PANES).map(([paneType, { icon }]) => (
-            <div className={s.pane_icon} key={paneType} onClick={() => setActivePane(paneType as AdminPane)}>
+            <div
+              className={`${s.pane_icon} ${
+                paneType === activePane ? "active" : ""
+              }`}
+              key={paneType}
+              onClick={() => setActivePane(paneType as AdminPane)}
+            >
               {icon}
             </div>
           ))}

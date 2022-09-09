@@ -12,6 +12,7 @@ import es from "../../../styles/Profile.module.scss";
 import { listProfiles } from "../../../supabase/api/profiles";
 import rectifyDateFormat from "../../../util/rectifyDateFormat";
 import FormEditProfile from "../../FormEditProfile/FormEditProfile";
+import OptimizedImage from "../../OptimizedImage/OptimizedImage";
 
 /**
  * The home page for admin activities
@@ -62,8 +63,14 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
                     }`}
                     key={profile.id}
                     onClick={() => setCurrProfile(profile)}
-                    style={{ paddingLeft: "5px" }}
                   >
+                    <div className={s.result_pic} style={{ borderRadius: '50%', overflow: 'hidden' }}>
+                      <OptimizedImage
+                        src={profile.avatar_url}
+                        className={s.inner_image}
+                        sizes={`20px`}
+                      />
+                    </div>
                     @{profile.username}
                     <div className={s.result_username}>
                       {new Date(

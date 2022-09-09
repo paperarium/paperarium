@@ -4,6 +4,7 @@
  * created on Wed Aug 31 2022
  * 2022 the nobot space,
  */
+import Link from "next/link";
 import { RiFacebookBoxLine, RiInstagramLine, RiMailLine } from "react-icons/ri";
 import s from "./Footer.module.scss";
 
@@ -36,7 +37,11 @@ const Footer: React.FC<FooterProps> = function Footer({ marginLeft }) {
         ✧.*·:·
       </div>
       <div className={s.legal_row}>
-        <div className={s.legal_link}>Legal</div>
+        <Link href="/policies/privacy" passHref>
+          <a className={s.legal_link}>
+          Privacy
+          </a>
+        </Link>
         <div
           className={s.legal_link}
           // onClick={() => displayPreferenceModal()}
@@ -44,26 +49,6 @@ const Footer: React.FC<FooterProps> = function Footer({ marginLeft }) {
           Cookies
         </div>
       </div>
-      {/* <button
-        className="termly-cookie-preference-button"
-        type="button"
-        style={{
-          background: "white",
-          width: "165px",
-          height: "30px",
-          borderRadius: "3px",
-          border: "1px solid #5f7d9c",
-          fontSize: "10px",
-          color: "#5f7d9c",
-          cursor: "pointer",
-          outline: "none",
-          padding: "0",
-        }}
-        // @ts-ignore
-        onClick={() => displayPreferenceModal()}
-      >
-        Manage Cookie Preferences
-      </button> */}
     </footer>
   );
 };
