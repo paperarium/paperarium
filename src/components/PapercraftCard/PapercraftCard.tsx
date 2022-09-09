@@ -43,7 +43,12 @@ const PapercraftCard = function PapercraftCard<
         }}
       >
         <div className={s.inner_container}>
-          <div className={s.image_container}>
+          <div
+            className={s.image_container}
+            style={{
+              aspectRatio: `${entity.pictures[0].width} / ${entity.pictures[0].height}`,
+            }}
+          >
             <OptimizedImage
               src={entity.pictures[0].key}
               className={s.inner_image}

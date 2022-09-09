@@ -81,39 +81,57 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                       ? " AND BUILT"
                       : ""
                   } BY`}</div>
-                  <div className={s.profile_picture}>
-                    {papercraft.user.avatar_url ? (
-                      <OptimizedImage
-                        src={papercraft.user.avatar_url}
-                        sizes={"20vw"}
-                        className={s.profile_pic_image}
-                      />
-                    ) : null}
-                  </div>
-                  <div className={s.profile_name}>
-                    <span className={s.user_name}>@{papercraft.user.username}</span>
-                    <span>{papercraft.user.builds[0].count} builds</span>
-                    <span>{papercraft.user.papercrafts[0].count} papercrafts</span>
-                  </div>
+                  <Link href={`/profile/${papercraft.user.username}`} passHref>
+                    <a>
+                      <div className={s.profile_picture}>
+                        {papercraft.user.avatar_url ? (
+                          <OptimizedImage
+                            src={papercraft.user.avatar_url}
+                            sizes={"20vw"}
+                            className={s.profile_pic_image}
+                          />
+                        ) : null}
+                      </div>
+                    </a>
+                  </Link>
+                  <Link href={`/profile/${papercraft.user.username}`} passHref>
+                    <a className={s.profile_name}>
+                      <span className={s.user_name}>
+                        @{papercraft.user.username}
+                      </span>
+                      <span>{papercraft.user.builds[0].count} builds</span>
+                      <span>
+                        {papercraft.user.papercrafts[0].count} papercrafts
+                      </span>
+                    </a>
+                  </Link>
                 </div>
-                {papercraft.display_build?
-                <div className={s.profile_container}>
-                  <div className={s.container_note}>BUILT BY</div>
-                  <div className={s.profile_picture}>
-                    {papercraft.display_build.user.avatar_url ? (
-                      <OptimizedImage
-                        src={papercraft.display_build.user.avatar_url}
-                        sizes={"20vw"}
-                        className={s.profile_pic_image}
-                      />
-                    ) : null}
+                {papercraft.display_build ? (
+                  <div className={s.profile_container}>
+                    <div className={s.container_note}>BUILT BY</div>
+                    <div className={s.profile_picture}>
+                      {papercraft.display_build.user.avatar_url ? (
+                        <OptimizedImage
+                          src={papercraft.display_build.user.avatar_url}
+                          sizes={"20vw"}
+                          className={s.profile_pic_image}
+                        />
+                      ) : null}
+                    </div>
+                    <div className={s.profile_name}>
+                      <span className={s.user_name}>
+                        @{papercraft.display_build.user.username}
+                      </span>
+                      <span>
+                        {papercraft.display_build.user.builds[0].count} builds
+                      </span>
+                      <span>
+                        {papercraft.display_build.user.papercrafts[0].count}{" "}
+                        papercrafts
+                      </span>
+                    </div>
                   </div>
-                  <div className={s.profile_name}>
-                    <span className={s.user_name}>@{papercraft.display_build.user.username}</span>
-                    <span>{papercraft.display_build.user.builds[0].count} builds</span>
-                    <span>{papercraft.display_build.user.papercrafts[0].count} papercrafts</span>
-                  </div>
-                </div> : null}
+                ) : null}
               </div>
               <div className={s.info_col}>
                 <div className={s.download_container}>
