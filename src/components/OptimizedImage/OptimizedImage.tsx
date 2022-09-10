@@ -17,7 +17,6 @@ type OptimizedImageProps = {
 const OptimizedImage: React.FC<OptimizedImageProps> = function OptimizedImage({
   src,
   className,
-  dimensions,
   sizes,
 }) {
   // initiate lazyload on client side

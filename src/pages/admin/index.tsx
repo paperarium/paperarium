@@ -13,14 +13,14 @@ import * as APIt from "../../supabase/types";
  */
 const AdminPage: NextPage = () => {
   // keep track of a "standin" user for uploading federated crafts
-  const [currProfile, setCurrProfile] = useState<APIt.Profile | null>(null);
+  const [activeProfile, setActiveProfile] = useState<APIt.Profile | null>(null);
 
   // stateful manages which pane is open
   const [activePane, setActivePane] = useState<AdminPane>(AdminPane.Profile);
   const { pane: Pane } = ADMIN_PANES[activePane];
   const adminPaneProps: AdminPaneProps = {
-    currProfile,
-    setCurrProfile,
+    activeProfile,
+    setActiveProfile,
   };
 
   return (

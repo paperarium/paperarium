@@ -19,8 +19,8 @@ import {
  * @returns
  */
 const AdminBuildsPane: React.FC<AdminPaneProps> = ({
-  currProfile,
-  setCurrProfile,
+  activeProfile,
+  setActiveProfile,
 }) => {
   // search for builds
   const [search, setSearch] = useState<string>("");
@@ -39,7 +39,7 @@ const AdminBuildsPane: React.FC<AdminPaneProps> = ({
   return (
     <>
       <Head>
-        <title>admin - paperarium</title>
+        <title>admin.builds - paperarium</title>
         <meta name="description" content="about us." />
       </Head>
       <div className={s.container}>

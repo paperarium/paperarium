@@ -2,49 +2,47 @@ import {
   supabaseClient,
   supabaseServerClient,
 } from "@supabase/auth-helpers-nextjs";
+import * as APIt from "../../../supabase/types";
 import { QueryClient, useQuery } from "@tanstack/react-query";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
 import { AdminPaneProps } from "..";
-import * as APIt from "../../../supabase/types";
 import s from "../../../styles/admin/Admin.module.scss";
 import es from "../../../styles/Profile.module.scss";
 import { listProfiles } from "../../../supabase/api/profiles";
+import { listTags, tagsKeys } from "../../../supabase/api/tags";
 import rectifyDateFormat from "../../../util/rectifyDateFormat";
 import FormEditProfile from "../../FormEditProfile/FormEditProfile";
 import OptimizedImage from "../../OptimizedImage/OptimizedImage";
 
 /**
- * The home page for admin activities
+ * The home page for admin tag activities
  * @returns
  */
-const AdminProfilesPane: React.FC<AdminPaneProps> = ({
-  activeProfile,
-  setActiveProfile,
-}) => {
-  // search for profiles
+const AdminTagsPane: React.FC<AdminPaneProps> = () => {
+  // search for tags
   const [search, setSearch] = useState<string>("");
-  const [currProfile, setCurrProfile] = useState<APIt.Profile | null>(activeProfile);
   const [currentSearch, setCurrentSearch] = useState<string>(search);
-  const profiles = useQuery(
-    ["admin", "profiles", { search: currentSearch }],
-    () => listProfiles({ search: currentSearch })
+  const [currTag, setCurrTag] = useState<APIt.Tag | null>(null);
+  const tags = useQuery(
+    ["admin", ...tagsKeys.list({ search: currentSearch })],
+    () => listTags({ search: currentSearch })
   );
 
   return (
     <>
       <Head>
-        <title>admin.profiles - paperarium</title>
+        <title>admin.tags - paperarium</title>
         <meta name="description" content="about us." />
       </Head>
       <div className={s.container}>
         <div className={s.query_col}>
-          PROFILES
+          TAGS
           <input
             type="text"
             value={search}
-            placeholder={"Search by profile..."}
+            placeholder={"Search by tag name..."}
             className={s.search_bar}
             autoComplete={"off"}
             onChange={(e) => setSearch(e.target.value)}
@@ -55,29 +53,31 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
             }}
           />
           <div className={s.results_container}>
-            {profiles.data
-              ? profiles.data.map((profile) => (
+            {tags.data
+              ? tags.data.map((tag) => (
                   <div
                     className={`${s.result} ${
-                      currProfile && currProfile.id === profile.id
+                      currTag && currTag.id === tag.id
                         ? "active"
                         : null
                     }`}
-                    key={profile.id}
-                    onClick={() => setCurrProfile(profile)}
+                    key={tag.id}
+                    onClick={() => setCurrTag(tag)}
+                    style={{ paddingLeft: "5px"}}
                   >
-                    <div className={s.result_pic} style={{ borderRadius: '50%', overflow: 'hidden' }}>
+                    {/* <div
+                      className={s.result_pic}
+                      style={{ borderRadius: "50%", overflow: "hidden" }}
+                    >
                       <OptimizedImage
                         src={profile.avatar_url}
                         className={s.inner_image}
                         sizes={`20px`}
                       />
-                    </div>
-                    @{profile.username}
+                    </div> */}
+                    {tag.name}
                     <div className={s.result_username}>
-                      {new Date(
-                        rectifyDateFormat(profile.created_at)
-                      ).toDateString()}
+                      {tag.code}
                     </div>
                   </div>
                 ))
@@ -85,24 +85,16 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
           </div>
           <div
             className={s.add_button}
-            onClick={() => {
-              setActiveProfile(currProfile);
-            }}
-          >
-            SELECT PROFILE
-          </div>
-          <div
-            className={s.add_button}
             onClick={async () => {
-              await supabaseClient.rpc("generate_user");
+              // await supabaseClient.rpc("generate_user");
             }}
           >
-            GENERATE A PROFILE
+            ADD A TAG
           </div>
         </div>
         <div className={s.control_col}>
           <div className={s.colored_background}>
-            {currProfile ? <FormEditProfile profile={currProfile} /> : null}
+            {currTag ? currTag.name : null}
           </div>
         </div>
       </div>
@@ -110,4 +102,4 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
   );
 };
 
-export default AdminProfilesPane;
+export default AdminTagsPane;

@@ -6,7 +6,11 @@ import { useState } from "react";
 import { AdminPaneProps } from "..";
 import * as APIt from "../../../supabase/types";
 import s from "../../../styles/admin/Admin.module.scss";
-import { listPapercrafts } from "../../../supabase/api/papercrafts";
+import {
+  getPapercraft,
+  listPapercrafts,
+  papercraftKeys,
+} from "../../../supabase/api/papercrafts";
 import PapercraftDisplay from "../../PapercraftDisplay/PapercraftDisplay";
 import Imgix from "react-imgix";
 import OptimizedImage from "../../OptimizedImage/OptimizedImage";
@@ -16,8 +20,8 @@ import OptimizedImage from "../../OptimizedImage/OptimizedImage";
  * @returns
  */
 const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
-  currProfile,
-  setCurrProfile,
+  activeProfile,
+  setActiveProfile,
 }) => {
   // search for papercrafts
   const [search, setSearch] = useState<string>("");
@@ -29,11 +33,16 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
     ["admin", "papercrafts", { search: currentSearch }],
     () => listPapercrafts({ search: currentSearch })
   );
+  const selectedPapercraft = useQuery(
+    ["admin", papercraftKeys.get(currPapercraft?.id || "")],
+    () => getPapercraft(currPapercraft!.id),
+    { enabled: !!currPapercraft }
+  );
 
   return (
     <>
       <Head>
-        <title>admin - paperarium</title>
+        <title>admin.papercrafts - paperarium</title>
         <meta name="description" content="about us." />
       </Head>
       <div className={s.container}>
@@ -81,8 +90,8 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
           </div>
         </div>
         <div className={s.control_col}>
-          {currPapercraft ? (
-            <PapercraftDisplay papercraft={currPapercraft} />
+          {selectedPapercraft.data ? (
+            <PapercraftDisplay papercraft={selectedPapercraft.data} />
           ) : (
             <div>SELECT A PAPERCRAFT TO SHOW IT HERE</div>
           )}

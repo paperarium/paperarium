@@ -12,8 +12,8 @@ import { listProfiles } from "../../../supabase/api/profiles";
  * @returns
  */
 const AdminHomePane: React.FC<AdminPaneProps> = ({
-  currProfile,
-  setCurrProfile,
+  activeProfile,
+  setActiveProfile,
 }) => {
   // search for profiles
   const [search, setSearch] = useState<string>("");
@@ -26,7 +26,7 @@ const AdminHomePane: React.FC<AdminPaneProps> = ({
   return (
     <>
       <Head>
-        <title>admin - paperarium</title>
+        <title>admin.home - paperarium</title>
         <meta name="description" content="about us." />
       </Head>
       <div className={s.container}>
