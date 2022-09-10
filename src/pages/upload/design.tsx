@@ -74,7 +74,7 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
 
   // checks if can show preview
   const canShowPreview = () => {
-    return !!(title && description && !!pdo && (!!pdfLineless || !!pdfLined));
+    return !!(title && description && (!!pdfLineless || !!pdfLined));
   };
 
   /* -------------------------------------------------------------------------- */
