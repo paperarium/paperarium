@@ -56,6 +56,12 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               minRows={3}
               readOnly={true}
             ></TextareaAutosize>
+            {papercraft.xlink ? 
+            <div className={s.xlink_container}>
+              <a href={papercraft.xlink} target="_blank" rel="noopener noreferrer">
+                {"> "}Original link <i>({new URL(papercraft.xlink).hostname})</i>
+              </a>
+            </div> : null}
             <div className={s.more_info_container}>
               <div className={s.info_col}>
                 <div className={s.tags_row}>
