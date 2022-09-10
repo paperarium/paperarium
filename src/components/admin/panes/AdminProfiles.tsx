@@ -25,7 +25,9 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
 }) => {
   // search for profiles
   const [search, setSearch] = useState<string>("");
-  const [currProfile, setCurrProfile] = useState<APIt.Profile | null>(activeProfile);
+  const [currProfile, setCurrProfile] = useState<APIt.Profile | null>(
+    activeProfile
+  );
   const [currentSearch, setCurrentSearch] = useState<string>(search);
   const profiles = useQuery(
     ["admin", "profiles", { search: currentSearch }],
@@ -66,7 +68,10 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
                     key={profile.id}
                     onClick={() => setCurrProfile(profile)}
                   >
-                    <div className={s.result_pic} style={{ borderRadius: '50%', overflow: 'hidden' }}>
+                    <div
+                      className={s.result_pic}
+                      style={{ borderRadius: "50%", overflow: "hidden" }}
+                    >
                       <OptimizedImage
                         src={profile.avatar_url}
                         className={s.inner_image}
@@ -104,6 +109,20 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
           <div className={s.colored_background}>
             {currProfile ? <FormEditProfile profile={currProfile} /> : null}
           </div>
+          {activeProfile ? (
+            <div className={s.profile_container}>
+              SELECTED PROFILE
+              <div className={s.profile_picture}>
+                <OptimizedImage
+                  src={activeProfile.avatar_url}
+                  className={s.inner_image}
+                  sizes={`200px`}
+                />
+              </div>
+              <div className={s.result_username}>@{activeProfile.username}</div>
+              {activeProfile.name}
+            </div>
+          ) : null}
         </div>
       </div>
     </>

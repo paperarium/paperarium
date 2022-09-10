@@ -4,6 +4,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
 import { AdminPane, AdminPaneProps, ADMIN_PANES } from "../../components/admin";
+import OptimizedImage from "../../components/OptimizedImage/OptimizedImage";
 import s from "../../styles/admin/Admin.module.scss";
 import * as APIt from "../../supabase/types";
 
@@ -44,7 +45,7 @@ const AdminPage: NextPage = () => {
           ))}
         </div>
         <div className={s.pane}>
-          <Pane {...adminPaneProps} />
+          <Pane {...adminPaneProps}></Pane>
         </div>
       </div>
     </>

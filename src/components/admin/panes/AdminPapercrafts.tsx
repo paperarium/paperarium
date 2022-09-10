@@ -1,15 +1,21 @@
 import { supabaseServerClient } from "@supabase/auth-helpers-nextjs";
-import { QueryClient, useQuery } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
-import { AdminPaneProps } from "..";
+import { AdminPane, AdminPaneProps } from "..";
 import * as APIt from "../../../supabase/types";
 import s from "../../../styles/admin/Admin.module.scss";
 import {
   getPapercraft,
   listPapercrafts,
   papercraftKeys,
+  updatePapercraft,
 } from "../../../supabase/api/papercrafts";
 import PapercraftDisplay from "../../PapercraftDisplay/PapercraftDisplay";
 import Imgix from "react-imgix";
@@ -29,6 +35,8 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
   const [currPapercraft, setCurrPapercraft] = useState<APIt.Papercraft | null>(
     null
   );
+
+  // queries
   const papercrafts = useQuery(
     ["admin", "papercrafts", { search: currentSearch }],
     () => listPapercrafts({ search: currentSearch })
@@ -37,6 +45,23 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
     ["admin", papercraftKeys.get(currPapercraft?.id || "")],
     () => getPapercraft(currPapercraft!.id),
     { enabled: !!currPapercraft }
+  );
+
+  // mutation for transferring ownership of a papercraft / updating it
+  const queryClient = useQueryClient();
+  const updatePapercraftMutation = useMutation(
+    async ({ id, input }: { id: string; input: Partial<APIt.Papercraft> }) => {
+      return updatePapercraft(id, input);
+    },
+    {
+      onSuccess: (papercraft) => {
+        queryClient.invalidateQueries(["admin", papercraftKeys.lists]);
+        queryClient.invalidateQueries([
+          "admin",
+          papercraftKeys.get(papercraft[0].id),
+        ]);
+      },
+    }
   );
 
   return (
@@ -95,6 +120,45 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
           ) : (
             <div>SELECT A PAPERCRAFT TO SHOW IT HERE</div>
           )}
+          {activeProfile ? (
+            <div className={s.profile_container}>
+              SELECTED PROFILE
+              <div className={s.profile_picture}>
+                <OptimizedImage
+                  src={activeProfile.avatar_url}
+                  className={s.inner_image}
+                  sizes={`200px`}
+                />
+              </div>
+              <div className={s.result_username}>@{activeProfile.username}</div>
+              {activeProfile.name}
+              <div
+                className={`${s.action_button} ${
+                  currPapercraft &&
+                  currPapercraft.user_id !== activeProfile.id &&
+                  !updatePapercraftMutation.isLoading
+                    ? ""
+                    : "disabled"
+                }`}
+                onClick={() => {
+                  if (!currPapercraft) return;
+                  updatePapercraftMutation.mutate({
+                    id: currPapercraft.id,
+                    input: { user_id: activeProfile.id },
+                  });
+                }}
+              >
+                TRANSFER
+                <br />
+                OWNERSHIP
+              </div>
+              <div className={s.action_button_note}>
+                makes @{activeProfile.username} the designer of this papercraft.
+                use this for moving archived papercrafts into their respective
+                designers' profiles.
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </>

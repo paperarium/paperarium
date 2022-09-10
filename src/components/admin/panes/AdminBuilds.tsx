@@ -1,12 +1,21 @@
 import { supabaseServerClient } from "@supabase/auth-helpers-nextjs";
-import { QueryClient, useQuery } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
 import { AdminPaneProps } from "..";
 import * as APIt from "../../../supabase/types";
 import s from "../../../styles/admin/Admin.module.scss";
-import { buildKeys, listBuilds } from "../../../supabase/api/builds";
+import {
+  buildKeys,
+  listBuilds,
+  updateBuild,
+} from "../../../supabase/api/builds";
 import OptimizedImage from "../../OptimizedImage/OptimizedImage";
 import PapercraftDisplay from "../../PapercraftDisplay/PapercraftDisplay";
 import {
@@ -26,6 +35,8 @@ const AdminBuildsPane: React.FC<AdminPaneProps> = ({
   const [search, setSearch] = useState<string>("");
   const [currentSearch, setCurrentSearch] = useState<string>(search);
   const [currBuild, setCurrBuild] = useState<APIt.Build | null>(null);
+
+  // queries
   const builds = useQuery(
     ["admin", ...buildKeys.list({ search: currentSearch })],
     () => listBuilds({ search: currentSearch })
@@ -34,6 +45,23 @@ const AdminBuildsPane: React.FC<AdminPaneProps> = ({
     ["admin", papercraftKeys.get(currBuild?.papercraft_id || "")],
     () => getPapercraft(currBuild!.papercraft_id),
     { enabled: !!currBuild }
+  );
+
+  // mutation for transferring ownership of a build / updating it
+  const queryClient = useQueryClient();
+  const updateBuildMutation = useMutation(
+    async ({ id, input }: { id: string; input: Partial<APIt.Papercraft> }) => {
+      return updateBuild(id, input);
+    },
+    {
+      onSuccess: (build) => {
+        queryClient.invalidateQueries(["admin", buildKeys.lists]);
+        queryClient.invalidateQueries([
+          "admin",
+          papercraftKeys.get(build[0].papercraft_id),
+        ]);
+      },
+    }
   );
 
   return (
@@ -90,6 +118,45 @@ const AdminBuildsPane: React.FC<AdminPaneProps> = ({
           ) : (
             <div>SELECT A BUILD TO SHOW IT HERE</div>
           )}
+          {activeProfile ? (
+            <div className={s.profile_container}>
+              SELECTED PROFILE
+              <div className={s.profile_picture}>
+                <OptimizedImage
+                  src={activeProfile.avatar_url}
+                  className={s.inner_image}
+                  sizes={`200px`}
+                />
+              </div>
+              <div className={s.result_username}>@{activeProfile.username}</div>
+              {activeProfile.name}
+              <div
+                className={`${s.action_button} ${
+                  currBuild &&
+                  currBuild.user_id !== activeProfile.id &&
+                  !updateBuildMutation.isLoading
+                    ? ""
+                    : "disabled"
+                }`}
+                onClick={() => {
+                  if (!currBuild) return;
+                  updateBuildMutation.mutate({
+                    id: currBuild.id,
+                    input: { user_id: activeProfile.id },
+                  });
+                }}
+              >
+                TRANSFER
+                <br />
+                OWNERSHIP
+              </div>
+              <div className={s.action_button_note}>
+                makes @{activeProfile.username} the creator of this build.
+                use this for moving archived papercrafts into their respective
+                builders' profiles.
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </>
