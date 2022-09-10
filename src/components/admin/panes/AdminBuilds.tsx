@@ -153,7 +153,7 @@ const AdminBuildsPane: React.FC<AdminPaneProps> = ({
               <div className={s.action_button_note}>
                 makes @{activeProfile.username} the creator of this build.
                 use this for moving archived papercrafts into their respective
-                builders' profiles.
+                builders&apos; profiles.
               </div>
             </div>
           ) : null}

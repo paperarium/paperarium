@@ -155,7 +155,7 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
               <div className={s.action_button_note}>
                 makes @{activeProfile.username} the designer of this papercraft.
                 use this for moving archived papercrafts into their respective
-                designers' profiles.
+                designers&apos; profiles.
               </div>
             </div>
           ) : null}
