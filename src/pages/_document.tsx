@@ -5,6 +5,7 @@
  * 2022 papercraft club
  */
 import { Html, Head, Main, NextScript } from "next/document";
+import Script from "next/script";
 import { useEffect, useState } from "react";
 
 export default function Document() {
@@ -86,13 +87,20 @@ export default function Document() {
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#000000" />
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="theme-color" content="#ffffff"></meta>
-        {/* <Script
-          type="text/javascript"
-          src="https://app.termly.io/embed.min.js"
-          data-auto-block="on"
-          data-website-uuid="f2ea0f83-ff36-4cd4-8567-feb699b6a45e"
-          strategy="beforeInteractive"
-        /> */}
+
+        {/* <!-- Scripts --> */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}');
+        `}
+        </Script>
       </Head>
       <body>
         <Main />
