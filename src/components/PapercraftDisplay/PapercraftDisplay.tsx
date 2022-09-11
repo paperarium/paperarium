@@ -28,7 +28,7 @@ type PapercraftDisplayProps = {
 };
 
 const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
-  function PapercraftCard({ papercraft, preview }) {
+  function PapercraftDisplay({ papercraft, preview }) {
     const router = useRouter();
     return (
       <div className={s.container}>
@@ -56,12 +56,18 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               minRows={3}
               readOnly={true}
             ></TextareaAutosize>
-            {papercraft.xlink ? 
-            <div className={s.xlink_container}>
-              <a href={papercraft.xlink} target="_blank" rel="noopener noreferrer">
-                {"> "}Original link <i>({new URL(papercraft.xlink).hostname})</i>
-              </a>
-            </div> : null}
+            {papercraft.xlink ? (
+              <div className={s.xlink_container}>
+                <a
+                  href={papercraft.xlink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {"> "}Original link{" "}
+                  <i>({new URL(papercraft.xlink).hostname})</i>
+                </a>
+              </div>
+            ) : null}
             <div className={s.more_info_container}>
               <div className={s.info_col}>
                 <div className={s.tags_row}>
@@ -112,30 +118,43 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                     </a>
                   </Link>
                 </div>
-                {papercraft.display_build ? (
+                {papercraft.display_build &&
+                papercraft.user.id !== papercraft.display_build.user_id ? (
                   <div className={s.profile_container}>
                     <div className={s.container_note}>BUILT BY</div>
-                    <div className={s.profile_picture}>
-                      {papercraft.display_build.user.avatar_url ? (
-                        <OptimizedImage
-                          src={papercraft.display_build.user.avatar_url}
-                          sizes={"20vw"}
-                          className={s.profile_pic_image}
-                        />
-                      ) : null}
-                    </div>
-                    <div className={s.profile_name}>
-                      <span className={s.user_name}>
-                        @{papercraft.display_build.user.username}
-                      </span>
-                      <span>
-                        {papercraft.display_build.user.builds[0].count} builds
-                      </span>
-                      <span>
-                        {papercraft.display_build.user.papercrafts[0].count}{" "}
-                        papercrafts
-                      </span>
-                    </div>
+                    <Link
+                      href={`/profile/${papercraft.display_build.user.username}`}
+                      passHref
+                    >
+                      <a>
+                        <div className={s.profile_picture}>
+                          {papercraft.display_build.user.avatar_url ? (
+                            <OptimizedImage
+                              src={papercraft.display_build.user.avatar_url}
+                              sizes={"20vw"}
+                              className={s.profile_pic_image}
+                            />
+                          ) : null}
+                        </div>
+                      </a>
+                    </Link>
+                    <Link
+                      href={`/profile/${papercraft.display_build.user.username}`}
+                      passHref
+                    >
+                      <a className={s.profile_name}>
+                        <span className={s.user_name}>
+                          @{papercraft.display_build.user.username}
+                        </span>
+                        <span>
+                          {papercraft.display_build.user.builds[0].count} builds
+                        </span>
+                        <span>
+                          {papercraft.display_build.user.papercrafts[0].count}{" "}
+                          papercrafts
+                        </span>
+                      </a>
+                    </Link>
                   </div>
                 ) : null}
               </div>

@@ -83,6 +83,20 @@ export const createBuild = async (
   return builds;
 };
 
+/**
+ * Updates a build in the supabase database.
+ * @param input
+ * @returns
+ */
+export const updateBuild = async (id: string, input: Partial<APIt.Build>) => {
+  const { data: builds, error } = await supabaseClient
+    .from<APIt.Build>("builds")
+    .update(input)
+    .match({ id });
+  if (error) throw error;
+  return builds;
+};
+
 /* -------------------------------------------------------------------------- */
 /*                                 KEY FACTORY                                */
 /* -------------------------------------------------------------------------- */

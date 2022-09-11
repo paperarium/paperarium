@@ -38,19 +38,10 @@ import { useRouter } from "next/router";
 import { uploadFile, uploadImageFile } from "../../util/uploadFile";
 import { createBuild } from "../../supabase/api/builds";
 import { getSelf } from "../../supabase/api/profiles";
+import { listTags } from "../../supabase/api/tags";
 
-const fetchTags = debounce(
-  async (search: string): Promise<APIt.Tag[]> => {
-    const { data: tags, error } = await supabaseClient
-      .from<APIt.Tag>("tags")
-      .select("*")
-      .filter("code", "like", `%${search}%`);
-    if (error) throw error;
-    return tags;
-  },
-  300,
-  { maxWait: 1200 }
-);
+// debounce the fetch tags function
+const fetchTags = debounce(listTags, 300, { maxWait: 1200 });
 
 const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
   // router to redirect on submissions success
@@ -382,7 +373,7 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
                 </div>
                 <AsyncSelect
                   isMulti
-                  loadOptions={async (search: string) => fetchTags(search)}
+                  loadOptions={async (search: string) => fetchTags({ search })}
                   className={s.tag_select}
                   getOptionLabel={(option: unknown) =>
                     (option as APIt.Tag).name

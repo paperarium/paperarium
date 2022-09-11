@@ -4,6 +4,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
 import { AdminPane, AdminPaneProps, ADMIN_PANES } from "../../components/admin";
+import OptimizedImage from "../../components/OptimizedImage/OptimizedImage";
 import s from "../../styles/admin/Admin.module.scss";
 import * as APIt from "../../supabase/types";
 
@@ -13,14 +14,14 @@ import * as APIt from "../../supabase/types";
  */
 const AdminPage: NextPage = () => {
   // keep track of a "standin" user for uploading federated crafts
-  const [currProfile, setCurrProfile] = useState<APIt.Profile | null>(null);
+  const [activeProfile, setActiveProfile] = useState<APIt.Profile | null>(null);
 
   // stateful manages which pane is open
   const [activePane, setActivePane] = useState<AdminPane>(AdminPane.Profile);
   const { pane: Pane } = ADMIN_PANES[activePane];
   const adminPaneProps: AdminPaneProps = {
-    currProfile,
-    setCurrProfile,
+    activeProfile,
+    setActiveProfile,
   };
 
   return (
@@ -44,7 +45,7 @@ const AdminPage: NextPage = () => {
           ))}
         </div>
         <div className={s.pane}>
-          <Pane {...adminPaneProps} />
+          <Pane {...adminPaneProps}></Pane>
         </div>
       </div>
     </>
