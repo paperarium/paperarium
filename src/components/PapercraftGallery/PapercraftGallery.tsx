@@ -37,6 +37,8 @@ type PapercraftGalleryProps = {
   children?: React.ReactNode;
   breakPointOverride?: MasonryProps["breakpointCols"];
   username?: string;
+  collective?: string;
+  disabled?: boolean;
 };
 
 /* --------------------------------- layout --------------------------------- */
@@ -84,7 +86,12 @@ const ENTITY_MAP: { [key in EntityType]: EntityMeta } = {
 /* -------------------------------------------------------------------------- */
 
 const PapercraftGallery: React.FC<PapercraftGalleryProps> =
-  function PapercraftGallery({ breakPointOverride, username }) {
+  function PapercraftGallery({
+    breakPointOverride,
+    username,
+    collective,
+    disabled,
+  }) {
     // refs
     const loadingOverlayRef = useRef<HTMLDivElement>(null);
 
@@ -94,10 +101,11 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
       EntityType.Papercrafts
     );
     const [currentSearch, setCurrentSearch] = useState<string>("");
-    const params = { search: currentSearch, username };
+    const params = { search: currentSearch, username, collective };
     const entities = useQuery<APIt.Papercraft[] | APIt.Build[]>(
       ENTITY_MAP[entityType].keys.list(params),
-      () => ENTITY_MAP[entityType].query(params)
+      () => ENTITY_MAP[entityType].query(params),
+      { enabled: !disabled }
     );
 
     return (

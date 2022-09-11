@@ -39,6 +39,7 @@ export const getPapercraft = async (pid: string) => {
 type ListPapercraftsQueryVariables = {
   search?: string;
   username?: string;
+  collective?: string;
   tags?: number[];
 };
 
@@ -49,6 +50,7 @@ type ListPapercraftsQueryVariables = {
 export const listPapercrafts = async ({
   search,
   username,
+  collective,
 }: ListPapercraftsQueryVariables) => {
   let req = (
     search
@@ -56,8 +58,15 @@ export const listPapercrafts = async ({
           papercraft_term: search,
         })
       : supabaseClient.from<APIt.Papercraft>("papercrafts")
-  ).select(`*,user:profiles!inner(username,avatar_url),tags:tags(*)`);
+  ).select(`
+    *,
+    user:profiles!inner(username,avatar_url),
+    collective:collectives!${
+      collective ? "inner" : "left"
+    }(titlecode,title,avatar_url),
+    tags:tags(*)`);
   if (username) req = req.eq("profiles.username" as any, username);
+  if (collective) req = req.eq("collectives.titlecode" as any, collective);
   const { data: papercrafts, error } = await req.order("created_at", {
     ascending: false,
   });
@@ -108,7 +117,7 @@ export const updatePapercraft = async (
 export const papercraftKeys = {
   all: ["papercrafts"] as const,
   lists: () => [...papercraftKeys.all, "list"] as const,
-  list: (params: { search: string; username?: string }) =>
+  list: (params: ListPapercraftsQueryVariables) =>
     [...papercraftKeys.lists(), params] as const,
   gets: () => [...papercraftKeys.all, "get"] as const,
   get: (id: string) => [...papercraftKeys.gets(), id] as const,
