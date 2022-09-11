@@ -269,8 +269,8 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
         updated_at: "",
         ...user,
         ...(profile ? profile : {}),
-        papercrafts: [{ count: 1 }],
-        builds: [{ count: 1 }],
+        n_papercrafts: [{ count: 1 }],
+        n_builds: [{ count: 1 }],
       },
       tags: tags,
     };
