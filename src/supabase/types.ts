@@ -48,6 +48,8 @@ export interface Papercraft {
   verified: boolean;
   build_id?: string;
   display_build?: Build;
+  collective_id?: number;
+  collective?: Collective;
   user: Profile;
   tags: Tag[];
 }
@@ -80,6 +82,33 @@ export type Announcement = {
 };
 
 export type BuildInput = PartialBy<Build, RowMetadata | "papercraft">;
+
+/* -------------------------------------------------------------------------- */
+/*                                 COLLECTIVES                                */
+/* -------------------------------------------------------------------------- */
+
+export interface Collective {
+  id: number;
+  created_at?: string;
+  title: string;
+  description: string;
+  titlecode: string;
+  xlink?: string;
+  avatar_url?: string;
+  members: Profile[];
+  papercrafts: Papercraft[];
+}
+
+export type CollectivesProfiles = {
+  id: number;
+  profile_id: string;
+  collective_id: number;
+};
+
+export type CollectiveInput = PartialBy<
+  Collective,
+  "id" | "created_at" | "members" | "papercrafts"
+>;
 
 /* -------------------------------------------------------------------------- */
 /*                                    TAGS                                    */
