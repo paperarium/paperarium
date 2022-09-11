@@ -23,8 +23,8 @@ export const getSelf = async (id: string) => {
     .select(
       `
       *,
-      papercrafts(count),
-      builds(count)`
+      n_papercrafts:papercrafts(count),
+      n_builds:builds(count)`
     )
     .eq("id", id);
   if (error) throw error;
@@ -41,8 +41,8 @@ export const getProfile = async (username: string) => {
     .select(
       `
       *,
-      papercrafts(count),
-      builds(count)`
+      n_papercrafts:papercrafts(count),
+      n_builds:builds(count)`
     )
     .eq("username", username);
   if (error) throw error;

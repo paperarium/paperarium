@@ -11,10 +11,7 @@ import OptimizedImage from "../../OptimizedImage/OptimizedImage";
  * The home page for admin collective activities
  * @returns
  */
-const AdminCollectivesPane: React.FC<AdminPaneProps> = ({
-  currProfile,
-  setCurrProfile,
-}) => {
+const AdminCollectivesPane: React.FC<AdminPaneProps> = () => {
   // search for collectives
   const [search, setSearch] = useState<string>("");
   const [currentSearch, setCurrentSearch] = useState<string>(search);
@@ -71,6 +68,12 @@ const AdminCollectivesPane: React.FC<AdminPaneProps> = ({
                     {collective.title}
                     <div className={s.result_username}>
                       @{collective.titlecode}
+                    </div>
+                    <div className={s.result_username}>
+                      {collective.n_members[0].count}{" "}members
+                    </div>
+                    <div className={s.result_username}>
+                      {collective.n_papercrafts[0].count}{" "}papercrafts
                     </div>
                   </div>
                 ))

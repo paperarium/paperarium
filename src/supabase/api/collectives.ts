@@ -25,7 +25,8 @@ export const getCollective = async (titlecode: string) => {
     .select(
       `
       *,
-      members:profiles(id,username,avatar_url,builds(count),papercrafts(count))
+      n_members:collectives_profiles(count),
+      n_papercrafts:papercrafts(count)
     `
     )
     .eq("titlecode", titlecode);
@@ -47,11 +48,13 @@ export const listCollectives = async ({
   let req = (
     search
       ? supabaseClient.rpc<APIt.Collective>("search_collectives", {
-          papercraft_term: search,
+          collective_term: search,
         })
       : supabaseClient.from<APIt.Collective>("collectives")
   ).select(
-    `*,members:profiles!inner(id,username,avatar_url),papercrafts(count)`
+    `*,
+    n_members:collectives_profiles(count),
+    n_papercrafts:papercrafts(count)`
   );
   const { data: collectives, error } = await req.order("created_at", {
     ascending: false,

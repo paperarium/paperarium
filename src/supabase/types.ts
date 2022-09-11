@@ -8,6 +8,7 @@
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
 type RowMetadata = "id" | "created_at" | "updated_at" | "user";
+type QueryCount = { count: number }[];
 
 /* -------------------------------------------------------------------------- */
 /*                                   PROFILE                                  */
@@ -20,8 +21,8 @@ export type Profile = {
   website?: string;
   about?: string;
   avatar_url?: string;
-  papercrafts: { count: number }[];
-  builds: { count: number }[];
+  n_papercrafts: QueryCount;
+  n_builds: QueryCount;
   created_at: string;
   updated_at: string;
 };
@@ -95,8 +96,8 @@ export interface Collective {
   titlecode: string;
   xlink?: string;
   avatar_url?: string;
-  members: Profile[];
-  papercrafts: Papercraft[];
+  n_members: QueryCount;
+  n_papercrafts: QueryCount;
 }
 
 export type CollectivesProfiles = {
@@ -107,7 +108,7 @@ export type CollectivesProfiles = {
 
 export type CollectiveInput = PartialBy<
   Collective,
-  "id" | "created_at" | "members" | "papercrafts"
+  "id" | "created_at" | "n_members" | "n_papercrafts"
 >;
 
 /* -------------------------------------------------------------------------- */

@@ -111,9 +111,9 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                       <span className={s.user_name}>
                         @{papercraft.user.username}
                       </span>
-                      <span>{papercraft.user.builds[0].count} builds</span>
+                      <span>{papercraft.user.n_builds[0].count} builds</span>
                       <span>
-                        {papercraft.user.papercrafts[0].count} papercrafts
+                        {papercraft.user.n_papercrafts[0].count} papercrafts
                       </span>
                     </a>
                   </Link>
@@ -147,10 +147,48 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                           @{papercraft.display_build.user.username}
                         </span>
                         <span>
-                          {papercraft.display_build.user.builds[0].count} builds
+                          {papercraft.display_build.user.n_builds[0].count} builds
                         </span>
                         <span>
-                          {papercraft.display_build.user.papercrafts[0].count}{" "}
+                          {papercraft.display_build.user.n_papercrafts[0].count}{" "}
+                          papercrafts
+                        </span>
+                      </a>
+                    </Link>
+                  </div>
+                ) : null}
+                {papercraft.collective ? (
+                  <div className={s.profile_container}>
+                    <div className={s.container_note}>THROUGH COLLECTIVE</div>
+                    <Link
+                      href={`/collectives/${papercraft.collective.titlecode}`}
+                      passHref
+                    >
+                      <a>
+                        <div className={s.profile_picture}>
+                          {papercraft.collective.avatar_url ? (
+                            <OptimizedImage
+                              src={papercraft.collective.avatar_url}
+                              sizes={"20vw"}
+                              className={s.profile_pic_image}
+                            />
+                          ) : null}
+                        </div>
+                      </a>
+                    </Link>
+                    <Link
+                      href={`/collectives/${papercraft.collective.titlecode}`}
+                      passHref
+                    >
+                      <a className={s.profile_name}>
+                        <span className={s.user_name}>
+                          @{papercraft.collective.titlecode}
+                        </span>
+                        <span>
+                          {papercraft.collective.n_members[0].count} members
+                        </span>
+                        <span>
+                          {papercraft.collective.n_papercrafts[0].count}{" "}
                           papercrafts
                         </span>
                       </a>
