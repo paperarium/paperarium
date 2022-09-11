@@ -5,24 +5,16 @@
  * 2022 the nobot space,
  */
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
-import {
-  GetStaticPaths,
-  GetStaticProps,
-  NextPage,
-  NextPageContext,
-} from "next";
+import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "node:querystring";
 import { CSSTransition } from "react-transition-group";
-import { useRef, useState } from "react";
-import { getProfile } from "../../supabase/api/profiles";
-import es from "../../styles/Explore.module.scss";
+import { useRef } from "react";
+import { getProfile, profileKeys } from "../../supabase/api/profiles";
 import s from "../../styles/profile/Profile.module.scss";
 import PapercraftGallery from "../../components/PapercraftGallery/PapercraftGallery";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { AiOutlineDownSquare } from "react-icons/ai";
-import PapercraftCard from "../../components/PapercraftCard/PapercraftCard";
 import {
   listPapercrafts,
   papercraftKeys,
@@ -31,7 +23,6 @@ import Layout from "../../components/Layout/Layout";
 import { useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import OptimizedImage from "../../components/OptimizedImage/OptimizedImage";
-import FilterBar from "../../components/FilterBar/FilterBar";
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPING                                   */
@@ -53,20 +44,15 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
   // use a fallback loading indicator
   const router = useRouter();
   const { user } = useUser();
-  const loadingOverlayRef = useRef<HTMLDivElement>(null);
   const seeFallback = useRef(router.isFallback);
   const fallbackRef = useRef<HTMLDivElement>(null);
-  const [search, setSearch] = useState<string>("");
-  const [currentSearch, setCurrentSearch] = useState<string>(search);
   // get the user's profile and papercrafts
-  const profile = useQuery(["profile", username], () => getProfile(username), {
-    enabled: !!username,
-  });
-  // get the cached papercraft query. we will also re-get the papercraft likes
-  const papercrafts = useQuery(
-    ["papercrafts", { search: currentSearch, username }],
-    () => listPapercrafts({ search: currentSearch, username }),
-    { enabled: !!username }
+  const profile = useQuery(
+    profileKeys.get(username),
+    () => getProfile(username),
+    {
+      enabled: !!username,
+    }
   );
 
   return (
@@ -103,10 +89,10 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
               <div className={s.user_name}>@{username}</div>
               <div className={s.user_real_name}>{profile.data?.name}</div>
               <div className={s.user_stat}>
-                {profile.data?.builds[0].count} builds
+                {profile.data?.n_builds[0].count} builds
               </div>
               <div className={s.user_stat}>
-                {profile.data?.papercrafts[0].count} papercrafts
+                {profile.data?.n_papercrafts[0].count} papercrafts
               </div>
             </div>
           </div>
@@ -184,7 +170,7 @@ export const getStaticProps: GetStaticProps<
   const username = params!.username!;
   const qparams = { search: "", username };
   const requests = [
-    queryClient.prefetchQuery(["profile", username], () =>
+    queryClient.prefetchQuery(profileKeys.get(username), () =>
       getProfile(username)
     ),
     queryClient.prefetchQuery(papercraftKeys.list(qparams), () =>

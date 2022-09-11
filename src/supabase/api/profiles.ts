@@ -89,3 +89,16 @@ export const updateProfile = async (
   if (error) throw error;
   return profiles[0];
 };
+
+/* -------------------------------------------------------------------------- */
+/*                                 KEY FACTORY                                */
+/* -------------------------------------------------------------------------- */
+
+export const profileKeys = {
+  all: ["profiles"] as const,
+  lists: () => [...profileKeys.all, "list"] as const,
+  list: (params: ListProfilesQueryVariables) =>
+    [...profileKeys.lists(), params] as const,
+  gets: () => [...profileKeys.all, "get"] as const,
+  get: (username: string) => [...profileKeys.gets(), username] as const,
+};
