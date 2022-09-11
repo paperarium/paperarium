@@ -62,6 +62,13 @@ const NavMenu: React.FC<NavMenuProps> = function NavMenu({
               <NavLink href={"/about"} onClick={closeMenu}>
                 history
               </NavLink>
+              <NavLink
+                href={"https://forum.paperarium.place"}
+                passHref
+                onClick={closeMenu}
+              >
+                forum
+              </NavLink>
             </div>
             <div className={s.nav_nav_column}>
               {profile ? (
@@ -80,7 +87,9 @@ const NavMenu: React.FC<NavMenuProps> = function NavMenu({
                       <div className={s.profile_name}>
                         <span className={s.user_name}>@{profile.username}</span>
                         <span>{profile.n_builds[0].count} builds</span>
-                        <span>{profile.n_papercrafts[0].count} papercrafts</span>
+                        <span>
+                          {profile.n_papercrafts[0].count} papercrafts
+                        </span>
                       </div>
                     </div>
                   </Link>

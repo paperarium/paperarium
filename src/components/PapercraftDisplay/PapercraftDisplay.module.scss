@@ -341,12 +341,13 @@
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-start;
-  flex: 1;
   gap: 5px;
+  width: 100%;
 
-  // @include respond-to("small") {
-  //   justify-content: flex-end;
-  // }
+  @include respond-to("medium") {
+    width: auto;
+    flex: 1;
+  }
 }
 
 .download_container {

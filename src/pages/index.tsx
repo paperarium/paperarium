@@ -30,6 +30,8 @@ const Home: NextPage = () => {
                   1600: 5,
                   1392: 4,
                   1167: 3,
+                  992: 2,
+                  767: 3,
                   480: 2,
                 }}
               ></PapercraftGallery>

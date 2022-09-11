@@ -162,7 +162,7 @@
   flex: 1;
   gap: 5px;
 
-  @include respond-to("xsmall") {
+  @include respond-to("medium") {
     max-width: 33%;
   }
 }

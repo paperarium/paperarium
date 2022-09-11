@@ -40,10 +40,17 @@ const NavBar: React.FC = function NavBar() {
         </Link>
         <div className={s.links_container}>
           <NavLink href={"/catalog"}>catalog</NavLink>
+          <NavLink href={"https://forum.paperarium.place"} passHref>
+            forum
+          </NavLink>
           <NavLink href={"/howto"}>guides</NavLink>
           <NavLink href={"/about"}>history</NavLink>
         </div>
         <div className={s.spacer}></div>
+        <div className={s.menu} onClick={() => setNavOpen(!navOpen)}>
+          <div className={s.menu_text}>{navOpen ? "CLOSE" : "MENU"}</div>
+          <Hamburger size={20} toggled={navOpen} toggle={setNavOpen} />
+        </div>
         <div className={s.profile_buttons}>
           {profile ? (
             <>
@@ -77,10 +84,6 @@ const NavBar: React.FC = function NavBar() {
               </Link>
             </>
           )}
-        </div>
-        <div className={s.menu} onClick={() => setNavOpen(!navOpen)}>
-          <div className={s.menu_text}>{navOpen ? "CLOSE" : "MENU"}</div>
-          <Hamburger size={20} toggled={navOpen} toggle={setNavOpen} />
         </div>
       </nav>
     </>

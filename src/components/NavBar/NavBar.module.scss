@@ -61,7 +61,7 @@
   align-items: center;
   gap: 5px;
 
-  @include respond-to("small") {
+  @include respond-to("medium") {
     display: flex;
   }
 
@@ -84,7 +84,7 @@
   // transform: translate(11px, -11px);
   cursor: pointer;
 
-  @include respond-to("small") {
+  @include respond-to("medium") {
     display: none;
   }
 }
@@ -94,7 +94,7 @@
   @include respond-to("xsmall") {
     display: block;
   }
-  @include respond-to("small") {
+  @include respond-to("medium") {
     display: none;
   }
 }
