@@ -46,11 +46,13 @@
 }
 
 .menu_content {
-  height: 300px;
   width: 100%;
-  padding: 10px;
   opacity: 0;
   background-color: $background;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   div[class~="enter-active"] > & {
     opacity: 1;
@@ -119,6 +121,11 @@
     background-color: $foreground;
     color: $background;
   }
+
+  &[class~="active"] {
+    background-color: $foreground;
+    color: $background;
+  }
 }
 
 @keyframes fadeleft {
@@ -156,5 +163,83 @@
 
   & > svg:hover {
     transform: rotate(10deg);
+  }
+}
+
+.tags_row {
+  position: relative;
+  height: $search_bar_visible_height;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  overflow: hidden;
+  gap: 5px;
+  padding: 5px;
+
+  &:last-of-type {
+    padding-top: 0px;
+    height: calc($search_bar_visible_height - 5px);
+  }
+
+  & input {
+    margin-left: 0px;
+  }
+}
+
+.tag_row_container {
+  @extend .tags_row;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  padding: 0px 5px;
+  overflow-x: scroll;
+  align-items: flex-start;
+}
+
+@keyframes fadeup {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+.tag {
+  border: $border;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  border-radius: 5px;
+  white-space: nowrap;
+  cursor: pointer;
+  letter-spacing: -1px;
+  animation: fadeup 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
+  gap: 5px;
+
+  & i {
+    opacity: 0.4;
+  }
+
+  &:hover {
+    border: 1px solid $foreground;
+  }
+
+  &[class~="active"] {
+    background-color: $foreground;
+    color: $background;
+  }
+
+  & path {
+    stroke: white !important;
   }
 }

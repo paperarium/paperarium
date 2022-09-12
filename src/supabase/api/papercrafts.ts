@@ -51,6 +51,7 @@ export const listPapercrafts = async ({
   search,
   username,
   collective,
+  tags,
 }: ListPapercraftsQueryVariables) => {
   let req = (
     search
@@ -64,7 +65,8 @@ export const listPapercrafts = async ({
     collective:collectives!${
       collective ? "inner" : "left"
     }(titlecode,title,avatar_url),
-    tags:tags(*)`);
+    tags!inner(id,name,code)`);
+  if (tags) req = req.in("tags.id" as any, tags);
   if (username) req = req.eq("profiles.username" as any, username);
   if (collective) req = req.eq("collectives.titlecode" as any, collective);
   const { data: papercrafts, error } = await req.order("created_at", {

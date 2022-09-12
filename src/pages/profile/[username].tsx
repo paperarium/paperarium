@@ -116,6 +116,7 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
         </div>
         <div className={s.main_grid}>
           <PapercraftGallery
+            user_id={profile.data?.id}
             breakPointOverride={{
               default: 5,
               2900: 7,

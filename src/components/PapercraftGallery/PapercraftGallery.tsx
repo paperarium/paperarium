@@ -37,6 +37,7 @@ type PapercraftGalleryProps = {
   children?: React.ReactNode;
   breakPointOverride?: MasonryProps["breakpointCols"];
   username?: string;
+  user_id?: string;
   collective?: string;
   disabled?: boolean;
 };
@@ -89,6 +90,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
   function PapercraftGallery({
     breakPointOverride,
     username,
+    user_id,
     collective,
     disabled,
   }) {
@@ -101,7 +103,13 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
       EntityType.Papercrafts
     );
     const [currentSearch, setCurrentSearch] = useState<string>("");
-    const params = { search: currentSearch, username, collective };
+    const [currentTags, setCurrentTags] = useState<APIt.Tag[]>([]);
+    const params = {
+      search: currentSearch,
+      username,
+      collective,
+      tags: currentTags.length > 0 ? currentTags.map(({ id }) => id) : undefined,
+    };
     const entities = useQuery<APIt.Papercraft[] | APIt.Build[]>(
       ENTITY_MAP[entityType].keys.list(params),
       () => ENTITY_MAP[entityType].query(params),
@@ -137,6 +145,9 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
         </div>
         <div className={s.container}>
           <FilterBar
+            user_id={user_id}
+            currentTags={currentTags}
+            submitTags={setCurrentTags}
             currentSearch={currentSearch}
             submitSearch={setCurrentSearch}
           />

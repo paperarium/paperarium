@@ -307,13 +307,9 @@
   align-items: flex-start;
   flex-direction: column;
   color: $foreground2;
-
-  @include respond-to("xsmall") {
-    text-align: left;
-    width: auto;
-    padding: 5px 0px;
-    margin-left: 8px;
-  }
+  margin-left: 8px;
+  text-align: left;
+  padding: 5px 0px;
 }
 
 .user_name {

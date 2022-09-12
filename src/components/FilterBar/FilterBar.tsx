@@ -9,27 +9,109 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { BsFilterCircle, BsFilterCircleFill } from "react-icons/bs";
 import { CSSTransition } from "react-transition-group";
 import s from "./FilterBar.module.scss";
+import * as APIt from "../../supabase/types";
 import { GrClose } from "react-icons/gr";
+import { useQuery } from "@tanstack/react-query";
+import {
+  listTags,
+  ListTagsQueryVariables,
+  tagsKeys,
+} from "../../supabase/api/tags";
 
 type FilterBarProps = {
+  user_id?: string;
+  currentTags: APIt.Tag[];
+  submitTags: (newTags: APIt.Tag[]) => void;
   currentSearch?: string;
   submitSearch: (search: string) => void;
 };
 
 const FilterBar: React.FC<FilterBarProps> = function FilterBar({
+  currentTags,
+  submitTags,
   currentSearch,
   submitSearch,
+  user_id
 }) {
   // statefuls
   const menuRef = useRef<HTMLDivElement>(null);
   const [search, setSearch] = useState("");
+  const [tagSearch, setTagSearch] = useState("");
   const [expanded, setExpanded] = useState(false);
+  // list tags
+  const qparams: ListTagsQueryVariables = { search: tagSearch, user_id };
+  const tags = useQuery<APIt.Tag[]>(tagsKeys.list(qparams), () =>
+    listTags(qparams)
+  );
 
   return (
     <div className={s.container}>
       <CSSTransition appear in={expanded} nodeRef={menuRef} timeout={300}>
         <div className={s.menu} ref={menuRef}>
-          <div className={s.menu_content}>HHI</div>
+          <div className={s.menu_content}>
+            <div className={s.tags_row}>
+              <input
+                type="text"
+                className={s.search_input}
+                placeholder="Search for a tag"
+                autoCorrect={"off"}
+                autoCapitalize={"off"}
+                spellCheck={false}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    setTagSearch((e.target as HTMLInputElement).value);
+                  }
+                }}
+              />
+              <div className={s.search_icon}>
+                <AiOutlineSearch />
+              </div>
+            </div>
+            <div className={s.tags_row}>
+              <div className={s.tag_row_container}>
+                {currentTags.map((tag, i) => (
+                  <div
+                    key={tag.id}
+                    className={`${s.tag} active`}
+                    onClick={() => {
+                      const newTags = [...currentTags];
+                      newTags.splice(i, 1);
+                      submitTags(newTags);
+                    }}
+                  >
+                    <>
+                      <GrClose />
+                      {tag.name} <i>({tag.n_papercrafts})</i>
+                    </>
+                  </div>
+                ))}
+                {tags.data
+                  ? tags.data.reduce<JSX.Element[]>((acc, tag) => {
+                      if (
+                        currentTags.findIndex(
+                          ({ id: e_id }) => e_id == tag.id
+                        ) !== -1
+                      )
+                        return acc;
+                      acc.push(
+                        <div
+                          key={tag.id}
+                          className={s.tag}
+                          onClick={() => {
+                            submitTags([...currentTags, tag]);
+                          }}
+                        >
+                          <>
+                            {tag.name} <i>({tag.n_papercrafts})</i>
+                          </>
+                        </div>
+                      );
+                      return acc;
+                    }, [])
+                  : null}
+              </div>
+            </div>
+          </div>
           <div className={s.visible_bar}>
             <input
               type="text"
@@ -50,10 +132,10 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
               <AiOutlineSearch />
             </div>
             <div
-              className={s.filter_button}
+              className={`${s.filter_button} ${expanded ? 'active' : ''}`}
               onClick={() => setExpanded(!expanded)}
             >
-              FILTER
+              TAGS
               {expanded ? <BsFilterCircleFill /> : <BsFilterCircle />}
             </div>
           </div>
@@ -74,4 +156,4 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
   );
 };
 
-export default FilterBar;
+export default React.memo(FilterBar);

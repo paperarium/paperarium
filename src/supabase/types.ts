@@ -125,6 +125,7 @@ export type Tag = {
   id: number;
   name: string;
   code: string;
+  n_papercrafts: number;
 };
 
 export type PapercraftsTagsInput = Omit<PapercraftsTags, "id">;

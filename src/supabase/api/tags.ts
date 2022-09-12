@@ -14,22 +14,26 @@ import * as APIt from "../types";
 /*                                   QUERIES                                  */
 /* -------------------------------------------------------------------------- */
 
-type ListTagsQueryVariables = {
+export type ListTagsQueryVariables = {
   search?: string;
-  count?: "papercrafts" | "builds";
+  user_id?: string;
 };
 
 /**
  * Lists the papercrafts from the supabase database.
  * @returns A list of papercrafts
  */
-export const listTags = async ({ search }: ListTagsQueryVariables) => {
-  let req = search
-    ? supabaseClient.rpc<APIt.Tag>("search_tags", {
-        tag_term: search,
+export const listTags = async ({ search, user_id }: ListTagsQueryVariables) => {
+  let req = user_id
+    ? supabaseClient.rpc<APIt.Tag>("search_tags_user", {
+        tag_term: search || "",
+        p_user_id: user_id,
       })
-    : supabaseClient.from<APIt.Tag>("tags");
-  const { data: tags, error } = await req.select(`*`);
+    : supabaseClient.rpc<APIt.Tag>("search_tags", {
+        tag_term: search || "",
+      });
+  req = req.select(`*`);
+  const { data: tags, error } = await req;
   if (error) throw error;
   return tags;
 };
