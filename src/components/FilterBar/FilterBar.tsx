@@ -17,6 +17,7 @@ import {
   ListTagsQueryVariables,
   tagsKeys,
 } from "../../supabase/api/tags";
+import { IoPricetagOutline } from "react-icons/io5";
 
 type FilterBarProps = {
   user_id?: string;
@@ -31,7 +32,7 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
   submitTags,
   currentSearch,
   submitSearch,
-  user_id
+  user_id,
 }) {
   // statefuls
   const menuRef = useRef<HTMLDivElement>(null);
@@ -69,34 +70,19 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
             </div>
             <div className={s.tags_row}>
               <div className={s.tag_row_container}>
-                {currentTags.map((tag, i) => (
-                  <div
-                    key={tag.id}
-                    className={`${s.tag} active`}
-                    onClick={() => {
-                      const newTags = [...currentTags];
-                      newTags.splice(i, 1);
-                      submitTags(newTags);
-                    }}
-                  >
-                    <>
-                      <GrClose />
-                      {tag.name} <i>({tag.n_papercrafts})</i>
-                    </>
-                  </div>
-                ))}
                 {tags.data
-                  ? tags.data.reduce<JSX.Element[]>((acc, tag) => {
+                  ? tags.data.map((tag) => {
+                      let active = "";
                       if (
                         currentTags.findIndex(
                           ({ id: e_id }) => e_id == tag.id
                         ) !== -1
                       )
-                        return acc;
-                      acc.push(
+                        active = "active";
+                      return (
                         <div
                           key={tag.id}
-                          className={s.tag}
+                          className={`${s.tag} ${active}`}
                           onClick={() => {
                             submitTags([...currentTags, tag]);
                           }}
@@ -106,8 +92,7 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
                           </>
                         </div>
                       );
-                      return acc;
-                    }, [])
+                    })
                   : null}
               </div>
             </div>
@@ -132,24 +117,43 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
               <AiOutlineSearch />
             </div>
             <div
-              className={`${s.filter_button} ${expanded ? 'active' : ''}`}
+              className={`${s.filter_button} ${expanded ? "active" : ""}`}
               onClick={() => setExpanded(!expanded)}
             >
               TAGS
               {expanded ? <BsFilterCircleFill /> : <BsFilterCircle />}
             </div>
           </div>
-          {currentSearch ? (
-            <div className={s.search_contents}>
-              <AiOutlineSearch />
-              {currentSearch}
-              <GrClose
+          <div className={s.filter_active_container}>
+            {currentTags.map((tag, i) => (
+              <div
+                key={tag.id}
+                className={s.active_tag}
                 onClick={() => {
-                  submitSearch("");
+                  const newTags = [...currentTags];
+                  newTags.splice(i, 1);
+                  submitTags(newTags);
                 }}
-              />
-            </div>
-          ) : null}
+              >
+                <>
+                  <IoPricetagOutline />
+                  {tag.name} <i>({tag.n_papercrafts})</i>
+                  <GrClose />
+                </>
+              </div>
+            ))}
+            {currentSearch ? (
+              <div className={s.search_contents}>
+                <AiOutlineSearch />
+                {currentSearch}
+                <GrClose
+                  onClick={() => {
+                    submitSearch("");
+                  }}
+                />
+              </div>
+            ) : null}
+          </div>
         </div>
       </CSSTransition>
     </div>

@@ -139,6 +139,18 @@
   }
 }
 
+.filter_active_container {
+  position: absolute;
+  bottom: -5px;
+  right: calc(16px + 5px);
+  transform: translateY(100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: 5px;
+}
+
 .search_contents {
   display: flex;
   flex-direction: row;
@@ -146,10 +158,6 @@
   align-items: center;
   padding: 5px;
   background-color: $background;
-  position: absolute;
-  bottom: -5px;
-  right: calc(16px + 5px);
-  transform: translateY(100%);
   border: $border;
   gap: 5px;
   color: $foreground2;
@@ -238,8 +246,33 @@
     background-color: $foreground;
     color: $background;
   }
+}
+
+.active_tag {
+  border: $border;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  border-radius: 5px;
+  white-space: nowrap;
+  cursor: pointer;
+  letter-spacing: -1px;
+  animation: fadeleft 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
+  gap: 5px;
+  background-color: $background;
+
+  & i {
+    opacity: 0.4;
+  }
+
+  &:hover {
+    border: 1px solid $foreground;
+  }
 
   & path {
-    stroke: white !important;
+    stroke: black !important;
   }
 }
