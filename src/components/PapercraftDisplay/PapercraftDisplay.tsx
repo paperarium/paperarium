@@ -21,6 +21,7 @@ import { Router, useRouter } from "next/router";
 import getPublicUrl from "../../util/getPublicUrl";
 import OptimizedImage from "../OptimizedImage/OptimizedImage";
 import rectifyDateFormat from "../../util/rectifyDateFormat";
+import ProfileLink from "../ProfileLink/ProfileLink";
 
 type PapercraftDisplayProps = {
   papercraft: Papercraft;
@@ -87,75 +88,18 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                     </div>
                   ) : null}
                 </div>
-                <div className={s.profile_container}>
+                <ProfileLink user={papercraft.user} full>
                   <div className={s.container_note}>{`DESIGNED${
                     papercraft.user.id === papercraft.display_build?.user_id
                       ? " AND BUILT"
                       : ""
                   } BY`}</div>
-                  <Link href={`/profile/${papercraft.user.username}`} passHref>
-                    <a>
-                      <div className={s.profile_picture}>
-                        {papercraft.user.avatar_url ? (
-                          <OptimizedImage
-                            src={papercraft.user.avatar_url}
-                            sizes={"20vw"}
-                            className={s.profile_pic_image}
-                          />
-                        ) : null}
-                      </div>
-                    </a>
-                  </Link>
-                  <Link href={`/profile/${papercraft.user.username}`} passHref>
-                    <a className={s.profile_name}>
-                      <span className={s.user_name}>
-                        @{papercraft.user.username}
-                      </span>
-                      <span>{papercraft.user.n_builds[0].count} builds</span>
-                      <span>
-                        {papercraft.user.n_papercrafts[0].count} papercrafts
-                      </span>
-                    </a>
-                  </Link>
-                </div>
+                </ProfileLink>
                 {papercraft.display_build &&
                 papercraft.user.id !== papercraft.display_build.user_id ? (
-                  <div className={s.profile_container}>
+                  <ProfileLink user={papercraft.display_build.user} full>
                     <div className={s.container_note}>BUILT BY</div>
-                    <Link
-                      href={`/profile/${papercraft.display_build.user.username}`}
-                      passHref
-                    >
-                      <a>
-                        <div className={s.profile_picture}>
-                          {papercraft.display_build.user.avatar_url ? (
-                            <OptimizedImage
-                              src={papercraft.display_build.user.avatar_url}
-                              sizes={"20vw"}
-                              className={s.profile_pic_image}
-                            />
-                          ) : null}
-                        </div>
-                      </a>
-                    </Link>
-                    <Link
-                      href={`/profile/${papercraft.display_build.user.username}`}
-                      passHref
-                    >
-                      <a className={s.profile_name}>
-                        <span className={s.user_name}>
-                          @{papercraft.display_build.user.username}
-                        </span>
-                        <span>
-                          {papercraft.display_build.user.n_builds[0].count} builds
-                        </span>
-                        <span>
-                          {papercraft.display_build.user.n_papercrafts[0].count}{" "}
-                          papercrafts
-                        </span>
-                      </a>
-                    </Link>
-                  </div>
+                    </ProfileLink>
                 ) : null}
                 {papercraft.collective ? (
                   <div className={s.profile_container}>

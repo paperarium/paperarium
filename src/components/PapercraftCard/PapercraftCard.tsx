@@ -4,13 +4,14 @@
  * created on Wed Aug 24 2022
  * 2022 the nobot space,
  */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import s from "./PapercraftCard.module.scss";
 import * as APIt from "../../supabase/types";
 import { useRouter } from "next/router";
 import OptimizedImage from "../OptimizedImage/OptimizedImage";
 import Link from "next/link";
 import { EntityType } from "../PapercraftGallery/PapercraftGallery";
+import ProfileLink from "../ProfileLink/ProfileLink";
 
 interface PapercraftCardProps<T extends APIt.Papercraft | APIt.Build> {
   entity: T;
@@ -22,27 +23,26 @@ const PapercraftCard = function PapercraftCard<
   T extends APIt.Papercraft | APIt.Build
 >({ entity, entityType }: PapercraftCardProps<T>) {
   // use router for navigating to page
-  const router = useRouter();
   const [clicked, setClicked] = useState(false);
 
   return (
-    <Link
-      href={
-        entityType === EntityType.Builds
-          ? `/papercrafts/${(entity as APIt.Build).papercraft.id}?build=${
-              entity.id
-            }`
-          : `/papercrafts/${entity.id}`
-      }
-      passHref
-    >
-      <a
-        className={s.container}
-        onClick={() => {
-          setClicked(true);
-        }}
+    <div className={s.inner_container}>
+      <Link
+        href={
+          entityType === EntityType.Builds
+            ? `/papercrafts/${(entity as APIt.Build).papercraft.id}?build=${
+                entity.id
+              }`
+            : `/papercrafts/${entity.id}`
+        }
+        passHref
       >
-        <div className={s.inner_container}>
+        <a
+          // className={s.container}
+          onClick={() => {
+            setClicked(true);
+          }}
+        >
           <div
             className={s.image_container}
             style={{
@@ -69,27 +69,19 @@ const PapercraftCard = function PapercraftCard<
               [σ﹏σ]
             </div>
           </div>
-          <div className={s.info_card}>
-            {/* <div className={s.profile_pic}>
-              {papercraft.user.avatar_url ? 
-              <OptimizedImage
-                src={papercraft.user.avatar_url}
-                sizes={"20vw"}
-                className={s.profile_pic_image} />
-              : null}
-            </div> */}
-            <div className={s.info_col}>
-              <div>
-                {entityType === EntityType.Papercrafts
-                  ? (entity as APIt.Papercraft).title!
-                  : (entity as APIt.Build).papercraft.title}
-              </div>
-              <div className={s.user_name}>@{entity.user.username}</div>
-            </div>
+        </a>
+      </Link>
+      <div className={s.info_card}>
+        <div className={s.info_col}>
+          <div>
+            {entityType === EntityType.Papercrafts
+              ? (entity as APIt.Papercraft).title!
+              : (entity as APIt.Build).papercraft.title}
           </div>
+          <ProfileLink user={entity.user} />
         </div>
-      </a>
-    </Link>
+      </div>
+    </div>
   );
 };
 

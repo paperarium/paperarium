@@ -5,10 +5,7 @@
  * 2022 the nobot space,
  */
 
-import {
-  supabaseClient,
-  supabaseServerClient,
-} from "@supabase/auth-helpers-nextjs";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import * as APIt from "../types";
 
 /* -------------------------------------------------------------------------- */
@@ -25,7 +22,7 @@ export const getPapercraft = async (pid: string) => {
     .select(
       `
       *,
-      user:profiles(id,username,avatar_url,n_builds:builds(count),n_papercrafts:papercrafts(count)),
+      user:profiles(id,username,avatar_url,n_builds:builds(count),n_papercrafts:papercrafts(count),archived),
       display_build:builds!papercrafts_build_id_fkey(id,description,pictures,user_id,user:profiles(username,avatar_url,n_builds:builds(count),n_papercrafts:papercrafts(count))),
       collective:collectives!papercrafts_collective_id_fkey(id,titlecode,title,n_members:collectives_profiles(count),n_papercrafts:papercrafts(count)),
       tags:tags(*)
@@ -61,7 +58,7 @@ export const listPapercrafts = async ({
       : supabaseClient.from<APIt.Papercraft>("papercrafts")
   ).select(`
     *,
-    user:profiles!inner(username,avatar_url),
+    user:profiles!inner(username,avatar_url,archived),
     collective:collectives!${
       collective ? "inner" : "left"
     }(titlecode,title,avatar_url),

@@ -25,6 +25,7 @@ export type Profile = {
   n_builds: QueryCount;
   created_at: string;
   updated_at: string;
+  archived: boolean;
 };
 
 /* -------------------------------------------------------------------------- */
