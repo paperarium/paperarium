@@ -1,0 +1,139 @@
+@import "../mixins";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  padding: 0px;
+  border: $border;
+  border-radius: 5px;
+  position: relative;
+}
+
+.modal_header {
+  padding: 5px 10px;
+  border-bottom: $border;
+  width: 100%;
+  text-align: center;
+}
+
+.tags_holder {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px;
+  gap: 5px;
+}
+
+@keyframes fadeleft {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
+.tags_input_row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  animation: fadeleft 0.3s ease-in-out;
+}
+
+.input_field {
+  flex: 1;
+  border: $border;
+  padding: 5px;
+  border-radius: 5px;
+  outline: none;
+  font-size: 15px;
+  font-family: "FT88";
+  letter-spacing: -1px;
+}
+
+.add_tag_button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border-radius: 5px;
+  padding: 5px;
+  border: 1px dashed $foreground2;
+  opacity: 0.3;
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+  &:hover {
+    transform: scale(0.95);
+  }
+}
+
+.tag_delete_button {
+  padding: 5px;
+  background: $background;
+  border: $border;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.submit_button {
+  width: 100%;
+  padding: 10px;
+  background-color: $foreground;
+  color: $background;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+  &:hover {
+    transform: scale(0.95);
+  }
+  text-align: center;
+}
+
+.loading_overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  font-style: italic;
+  color: #707070;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  pointer-events: none;
+
+  &[class~="enter-active"] {
+    opacity: 1;
+    pointer-events: all;
+  }
+  &[class~="enter-done"] {
+    opacity: 1;
+    pointer-events: all;
+  }
+}

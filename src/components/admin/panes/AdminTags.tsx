@@ -1,20 +1,19 @@
-import {
-  supabaseClient,
-  supabaseServerClient,
-} from "@supabase/auth-helpers-nextjs";
 import * as APIt from "../../../supabase/types";
-import { QueryClient, useQuery } from "@tanstack/react-query";
-import type { NextPage } from "next";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import Head from "next/head";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { AdminPaneProps } from "..";
 import s from "../../../styles/admin/Admin.module.scss";
-import es from "../../../styles/Profile.module.scss";
-import { listProfiles } from "../../../supabase/api/profiles";
-import { listTags, tagsKeys } from "../../../supabase/api/tags";
-import rectifyDateFormat from "../../../util/rectifyDateFormat";
-import FormEditProfile from "../../FormEditProfile/FormEditProfile";
-import OptimizedImage from "../../OptimizedImage/OptimizedImage";
+import s2 from "../../../styles/admin/AdminTags.module.scss";
+import { createTag, listTags, tagsKeys } from "../../../supabase/api/tags";
+import { GrClose } from "react-icons/gr";
+import { CSSTransition } from "react-transition-group";
+
+let nTags = 0;
 
 /**
  * The home page for admin tag activities
@@ -28,6 +27,50 @@ const AdminTagsPane: React.FC<AdminPaneProps> = () => {
   const tags = useQuery(
     ["admin", ...tagsKeys.list({ search: currentSearch })],
     () => listTags({ search: currentSearch })
+  );
+  const [showCreate, setShowCreate] = useState(true);
+  const [createTagsInput, setCreateTagsInput] = useState<APIt.Tag[]>([
+    {
+      id: nTags,
+      name: "",
+      code: "",
+      n_papercrafts: 0,
+    },
+  ]);
+  // function for mutating
+  const queryClient = useQueryClient();
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const createTagsMutation = useMutation(
+    async () => {
+      if (createTagsMutation.isLoading) return;
+      const inputtedTags = createTagsInput.reduce<Partial<APIt.Tag>[]>(
+        (acc, tag) => {
+          if (!tag.name && !tag.code) return acc;
+          acc.push({
+            name: tag.name,
+            code: tag.code,
+          });
+          return acc;
+        },
+        []
+      );
+      // adds all the tags
+      await createTag(inputtedTags);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["admin", ...tagsKeys.lists()]);
+        nTags += 1;
+        setCreateTagsInput([
+          {
+            id: nTags,
+            name: "",
+            code: "",
+            n_papercrafts: 0,
+          },
+        ]);
+      },
+    }
   );
 
   return (
@@ -46,7 +89,7 @@ const AdminTagsPane: React.FC<AdminPaneProps> = () => {
             className={s.search_bar}
             autoComplete={"off"}
             onChange={(e) => setSearch(e.target.value)}
-            onKeyPress={(e) => {
+            onKeyDown={(e) => {
               if (e.key === "Enter") {
                 setCurrentSearch(search);
               }
@@ -57,28 +100,17 @@ const AdminTagsPane: React.FC<AdminPaneProps> = () => {
               ? tags.data.map((tag) => (
                   <div
                     className={`${s.result} ${
-                      currTag && currTag.id === tag.id
-                        ? "active"
-                        : null
+                      currTag && currTag.id === tag.id ? "active" : null
                     }`}
                     key={tag.id}
-                    onClick={() => setCurrTag(tag)}
-                    style={{ paddingLeft: "5px"}}
+                    onClick={() => {
+                      setCurrTag(tag);
+                      setShowCreate(false);
+                    }}
+                    style={{ paddingLeft: "5px" }}
                   >
-                    {/* <div
-                      className={s.result_pic}
-                      style={{ borderRadius: "50%", overflow: "hidden" }}
-                    >
-                      <OptimizedImage
-                        src={profile.avatar_url}
-                        className={s.inner_image}
-                        sizes={`20px`}
-                      />
-                    </div> */}
                     {tag.name}
-                    <div className={s.result_username}>
-                      {tag.code}
-                    </div>
+                    <div className={s.result_username}>{tag.code}</div>
                   </div>
                 ))
               : null}
@@ -86,7 +118,7 @@ const AdminTagsPane: React.FC<AdminPaneProps> = () => {
           <div
             className={s.add_button}
             onClick={async () => {
-              // await supabaseClient.rpc("generate_user");
+              setShowCreate(true);
             }}
           >
             ADD A TAG
@@ -94,7 +126,97 @@ const AdminTagsPane: React.FC<AdminPaneProps> = () => {
         </div>
         <div className={s.control_col}>
           <div className={s.colored_background}>
-            {currTag ? currTag.name : null}
+            {showCreate ? (
+              <div className={s2.container}>
+                <div className={s2.modal_header}>CREATE TAGS</div>
+                <div className={s2.tags_holder}>
+                  {createTagsInput.map((tag, i) => (
+                    <div className={s2.tags_input_row} key={tag.id}>
+                      <input
+                        type="text"
+                        className={s2.input_field}
+                        placeholder={"Name (Nintendo, e.g.)"}
+                        value={tag.name}
+                        onChange={(e) => {
+                          const tags = [...createTagsInput];
+                          tags[i].name = e.target.value;
+                          setCreateTagsInput(tags);
+                        }}
+                      />
+                      <input
+                        type="text"
+                        className={s2.input_field}
+                        placeholder={"Code (nintendo, e.g.)"}
+                        value={tag.code}
+                        onChange={(e) => {
+                          const tags = [...createTagsInput];
+                          tags[i].code = e.target.value.replaceAll(' ', '');
+                          setCreateTagsInput(tags);
+                        }}
+                      />
+                      <div
+                        className={s2.tag_delete_button}
+                        onClick={() => {
+                          const tags = [...createTagsInput];
+                          tags.splice(i, 1);
+                          nTags += 1;
+                          if (tags.length == 0) {
+                            setCreateTagsInput([
+                              {
+                                id: nTags,
+                                name: "",
+                                code: "",
+                                n_papercrafts: 0,
+                              },
+                            ]);
+                          } else {
+                            setCreateTagsInput(tags);
+                          }
+                        }}
+                      >
+                        <GrClose />
+                      </div>
+                    </div>
+                  ))}
+                  <div
+                    className={s2.add_tag_button}
+                    onClick={() => {
+                      nTags += 1;
+                      setCreateTagsInput([
+                        ...createTagsInput,
+                        {
+                          id: nTags,
+                          name: "",
+                          code: "",
+                          n_papercrafts: 0,
+                        },
+                      ]);
+                    }}
+                  >
+                    + add another tag
+                  </div>
+                  <div
+                    className={s2.submit_button}
+                    onClick={() => createTagsMutation.mutate()}
+                  >
+                    SUBMIT
+                  </div>
+                  <CSSTransition
+                    timeout={300}
+                    in={createTagsMutation.isLoading}
+                    nodeRef={overlayRef}
+                  >
+                    <div className={s2.loading_overlay} ref={overlayRef}>
+                      creating...
+                    </div>
+                  </CSSTransition>
+                </div>
+              </div>
+            ) : currTag ? (
+              currTag.name
+            ) : (
+              <div>SELECT A TAG TO SHOW IT HERE</div>
+            )}
           </div>
         </div>
       </div>

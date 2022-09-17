@@ -39,6 +39,25 @@ export const listTags = async ({ search, user_id }: ListTagsQueryVariables) => {
 };
 
 /* -------------------------------------------------------------------------- */
+/*                                  MUTATIONS                                 */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Creates a tag in the database
+ * @param input
+ * @returns
+ */
+export const createTag = async (
+  input: Partial<APIt.Tag> | Partial<APIt.Tag>[]
+) => {
+  const { data: tags, error } = await supabaseClient
+    .from<APIt.Tag>("tags")
+    .insert(input);
+  if (error) throw error;
+  return tags;
+};
+
+/* -------------------------------------------------------------------------- */
 /*                                 KEY FACTORY                                */
 /* -------------------------------------------------------------------------- */
 

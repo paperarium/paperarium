@@ -21,24 +21,6 @@ const Home: NextPage = () => {
       <div className={s.styled_container}>
         <div className={s.page_row}>
           <div className={s.page_col}>
-            <div className={s.main_grid}>
-              <PapercraftGallery
-                breakPointOverride={{
-                  default: 4,
-                  3000: 7,
-                  2400: 6,
-                  1600: 5,
-                  1392: 4,
-                  1167: 3,
-                  992: 2,
-                  767: 3,
-                  480: 2,
-                }}
-              ></PapercraftGallery>
-            </div>
-          </div>
-          <div className={s.divider}></div>
-          <div className={s.page_col}>
             <div className={s.content_container}>
               <i>
                 <h1>
@@ -68,6 +50,24 @@ const Home: NextPage = () => {
               <Link href="/catalog">
                 <div className={s.continue_button}>CATALOG</div>
               </Link>
+            </div>
+          </div>
+          <div className={s.divider}></div>
+          <div className={s.page_col}>
+            <div className={s.main_grid}>
+              <PapercraftGallery
+                breakPointOverride={{
+                  default: 4,
+                  3000: 7,
+                  2400: 6,
+                  1600: 5,
+                  1392: 4,
+                  1167: 3,
+                  992: 2,
+                  767: 3,
+                  480: 2,
+                }}
+              ></PapercraftGallery>
             </div>
           </div>
         </div>

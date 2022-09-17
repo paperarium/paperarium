@@ -132,7 +132,7 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
                 onClick={() => {
                   const newTags = [...currentTags];
                   newTags.splice(i, 1);
-                  submitTags(newTags);
+                  submitTags(newTags);  
                 }}
               >
                 <>

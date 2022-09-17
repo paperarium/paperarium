@@ -4,7 +4,11 @@ import { useState } from "react";
 import { AdminPaneProps } from "..";
 import * as APIt from "../../../supabase/types";
 import s from "../../../styles/admin/Admin.module.scss";
-import { collectiveKeys, listCollectives } from "../../../supabase/api/collectives";
+import {
+  collectiveKeys,
+  listCollectives,
+} from "../../../supabase/api/collectives";
+import s2 from "../../../styles/admin/AdminTags.module.scss";
 import OptimizedImage from "../../OptimizedImage/OptimizedImage";
 
 /**
@@ -19,10 +23,10 @@ const AdminCollectivesPane: React.FC<AdminPaneProps> = () => {
     null
   );
   const qparams = { search: currentSearch };
-  const collectives = useQuery(
-    ["admin", collectiveKeys.list(qparams)],
-    () => listCollectives(qparams)
+  const collectives = useQuery(["admin", collectiveKeys.list(qparams)], () =>
+    listCollectives(qparams)
   );
+  const [showCreate, setShowCreate] = useState(true);
 
   return (
     <>
@@ -70,10 +74,10 @@ const AdminCollectivesPane: React.FC<AdminPaneProps> = () => {
                       @{collective.titlecode}
                     </div>
                     <div className={s.result_username}>
-                      {collective.n_members[0].count}{" "}members
+                      {collective.n_members[0].count} members
                     </div>
                     <div className={s.result_username}>
-                      {collective.n_papercrafts[0].count}{" "}papercrafts
+                      {collective.n_papercrafts[0].count} papercrafts
                     </div>
                   </div>
                 ))
@@ -81,7 +85,11 @@ const AdminCollectivesPane: React.FC<AdminPaneProps> = () => {
           </div>
         </div>
         <div className={s.control_col}>
-          {currCollective ? (
+          {showCreate ? (
+            <div className={s2.container}>
+              CREATE
+            </div>
+          ) : currCollective ? (
             currCollective.title
           ) : (
             <div>SELECT A COLLECTIVE TO SHOW IT HERE</div>
