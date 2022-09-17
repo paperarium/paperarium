@@ -23,7 +23,7 @@ export const getPapercraft = async (pid: string) => {
       `
       *,
       user:profiles(id,username,avatar_url,n_builds:builds(count),n_papercrafts:papercrafts(count),archived),
-      display_build:builds!papercrafts_build_id_fkey(id,description,pictures,user_id,user:profiles(username,avatar_url,n_builds:builds(count),n_papercrafts:papercrafts(count))),
+      display_build:builds!papercrafts_build_id_fkey(id,description,pictures,user_id,user:profiles(username,avatar_url,n_builds:builds(count),n_papercrafts:papercrafts(count),archived)),
       collective:collectives!papercrafts_collective_id_fkey(id,titlecode,title,n_members:collectives_profiles(count),n_papercrafts:papercrafts(count)),
       tags:tags(*)
     `
