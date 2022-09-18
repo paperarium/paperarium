@@ -12,7 +12,6 @@ import { User } from '@supabase/auth-helpers-nextjs';
 import { CSSTransition } from 'react-transition-group';
 import PapercraftDisplay from '../../components/PapercraftDisplay/PapercraftDisplay';
 import BlinkEffect from '../../components/BlinkEffect/BlinkEffect';
-import { useRouter } from 'next/router';
 import FormEditPapercraft, {
   FormEditPapercraftHandleProps,
 } from '../../components/FormEditPapercraft/FormEditPapercraft';
@@ -22,17 +21,16 @@ import { useQuery } from '@tanstack/react-query';
 type FlowPapercraftProps = {
   user: User;
   defaultPapercraft?: APIt.Papercraft;
-  redirectOnSuccess?: boolean;
+  onSuccess: (papercraft_id: string) => void;
+  onBackButtonClick?: () => void;
 };
 
 const FlowPapercraft: React.FC<FlowPapercraftProps> = ({
   user,
   defaultPapercraft,
-  redirectOnSuccess,
+  onSuccess,
+  onBackButtonClick,
 }) => {
-  // router to redirect on submissions success
-  const router = useRouter();
-
   // reference to the form for CSS transitions
   const formRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -75,13 +73,18 @@ const FlowPapercraft: React.FC<FlowPapercraftProps> = ({
         <div className={s.upload_container} ref={formRef}>
           <div className={s.upload_col}>
             <div className={s.column_header}>
-              <b>
-                {!!defaultPapercraft ? 'edit' : 'upload'} a papercraft design
-                slip!
-              </b>
-              <br /> after filling in all of the required fields, the submit
-              button will activate and you can post your papercraft to our
-              website.
+              <div className={s.back_button} onClick={onBackButtonClick}>
+                {'<'}
+              </div>
+              <div className={s.column_label}>
+                <b>
+                  {!!defaultPapercraft ? 'edit' : 'upload'} a papercraft design
+                  slip!
+                </b>
+                <br /> after filling in all of the required fields, the submit
+                button will activate and you can post your papercraft to our
+                website.
+              </div>
             </div>
             <div className={s.spacer}></div>
             {profile ? (
@@ -91,6 +94,7 @@ const FlowPapercraft: React.FC<FlowPapercraftProps> = ({
                 defaultPapercraft={defaultPapercraft}
                 setSubmissionMessage={setSubmissionMessage}
                 setCanPreview={setCanPreview}
+                onSuccess={({ id }) => onSuccess(id)}
               >
                 <div
                   className={s.input_form_title}
@@ -132,8 +136,7 @@ const FlowPapercraft: React.FC<FlowPapercraftProps> = ({
               className={s.submit_button}
               onClick={async () => {
                 if (inConfirm && formHandle.current) {
-                  const pid = await formHandle.current.submitPapercraft();
-                  redirectOnSuccess && router.push(`/papercrafts/${pid}`);
+                  formHandle.current.submitPapercraft();
                 } else {
                   setInConfirm(true);
                 }

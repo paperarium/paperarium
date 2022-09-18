@@ -9,8 +9,10 @@ import React from 'react';
 import Head from 'next/head';
 import { withPageAuth, User } from '@supabase/auth-helpers-nextjs';
 import FlowPapercraft from '../../components/FlowPapercraft/FlowPapercraft';
+import { useRouter } from 'next/router';
 
 const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
+  const router = useRouter();
   return (
     <>
       <Head>
@@ -20,7 +22,11 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
           content="submit a papercraft for publication!"
         />
       </Head>
-      <FlowPapercraft user={user} />
+      <FlowPapercraft
+        user={user}
+        onSuccess={(pid) => router.push(`/papercrafts/${pid}`)}
+        onBackButtonClick={() => router.push(`/upload`)}
+      />
     </>
   );
 };

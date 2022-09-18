@@ -37,12 +37,12 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
   );
 
   // queries
-  const papercrafts = useQuery(
-    ['admin', 'papercrafts', { search: currentSearch }],
-    () => listPapercrafts({ search: currentSearch })
+  const list_q_params = { search: currentSearch };
+  const papercrafts = useQuery(papercraftKeys.list(list_q_params), () =>
+    listPapercrafts(list_q_params)
   );
   const selectedPapercraft = useQuery(
-    ['admin', papercraftKeys.get(currPapercraft?.id || '')],
+    papercraftKeys.get(currPapercraft?.id || ''),
     () => getPapercraft(currPapercraft!.id),
     { enabled: !!currPapercraft }
   );
@@ -55,11 +55,8 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
     },
     {
       onSuccess: (papercraft) => {
-        queryClient.invalidateQueries(['admin', papercraftKeys.lists]);
-        queryClient.invalidateQueries([
-          'admin',
-          papercraftKeys.get(papercraft[0].id),
-        ]);
+        queryClient.invalidateQueries(papercraftKeys.lists());
+        queryClient.invalidateQueries(papercraftKeys.get(papercraft[0].id));
       },
     }
   );
@@ -80,7 +77,7 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
             className={s.search_bar}
             autoComplete={'off'}
             onChange={(e) => setSearch(e.target.value)}
-            onKeyPress={(e) => {
+            onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 setCurrentSearch(search);
               }

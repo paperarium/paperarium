@@ -205,6 +205,12 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+
+  &:last-of-type {
+    margin-top: -8px;
+    border: 1px dashed var(--border-color);
+    opacity: 0.6;
+  }
 }
 
 /* -------------------------------------------------------------------------- */

@@ -50,7 +50,12 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
 
     return editing && user ? (
       <Suspense fallback={`Loading...`}>
-        <DynamicEditFlow user={user} defaultPapercraft={papercraft} />
+        <DynamicEditFlow
+          user={user}
+          defaultPapercraft={papercraft}
+          onSuccess={() => setEditing(false)}
+          onBackButtonClick={() => setEditing(false)}
+        />
       </Suspense>
     ) : (
       <div className={s.container}>
@@ -64,11 +69,9 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               readOnly={true}
             ></TextareaAutosize>
             <div className={s.date_input}>
-              {preview
-                ? papercraft.created_at
-                : new Date(
-                    rectifyDateFormat(papercraft.created_at)
-                  ).toDateString()}
+              {new Date(
+                rectifyDateFormat(papercraft.created_at)
+              ).toDateString()}
             </div>
             <TextareaAutosize
               className={s.preview_description}

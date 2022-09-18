@@ -16,6 +16,7 @@ import s from './FormEditPapercraft.module.scss';
 import { uploadFile, uploadImageFile } from '../../util/uploadFile';
 import {
   createPapercraft,
+  papercraftKeys,
   updatePapercraft,
 } from '../../supabase/api/papercrafts';
 import { createBuild } from '../../supabase/api/builds';
@@ -23,6 +24,7 @@ import {
   createPapercraftsTags,
   deletePapercraftsTags,
 } from '../../supabase/api/papercraftstags';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 // debounce the fetch tags function
 const fetchTags = debounce(listTags, 300, { maxWait: 1200 });
@@ -33,7 +35,7 @@ const fetchTags = debounce(listTags, 300, { maxWait: 1200 });
 
 export type FormEditPapercraftHandleProps = {
   getPapercraft: () => APIt.Papercraft;
-  submitPapercraft: () => Promise<string>;
+  submitPapercraft: () => void;
 };
 
 type FormEditPapercraftProps = {
@@ -42,6 +44,7 @@ type FormEditPapercraftProps = {
   children?: React.ReactNode;
   setSubmissionMessage: (message: string) => void;
   setCanPreview: (canPreview: boolean) => void;
+  onSuccess: (papercraft: APIt.Papercraft) => void;
 };
 
 /* -------------------------------------------------------------------------- */
@@ -52,13 +55,21 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
   FormEditPapercraftHandleProps,
   FormEditPapercraftProps
 > = function FormEditPapercraft(
-  { defaultPapercraft, profile, children, setSubmissionMessage, setCanPreview },
+  {
+    defaultPapercraft,
+    profile,
+    children,
+    setSubmissionMessage,
+    setCanPreview,
+    onSuccess,
+  },
   forwardedRef
 ) {
   /* -------------------------------------------------------------------------- */
   /*                                 INPUT FORM                                 */
   /* -------------------------------------------------------------------------- */
   // state managers for the state of the papercraft
+  const queryClient = useQueryClient();
 
   // input form fields
   const [title, setTitle] = useState<string>(defaultPapercraft?.title || '');
@@ -177,201 +188,213 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
 
   // submits the papercraft, either creating it (if no default papercraft was
   // specified) or updating it (if a default papercraft was specified).
-  const submitPapercraft = async () => {
-    // do some quick form validation
-    if (!profile) throw "couldn't get profile!";
-    if (!title) throw 'missing title!';
-    if (!description) throw 'missing description!';
-    if (images === null || images.length === 0) throw 'missing images!';
-    if (!pdfLined && !pdfLineless) throw 'missing a pdf!';
+  const submitPapercraft = useMutation(
+    async () => {
+      // do some quick form validation
+      if (!profile) throw "couldn't get profile!";
+      if (!title) throw 'missing title!';
+      if (!description) throw 'missing description!';
+      if (images === null || images.length === 0) throw 'missing images!';
+      if (!pdfLined && !pdfLineless) throw 'missing a pdf!';
 
-    // set submitting message
-    setSubmissionMessage('Uploading pictures...');
+      // set submitting message
+      setSubmissionMessage('Uploading pictures...');
 
-    // now generate the key for uploading things to the papercraft––note
-    // that papercrafts with the same name WILL overlap. but this is imperative
-    // for allowing both updating and creating of crafts.
-    const PAPERCRAFT_KEY_PREFIX = `${profile.id}/papercrafts/${title.replace(
-      /[^a-zA-Z0-9-_\.]/g,
-      ''
-    )}`;
-
-    // 1. upload the images of the papercraft. if images existed in the default
-    //    papercraft, make sure we only upload new images that have appeared.
-    //    that is, only upload files, not picture object images.
-    const pictures: APIt.Picture[] = [];
-    for (let i = 0; i < images.length; i++) {
-      if ((images[i] as any).blobURL === undefined) {
-        pictures.push(images[i] as APIt.Picture);
-        continue;
-      }
-      const i_file = images[i] as File;
-      const { name } = i_file;
-      const fileName = `${PAPERCRAFT_KEY_PREFIX}/IMAGE_${i}_${name.replace(
+      // now generate the key for uploading things to the papercraft––note
+      // that papercrafts with the same name WILL overlap. but this is imperative
+      // for allowing both updating and creating of crafts.
+      const PAPERCRAFT_KEY_PREFIX = `${profile.id}/papercrafts/${title.replace(
         /[^a-zA-Z0-9-_\.]/g,
         ''
       )}`;
-      pictures.push(await uploadImageFile(fileName, i_file));
-    }
 
-    // 2. upload the papercraft files.
-    setSubmissionMessage('Uploading files...');
-
-    // 2.1. GLB - for in-browser 3d view
-    let glb_url: string | undefined = undefined;
-    if (glb) {
-      if (typeof glb !== 'string') {
-        const glb_file = `${PAPERCRAFT_KEY_PREFIX}/${glb.name.replace(
+      // 1. upload the images of the papercraft. if images existed in the default
+      //    papercraft, make sure we only upload new images that have appeared.
+      //    that is, only upload files, not picture object images.
+      const pictures: APIt.Picture[] = [];
+      for (let i = 0; i < images.length; i++) {
+        if ((images[i] as any).blobURL === undefined) {
+          pictures.push(images[i] as APIt.Picture);
+          continue;
+        }
+        const i_file = images[i] as File;
+        const { name } = i_file;
+        const fileName = `${PAPERCRAFT_KEY_PREFIX}/IMAGE_${i}_${name.replace(
           /[^a-zA-Z0-9-_\.]/g,
           ''
         )}`;
-        glb_url = await uploadFile(glb_file, glb);
+        pictures.push(await uploadImageFile(fileName, i_file));
+      }
+
+      // 2. upload the papercraft files.
+      setSubmissionMessage('Uploading files...');
+
+      // 2.1. GLB - for in-browser 3d view
+      let glb_url: string | undefined = undefined;
+      if (glb) {
+        if (typeof glb !== 'string') {
+          const glb_file = `${PAPERCRAFT_KEY_PREFIX}/${glb.name.replace(
+            /[^a-zA-Z0-9-_\.]/g,
+            ''
+          )}`;
+          glb_url = await uploadFile(glb_file, glb);
+        } else {
+          glb_url = glb;
+        }
+      }
+
+      // 2.2. PDF (lined) - for more beginner papercrafts
+      let pdf_lined_url: string | undefined = undefined;
+      if (pdfLined) {
+        if (typeof pdfLined !== 'string') {
+          const pdf_lined_file = `${PAPERCRAFT_KEY_PREFIX}/${pdfLined.name.replace(
+            /[^a-zA-Z0-9-_\.]/g,
+            ''
+          )}`;
+          pdf_lined_url = await uploadFile(pdf_lined_file, pdfLined);
+        } else {
+          pdf_lined_url = pdfLined;
+        }
+      }
+
+      // 2.3. PDF (lineless) - for the usual papercrafter
+      let pdf_lineless_url: string | undefined = undefined;
+      if (pdfLineless) {
+        if (typeof pdfLineless !== 'string') {
+          const pdf_lineless_file = `${PAPERCRAFT_KEY_PREFIX}/${pdfLineless.name.replace(
+            /[^a-zA-Z0-9-_\.]/g,
+            ''
+          )}`;
+          pdf_lineless_url = await uploadFile(pdf_lineless_file, pdfLineless);
+        } else {
+          pdf_lineless_url = pdfLineless;
+        }
+      }
+
+      // 2.3. PDO - a guide for how to put together the craft
+      let pdo_url: string | undefined = undefined;
+      if (pdo) {
+        if (typeof pdo !== 'string') {
+          const pdo_file = `${PAPERCRAFT_KEY_PREFIX}/${pdo.name.replace(
+            /[^a-zA-Z0-9-_\.]/g,
+            ''
+          )}`;
+          pdo_url = await uploadFile(pdo_file, pdo);
+        } else {
+          pdo_url = pdo;
+        }
+      }
+
+      // 3. build the papercraft
+      let papercraft: APIt.Papercraft | undefined = defaultPapercraft;
+      // if no papercraft id, we need to create this papercraft
+      if (!papercraft) {
+        setSubmissionMessage('Creating design entry...');
+        papercraft = (
+          await createPapercraft({
+            user_id: profile.id,
+            title,
+            description,
+            glb_url,
+            pdo_url,
+            pdf_lineless_url,
+            pdf_lined_url,
+            pictures,
+            difficulty: difficulty,
+            xlink: xLink,
+            dimensions_cm:
+              dLength && dWidth && dHeight
+                ? [dLength, dWidth, dHeight].map(
+                    (val) => val * (dUnits === 'cm' ? 1 : 2.54)
+                  )
+                : undefined,
+            verified: false,
+          })
+        )[0];
+        // otherwise, we're just updating the entry
       } else {
-        glb_url = glb;
+        setSubmissionMessage('Updating design entry...');
+        papercraft = (
+          await updatePapercraft(papercraft.id, {
+            title,
+            description,
+            glb_url,
+            pdo_url,
+            pdf_lineless_url,
+            pdf_lined_url,
+            pictures,
+            difficulty: difficulty,
+            xlink: xLink,
+            dimensions_cm:
+              dLength && dWidth && dHeight
+                ? [dLength, dWidth, dHeight].map(
+                    (val) => val * (dUnits === 'cm' ? 1 : 2.54)
+                  )
+                : undefined,
+          })
+        )[0];
       }
-    }
 
-    // 2.2. PDF (lined) - for more beginner papercrafts
-    let pdf_lined_url: string | undefined = undefined;
-    if (pdfLined) {
-      if (typeof pdfLined !== 'string') {
-        const pdf_lined_file = `${PAPERCRAFT_KEY_PREFIX}/${pdfLined.name.replace(
-          /[^a-zA-Z0-9-_\.]/g,
-          ''
-        )}`;
-        pdf_lined_url = await uploadFile(pdf_lined_file, pdfLined);
-      } else {
-        pdf_lined_url = pdfLined;
+      // 6. if this was uploaded as a build, cross-post it to user's builds
+      if (isBuild) {
+        setSubmissionMessage('Creating build entry...');
+        const build_id = (
+          await createBuild({
+            user_id: profile.id,
+            papercraft_id: papercraft.id,
+            pictures,
+            xlink: xLink,
+            verified: false,
+          })
+        )[0].id;
+        setSubmissionMessage('Linking build entry to papercraft...');
+        await updatePapercraft(papercraft.id, {
+          build_id,
+        });
       }
-    }
 
-    // 2.3. PDF (lineless) - for the usual papercrafter
-    let pdf_lineless_url: string | undefined = undefined;
-    if (pdfLineless) {
-      if (typeof pdfLineless !== 'string') {
-        const pdf_lineless_file = `${PAPERCRAFT_KEY_PREFIX}/${pdfLineless.name.replace(
-          /[^a-zA-Z0-9-_\.]/g,
-          ''
-        )}`;
-        pdf_lineless_url = await uploadFile(pdf_lineless_file, pdfLineless);
-      } else {
-        pdf_lineless_url = pdfLineless;
+      // 7. if editing papercraft, delete all old tags
+      if (defaultPapercraft) {
+        setSubmissionMessage('Pruning old tags...');
+        const papercraft_tags_deletions = [];
+        for (const papercraft_tag of defaultPapercraft.tags) {
+          papercraft_tags_deletions.push(
+            deletePapercraftsTags(defaultPapercraft.id, papercraft_tag.id)
+          );
+        }
+        await Promise.all(papercraft_tags_deletions);
       }
-    }
 
-    // 2.3. PDO - a guide for how to put together the craft
-    let pdo_url: string | undefined = undefined;
-    if (pdo) {
-      if (typeof pdo !== 'string') {
-        const pdo_file = `${PAPERCRAFT_KEY_PREFIX}/${pdo.name.replace(
-          /[^a-zA-Z0-9-_\.]/g,
-          ''
-        )}`;
-        pdo_url = await uploadFile(pdo_file, pdo);
-      } else {
-        pdo_url = pdo;
+      // 7. now build the new papercrafts tags.
+      setSubmissionMessage('Linking new tags...');
+      const papercraft_tags_input: APIt.PapercraftsTagsInput[] = [];
+      for (const papercraft_tag of tags) {
+        papercraft_tags_input.push({
+          papercraft_id: papercraft.id,
+          tag_id: papercraft_tag.id,
+        });
       }
-    }
+      await createPapercraftsTags(papercraft_tags_input);
 
-    // 3. build the papercraft
-    let papercraft_id = defaultPapercraft?.id;
-    // if no papercraft id, we need to create this papercraft
-    if (!papercraft_id) {
-      setSubmissionMessage('Creating design entry...');
-      papercraft_id = (
-        await createPapercraft({
-          user_id: profile.id,
-          title,
-          description,
-          glb_url,
-          pdo_url,
-          pdf_lineless_url,
-          pdf_lined_url,
-          pictures,
-          difficulty: difficulty,
-          xlink: xLink,
-          dimensions_cm:
-            dLength && dWidth && dHeight
-              ? [dLength, dWidth, dHeight].map(
-                  (val) => val * (dUnits === 'cm' ? 1 : 2.54)
-                )
-              : undefined,
-          verified: false,
-        })
-      )[0].id;
-      // otherwise, we're just updating the entry
-    } else {
-      setSubmissionMessage('Updating design entry...');
-      await updatePapercraft(papercraft_id, {
-        title,
-        description,
-        glb_url,
-        pdo_url,
-        pdf_lineless_url,
-        pdf_lined_url,
-        pictures,
-        difficulty: difficulty,
-        xlink: xLink,
-        dimensions_cm:
-          dLength && dWidth && dHeight
-            ? [dLength, dWidth, dHeight].map(
-                (val) => val * (dUnits === 'cm' ? 1 : 2.54)
-              )
-            : undefined,
-      });
+      // 6. Finished!
+      setSubmissionMessage('Done!');
+      return papercraft;
+    },
+    {
+      onSuccess: (papercraft) => {
+        // use the query client to invalidate any papercraft searches
+        queryClient.invalidateQueries(papercraftKeys.lists());
+        queryClient.invalidateQueries(papercraftKeys.get(papercraft.id));
+        onSuccess(papercraft);
+      },
     }
-
-    // 6. if this was uploaded as a build, cross-post it to user's builds
-    if (isBuild) {
-      setSubmissionMessage('Creating build entry...');
-      const build_id = (
-        await createBuild({
-          user_id: profile.id,
-          papercraft_id,
-          pictures,
-          xlink: xLink,
-          verified: false,
-        })
-      )[0].id;
-      setSubmissionMessage('Linking build entry to papercraft...');
-      await updatePapercraft(papercraft_id, {
-        build_id,
-      });
-    }
-
-    // 7. if editing papercraft, delete all old tags
-    if (defaultPapercraft) {
-      setSubmissionMessage('Pruning old tags...');
-      const papercraft_tags_deletions = [];
-      for (const papercraft_tag of defaultPapercraft.tags) {
-        papercraft_tags_deletions.push(
-          deletePapercraftsTags(defaultPapercraft.id, papercraft_tag.id)
-        );
-      }
-      await Promise.all(papercraft_tags_deletions);
-    }
-
-    // 7. now build the new papercrafts tags.
-    setSubmissionMessage('Linking new tags...');
-    const papercraft_tags_input: APIt.PapercraftsTagsInput[] = [];
-    for (const papercraft_tag of tags) {
-      papercraft_tags_input.push({
-        papercraft_id,
-        tag_id: papercraft_tag.id,
-      });
-    }
-    await createPapercraftsTags(papercraft_tags_input);
-
-    // 6. Finished!
-    setSubmissionMessage('Done!');
-    return papercraft_id;
-  };
+  );
 
   // imperative handle allows us to retrieve the papercraft from this form, as
   // well as trigger events to submit the form.
   useImperativeHandle(forwardedRef, () => ({
     getPapercraft,
-    submitPapercraft,
+    submitPapercraft: submitPapercraft.mutate,
   }));
 
   /* -------------------------------------------------------------------------- */
