@@ -10,7 +10,6 @@
   border-top: $border;
   justify-content: center;
   align-items: center;
-  gap: 3px;
   z-index: 1;
   background-color: $background;
 
@@ -20,11 +19,47 @@
   }
 }
 
+.divider {
+  width: 100%;
+  height: 14px;
+  background-color: $background;
+  border-bottom: $border;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 20px;
+
+  &:after {
+    content: "୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧";
+    white-space: nowrap;
+    font-size: 10px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+  }
+}
+
 .footer_row {
+  flex-wrap: wrap;
+  width: 100%;
   display: flex;
   flex-direction: row;
-  width: 80%;
-  max-width: 500px;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 0px 20px;
+  height: 100%;
+  position: relative;
+}
+
+.footer_col {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0px 10px;
+  min-width: 300px;
+  height: 100%;
 }
 
 .socials_row {
@@ -32,8 +67,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 80%;
-  max-width: 400px;
+  width: 100%;
   gap: 5px;
   margin-bottom: 5px;
   font-size: 20px;
@@ -88,21 +122,23 @@
   }
 }
 
-.divider {
-  width: 100%;
-  height: 14px;
-  background-color: $background;
-  border-bottom: $border;
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 20px;
+.disclaimer {
+  letter-spacing: -1px;
+  font-size: 12px;
+  opacity: 0.5;
+  font-style: italic;
+  text-align: center;
+}
 
-  &:after {
-    content: "୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧";
-    white-space: nowrap;
-    font-size: 10px;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-  }
+.link_grid {
+  flex: 1;
+  width: 100%;
+  display: grid;
+  margin-top: 10px;
+  gap: 10px;
+  border-left: $border;
+  border-right: $border;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-rows: repeat(auto-fit, minmax(10px, 1fr));
+  text-align: center;
 }
