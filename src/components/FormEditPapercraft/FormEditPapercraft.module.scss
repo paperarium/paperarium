@@ -1,4 +1,4 @@
-@import "../../styles/mixins";
+@import '../../styles/mixins';
 
 @keyframes fadein {
   from {
@@ -29,15 +29,15 @@
   transition: transform 0.7s ease-in-out;
   animation: fadein 0.4s ease-in-out;
 
-  div[class~="preview-enter-active"] & {
+  div[class~='preview-enter-active'] & {
     transform: translateY(calc(100% - 10px));
   }
 
-  div[class~="preview-enter-done"] & {
+  div[class~='preview-enter-done'] & {
     transform: translateY(calc(100% - 10px));
   }
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     margin-top: 0px;
     max-height: calc(100% - 160px);
   }
@@ -51,7 +51,7 @@
   align-items: flex-start;
   padding: 10px 0px;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     overflow: scroll;
     height: 100%;
   }
@@ -85,7 +85,7 @@
   border-radius: 5px;
   border: none;
   flex-shrink: 0;
-  font-family: "FT88 Gothic";
+  font-family: 'FT88 Gothic';
 }
 
 .description_input {
@@ -97,10 +97,10 @@
   resize: none;
   width: 100%;
   font-size: 15px;
-  font-family: "FT88";
+  font-family: 'FT88';
   flex-shrink: 0;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     max-height: 300px;
   }
 }
@@ -229,6 +229,6 @@
 
   & > input {
     outline: none;
-    font-family: "FT88";
+    font-family: 'FT88';
   }
 }

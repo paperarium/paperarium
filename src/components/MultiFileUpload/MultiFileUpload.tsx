@@ -4,10 +4,10 @@
  * created on Thu Aug 25 2022
  * 2022 the nobot space,
  */
-import s from "./MultiFileUpload.module.scss";
-import * as APIt from "../../supabase/types";
-import { FiX, FiCheckCircle, FiUpload } from "react-icons/fi";
-import { ChangeEventHandler, MouseEventHandler, useRef } from "react";
+import s from './MultiFileUpload.module.scss';
+import * as APIt from '../../supabase/types';
+import { FiX, FiCheckCircle, FiUpload } from 'react-icons/fi';
+import { ChangeEventHandler, MouseEventHandler, useRef } from 'react';
 
 type MultiFileUploadProps = {
   files: (File | APIt.Picture)[] | null;
@@ -23,13 +23,13 @@ const MultiFileUpload: React.FC<MultiFileUploadProps> =
     const onChange: ChangeEventHandler<HTMLInputElement> = (event) => {
       if (!event.target.files) return;
       setFiles(Array.from(event.target.files));
-      if (inputRef.current) inputRef.current.value = "";
+      if (inputRef.current) inputRef.current.value = '';
     };
 
     const onClearClick: MouseEventHandler = (event) => {
       event.stopPropagation();
       setFiles(null);
-      if (inputRef.current) inputRef.current.value = "";
+      if (inputRef.current) inputRef.current.value = '';
     };
 
     return (
@@ -53,7 +53,7 @@ const MultiFileUpload: React.FC<MultiFileUploadProps> =
                   <div className={s.spacer}>
                     {(file as File).name !== undefined
                       ? (file as File).name
-                      : (file as APIt.Picture).key.split("/").pop()}
+                      : (file as APIt.Picture).key.split('/').pop()}
                   </div>
                   <div className={s.file_icon}>
                     <FiX
@@ -84,9 +84,9 @@ const MultiFileUpload: React.FC<MultiFileUploadProps> =
                 CLEAR
               </div>
             ) : null}
-            <div style={{ marginLeft: "5px" }}>
+            <div style={{ marginLeft: '5px' }}>
               {files ? files.length : 0} image
-              {files && files.length == 1 ? "" : "s"}.
+              {files && files.length == 1 ? '' : 's'}.
             </div>
           </div>
         </label>

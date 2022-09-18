@@ -7,7 +7,7 @@
 
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
-type RowMetadata = "id" | "created_at" | "updated_at" | "user";
+type RowMetadata = 'id' | 'created_at' | 'updated_at' | 'user';
 type QueryCount = { count: number }[];
 
 /* -------------------------------------------------------------------------- */
@@ -56,7 +56,7 @@ export interface Papercraft {
   tags: Tag[];
 }
 
-export type PapercraftInput = PartialBy<Papercraft, RowMetadata | "tags">;
+export type PapercraftInput = PartialBy<Papercraft, RowMetadata | 'tags'>;
 
 /* -------------------------------------------------------------------------- */
 /*                                   BUILDS                                   */
@@ -83,7 +83,7 @@ export type Announcement = {
   text: string;
 };
 
-export type BuildInput = PartialBy<Build, RowMetadata | "papercraft">;
+export type BuildInput = PartialBy<Build, RowMetadata | 'papercraft'>;
 
 /* -------------------------------------------------------------------------- */
 /*                                 COLLECTIVES                                */
@@ -109,7 +109,7 @@ export type CollectivesProfiles = {
 
 export type CollectiveInput = PartialBy<
   Collective,
-  "id" | "created_at" | "n_members" | "n_papercrafts"
+  'id' | 'created_at' | 'n_members' | 'n_papercrafts'
 >;
 
 /* -------------------------------------------------------------------------- */
@@ -129,7 +129,7 @@ export type Tag = {
   n_papercrafts: number;
 };
 
-export type PapercraftsTagsInput = Omit<PapercraftsTags, "id">;
+export type PapercraftsTagsInput = Omit<PapercraftsTags, 'id'>;
 
 /* -------------------------------------------------------------------------- */
 /*                                 PRIMITIVES                                 */

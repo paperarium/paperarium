@@ -1,4 +1,4 @@
-@import "../../styles/mixins";
+@import '../../styles/mixins';
 
 .profile_container {
   display: flex;
@@ -9,16 +9,16 @@
   gap: 8px;
   position: relative;
 
-  &[class~="full"] {
+  &[class~='full'] {
     margin-top: 8px;
     border-top: $border;
     padding-top: 8px;
     margin-bottom: 8px;
   }
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     padding-bottom: 0px;
-    &[class~="full"] {
+    &[class~='full'] {
       margin-bottom: 0px;
     }
   }
@@ -61,7 +61,7 @@
   flex-direction: column;
   color: $foreground2;
 
-  @include respond-to("xsmall") {
+  @include respond-to('xsmall') {
     text-align: left;
     width: auto;
   }

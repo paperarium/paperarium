@@ -4,22 +4,22 @@
  * created on Sun Sep 04 2022
  * 2022 the nobot space,
  */
-import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { ParsedUrlQuery } from "node:querystring";
-import { CSSTransition } from "react-transition-group";
-import { useRef } from "react";
-import s from "../../styles/profile/Profile.module.scss";
-import PapercraftGallery from "../../components/PapercraftGallery/PapercraftGallery";
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { ParsedUrlQuery } from 'node:querystring';
+import { CSSTransition } from 'react-transition-group';
+import { useRef } from 'react';
+import s from '../../styles/profile/Profile.module.scss';
+import PapercraftGallery from '../../components/PapercraftGallery/PapercraftGallery';
 import {
   listPapercrafts,
   papercraftKeys,
-} from "../../supabase/api/papercrafts";
-import Layout from "../../components/Layout/Layout";
-import OptimizedImage from "../../components/OptimizedImage/OptimizedImage";
-import { collectiveKeys, getCollective } from "../../supabase/api/collectives";
+} from '../../supabase/api/papercrafts';
+import Layout from '../../components/Layout/Layout';
+import OptimizedImage from '../../components/OptimizedImage/OptimizedImage';
+import { collectiveKeys, getCollective } from '../../supabase/api/collectives';
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPING                                   */
@@ -75,7 +75,7 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
               {collective.data?.avatar_url ? (
                 <OptimizedImage
                   src={collective.data.avatar_url}
-                  sizes={"20vw"}
+                  sizes={'20vw'}
                   className={s.profile_pic_image}
                 />
               ) : null}
@@ -149,7 +149,7 @@ export const getStaticProps: GetStaticProps<
 > = async ({ params }) => {
   const queryClient = new QueryClient();
   const titlecode = params!.titlecode!;
-  const qparams = { search: "", titlecode };
+  const qparams = { search: '', titlecode };
   const requests = [
     queryClient.prefetchQuery(collectiveKeys.get(titlecode), () =>
       getCollective(titlecode)
@@ -167,9 +167,8 @@ export const getStaticProps: GetStaticProps<
     revalidate: false,
   };
 };
-
 (ProfilePage as any).getLayout = (page: React.ReactNode) => (
-  <Layout footerMarginLeft={"var(--profile-bar-width)"}>{page}</Layout>
+  <Layout footerMarginLeft={'var(--profile-bar-width)'}>{page}</Layout>
 );
 
 export default ProfilePage;

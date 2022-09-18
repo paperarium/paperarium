@@ -1,15 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
-import Head from "next/head";
-import { useState } from "react";
-import { AdminPaneProps } from "..";
-import * as APIt from "../../../supabase/types";
-import s from "../../../styles/admin/Admin.module.scss";
+import { useQuery } from '@tanstack/react-query';
+import Head from 'next/head';
+import { useState } from 'react';
+import { AdminPaneProps } from '..';
+import * as APIt from '../../../supabase/types';
+import s from '../../../styles/admin/Admin.module.scss';
 import {
   collectiveKeys,
   listCollectives,
-} from "../../../supabase/api/collectives";
-import s2 from "../../../styles/admin/AdminTags.module.scss";
-import OptimizedImage from "../../OptimizedImage/OptimizedImage";
+} from '../../../supabase/api/collectives';
+import s2 from '../../../styles/admin/AdminTags.module.scss';
+import OptimizedImage from '../../OptimizedImage/OptimizedImage';
 
 /**
  * The home page for admin collective activities
@@ -17,13 +17,13 @@ import OptimizedImage from "../../OptimizedImage/OptimizedImage";
  */
 const AdminCollectivesPane: React.FC<AdminPaneProps> = () => {
   // search for collectives
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
   const [currentSearch, setCurrentSearch] = useState<string>(search);
   const [currCollective, setCurrCollective] = useState<APIt.Collective | null>(
     null
   );
   const qparams = { search: currentSearch };
-  const collectives = useQuery(["admin", collectiveKeys.list(qparams)], () =>
+  const collectives = useQuery(['admin', collectiveKeys.list(qparams)], () =>
     listCollectives(qparams)
   );
   const [showCreate, setShowCreate] = useState(true);
@@ -40,12 +40,12 @@ const AdminCollectivesPane: React.FC<AdminPaneProps> = () => {
           <input
             type="text"
             value={search}
-            placeholder={"Search by title..."}
+            placeholder={'Search by title...'}
             className={s.search_bar}
-            autoComplete={"off"}
+            autoComplete={'off'}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === 'Enter') {
                 setCurrentSearch(search);
               }
             }}
@@ -56,7 +56,7 @@ const AdminCollectivesPane: React.FC<AdminPaneProps> = () => {
                   <div
                     className={`${s.result} ${
                       currCollective && currCollective.id === collective.id
-                        ? "active"
+                        ? 'active'
                         : null
                     }`}
                     key={collective.id}
@@ -86,9 +86,7 @@ const AdminCollectivesPane: React.FC<AdminPaneProps> = () => {
         </div>
         <div className={s.control_col}>
           {showCreate ? (
-            <div className={s2.container}>
-              CREATE
-            </div>
+            <div className={s2.container}>CREATE</div>
           ) : currCollective ? (
             currCollective.title
           ) : (

@@ -1,4 +1,4 @@
-@import "../../styles/mixins";
+@import '../../styles/mixins';
 
 .nav_menu_backdrop {
   position: fixed;
@@ -14,19 +14,19 @@
   transform: translateY(20px);
   transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 
-  &[class~="enter-active"] {
+  &[class~='enter-active'] {
     transform: translateY(0px);
     opacity: 1;
     pointer-events: all;
   }
 
-  &[class~="enter-done"] {
+  &[class~='enter-done'] {
     transform: translateY(0px);
     opacity: 1;
     pointer-events: all;
   }
 
-  @include respond-to("medium") {
+  @include respond-to('medium') {
     opacity: 0 !important;
     pointer-events: none;
   }
@@ -47,15 +47,15 @@
   transform: translateY(calc(-100% + var(--notice-bar-height)));
   transition: transform 0.3s ease-in-out;
 
-  &[class~="enter-active"] {
+  &[class~='enter-active'] {
     transform: translateY(0px);
   }
 
-  &[class~="enter-done"] {
+  &[class~='enter-done'] {
     transform: translateY(0px);
   }
 
-  @include respond-to("medium") {
+  @include respond-to('medium') {
     transform: translateY(calc(-100% + var(--notice-bar-height))) !important;
   }
 }
@@ -72,11 +72,11 @@
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
 
-  div[class~="enter-active"] > & {
+  div[class~='enter-active'] > & {
     opacity: 1;
   }
 
-  div[class~="enter-done"] > & {
+  div[class~='enter-done'] > & {
     opacity: 1;
   }
   // border-top: $border;
@@ -196,7 +196,7 @@
   // animation: scrollText 10s linear infinite;
   cursor: pointer;
 
-  @include respond-to("large") {
+  @include respond-to('large') {
     // animation: scrollText 30s linear infinite;
   }
 
@@ -214,7 +214,7 @@
   align-items: center;
   gap: 5px;
 
-  @include respond-to("xsmall") {
+  @include respond-to('xsmall') {
     flex-direction: row;
     justify-content: flex-start;
     align-items: flex-end;
@@ -240,7 +240,7 @@
   justify-content: center;
   align-items: center;
 
-  @include respond-to("xsmall") {
+  @include respond-to('xsmall') {
     height: 50px;
     width: 50px;
     min-width: 50px;
@@ -256,7 +256,7 @@
   flex-direction: column;
   gap: 1px;
 
-  @include respond-to("xsmall") {
+  @include respond-to('xsmall') {
     text-align: left;
     width: auto;
     padding: 5px 0px;

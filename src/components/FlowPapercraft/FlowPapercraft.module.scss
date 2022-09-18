@@ -1,4 +1,4 @@
-@import "../../styles/mixins";
+@import '../../styles/mixins';
 
 $completion_bar_height: 20px;
 
@@ -20,11 +20,11 @@ $completion_bar_height: 20px;
   align-items: center;
   position: relative;
   overflow: hidden;
-  &[class~="preview-enter-done"] {
+  &[class~='preview-enter-done'] {
     pointer-events: none;
   }
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     flex-direction: row;
     height: calc(
       100vh - var(--header-height) - var(--notice-bar-height) -
@@ -49,7 +49,7 @@ $completion_bar_height: 20px;
   );
   z-index: 1;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     height: 100%;
     width: auto;
     max-width: 700px;
@@ -86,15 +86,15 @@ $completion_bar_height: 20px;
   animation: fadeup 0.4s ease-in-out;
   transition: transform 0.7s ease-in-out;
 
-  div[class~="preview-enter-active"] & {
+  div[class~='preview-enter-active'] & {
     transform: translateY(calc(100% - 10px));
   }
 
-  div[class~="preview-enter-done"] & {
+  div[class~='preview-enter-done'] & {
     transform: translateY(calc(100% - 10px));
   }
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     // overflow: hidden;
     margin-top: 0px;
     max-height: calc(100% - 160px);
@@ -109,7 +109,7 @@ $completion_bar_height: 20px;
   align-items: flex-start;
   padding: 10px 0px;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     overflow: scroll;
     height: 100%;
   }
@@ -122,7 +122,7 @@ $completion_bar_height: 20px;
   justify-content: flex-start;
   align-items: flex-start;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     overflow: scroll;
     height: 100%;
   }
@@ -139,7 +139,7 @@ $completion_bar_height: 20px;
 }
 
 .input_form_title {
-  font-family: "FT88 Serif";
+  font-family: 'FT88 Serif';
   letter-spacing: 1px;
   position: absolute;
   top: 5px;
@@ -162,7 +162,7 @@ $completion_bar_height: 20px;
 }
 
 .preview_show_button {
-  font-family: "FT88 Serif";
+  font-family: 'FT88 Serif';
   letter-spacing: 1px;
   position: absolute;
   top: 5px;
@@ -182,7 +182,7 @@ $completion_bar_height: 20px;
     transform: translateY(-100%) scale(1.05);
   }
 
-  &[class~="disabled"] {
+  &[class~='disabled'] {
     color: $background2;
     border: 1px solid #d0d0d0;
   }
@@ -212,7 +212,7 @@ $completion_bar_height: 20px;
   border-radius: 5px;
   border: none;
   flex-shrink: 0;
-  font-family: "FT88 Gothic";
+  font-family: 'FT88 Gothic';
 }
 
 .description_input {
@@ -224,10 +224,10 @@ $completion_bar_height: 20px;
   resize: none;
   width: 100%;
   font-size: 15px;
-  font-family: "FT88";
+  font-family: 'FT88';
   flex-shrink: 0;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     max-height: 300px;
   }
 }
@@ -363,7 +363,7 @@ $completion_bar_height: 20px;
 
   & > input {
     outline: none;
-    font-family: "FT88";
+    font-family: 'FT88';
   }
 }
 
@@ -378,15 +378,15 @@ $completion_bar_height: 20px;
   border: $border;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
 
-  div[class~="preview-enter-active"] & {
+  div[class~='preview-enter-active'] & {
     transform: translateY(calc(-100% - 10px));
   }
 
-  div[class~="preview-enter-done"] & {
+  div[class~='preview-enter-done'] & {
     transform: translateY(calc(-100% - 10px));
   }
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     width: 80%;
   }
 }
@@ -425,7 +425,7 @@ $completion_bar_height: 20px;
   //   transform: translateX(calc(-100%));
   // }
 
-  div[class~="preview-enter-done"] & {
+  div[class~='preview-enter-done'] & {
     transform: translateX(calc(-100%));
   }
 
@@ -437,7 +437,7 @@ $completion_bar_height: 20px;
     //   transform: translateX(calc(100%));
     // }
 
-    div[class~="preview-enter-done"] & {
+    div[class~='preview-enter-done'] & {
       transform: translateX(calc(100%));
     }
   }
@@ -455,11 +455,11 @@ $completion_bar_height: 20px;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
   overflow-y: scroll;
 
-  div[class~="preview-enter-active"] & {
+  div[class~='preview-enter-active'] & {
     opacity: 1;
   }
 
-  div[class~="preview-enter-done"] & {
+  div[class~='preview-enter-done'] & {
     opacity: 1;
     transform: scale(0.91) translateY(-2.5%);
   }
@@ -469,7 +469,7 @@ $completion_bar_height: 20px;
   width: 100%;
   position: relative;
 
-  @include respond-to("large") {
+  @include respond-to('large') {
     width: auto;
     flex: 1;
     height: 100%;
@@ -485,7 +485,7 @@ $completion_bar_height: 20px;
   width: 100%;
   position: relative;
 
-  @include respond-to("large") {
+  @include respond-to('large') {
     width: auto;
     flex: 1;
     height: 100%;
@@ -542,7 +542,7 @@ $completion_bar_height: 20px;
   align-items: flex-start;
   justify-content: flex-start;
 
-  @include respond-to("large") {
+  @include respond-to('large') {
     width: 250px;
     height: 100%;
     border-top: none;
@@ -575,7 +575,7 @@ $completion_bar_height: 20px;
   border-color: $highlight-dark;
   background-color: $highlight;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     width: 5px;
     border-bottom: none;
     border-left: $border;
@@ -595,7 +595,7 @@ $completion_bar_height: 20px;
   margin-top: 12px;
 
   &:before {
-    content: "TAGS";
+    content: 'TAGS';
     position: absolute;
     top: 0px;
     left: 0px;
@@ -633,7 +633,7 @@ $completion_bar_height: 20px;
   margin-top: 12px;
 
   &:before {
-    content: "DIFFICULTY";
+    content: 'DIFFICULTY';
     position: absolute;
     top: 0px;
     left: 0px;
@@ -684,7 +684,7 @@ $completion_bar_height: 20px;
   align-items: center;
   padding-right: 5px;
 
-  &[class~="shimmer"] {
+  &[class~='shimmer'] {
     background: gradient(
       linear,
       left top,
@@ -721,7 +721,7 @@ $completion_bar_height: 20px;
   border: 3px solid white;
   border-radius: 15px;
   font-size: 30px;
-  font-family: "FT88 Gothic";
+  font-family: 'FT88 Gothic';
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
   cursor: pointer;
   pointer-events: all;
@@ -735,7 +735,7 @@ $completion_bar_height: 20px;
     transform: translateX(-50%) scale(1.05);
   }
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     bottom: 20px;
   }
 }
@@ -758,12 +758,12 @@ $completion_bar_height: 20px;
   align-items: center;
   cursor: pointer;
 
-  &[class~="enter-active"] {
+  &[class~='enter-active'] {
     background-color: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(5px);
   }
 
-  &[class~="enter-done"] {
+  &[class~='enter-done'] {
     background-color: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(5px);
     pointer-events: all;
@@ -781,7 +781,7 @@ $completion_bar_height: 20px;
     opacity: 0.5;
   }
 
-  div[class~="enter-done"] > & {
+  div[class~='enter-done'] > & {
     opacity: 1;
   }
 }

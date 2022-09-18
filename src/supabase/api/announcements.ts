@@ -5,8 +5,8 @@
  * 2022 the nobot space,
  */
 
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import * as APIt from "../types";
+import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import * as APIt from '../types';
 
 /* -------------------------------------------------------------------------- */
 /*                                  MUTATIONS                                 */
@@ -19,9 +19,9 @@ import * as APIt from "../types";
  */
 export const listAnnouncements = async () => {
   const { data: announcements, error } = await supabaseClient
-    .from<APIt.Announcement>("announcements")
-    .select("*")
-    .eq("active", true);
+    .from<APIt.Announcement>('announcements')
+    .select('*')
+    .eq('active', true);
   if (error) throw error;
   return announcements;
 };

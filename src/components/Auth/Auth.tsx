@@ -5,26 +5,26 @@
  * 2022 the nobot space,
  */
 
-import { Provider, SupabaseClient } from "@supabase/supabase-js";
-import { Input, Space } from "@supabase/ui";
-import { useEffect, useState } from "react";
-import s from "./Auth.module.scss";
-import { EmailAuth } from "./modes/EmailAuth";
-import { ForgottenPassword } from "./modes/ForgottenPassword";
-import { MagicLink } from "./modes/MagicLink";
-import { SocialAuth } from "./modes/SocialAuth";
-import { UpdatePassword } from "./modes/UpdatePassword";
+import { Provider, SupabaseClient } from '@supabase/supabase-js';
+import { Input, Space } from '@supabase/ui';
+import { useEffect, useState } from 'react';
+import s from './Auth.module.scss';
+import { EmailAuth } from './modes/EmailAuth';
+import { ForgottenPassword } from './modes/ForgottenPassword';
+import { MagicLink } from './modes/MagicLink';
+import { SocialAuth } from './modes/SocialAuth';
+import { UpdatePassword } from './modes/UpdatePassword';
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPINGS                                  */
 /* -------------------------------------------------------------------------- */
 
 export const VIEWS: ViewsMap = {
-  SIGN_IN: "sign_in",
-  SIGN_UP: "sign_up",
-  FORGOTTEN_PASSWORD: "forgotten_password",
-  MAGIC_LINK: "magic_link",
-  UPDATE_PASSWORD: "update_password",
+  SIGN_IN: 'sign_in',
+  SIGN_UP: 'sign_up',
+  FORGOTTEN_PASSWORD: 'forgotten_password',
+  MAGIC_LINK: 'magic_link',
+  UPDATE_PASSWORD: 'update_password',
 };
 
 interface ViewsMap {
@@ -32,11 +32,11 @@ interface ViewsMap {
 }
 
 export type ViewType =
-  | "sign_in"
-  | "sign_up"
-  | "forgotten_password"
-  | "magic_link"
-  | "update_password";
+  | 'sign_in'
+  | 'sign_up'
+  | 'forgotten_password'
+  | 'magic_link'
+  | 'update_password';
 
 export type RedirectTo = undefined | string;
 
@@ -63,13 +63,13 @@ const Auth: React.FC<AuthProps> = function Auth({
   view = 'sign_in',
 }) {
   const [authView, setAuthView] = useState(view);
-  const [defaultEmail, setDefaultEmail] = useState("");
-  const [defaultPassword, setDefaultPassword] = useState("");
+  const [defaultEmail, setDefaultEmail] = useState('');
+  const [defaultPassword, setDefaultPassword] = useState('');
 
   const Container = (props: any) => {
     return (
       <div className={[s['sbui-auth'], className].join(' ')}>
-        <Space size={8} direction={"vertical"}>
+        <Space size={8} direction={'vertical'}>
           <SocialAuth
             supabaseClient={supabaseClient}
             verticalSocialLayout={true}
@@ -95,7 +95,7 @@ const Auth: React.FC<AuthProps> = function Auth({
       return (
         <Container>
           <EmailAuth
-            id={authView === VIEWS.SIGN_UP ? "auth-sign-up" : "auth-sign-in"}
+            id={authView === VIEWS.SIGN_UP ? 'auth-sign-up' : 'auth-sign-in'}
             supabaseClient={supabaseClient}
             authView={authView}
             setAuthView={setAuthView}
@@ -133,7 +133,7 @@ const Auth: React.FC<AuthProps> = function Auth({
         <Container>
           <UpdatePassword supabaseClient={supabaseClient} />
         </Container>
-      )
+      );
     default:
       return null;
   }

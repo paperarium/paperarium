@@ -5,11 +5,8 @@
  * 2022 the nobot space,
  */
 
-import {
-  supabaseClient,
-  supabaseServerClient,
-} from "@supabase/auth-helpers-nextjs";
-import * as APIt from "../types";
+import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import * as APIt from '../types';
 
 /* -------------------------------------------------------------------------- */
 /*                                   QUERIES                                  */
@@ -21,7 +18,7 @@ import * as APIt from "../types";
  */
 export const getCollective = async (titlecode: string) => {
   const { data: collectives, error } = await supabaseClient
-    .from<APIt.Collective>("collectives")
+    .from<APIt.Collective>('collectives')
     .select(
       `
       *,
@@ -29,7 +26,7 @@ export const getCollective = async (titlecode: string) => {
       n_papercrafts:papercrafts(count)
     `
     )
-    .eq("titlecode", titlecode);
+    .eq('titlecode', titlecode);
   if (error) throw error;
   return collectives[0];
 };
@@ -47,16 +44,16 @@ export const listCollectives = async ({
 }: ListCollectivesQueryVariables) => {
   let req = (
     search
-      ? supabaseClient.rpc<APIt.Collective>("search_collectives", {
+      ? supabaseClient.rpc<APIt.Collective>('search_collectives', {
           collective_term: search,
         })
-      : supabaseClient.from<APIt.Collective>("collectives")
+      : supabaseClient.from<APIt.Collective>('collectives')
   ).select(
     `*,
     n_members:collectives_profiles(count),
     n_papercrafts:papercrafts(count)`
   );
-  const { data: collectives, error } = await req.order("created_at", {
+  const { data: collectives, error } = await req.order('created_at', {
     ascending: false,
   });
   if (error) throw error;
@@ -76,7 +73,7 @@ export const createCollective = async (
   input: APIt.CollectiveInput | APIt.CollectiveInput[]
 ) => {
   const { data: collectives, error } = await supabaseClient
-    .from<APIt.Collective>("collectives")
+    .from<APIt.Collective>('collectives')
     .insert(input);
   if (error) throw error;
   return collectives;
@@ -92,7 +89,7 @@ export const updateCollective = async (
   input: Partial<APIt.Collective>
 ) => {
   const { data: collectives, error } = await supabaseClient
-    .from<APIt.Collective>("collectives")
+    .from<APIt.Collective>('collectives')
     .update(input)
     .match({ id });
   if (error) throw error;
@@ -104,10 +101,10 @@ export const updateCollective = async (
 /* -------------------------------------------------------------------------- */
 
 export const collectiveKeys = {
-  all: ["collectives"] as const,
-  lists: () => [...collectiveKeys.all, "list"] as const,
+  all: ['collectives'] as const,
+  lists: () => [...collectiveKeys.all, 'list'] as const,
   list: (params: ListCollectivesQueryVariables) =>
     [...collectiveKeys.lists(), params] as const,
-  gets: () => [...collectiveKeys.all, "get"] as const,
+  gets: () => [...collectiveKeys.all, 'get'] as const,
   get: (titlecode: string) => [...collectiveKeys.gets(), titlecode] as const,
 };

@@ -1,11 +1,11 @@
-import { supabaseServerClient } from "@supabase/auth-helpers-nextjs";
-import { QueryClient, useQuery } from "@tanstack/react-query";
-import type { NextPage } from "next";
-import Head from "next/head";
-import { useState } from "react";
-import { AdminPaneProps } from "..";
-import s from "../../../styles/admin/Admin.module.scss";
-import { listProfiles } from "../../../supabase/api/profiles";
+import { supabaseServerClient } from '@supabase/auth-helpers-nextjs';
+import { QueryClient, useQuery } from '@tanstack/react-query';
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import { useState } from 'react';
+import { AdminPaneProps } from '..';
+import s from '../../../styles/admin/Admin.module.scss';
+import { listProfiles } from '../../../supabase/api/profiles';
 
 /**
  * The home page for admin activities
@@ -16,10 +16,10 @@ const AdminHomePane: React.FC<AdminPaneProps> = ({
   setActiveProfile,
 }) => {
   // search for profiles
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
   const [currentSearch, setCurrentSearch] = useState<string>(search);
   const profiles = useQuery(
-    ["admin", "profiles", { search: currentSearch }],
+    ['admin', 'profiles', { search: currentSearch }],
     () => listProfiles({ search: currentSearch })
   );
 
@@ -29,9 +29,7 @@ const AdminHomePane: React.FC<AdminPaneProps> = ({
         <title>admin.home - paperarium</title>
         <meta name="description" content="about us." />
       </Head>
-      <div className={s.container}>
-        THIS IS THE ADMIN HOME
-      </div>
+      <div className={s.container}>THIS IS THE ADMIN HOME</div>
     </>
   );
 };

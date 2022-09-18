@@ -1,4 +1,4 @@
-@import "./mixins";
+@import './mixins';
 
 .search_container {
   position: fixed;
@@ -16,7 +16,7 @@
   align-items: flex-start;
   gap: 5px;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     transform: none;
   }
 }
@@ -38,7 +38,7 @@
   position: relative;
   @include grid-background;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     display: block;
     margin-top: 0px;
   }

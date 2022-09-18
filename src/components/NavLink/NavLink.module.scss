@@ -1,4 +1,4 @@
-@import "../../styles//mixins";
+@import '../../styles//mixins';
 
 /*
  * styles.module.css
@@ -29,7 +29,7 @@
   padding: 8px;
   white-space: nowrap;
 
-  &[class~="active"] {
+  &[class~='active'] {
     opacity: 1;
     font-weight: 700;
     background-color: $foreground;

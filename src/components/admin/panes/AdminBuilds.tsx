@@ -1,27 +1,27 @@
-import { supabaseServerClient } from "@supabase/auth-helpers-nextjs";
+import { supabaseServerClient } from '@supabase/auth-helpers-nextjs';
 import {
   QueryClient,
   useMutation,
   useQuery,
   useQueryClient,
-} from "@tanstack/react-query";
-import type { NextPage } from "next";
-import Head from "next/head";
-import { useState } from "react";
-import { AdminPaneProps } from "..";
-import * as APIt from "../../../supabase/types";
-import s from "../../../styles/admin/Admin.module.scss";
+} from '@tanstack/react-query';
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import { useState } from 'react';
+import { AdminPaneProps } from '..';
+import * as APIt from '../../../supabase/types';
+import s from '../../../styles/admin/Admin.module.scss';
 import {
   buildKeys,
   listBuilds,
   updateBuild,
-} from "../../../supabase/api/builds";
-import OptimizedImage from "../../OptimizedImage/OptimizedImage";
-import PapercraftDisplay from "../../PapercraftDisplay/PapercraftDisplay";
+} from '../../../supabase/api/builds';
+import OptimizedImage from '../../OptimizedImage/OptimizedImage';
+import PapercraftDisplay from '../../PapercraftDisplay/PapercraftDisplay';
 import {
   getPapercraft,
   papercraftKeys,
-} from "../../../supabase/api/papercrafts";
+} from '../../../supabase/api/papercrafts';
 
 /**
  * The home page for admin papercraft activities
@@ -32,17 +32,17 @@ const AdminBuildsPane: React.FC<AdminPaneProps> = ({
   setActiveProfile,
 }) => {
   // search for builds
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
   const [currentSearch, setCurrentSearch] = useState<string>(search);
   const [currBuild, setCurrBuild] = useState<APIt.Build | null>(null);
 
   // queries
   const builds = useQuery(
-    ["admin", ...buildKeys.list({ search: currentSearch })],
+    ['admin', ...buildKeys.list({ search: currentSearch })],
     () => listBuilds({ search: currentSearch })
   );
   const selectedPapercraft = useQuery(
-    ["admin", papercraftKeys.get(currBuild?.papercraft_id || "")],
+    ['admin', papercraftKeys.get(currBuild?.papercraft_id || '')],
     () => getPapercraft(currBuild!.papercraft_id),
     { enabled: !!currBuild }
   );
@@ -55,9 +55,9 @@ const AdminBuildsPane: React.FC<AdminPaneProps> = ({
     },
     {
       onSuccess: (build) => {
-        queryClient.invalidateQueries(["admin", buildKeys.lists]);
+        queryClient.invalidateQueries(['admin', buildKeys.lists]);
         queryClient.invalidateQueries([
-          "admin",
+          'admin',
           papercraftKeys.get(build[0].papercraft_id),
         ]);
       },
@@ -76,12 +76,12 @@ const AdminBuildsPane: React.FC<AdminPaneProps> = ({
           <input
             type="text"
             value={search}
-            placeholder={"Search by title..."}
+            placeholder={'Search by title...'}
             className={s.search_bar}
-            autoComplete={"off"}
+            autoComplete={'off'}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === 'Enter') {
                 setCurrentSearch(search);
               }
             }}
@@ -91,7 +91,7 @@ const AdminBuildsPane: React.FC<AdminPaneProps> = ({
               ? builds.data.map((build) => (
                   <div
                     className={`${s.result} ${
-                      currBuild && currBuild.id === build.id ? "active" : null
+                      currBuild && currBuild.id === build.id ? 'active' : null
                     }`}
                     key={build.id}
                     onClick={() => setCurrBuild(build)}
@@ -135,8 +135,8 @@ const AdminBuildsPane: React.FC<AdminPaneProps> = ({
                   currBuild &&
                   currBuild.user_id !== activeProfile.id &&
                   !updateBuildMutation.isLoading
-                    ? ""
-                    : "disabled"
+                    ? ''
+                    : 'disabled'
                 }`}
                 onClick={() => {
                   if (!currBuild) return;
@@ -151,8 +151,8 @@ const AdminBuildsPane: React.FC<AdminPaneProps> = ({
                 OWNERSHIP
               </div>
               <div className={s.action_button_note}>
-                makes @{activeProfile.username} the creator of this build.
-                use this for moving archived papercrafts into their respective
+                makes @{activeProfile.username} the creator of this build. use
+                this for moving archived papercrafts into their respective
                 builders&apos; profiles.
               </div>
             </div>

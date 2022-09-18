@@ -7,8 +7,8 @@
 import {
   supabaseClient,
   supabaseServerClient,
-} from "@supabase/auth-helpers-nextjs";
-import * as APIt from "../types";
+} from '@supabase/auth-helpers-nextjs';
+import * as APIt from '../types';
 
 /* -------------------------------------------------------------------------- */
 /*                                   QUERIES                                  */
@@ -25,12 +25,12 @@ export type ListTagsQueryVariables = {
  */
 export const listTags = async ({ search, user_id }: ListTagsQueryVariables) => {
   let req = user_id
-    ? supabaseClient.rpc<APIt.Tag>("search_tags_user", {
-        tag_term: search || "",
+    ? supabaseClient.rpc<APIt.Tag>('search_tags_user', {
+        tag_term: search || '',
         p_user_id: user_id,
       })
-    : supabaseClient.rpc<APIt.Tag>("search_tags", {
-        tag_term: search || "",
+    : supabaseClient.rpc<APIt.Tag>('search_tags', {
+        tag_term: search || '',
       });
   req = req.select(`*`);
   const { data: tags, error } = await req;
@@ -51,7 +51,7 @@ export const createTag = async (
   input: Partial<APIt.Tag> | Partial<APIt.Tag>[]
 ) => {
   const { data: tags, error } = await supabaseClient
-    .from<APIt.Tag>("tags")
+    .from<APIt.Tag>('tags')
     .insert(input);
   if (error) throw error;
   return tags;
@@ -62,10 +62,10 @@ export const createTag = async (
 /* -------------------------------------------------------------------------- */
 
 export const tagsKeys = {
-  all: ["tags"] as const,
-  lists: () => [...tagsKeys.all, "list"] as const,
+  all: ['tags'] as const,
+  lists: () => [...tagsKeys.all, 'list'] as const,
   list: (params: ListTagsQueryVariables) =>
     [...tagsKeys.lists(), params] as const,
-  gets: () => [...tagsKeys.all, "get"] as const,
+  gets: () => [...tagsKeys.all, 'get'] as const,
   get: (id: string) => [...tagsKeys.gets(), id] as const,
 };

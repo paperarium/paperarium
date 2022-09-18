@@ -1,19 +1,19 @@
 import {
   supabaseClient,
   supabaseServerClient,
-} from "@supabase/auth-helpers-nextjs";
-import { QueryClient, useQuery } from "@tanstack/react-query";
-import type { NextPage } from "next";
-import Head from "next/head";
-import { useState } from "react";
-import { AdminPaneProps } from "..";
-import * as APIt from "../../../supabase/types";
-import s from "../../../styles/admin/Admin.module.scss";
-import es from "../../../styles/Profile.module.scss";
-import { listProfiles } from "../../../supabase/api/profiles";
-import rectifyDateFormat from "../../../util/rectifyDateFormat";
-import FormEditProfile from "../../FormEditProfile/FormEditProfile";
-import OptimizedImage from "../../OptimizedImage/OptimizedImage";
+} from '@supabase/auth-helpers-nextjs';
+import { QueryClient, useQuery } from '@tanstack/react-query';
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import { useState } from 'react';
+import { AdminPaneProps } from '..';
+import * as APIt from '../../../supabase/types';
+import s from '../../../styles/admin/Admin.module.scss';
+import es from '../../../styles/Profile.module.scss';
+import { listProfiles } from '../../../supabase/api/profiles';
+import rectifyDateFormat from '../../../util/rectifyDateFormat';
+import FormEditProfile from '../../FormEditProfile/FormEditProfile';
+import OptimizedImage from '../../OptimizedImage/OptimizedImage';
 
 /**
  * The home page for admin activities
@@ -24,13 +24,13 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
   setActiveProfile,
 }) => {
   // search for profiles
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
   const [currProfile, setCurrProfile] = useState<APIt.Profile | null>(
     activeProfile
   );
   const [currentSearch, setCurrentSearch] = useState<string>(search);
   const profiles = useQuery(
-    ["admin", "profiles", { search: currentSearch }],
+    ['admin', 'profiles', { search: currentSearch }],
     () => listProfiles({ search: currentSearch })
   );
 
@@ -46,12 +46,12 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
           <input
             type="text"
             value={search}
-            placeholder={"Search by profile..."}
+            placeholder={'Search by profile...'}
             className={s.search_bar}
-            autoComplete={"off"}
+            autoComplete={'off'}
             onChange={(e) => setSearch(e.target.value)}
             onKeyPress={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === 'Enter') {
                 setCurrentSearch(search);
               }
             }}
@@ -62,7 +62,7 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
                   <div
                     className={`${s.result} ${
                       currProfile && currProfile.id === profile.id
-                        ? "active"
+                        ? 'active'
                         : null
                     }`}
                     key={profile.id}
@@ -70,7 +70,7 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
                   >
                     <div
                       className={s.result_pic}
-                      style={{ borderRadius: "50%", overflow: "hidden" }}
+                      style={{ borderRadius: '50%', overflow: 'hidden' }}
                     >
                       <OptimizedImage
                         src={profile.avatar_url}
@@ -99,7 +99,7 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
           <div
             className={s.add_button}
             onClick={async () => {
-              await supabaseClient.rpc("generate_user");
+              await supabaseClient.rpc('generate_user');
             }}
           >
             GENERATE A PROFILE

@@ -1,4 +1,4 @@
-@import "../mixins";
+@import '../mixins';
 
 .profile_container {
   display: flex;
@@ -10,7 +10,7 @@
   position: relative;
   margin-top: 5px;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     display: block;
     margin-top: 0px;
   }
@@ -31,7 +31,7 @@
   padding: 10px;
   overflow-y: scroll;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     transform: none;
     position: fixed;
     top: calc(var(--header-height) + var(--notice-bar-height));
@@ -61,7 +61,7 @@ $search_bar_visible_height: 40px;
   border-bottom: $border;
   z-index: 2;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     position: fixed;
     top: calc(var(--header-height) + var(--notice-bar-height));
     left: var(--profile-bar-width);
@@ -74,7 +74,7 @@ $search_bar_visible_height: 40px;
   position: relative;
   min-height: calc(100vh - var(--header-height) - var(--notice-bar-height));
   @include grid-background;
-  @include respond-to("small") {
+  @include respond-to('small') {
     padding-left: calc(var(--profile-bar-width));
     flex: 1;
   }
@@ -91,7 +91,7 @@ $search_bar_visible_height: 40px;
   gap: 10px;
   flex: 1;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     flex-direction: column;
     justify-content: flex-start;
     height: auto;
@@ -115,7 +115,7 @@ $search_bar_visible_height: 40px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-family: "FT88 Gothic";
+  font-family: 'FT88 Gothic';
   font-size: 30px;
   line-height: 1;
 
@@ -127,7 +127,7 @@ $search_bar_visible_height: 40px;
     border-radius: 50%;
   }
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     width: 80%;
     height: auto;
     aspect-ratio: 1;
@@ -135,7 +135,7 @@ $search_bar_visible_height: 40px;
   }
 
   &:after {
-    content: "";
+    content: '';
     position: absolute;
     top: -5px;
     left: -5px;
@@ -154,7 +154,7 @@ $search_bar_visible_height: 40px;
   gap: 1px;
   text-align: left;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     text-align: center;
     width: 100%;
     padding: 5px 0px;
@@ -211,7 +211,7 @@ $search_bar_visible_height: 40px;
   letter-spacing: -1px;
   padding: 0px 10px;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     flex: 1;
     text-align: center;
   }
@@ -247,12 +247,12 @@ $search_bar_visible_height: 40px;
   opacity: 1;
   transition: opacity 0.3s ease-in-out;
 
-  &[class~="exit-active"] {
+  &[class~='exit-active'] {
     pointer-events: none;
     opacity: 0;
   }
 
-  &[class~="exit-done"] {
+  &[class~='exit-done'] {
     pointer-events: none;
     opacity: 0;
   }
@@ -280,12 +280,12 @@ $search_bar_visible_height: 40px;
   align-items: center;
   font-size: 18px;
 
-  &[class~="enter-active"] {
+  &[class~='enter-active'] {
     opacity: 1;
     pointer-events: all;
   }
 
-  &[class~="enter-done"] {
+  &[class~='enter-done'] {
     opacity: 1;
     pointer-events: all;
   }

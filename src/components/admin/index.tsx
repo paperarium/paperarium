@@ -4,14 +4,22 @@
  * created on Wed Sep 07 2022
  * 2022 the nobot space,
  */
-import { IoPersonOutline, IoHomeOutline, IoCubeOutline, IoBuildOutline, IoShapesOutline, IoPricetagOutline, IoPeopleOutline } from "react-icons/io5";
-import * as APIt from "../../supabase/types";
-import AdminBuildsPane from "./panes/AdminBuilds";
-import AdminCollectivesPane from "./panes/AdminCollectives";
-import AdminHomePane from "./panes/AdminHome";
-import AdminPapercraftsPane from "./panes/AdminPapercrafts";
-import AdminProfilesPane from "./panes/AdminProfiles";
-import AdminTagsPane from "./panes/AdminTags";
+import {
+  IoPersonOutline,
+  IoHomeOutline,
+  IoCubeOutline,
+  IoBuildOutline,
+  IoShapesOutline,
+  IoPricetagOutline,
+  IoPeopleOutline,
+} from 'react-icons/io5';
+import * as APIt from '../../supabase/types';
+import AdminBuildsPane from './panes/AdminBuilds';
+import AdminCollectivesPane from './panes/AdminCollectives';
+import AdminHomePane from './panes/AdminHome';
+import AdminPapercraftsPane from './panes/AdminPapercrafts';
+import AdminProfilesPane from './panes/AdminProfiles';
+import AdminTagsPane from './panes/AdminTags';
 
 type AdminPaneObj = {
   icon: JSX.Element;
@@ -19,12 +27,12 @@ type AdminPaneObj = {
 };
 
 export enum AdminPane {
-  Home = "home",
-  Profile = "profile",
-  Papercrafts = "papercrafts",
-  Builds = "builds",
-  Tags = "tags",
-  Collectives = "collectives"
+  Home = 'home',
+  Profile = 'profile',
+  Papercrafts = 'papercrafts',
+  Builds = 'builds',
+  Tags = 'tags',
+  Collectives = 'collectives',
 }
 
 // export type AdminPane = keyof typeof ADMIN_PANES;
@@ -40,7 +48,7 @@ export const ADMIN_PANES: { [key in AdminPane]: AdminPaneObj } = {
   },
   [AdminPane.Collectives]: {
     icon: <IoPeopleOutline />,
-    pane: AdminCollectivesPane
+    pane: AdminCollectivesPane,
   },
   [AdminPane.Papercrafts]: {
     icon: <IoShapesOutline />,
@@ -52,8 +60,8 @@ export const ADMIN_PANES: { [key in AdminPane]: AdminPaneObj } = {
   },
   [AdminPane.Tags]: {
     icon: <IoPricetagOutline />,
-    pane: AdminTagsPane
-  }
+    pane: AdminTagsPane,
+  },
 };
 
 export type AdminPaneProps = {

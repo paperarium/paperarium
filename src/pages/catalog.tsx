@@ -1,9 +1,9 @@
-import { dehydrate, QueryClient } from "@tanstack/react-query";
-import type { NextPage } from "next";
-import Head from "next/head";
-import s from "../styles/Explore.module.scss";
-import { listPapercrafts, papercraftKeys } from "../supabase/api/papercrafts";
-import PapercraftGallery from "../components/PapercraftGallery/PapercraftGallery";
+import { dehydrate, QueryClient } from '@tanstack/react-query';
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import s from '../styles/Explore.module.scss';
+import { listPapercrafts, papercraftKeys } from '../supabase/api/papercrafts';
+import PapercraftGallery from '../components/PapercraftGallery/PapercraftGallery';
 
 const ExplorePage: NextPage = () => {
   return (
@@ -30,7 +30,7 @@ const ExplorePage: NextPage = () => {
  */
 export async function getStaticProps(context: any) {
   const queryClient = new QueryClient();
-  const params = { search: "" };
+  const params = { search: '' };
   await queryClient.prefetchQuery(papercraftKeys.list(params), () =>
     listPapercrafts(params)
   );

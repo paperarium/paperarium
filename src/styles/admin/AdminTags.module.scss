@@ -1,4 +1,4 @@
-@import "../mixins";
+@import '../mixins';
 
 .container {
   display: flex;
@@ -54,7 +54,7 @@
   border-radius: 5px;
   outline: none;
   font-size: 15px;
-  font-family: "FT88";
+  font-family: 'FT88';
   letter-spacing: -1px;
 }
 
@@ -128,11 +128,11 @@
   opacity: 0;
   pointer-events: none;
 
-  &[class~="enter-active"] {
+  &[class~='enter-active'] {
     opacity: 1;
     pointer-events: all;
   }
-  &[class~="enter-done"] {
+  &[class~='enter-done'] {
     opacity: 1;
     pointer-events: all;
   }

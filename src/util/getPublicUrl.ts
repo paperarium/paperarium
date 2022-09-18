@@ -5,7 +5,7 @@
  * 2022 the nobot space,
  */
 
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 
 /**
  * Gets the public URL from an encoded key of a supabase storage object.
@@ -13,8 +13,8 @@ import { supabaseClient } from "@supabase/auth-helpers-nextjs";
  * @returns a public URL for the blob
  */
 export default function getPublicUrl(url: string) {
-  const split = url.split("/");
+  const split = url.split('/');
   const bucket = split.shift();
-  return supabaseClient.storage.from(bucket!).getPublicUrl(split.join("/"))
+  return supabaseClient.storage.from(bucket!).getPublicUrl(split.join('/'))
     .data!.publicURL;
 }

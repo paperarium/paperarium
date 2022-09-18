@@ -7,9 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "yarn lint --fix",
+    "prettier": "npx prettier src --check",
+    "prettier:fix": "yarn prettier --write",
+    "format": "yarn prettier:fix && yarn lint:fix",
     "analyze": "ANALYZE=true next build",
-    "update-types": "source .env.local && npx openapi-typescript \"${NEXT_PUBLIC_SUPABASE_URL}/rest/v1\" --header \"apikey: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}\" --header \"Authorization: Bearer ${NEXT_PUBLIC_SUPABASE_ANON_KEY}\" --version=3 --output src/types/database.ts",
-    "check-curl": "source .env.local && curl \"${NEXT_PUBLIC_SUPABASE_URL}/rest/v1?apiKey=${NEXT_PUBLIC_SUPABASE_ANON_KEY}\" -H \"apikey: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}\" -H \"Authorization: Bearer ${NEXT_PUBLIC_SUPABASE_ANON_KEY}\""
+    "prepare": "husky install"
   },
   "dependencies": {
     "@supabase/auth-helpers-nextjs": "^0.2.7",
@@ -45,6 +48,26 @@
     "@types/uuid": "^8.3.4",
     "eslint": "8.22.0",
     "eslint-config-next": "12.2.5",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": ">=6",
+    "lint-staged": ">=10",
+    "pre-commit": "^1.2.2",
+    "prettier": "^2.7.1",
+    "tslint-config-prettier": "^1.18.0",
     "typescript": "4.7.4"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.tsx": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.scss": [
+      "prettier --write"
+    ]
   }
 }

@@ -4,11 +4,11 @@
  * created on Sat Sep 17 2022
  * 2022 the nobot space,
  */
-import Link from "next/link";
-import { HiOutlineArchive } from "react-icons/hi";
-import * as APIt from "../../supabase/types";
-import OptimizedImage from "../OptimizedImage/OptimizedImage";
-import s from "./ProfileLink.module.scss";
+import Link from 'next/link';
+import { HiOutlineArchive } from 'react-icons/hi';
+import * as APIt from '../../supabase/types';
+import OptimizedImage from '../OptimizedImage/OptimizedImage';
+import s from './ProfileLink.module.scss';
 
 type ProfileLinkProps = {
   user: APIt.Profile;
@@ -21,7 +21,6 @@ const ProfileLink: React.FC<ProfileLinkProps> = function ProfileLink({
   full,
   children,
 }) {
-
   const fullClass = full ? 'full' : '';
   return (
     <div className={`${s.profile_container} ${fullClass}`}>
@@ -33,7 +32,7 @@ const ProfileLink: React.FC<ProfileLinkProps> = function ProfileLink({
               {user.avatar_url ? (
                 <OptimizedImage
                   src={user.avatar_url}
-                  sizes={"20vw"}
+                  sizes={'20vw'}
                   className={s.profile_pic_image}
                 />
               ) : null}
@@ -43,7 +42,10 @@ const ProfileLink: React.FC<ProfileLinkProps> = function ProfileLink({
       ) : null}
       <Link href={`/profile/${user.username}`} passHref>
         <a className={s.profile_name}>
-          <span className={s.user_name}>@{user.username}{user.archived ? <HiOutlineArchive color="#dba000" /> : null}</span>
+          <span className={s.user_name}>
+            @{user.username}
+            {user.archived ? <HiOutlineArchive color="#dba000" /> : null}
+          </span>
           {full ? (
             <>
               <span>{user.n_builds[0].count} builds</span>

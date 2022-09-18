@@ -4,16 +4,21 @@
  * created on Wed Aug 31 2022
  * 2022 the nobot space,
  */
-import Link from "next/link";
+import Link from 'next/link';
 import {
   IoCubeOutline,
   IoPeopleOutline,
   IoShapesOutline,
   IoTelescopeOutline,
-} from "react-icons/io5";
-import { RiFacebookBoxLine, RiInstagramLine, RiMailLine, RiScissorsCutFill } from "react-icons/ri";
-import NavLink from "../NavLink/NavLink";
-import s from "./Footer.module.scss";
+} from 'react-icons/io5';
+import {
+  RiFacebookBoxLine,
+  RiInstagramLine,
+  RiMailLine,
+  RiScissorsCutFill,
+} from 'react-icons/ri';
+import NavLink from '../NavLink/NavLink';
+import s from './Footer.module.scss';
 
 type FooterProps = {
   marginLeft?: string;
@@ -40,7 +45,7 @@ const Footer: React.FC<FooterProps> = function Footer({ marginLeft }) {
               ✧.*·:·
             </div>
           </div>
-            <div className={s.socials_row}>
+          <div className={s.socials_row}>
             <a
               href="https://instagram.com/paperarium"
               target="_blank"
@@ -63,7 +68,7 @@ const Footer: React.FC<FooterProps> = function Footer({ marginLeft }) {
 
         <div
           className={s.link_grid}
-          style={{ minWidth: "300px", padding: "5px" }}
+          style={{ minWidth: '300px', padding: '5px' }}
         >
           <div className={s.link_grid}>
             <div className={s.nav_cell}>

@@ -1,4 +1,4 @@
-@import "../../styles/mixins";
+@import '../../styles/mixins';
 
 @keyframes fadein {
   from {
@@ -42,7 +42,7 @@ $total: 10;
   color: #303030;
   text-align: center;
 
-  &[class~="clicked"] {
+  &[class~='clicked'] {
     opacity: 1;
     pointer-events: all;
   }

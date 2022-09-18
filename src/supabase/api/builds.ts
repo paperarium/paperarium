@@ -8,8 +8,8 @@
 import {
   supabaseClient,
   supabaseServerClient,
-} from "@supabase/auth-helpers-nextjs";
-import * as APIt from "../types";
+} from '@supabase/auth-helpers-nextjs';
+import * as APIt from '../types';
 
 /* -------------------------------------------------------------------------- */
 /*                                   QUERIES                                  */
@@ -21,7 +21,7 @@ import * as APIt from "../types";
  */
 export const getBuild = async (pid: string) => {
   const { data: builds, error } = await supabaseClient
-    .from<APIt.Build>("builds")
+    .from<APIt.Build>('builds')
     .select(
       `
       *,
@@ -29,7 +29,7 @@ export const getBuild = async (pid: string) => {
       papercraft:papercrafts!inner(id,title,description,pictures,user_id)
     `
     )
-    .eq("id", pid);
+    .eq('id', pid);
   if (error) throw error;
   return builds[0];
 };
@@ -50,15 +50,15 @@ export const listBuilds = async ({
 }: ListBuildsQueryVariables) => {
   let req = (
     search
-      ? supabaseClient.rpc<APIt.Build>("search_builds", {
+      ? supabaseClient.rpc<APIt.Build>('search_builds', {
           build_term: search,
         })
-      : supabaseClient.from<APIt.Build>("builds")
+      : supabaseClient.from<APIt.Build>('builds')
   ).select(
     `*,user:profiles!inner(username,avatar_url),papercraft:papercrafts!builds_papercraft_id_fkey(id,title,description,pictures,user_id)`
   );
-  if (username) req = req.eq("profiles.username" as any, username);
-  const { data: builds, error } = await req.order("created_at", {
+  if (username) req = req.eq('profiles.username' as any, username);
+  const { data: builds, error } = await req.order('created_at', {
     ascending: false,
   });
   if (error) throw error;
@@ -77,7 +77,7 @@ export const createBuild = async (
   input: APIt.BuildInput | APIt.BuildInput[]
 ) => {
   const { data: builds, error } = await supabaseClient
-    .from<APIt.Build>("builds")
+    .from<APIt.Build>('builds')
     .insert(input);
   if (error) throw error;
   return builds;
@@ -90,7 +90,7 @@ export const createBuild = async (
  */
 export const updateBuild = async (id: string, input: Partial<APIt.Build>) => {
   const { data: builds, error } = await supabaseClient
-    .from<APIt.Build>("builds")
+    .from<APIt.Build>('builds')
     .update(input)
     .match({ id });
   if (error) throw error;
@@ -102,8 +102,8 @@ export const updateBuild = async (id: string, input: Partial<APIt.Build>) => {
 /* -------------------------------------------------------------------------- */
 
 export const buildKeys = {
-  all: ["builds"] as const,
-  lists: () => [...buildKeys.all, "list"] as const,
+  all: ['builds'] as const,
+  lists: () => [...buildKeys.all, 'list'] as const,
   list: (params: { search: string; username?: string }) =>
     [...buildKeys.lists(), params] as const,
 };

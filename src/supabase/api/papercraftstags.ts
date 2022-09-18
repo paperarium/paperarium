@@ -5,8 +5,8 @@
  * 2022 the nobot space,
  */
 
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import * as APIt from "../types";
+import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import * as APIt from '../types';
 
 /* -------------------------------------------------------------------------- */
 /*                                  MUTATIONS                                 */
@@ -21,7 +21,7 @@ export const createPapercraftsTags = async (
   input: APIt.PapercraftsTagsInput | APIt.PapercraftsTagsInput[]
 ) => {
   const { data: papercraftsTags, error } = await supabaseClient
-    .from<APIt.PapercraftsTags>("papercrafts_tags")
+    .from<APIt.PapercraftsTags>('papercrafts_tags')
     .insert(input);
   if (error) throw error;
   return papercraftsTags;
@@ -37,7 +37,7 @@ export const deletePapercraftsTags = async (
   tag_id: number
 ) => {
   const { data: papercraftsTags, error } = await supabaseClient
-    .from<APIt.PapercraftsTags>("papercrafts_tags")
+    .from<APIt.PapercraftsTags>('papercrafts_tags')
     .delete()
     .match({ papercraft_id, tag_id });
   if (error) throw error;

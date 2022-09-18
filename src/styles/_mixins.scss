@@ -37,19 +37,19 @@ $layout_bar_height: var(--layout-bar-height);
 }
 
 $breakpoints: (
-  "xsmall": (
+  'xsmall': (
     min-width: 480px,
   ),
-  "small": (
+  'small': (
     min-width: 767px,
   ),
-  "medium": (
+  'medium': (
     min-width: 992px,
   ),
-  "large": (
+  'large': (
     min-width: 1200px,
   ),
-  "xl": (
+  'xl': (
     min-width: 1500px,
   ),
 ) !default;

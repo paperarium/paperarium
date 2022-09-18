@@ -4,22 +4,22 @@
  * created on Sun Sep 04 2022
  * 2022 the nobot space,
  */
-import React, { useRef, useState } from "react";
-import s from "./PapercraftGallery.module.scss";
-import Masonry, { MasonryProps } from "react-masonry-css";
-import FilterBar from "../FilterBar/FilterBar";
-import { useQuery } from "@tanstack/react-query";
+import React, { useRef, useState } from 'react';
+import s from './PapercraftGallery.module.scss';
+import Masonry, { MasonryProps } from 'react-masonry-css';
+import FilterBar from '../FilterBar/FilterBar';
+import { useQuery } from '@tanstack/react-query';
 import {
   listPapercrafts,
   papercraftKeys,
-} from "../../supabase/api/papercrafts";
-import PapercraftCard from "../PapercraftCard/PapercraftCard";
-import { CSSTransition } from "react-transition-group";
-import { MdOutlineTableRows } from "react-icons/md";
-import { RiLayoutGridLine, RiLayoutBottomLine } from "react-icons/ri";
-import { IoCubeOutline, IoShapesOutline } from "react-icons/io5";
-import * as APIt from "../../supabase/types";
-import { buildKeys, listBuilds } from "../../supabase/api/builds";
+} from '../../supabase/api/papercrafts';
+import PapercraftCard from '../PapercraftCard/PapercraftCard';
+import { CSSTransition } from 'react-transition-group';
+import { MdOutlineTableRows } from 'react-icons/md';
+import { RiLayoutGridLine, RiLayoutBottomLine } from 'react-icons/ri';
+import { IoCubeOutline, IoShapesOutline } from 'react-icons/io5';
+import * as APIt from '../../supabase/types';
+import { buildKeys, listBuilds } from '../../supabase/api/builds';
 
 const breakpointColumnsObj = {
   default: 5,
@@ -35,7 +35,7 @@ const breakpointColumnsObj = {
 
 type PapercraftGalleryProps = {
   children?: React.ReactNode;
-  breakPointOverride?: MasonryProps["breakpointCols"];
+  breakPointOverride?: MasonryProps['breakpointCols'];
   username?: string;
   user_id?: string;
   collective?: string;
@@ -45,9 +45,9 @@ type PapercraftGalleryProps = {
 /* --------------------------------- layout --------------------------------- */
 
 enum LayoutType {
-  Compact = "compact",
-  Rows = "rows",
-  Grid = "grid",
+  Compact = 'compact',
+  Rows = 'rows',
+  Grid = 'grid',
 }
 
 const LAYOUT_ICONS: { [key in LayoutType]: JSX.Element } = {
@@ -59,8 +59,8 @@ const LAYOUT_ICONS: { [key in LayoutType]: JSX.Element } = {
 /* -------------------------------- entities -------------------------------- */
 
 export enum EntityType {
-  Papercrafts = "papercrafts",
-  Builds = "builds",
+  Papercrafts = 'papercrafts',
+  Builds = 'builds',
 }
 
 type EntityMeta = {
@@ -102,13 +102,14 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
     const [entityType, setEntityType] = useState<EntityType>(
       EntityType.Papercrafts
     );
-    const [currentSearch, setCurrentSearch] = useState<string>("");
+    const [currentSearch, setCurrentSearch] = useState<string>('');
     const [currentTags, setCurrentTags] = useState<APIt.Tag[]>([]);
     const params = {
       search: currentSearch,
       username,
       collective,
-      tags: currentTags.length > 0 ? currentTags.map(({ id }) => id) : undefined,
+      tags:
+        currentTags.length > 0 ? currentTags.map(({ id }) => id) : undefined,
     };
     const entities = useQuery<APIt.Papercraft[] | APIt.Build[]>(
       ENTITY_MAP[entityType].keys.list(params),
@@ -122,7 +123,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
           {Object.entries(ENTITY_MAP).map(([key, { icon }]) => (
             <div
               className={`${s.layout_type} ${
-                entityType === key ? "active" : ""
+                entityType === key ? 'active' : ''
               }`}
               key={key}
               onClick={() => setEntityType(key as EntityType)}
@@ -134,7 +135,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
           {Object.entries(LAYOUT_ICONS).map(([key, icon]) => (
             <div
               className={`${s.layout_button} ${
-                layoutType === key ? "active" : ""
+                layoutType === key ? 'active' : ''
               }`}
               key={key}
               onClick={() => setLayoutType(key as LayoutType)}

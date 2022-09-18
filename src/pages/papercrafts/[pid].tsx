@@ -4,16 +4,16 @@
  * created on Sun Sep 04 2022
  * 2022 the nobot space,
  */
-import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import PapercraftDisplay from "../../components/PapercraftDisplay/PapercraftDisplay";
-import { getPapercraft, papercraftKeys } from "../../supabase/api/papercrafts";
-import s from "../../components/PapercraftDisplay/PapercraftDisplay.module.scss";
-import { ParsedUrlQuery } from "node:querystring";
-import { CSSTransition } from "react-transition-group";
-import { useRef } from "react";
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import PapercraftDisplay from '../../components/PapercraftDisplay/PapercraftDisplay';
+import { getPapercraft, papercraftKeys } from '../../supabase/api/papercrafts';
+import s from '../../components/PapercraftDisplay/PapercraftDisplay.module.scss';
+import { ParsedUrlQuery } from 'node:querystring';
+import { CSSTransition } from 'react-transition-group';
+import { useRef } from 'react';
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPING                                   */

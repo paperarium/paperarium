@@ -1,4 +1,4 @@
-@import "../../styles/mixins";
+@import '../../styles/mixins';
 
 .sbui-auth {
   width: 100%;
@@ -29,7 +29,7 @@
   padding-left: 2.5rem;
   color: rgba(75, 85, 99, 1);
   outline: none;
-  font-family: "FT88";
+  font-family: 'FT88';
 
   &:focus {
     --tw-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);

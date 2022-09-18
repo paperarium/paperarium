@@ -1,4 +1,4 @@
-@import "./mixins";
+@import './mixins';
 
 .styled_container {
   min-height: 100%;
@@ -29,7 +29,7 @@
   height: auto;
   min-height: auto;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     flex-direction: row;
     min-height: 500px;
     // height: calc(100vh - var(--header-height) - var(--notice-bar-height));
@@ -46,7 +46,7 @@
     z-index: 3;
   }
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     min-height: calc(100vh - var(--header-height) - var(--notice-bar-height));
     width: auto;
     flex: 1;
@@ -82,7 +82,7 @@
   }
 
   & p {
-    font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     font-size: 15px;
   }
 
@@ -90,13 +90,13 @@
     letter-spacing: -1px;
   }
 
-  @include respond-to("xsmall") {
+  @include respond-to('xsmall') {
     & p {
       font-size: 16px;
     }
   }
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     border-bottom: none;
     border-top: $border;
     // border-right: 1px solid #505050;
@@ -133,7 +133,7 @@
   position: relative;
   @include grid-background;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     display: block;
     margin-top: 0px;
   }
@@ -149,7 +149,7 @@
   overflow: hidden;
   z-index: 3;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     display: none;
     width: 15px;
     height: 100%;
@@ -159,7 +159,7 @@
   }
 
   &:after {
-    content: "୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧";
+    content: '୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧';
     white-space: nowrap;
     font-size: 10px;
     position: absolute;
@@ -170,9 +170,9 @@
 
 .title_big {
   font-size: 40px;
-  font-family: "FT88 Gothic";
+  font-family: 'FT88 Gothic';
 
-  @include respond-to("xsmall") {
+  @include respond-to('xsmall') {
     font-size: 50px;
   }
 }

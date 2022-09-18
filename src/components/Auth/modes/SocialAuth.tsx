@@ -4,53 +4,53 @@
  * created on Tue Sep 06 2022
  * 2022 the nobot space,
  */
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { Provider, SupabaseClient } from "@supabase/supabase-js";
-import { Button, Divider, Space, Typography } from "@supabase/ui";
-import { useState } from "react";
-import { RedirectTo, VIEWS, ViewType } from "../Auth";
-import * as SocialIcons from "../SocialIcons";
-import s from "../Auth.module.scss";
+import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import { Provider, SupabaseClient } from '@supabase/supabase-js';
+import { Button, Divider, Space, Typography } from '@supabase/ui';
+import { useState } from 'react';
+import { RedirectTo, VIEWS, ViewType } from '../Auth';
+import * as SocialIcons from '../SocialIcons';
+import s from '../Auth.module.scss';
 
 const buttonStyles: any = {
   azure: {
-    backgroundColor: "#008AD7",
-    color: "white",
+    backgroundColor: '#008AD7',
+    color: 'white',
   },
   bitbucket: {
-    backgroundColor: "#205081",
-    color: "white",
+    backgroundColor: '#205081',
+    color: 'white',
   },
   facebook: {
-    backgroundColor: "#4267B2",
-    color: "white",
+    backgroundColor: '#4267B2',
+    color: 'white',
   },
   github: {
-    backgroundColor: "#333",
-    color: "white",
+    backgroundColor: '#333',
+    color: 'white',
   },
   gitlab: {
-    backgroundColor: "#FC6D27",
+    backgroundColor: '#FC6D27',
   },
   google: {
-    backgroundColor: "#ce4430",
-    color: "white",
+    backgroundColor: '#ce4430',
+    color: 'white',
   },
   twitter: {
-    backgroundColor: "#1DA1F2",
-    color: "white",
+    backgroundColor: '#1DA1F2',
+    color: 'white',
   },
   apple: {
-    backgroundColor: "#000",
-    color: "white",
+    backgroundColor: '#000',
+    color: 'white',
   },
   discord: {
-    backgroundColor: "#404fec",
-    color: "white",
+    backgroundColor: '#404fec',
+    color: 'white',
   },
   twitch: {
-    backgroundColor: "#9146ff",
-    color: "white",
+    backgroundColor: '#9146ff',
+    color: 'white',
   },
 };
 
@@ -73,7 +73,7 @@ export function SocialAuth({
 }: SocialAuthProps) {
   // statefuls
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const handleProviderSignIn = async (provider: Provider) => {
     setLoading(true);
@@ -86,14 +86,14 @@ export function SocialAuth({
   };
 
   return (
-    <Space size={8} direction={"vertical"}>
+    <Space size={8} direction={'vertical'}>
       {providers && providers.length > 0 && (
         <>
-          <Space size={4} direction={"vertical"}>
+          <Space size={4} direction={'vertical'}>
             <Typography.Text type="secondary" className={s.sbui_auth_label}>
-              Sign {view === VIEWS.SIGN_UP ? "up" : "in"} with
+              Sign {view === VIEWS.SIGN_UP ? 'up' : 'in'} with
             </Typography.Text>
-            <Space size={2} direction={"vertical"}>
+            <Space size={2} direction={'vertical'}>
               {providers.map((provider) => {
                 // @ts-ignore
                 const AuthIcon = SocialIcons[provider];
@@ -107,12 +107,12 @@ export function SocialAuth({
                       type="default"
                       shadow
                       // style={buttonStyles[provider]}
-                      icon={AuthIcon ? <AuthIcon /> : ""}
+                      icon={AuthIcon ? <AuthIcon /> : ''}
                       loading={loading}
                       onClick={() => handleProviderSignIn(provider)}
-                      className={"flex items-center"}
+                      className={'flex items-center'}
                     >
-                      Sign {view === VIEWS.SIGN_UP ? "up" : "in"} with{" "}
+                      Sign {view === VIEWS.SIGN_UP ? 'up' : 'in'} with{' '}
                       {provider}
                     </Button>
                   </div>

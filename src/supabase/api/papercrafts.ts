@@ -5,8 +5,8 @@
  * 2022 the nobot space,
  */
 
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import * as APIt from "../types";
+import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import * as APIt from '../types';
 
 /* -------------------------------------------------------------------------- */
 /*                                   QUERIES                                  */
@@ -18,7 +18,7 @@ import * as APIt from "../types";
  */
 export const getPapercraft = async (pid: string) => {
   const { data: papercrafts, error } = await supabaseClient
-    .from<APIt.Papercraft>("papercrafts")
+    .from<APIt.Papercraft>('papercrafts')
     .select(
       `
       *,
@@ -28,7 +28,7 @@ export const getPapercraft = async (pid: string) => {
       tags:tags(*)
     `
     )
-    .eq("id", pid);
+    .eq('id', pid);
   if (error) throw error;
   return papercrafts[0];
 };
@@ -52,21 +52,21 @@ export const listPapercrafts = async ({
 }: ListPapercraftsQueryVariables) => {
   let req = (
     search
-      ? supabaseClient.rpc<APIt.Papercraft>("search_papercrafts", {
+      ? supabaseClient.rpc<APIt.Papercraft>('search_papercrafts', {
           papercraft_term: search,
         })
-      : supabaseClient.from<APIt.Papercraft>("papercrafts")
+      : supabaseClient.from<APIt.Papercraft>('papercrafts')
   ).select(`
     *,
     user:profiles!inner(username,avatar_url,archived),
     collective:collectives!${
-      collective ? "inner" : "left"
+      collective ? 'inner' : 'left'
     }(titlecode,title,avatar_url),
     tags!inner(id,name,code)`);
-  if (tags) req = req.in("tags.id" as any, tags);
-  if (username) req = req.eq("profiles.username" as any, username);
-  if (collective) req = req.eq("collectives.titlecode" as any, collective);
-  const { data: papercrafts, error } = await req.order("created_at", {
+  if (tags) req = req.in('tags.id' as any, tags);
+  if (username) req = req.eq('profiles.username' as any, username);
+  if (collective) req = req.eq('collectives.titlecode' as any, collective);
+  const { data: papercrafts, error } = await req.order('created_at', {
     ascending: false,
   });
   if (error) throw error;
@@ -86,7 +86,7 @@ export const createPapercraft = async (
   input: APIt.PapercraftInput | APIt.PapercraftInput[]
 ) => {
   const { data: papercrafts, error } = await supabaseClient
-    .from<APIt.Papercraft>("papercrafts")
+    .from<APIt.Papercraft>('papercrafts')
     .insert(input);
   if (error) throw error;
   return papercrafts;
@@ -102,7 +102,7 @@ export const updatePapercraft = async (
   input: Partial<APIt.Papercraft>
 ) => {
   const { data: papercrafts, error } = await supabaseClient
-    .from<APIt.Papercraft>("papercrafts")
+    .from<APIt.Papercraft>('papercrafts')
     .update(input)
     .match({ id });
   if (error) throw error;
@@ -114,10 +114,10 @@ export const updatePapercraft = async (
 /* -------------------------------------------------------------------------- */
 
 export const papercraftKeys = {
-  all: ["papercrafts"] as const,
-  lists: () => [...papercraftKeys.all, "list"] as const,
+  all: ['papercrafts'] as const,
+  lists: () => [...papercraftKeys.all, 'list'] as const,
   list: (params: ListPapercraftsQueryVariables) =>
     [...papercraftKeys.lists(), params] as const,
-  gets: () => [...papercraftKeys.all, "get"] as const,
+  gets: () => [...papercraftKeys.all, 'get'] as const,
   get: (id: string) => [...papercraftKeys.gets(), id] as const,
 };

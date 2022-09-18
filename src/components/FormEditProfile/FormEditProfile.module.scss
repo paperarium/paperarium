@@ -1,4 +1,4 @@
-@import "../../styles/mixins";
+@import '../../styles/mixins';
 
 @keyframes fadeup {
   from {
@@ -28,7 +28,7 @@
   animation: fadeup 0.5s ease-in-out;
 
   &:after {
-    content: "EDIT YOUR PROFILE";
+    content: 'EDIT YOUR PROFILE';
     position: absolute;
     top: 5px;
     left: 50%;
@@ -46,7 +46,7 @@
   }
 
   &:before {
-    content: "";
+    content: '';
     position: absolute;
     top: -10px;
     left: -10px;
@@ -130,7 +130,7 @@
     border: $border;
   }
 
-  &[class~="disabled"] {
+  &[class~='disabled'] {
     background-color: #d0d0d0;
     color: black;
     opacity: 0.5;
@@ -165,7 +165,7 @@
   padding: 0px 5px;
   outline: none;
   font-size: 15px;
-  font-family: "FT88";
+  font-family: 'FT88';
 }
 
 .description_input {
@@ -177,10 +177,10 @@
   resize: none;
   width: 100%;
   font-size: 13px;
-  font-family: "FT88";
+  font-family: 'FT88';
   flex-shrink: 0;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     max-height: 300px;
   }
 }
@@ -207,12 +207,12 @@
   pointer-events: none;
   cursor: default;
 
-  &[class~="enter-active"] {
+  &[class~='enter-active'] {
     pointer-events: none;
     opacity: 1;
   }
 
-  &[class~="enter-done"] {
+  &[class~='enter-done'] {
     pointer-events: none;
     opacity: 1;
   }

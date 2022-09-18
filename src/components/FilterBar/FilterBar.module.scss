@@ -1,4 +1,4 @@
-@import "../../styles/mixins";
+@import '../../styles/mixins';
 
 .container {
   position: sticky;
@@ -12,7 +12,7 @@
   z-index: 2;
   pointer-events: none;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     z-index: 3;
     // position: fixed;
     // height: auto;
@@ -36,11 +36,11 @@
   transition: transform 0.3s ease-in-out;
   transform: translateY(calc(-100% + $search_bar_visible_height));
 
-  &[class~="enter-active"] {
+  &[class~='enter-active'] {
     transform: translateY(0px);
   }
 
-  &[class~="enter-done"] {
+  &[class~='enter-done'] {
     transform: translateY(0px);
   }
 }
@@ -54,15 +54,15 @@
   justify-content: center;
   align-items: center;
 
-  div[class~="enter-active"] > & {
+  div[class~='enter-active'] > & {
     opacity: 1;
   }
 
-  div[class~="enter-done"] > & {
+  div[class~='enter-done'] > & {
     opacity: 1;
   }
 
-  div[class~="exit-active"] > & {
+  div[class~='exit-active'] > & {
     opacity: 1;
   }
 }
@@ -91,7 +91,7 @@
   height: 100%;
   outline: none;
   padding-left: 30px;
-  font-family: "FT88";
+  font-family: 'FT88';
   font-size: 15px;
   vertical-align: bottom;
   min-width: 100px;
@@ -123,7 +123,7 @@
     color: $background;
   }
 
-  &[class~="active"] {
+  &[class~='active'] {
     background-color: $foreground;
     color: $background;
   }
@@ -243,7 +243,7 @@
     border: 1px solid $foreground;
   }
 
-  &[class~="active"] {
+  &[class~='active'] {
     background-color: $foreground;
     color: $background;
   }

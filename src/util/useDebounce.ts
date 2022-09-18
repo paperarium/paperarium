@@ -5,7 +5,7 @@
  * 2022 the nobot space,
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 // Hook
 export default function useDebounce<T>(value: T, delay: number) {

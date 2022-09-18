@@ -4,13 +4,13 @@
  * created on Thu Aug 25 2022
  * 2022 the nobot space,
  */
-import s from "./FileUpload.module.scss";
-import { FiX, FiCheckCircle, FiUpload } from "react-icons/fi";
-import { ChangeEventHandler, MouseEventHandler, useRef } from "react";
+import s from './FileUpload.module.scss';
+import { FiX, FiCheckCircle, FiUpload } from 'react-icons/fi';
+import { ChangeEventHandler, MouseEventHandler, useRef } from 'react';
 
 type FileUploadProps = {
-  file: File | string |  null;
-  setFile: (newFile: File | string |  null) => void;
+  file: File | string | null;
+  setFile: (newFile: File | string | null) => void;
   accept?: string;
   withIcon?: boolean;
   children?: React.ReactNode;
@@ -32,7 +32,7 @@ const FileUpload: React.FC<FileUploadProps> = function FileUpload({
   const onClearClick: MouseEventHandler = (event) => {
     event.stopPropagation();
     setFile(null);
-    if (inputRef.current) inputRef.current.value = "";
+    if (inputRef.current) inputRef.current.value = '';
   };
 
   return (
@@ -55,7 +55,7 @@ const FileUpload: React.FC<FileUploadProps> = function FileUpload({
               {file ? (
                 <>
                   <FiCheckCircle />
-                  {typeof file === "string" ? file.split('/').pop() : file.name}
+                  {typeof file === 'string' ? file.split('/').pop() : file.name}
                 </>
               ) : null}
             </div>

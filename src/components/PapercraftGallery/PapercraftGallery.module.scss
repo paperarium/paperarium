@@ -1,4 +1,4 @@
-@import "../../styles/mixins";
+@import '../../styles/mixins';
 
 .meta_container {
   width: 100%;
@@ -7,7 +7,7 @@
   flex-direction: column;
   min-height: calc(100vh - var(--header-height) - var(--notice-bar-height));
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     flex-direction: row;
   }
 }
@@ -48,7 +48,7 @@
   border-bottom: $border;
   font-size: calc($layout_bar_height - 10px);
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     height: calc(100vh - var(--header-height) - var(--notice-bar-height) - 1px);
     width: $layout_bar_height;
     flex-direction: column;
@@ -74,7 +74,7 @@
     color: $foreground2;
   }
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     height: auto;
     width: 100%;
     border-left: none;
@@ -83,7 +83,7 @@
     writing-mode: vertical-lr;
   }
 
-  &[class~="active"] {
+  &[class~='active'] {
     color: $foreground;
   }
 }
@@ -97,7 +97,7 @@
   vertical-align: -10%;
   flex: 1;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     padding: 10px 5px;
   }
 
@@ -111,7 +111,7 @@
   height: 100%;
   flex: 1;
 
-  @include respond-to("small") {
+  @include respond-to('small') {
     height: auto;
     width: 100%;
     border-left: none;
@@ -136,7 +136,7 @@
   gap: 5px;
   flex-shrink: 1;
 
-  @include respond-to("medium") {
+  @include respond-to('medium') {
     max-width: 33%;
   }
 }
@@ -158,12 +158,12 @@
   align-items: center;
   font-size: 18px;
 
-  &[class~="enter-active"] {
+  &[class~='enter-active'] {
     opacity: 1;
     pointer-events: all;
   }
 
-  &[class~="enter-done"] {
+  &[class~='enter-done'] {
     opacity: 1;
     pointer-events: all;
   }

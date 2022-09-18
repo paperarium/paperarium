@@ -1,17 +1,13 @@
-import * as APIt from "../../../supabase/types";
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
-import Head from "next/head";
-import { useRef, useState } from "react";
-import { AdminPaneProps } from "..";
-import s from "../../../styles/admin/Admin.module.scss";
-import s2 from "../../../styles/admin/AdminTags.module.scss";
-import { createTag, listTags, tagsKeys } from "../../../supabase/api/tags";
-import { GrClose } from "react-icons/gr";
-import { CSSTransition } from "react-transition-group";
+import * as APIt from '../../../supabase/types';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import Head from 'next/head';
+import { useRef, useState } from 'react';
+import { AdminPaneProps } from '..';
+import s from '../../../styles/admin/Admin.module.scss';
+import s2 from '../../../styles/admin/AdminTags.module.scss';
+import { createTag, listTags, tagsKeys } from '../../../supabase/api/tags';
+import { GrClose } from 'react-icons/gr';
+import { CSSTransition } from 'react-transition-group';
 
 let nTags = 0;
 
@@ -21,19 +17,19 @@ let nTags = 0;
  */
 const AdminTagsPane: React.FC<AdminPaneProps> = () => {
   // search for tags
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
   const [currentSearch, setCurrentSearch] = useState<string>(search);
   const [currTag, setCurrTag] = useState<APIt.Tag | null>(null);
   const tags = useQuery(
-    ["admin", ...tagsKeys.list({ search: currentSearch })],
+    ['admin', ...tagsKeys.list({ search: currentSearch })],
     () => listTags({ search: currentSearch })
   );
   const [showCreate, setShowCreate] = useState(true);
   const [createTagsInput, setCreateTagsInput] = useState<APIt.Tag[]>([
     {
       id: nTags,
-      name: "",
-      code: "",
+      name: '',
+      code: '',
       n_papercrafts: 0,
     },
   ]);
@@ -59,13 +55,13 @@ const AdminTagsPane: React.FC<AdminPaneProps> = () => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["admin", ...tagsKeys.lists()]);
+        queryClient.invalidateQueries(['admin', ...tagsKeys.lists()]);
         nTags += 1;
         setCreateTagsInput([
           {
             id: nTags,
-            name: "",
-            code: "",
+            name: '',
+            code: '',
             n_papercrafts: 0,
           },
         ]);
@@ -85,12 +81,12 @@ const AdminTagsPane: React.FC<AdminPaneProps> = () => {
           <input
             type="text"
             value={search}
-            placeholder={"Search by tag name..."}
+            placeholder={'Search by tag name...'}
             className={s.search_bar}
-            autoComplete={"off"}
+            autoComplete={'off'}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === 'Enter') {
                 setCurrentSearch(search);
               }
             }}
@@ -100,14 +96,14 @@ const AdminTagsPane: React.FC<AdminPaneProps> = () => {
               ? tags.data.map((tag) => (
                   <div
                     className={`${s.result} ${
-                      currTag && currTag.id === tag.id ? "active" : null
+                      currTag && currTag.id === tag.id ? 'active' : null
                     }`}
                     key={tag.id}
                     onClick={() => {
                       setCurrTag(tag);
                       setShowCreate(false);
                     }}
-                    style={{ paddingLeft: "5px" }}
+                    style={{ paddingLeft: '5px' }}
                   >
                     {tag.name}
                     <div className={s.result_username}>{tag.code}</div>
@@ -135,7 +131,7 @@ const AdminTagsPane: React.FC<AdminPaneProps> = () => {
                       <input
                         type="text"
                         className={s2.input_field}
-                        placeholder={"Name (Nintendo, e.g.)"}
+                        placeholder={'Name (Nintendo, e.g.)'}
                         value={tag.name}
                         onChange={(e) => {
                           const tags = [...createTagsInput];
@@ -146,7 +142,7 @@ const AdminTagsPane: React.FC<AdminPaneProps> = () => {
                       <input
                         type="text"
                         className={s2.input_field}
-                        placeholder={"Code (nintendo, e.g.)"}
+                        placeholder={'Code (nintendo, e.g.)'}
                         value={tag.code}
                         onChange={(e) => {
                           const tags = [...createTagsInput];
@@ -164,8 +160,8 @@ const AdminTagsPane: React.FC<AdminPaneProps> = () => {
                             setCreateTagsInput([
                               {
                                 id: nTags,
-                                name: "",
-                                code: "",
+                                name: '',
+                                code: '',
                                 n_papercrafts: 0,
                               },
                             ]);
@@ -186,8 +182,8 @@ const AdminTagsPane: React.FC<AdminPaneProps> = () => {
                         ...createTagsInput,
                         {
                           id: nTags,
-                          name: "",
-                          code: "",
+                          name: '',
+                          code: '',
                           n_papercrafts: 0,
                         },
                       ]);

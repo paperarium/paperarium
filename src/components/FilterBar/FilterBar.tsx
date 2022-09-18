@@ -4,20 +4,20 @@
  * created on Tue Sep 06 2022
  * 2022 the nobot space,
  */
-import React, { useRef, useState } from "react";
-import { AiOutlineSearch } from "react-icons/ai";
-import { BsFilterCircle, BsFilterCircleFill } from "react-icons/bs";
-import { CSSTransition } from "react-transition-group";
-import s from "./FilterBar.module.scss";
-import * as APIt from "../../supabase/types";
-import { GrClose } from "react-icons/gr";
-import { useQuery } from "@tanstack/react-query";
+import React, { useRef, useState } from 'react';
+import { AiOutlineSearch } from 'react-icons/ai';
+import { BsFilterCircle, BsFilterCircleFill } from 'react-icons/bs';
+import { CSSTransition } from 'react-transition-group';
+import s from './FilterBar.module.scss';
+import * as APIt from '../../supabase/types';
+import { GrClose } from 'react-icons/gr';
+import { useQuery } from '@tanstack/react-query';
 import {
   listTags,
   ListTagsQueryVariables,
   tagsKeys,
-} from "../../supabase/api/tags";
-import { IoPricetagOutline } from "react-icons/io5";
+} from '../../supabase/api/tags';
+import { IoPricetagOutline } from 'react-icons/io5';
 
 type FilterBarProps = {
   user_id?: string;
@@ -36,8 +36,8 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
 }) {
   // statefuls
   const menuRef = useRef<HTMLDivElement>(null);
-  const [search, setSearch] = useState("");
-  const [tagSearch, setTagSearch] = useState("");
+  const [search, setSearch] = useState('');
+  const [tagSearch, setTagSearch] = useState('');
   const [expanded, setExpanded] = useState(false);
   // list tags
   const qparams: ListTagsQueryVariables = { search: tagSearch, user_id };
@@ -55,11 +55,11 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
                 type="text"
                 className={s.search_input}
                 placeholder="Search for a tag"
-                autoCorrect={"off"}
-                autoCapitalize={"off"}
+                autoCorrect={'off'}
+                autoCapitalize={'off'}
                 spellCheck={false}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") {
+                  if (e.key === 'Enter') {
                     setTagSearch((e.target as HTMLInputElement).value);
                   }
                 }}
@@ -72,13 +72,13 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
               <div className={s.tag_row_container}>
                 {tags.data
                   ? tags.data.map((tag) => {
-                      let active = "";
+                      let active = '';
                       if (
                         currentTags.findIndex(
                           ({ id: e_id }) => e_id == tag.id
                         ) !== -1
                       )
-                        active = "active";
+                        active = 'active';
                       return (
                         <div
                           key={tag.id}
@@ -103,12 +103,12 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
               className={s.search_input}
               placeholder="Search"
               value={search}
-              autoCorrect={"off"}
-              autoCapitalize={"off"}
+              autoCorrect={'off'}
+              autoCapitalize={'off'}
               spellCheck={false}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
+                if (e.key === 'Enter') {
                   submitSearch(search);
                 }
               }}
@@ -117,7 +117,7 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
               <AiOutlineSearch />
             </div>
             <div
-              className={`${s.filter_button} ${expanded ? "active" : ""}`}
+              className={`${s.filter_button} ${expanded ? 'active' : ''}`}
               onClick={() => setExpanded(!expanded)}
             >
               TAGS
@@ -132,7 +132,7 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
                 onClick={() => {
                   const newTags = [...currentTags];
                   newTags.splice(i, 1);
-                  submitTags(newTags);  
+                  submitTags(newTags);
                 }}
               >
                 <>
@@ -148,7 +148,7 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
                 {currentSearch}
                 <GrClose
                   onClick={() => {
-                    submitSearch("");
+                    submitSearch('');
                   }}
                 />
               </div>

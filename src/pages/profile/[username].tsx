@@ -4,25 +4,25 @@
  * created on Sun Sep 04 2022
  * 2022 the nobot space,
  */
-import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { ParsedUrlQuery } from "node:querystring";
-import { CSSTransition } from "react-transition-group";
-import { useRef } from "react";
-import { getProfile, profileKeys } from "../../supabase/api/profiles";
-import s from "../../styles/profile/Profile.module.scss";
-import PapercraftGallery from "../../components/PapercraftGallery/PapercraftGallery";
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { ParsedUrlQuery } from 'node:querystring';
+import { CSSTransition } from 'react-transition-group';
+import { useRef } from 'react';
+import { getProfile, profileKeys } from '../../supabase/api/profiles';
+import s from '../../styles/profile/Profile.module.scss';
+import PapercraftGallery from '../../components/PapercraftGallery/PapercraftGallery';
+import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import {
   listPapercrafts,
   papercraftKeys,
-} from "../../supabase/api/papercrafts";
-import Layout from "../../components/Layout/Layout";
-import { useUser } from "@supabase/auth-helpers-react";
-import Link from "next/link";
-import OptimizedImage from "../../components/OptimizedImage/OptimizedImage";
+} from '../../supabase/api/papercrafts';
+import Layout from '../../components/Layout/Layout';
+import { useUser } from '@supabase/auth-helpers-react';
+import Link from 'next/link';
+import OptimizedImage from '../../components/OptimizedImage/OptimizedImage';
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPING                                   */
@@ -80,7 +80,7 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
               {profile.data?.avatar_url ? (
                 <OptimizedImage
                   src={profile.data.avatar_url}
-                  sizes={"20vw"}
+                  sizes={'20vw'}
                   className={s.profile_pic_image}
                 />
               ) : null}
@@ -105,7 +105,7 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
               <div
                 className={s.profile_button}
                 onClick={() =>
-                  supabaseClient.auth.signOut().then(() => router.push("/"))
+                  supabaseClient.auth.signOut().then(() => router.push('/'))
                 }
               >
                 sign out
@@ -169,7 +169,7 @@ export const getStaticProps: GetStaticProps<
 > = async ({ params }) => {
   const queryClient = new QueryClient();
   const username = params!.username!;
-  const qparams = { search: "", username };
+  const qparams = { search: '', username };
   const requests = [
     queryClient.prefetchQuery(profileKeys.get(username), () =>
       getProfile(username)
@@ -187,9 +187,8 @@ export const getStaticProps: GetStaticProps<
     revalidate: false,
   };
 };
-
 (ProfilePage as any).getLayout = (page: React.ReactNode) => (
-  <Layout footerMarginLeft={"var(--profile-bar-width)"}>{page}</Layout>
+  <Layout footerMarginLeft={'var(--profile-bar-width)'}>{page}</Layout>
 );
 
 export default ProfilePage;

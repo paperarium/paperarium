@@ -1,13 +1,13 @@
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
-import type { NextPage } from "next";
-import Head from "next/head";
-import Link from "next/link";
-import PapercraftCard from "../components/PapercraftCard/PapercraftCard";
-import PapercraftGallery from "../components/PapercraftGallery/PapercraftGallery";
-import s from "../styles/Home.module.scss";
-import { listAnnouncements } from "../supabase/api/announcements";
-import { listPapercrafts, papercraftKeys } from "../supabase/api/papercrafts";
+import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import Link from 'next/link';
+import PapercraftCard from '../components/PapercraftCard/PapercraftCard';
+import PapercraftGallery from '../components/PapercraftGallery/PapercraftGallery';
+import s from '../styles/Home.module.scss';
+import { listAnnouncements } from '../supabase/api/announcements';
+import { listPapercrafts, papercraftKeys } from '../supabase/api/papercrafts';
 
 const Home: NextPage = () => {
   return (
@@ -84,12 +84,12 @@ const Home: NextPage = () => {
  */
 export async function getStaticProps(context: any) {
   const queryClient = new QueryClient();
-  const params = { search: "" };
+  const params = { search: '' };
   const req = [
     queryClient.prefetchQuery(papercraftKeys.list(params), async () => {
       return await listPapercrafts(params);
     }),
-    queryClient.prefetchQuery(["announcements"], listAnnouncements),
+    queryClient.prefetchQuery(['announcements'], listAnnouncements),
   ];
   await Promise.all(req);
   return {

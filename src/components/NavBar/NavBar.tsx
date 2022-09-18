@@ -1,25 +1,25 @@
-import Hamburger from "hamburger-react";
-import Link from "next/link";
-import Image from "next/image";
-import React, { useState } from "react";
-import NavLink from "../NavLink/NavLink";
-import NavMenu from "../NavMenu/NavMenu";
-import { RiScissorsCutLine } from "react-icons/ri";
-import s from "./NavBar.module.scss";
-import { useRouter } from "next/router";
-import { useUser } from "@supabase/auth-helpers-react";
-import LOGO from "../../../public/img/logo.svg";
-import { useQuery } from "@tanstack/react-query";
-import { listAnnouncements } from "../../supabase/api/announcements";
-import { getSelf } from "../../supabase/api/profiles";
-import OptimizedImage from "../OptimizedImage/OptimizedImage";
+import Hamburger from 'hamburger-react';
+import Link from 'next/link';
+import Image from 'next/image';
+import React, { useState } from 'react';
+import NavLink from '../NavLink/NavLink';
+import NavMenu from '../NavMenu/NavMenu';
+import { RiScissorsCutLine } from 'react-icons/ri';
+import s from './NavBar.module.scss';
+import { useRouter } from 'next/router';
+import { useUser } from '@supabase/auth-helpers-react';
+import LOGO from '../../../public/img/logo.svg';
+import { useQuery } from '@tanstack/react-query';
+import { listAnnouncements } from '../../supabase/api/announcements';
+import { getSelf } from '../../supabase/api/profiles';
+import OptimizedImage from '../OptimizedImage/OptimizedImage';
 
 const NavBar: React.FC = function NavBar() {
   const router = useRouter();
   const [navOpen, setNavOpen] = useState(false);
   const { user } = useUser();
   const { data: profile } = useQuery(
-    ["profiles", { id: user?.id }],
+    ['profiles', { id: user?.id }],
     () => getSelf(user!.id),
     {
       enabled: !!user?.id,
@@ -39,16 +39,16 @@ const NavBar: React.FC = function NavBar() {
           </a>
         </Link>
         <div className={s.links_container}>
-          <NavLink href={"/catalog"}>catalog</NavLink>
-          <NavLink href={"https://forum.paperarium.place"} passHref>
+          <NavLink href={'/catalog'}>catalog</NavLink>
+          <NavLink href={'https://forum.paperarium.place'} passHref>
             forum
           </NavLink>
-          <NavLink href={"/howto"}>guides</NavLink>
-          <NavLink href={"/about"}>history</NavLink>
+          <NavLink href={'/howto'}>guides</NavLink>
+          <NavLink href={'/about'}>history</NavLink>
         </div>
         <div className={s.spacer}></div>
         <div className={s.menu} onClick={() => setNavOpen(!navOpen)}>
-          <div className={s.menu_text}>{navOpen ? "CLOSE" : "MENU"}</div>
+          <div className={s.menu_text}>{navOpen ? 'CLOSE' : 'MENU'}</div>
           <Hamburger size={20} toggled={navOpen} toggle={setNavOpen} />
         </div>
         <div className={s.profile_buttons}>
@@ -65,7 +65,7 @@ const NavBar: React.FC = function NavBar() {
                     {profile.avatar_url ? (
                       <OptimizedImage
                         src={profile.avatar_url}
-                        sizes={"20vw"}
+                        sizes={'20vw'}
                         className={s.profile_pic_image}
                       />
                     ) : null}

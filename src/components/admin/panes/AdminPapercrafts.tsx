@@ -1,25 +1,25 @@
-import { supabaseServerClient } from "@supabase/auth-helpers-nextjs";
+import { supabaseServerClient } from '@supabase/auth-helpers-nextjs';
 import {
   QueryClient,
   useMutation,
   useQuery,
   useQueryClient,
-} from "@tanstack/react-query";
-import type { NextPage } from "next";
-import Head from "next/head";
-import { useState } from "react";
-import { AdminPane, AdminPaneProps } from "..";
-import * as APIt from "../../../supabase/types";
-import s from "../../../styles/admin/Admin.module.scss";
+} from '@tanstack/react-query';
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import { useState } from 'react';
+import { AdminPane, AdminPaneProps } from '..';
+import * as APIt from '../../../supabase/types';
+import s from '../../../styles/admin/Admin.module.scss';
 import {
   getPapercraft,
   listPapercrafts,
   papercraftKeys,
   updatePapercraft,
-} from "../../../supabase/api/papercrafts";
-import PapercraftDisplay from "../../PapercraftDisplay/PapercraftDisplay";
-import Imgix from "react-imgix";
-import OptimizedImage from "../../OptimizedImage/OptimizedImage";
+} from '../../../supabase/api/papercrafts';
+import PapercraftDisplay from '../../PapercraftDisplay/PapercraftDisplay';
+import Imgix from 'react-imgix';
+import OptimizedImage from '../../OptimizedImage/OptimizedImage';
 
 /**
  * The home page for admin papercraft activities
@@ -30,7 +30,7 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
   setActiveProfile,
 }) => {
   // search for papercrafts
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
   const [currentSearch, setCurrentSearch] = useState<string>(search);
   const [currPapercraft, setCurrPapercraft] = useState<APIt.Papercraft | null>(
     null
@@ -38,11 +38,11 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
 
   // queries
   const papercrafts = useQuery(
-    ["admin", "papercrafts", { search: currentSearch }],
+    ['admin', 'papercrafts', { search: currentSearch }],
     () => listPapercrafts({ search: currentSearch })
   );
   const selectedPapercraft = useQuery(
-    ["admin", papercraftKeys.get(currPapercraft?.id || "")],
+    ['admin', papercraftKeys.get(currPapercraft?.id || '')],
     () => getPapercraft(currPapercraft!.id),
     { enabled: !!currPapercraft }
   );
@@ -55,9 +55,9 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
     },
     {
       onSuccess: (papercraft) => {
-        queryClient.invalidateQueries(["admin", papercraftKeys.lists]);
+        queryClient.invalidateQueries(['admin', papercraftKeys.lists]);
         queryClient.invalidateQueries([
-          "admin",
+          'admin',
           papercraftKeys.get(papercraft[0].id),
         ]);
       },
@@ -76,12 +76,12 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
           <input
             type="text"
             value={search}
-            placeholder={"Search by title..."}
+            placeholder={'Search by title...'}
             className={s.search_bar}
-            autoComplete={"off"}
+            autoComplete={'off'}
             onChange={(e) => setSearch(e.target.value)}
             onKeyPress={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === 'Enter') {
                 setCurrentSearch(search);
               }
             }}
@@ -92,7 +92,7 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
                   <div
                     className={`${s.result} ${
                       currPapercraft && currPapercraft.id === papercraft.id
-                        ? "active"
+                        ? 'active'
                         : null
                     }`}
                     key={papercraft.id}
@@ -137,8 +137,8 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
                   currPapercraft &&
                   currPapercraft.user_id !== activeProfile.id &&
                   !updatePapercraftMutation.isLoading
-                    ? ""
-                    : "disabled"
+                    ? ''
+                    : 'disabled'
                 }`}
                 onClick={() => {
                   if (!currPapercraft) return;

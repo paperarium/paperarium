@@ -1,4 +1,4 @@
-@import "../../styles/mixins";
+@import '../../styles/mixins';
 
 .container {
   position: absolute;
@@ -31,7 +31,7 @@
   transform: scale(1.5);
   opacity: 0;
 
-  div[class~="ring-enter-done"] > & {
+  div[class~='ring-enter-done'] > & {
     opacity: 1;
     animation: pulse 2s ease-out infinite;
   }

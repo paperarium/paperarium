@@ -4,14 +4,14 @@
  * created on Wed Aug 24 2022
  * 2022 the nobot space,
  */
-import React, { useState } from "react";
-import s from "./PapercraftCard.module.scss";
-import * as APIt from "../../supabase/types";
-import { useRouter } from "next/router";
-import OptimizedImage from "../OptimizedImage/OptimizedImage";
-import Link from "next/link";
-import { EntityType } from "../PapercraftGallery/PapercraftGallery";
-import ProfileLink from "../ProfileLink/ProfileLink";
+import React, { useState } from 'react';
+import s from './PapercraftCard.module.scss';
+import * as APIt from '../../supabase/types';
+import { useRouter } from 'next/router';
+import OptimizedImage from '../OptimizedImage/OptimizedImage';
+import Link from 'next/link';
+import { EntityType } from '../PapercraftGallery/PapercraftGallery';
+import ProfileLink from '../ProfileLink/ProfileLink';
 
 interface PapercraftCardProps<T extends APIt.Papercraft | APIt.Build> {
   entity: T;

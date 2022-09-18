@@ -4,28 +4,28 @@
  * created on Fri Sep 2 2022
  * 2022 the nobot space,
  */
-import React, { Suspense, useState } from "react";
-import s from "./PapercraftDisplay.module.scss";
-import { Papercraft } from "../../supabase/types";
-import TextareaAutosize from "react-textarea-autosize";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper";
-import * as APIt from "../../supabase/types";
-import Link from "next/link";
-import { BiArrowBack } from "react-icons/bi";
-import { FiEdit3, FiShare } from "react-icons/fi";
-import { useRouter } from "next/router";
-import getPublicUrl from "../../util/getPublicUrl";
-import OptimizedImage from "../OptimizedImage/OptimizedImage";
-import rectifyDateFormat from "../../util/rectifyDateFormat";
-import ProfileLink from "../ProfileLink/ProfileLink";
-import { useUser } from "@supabase/auth-helpers-react";
-import { useQuery } from "@tanstack/react-query";
-import { getIsAdmin } from "../../supabase/api/profiles";
-import dynamic from "next/dynamic";
+import React, { Suspense, useState } from 'react';
+import s from './PapercraftDisplay.module.scss';
+import { Papercraft } from '../../supabase/types';
+import TextareaAutosize from 'react-textarea-autosize';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination } from 'swiper';
+import * as APIt from '../../supabase/types';
+import Link from 'next/link';
+import { BiArrowBack } from 'react-icons/bi';
+import { FiEdit3, FiShare } from 'react-icons/fi';
+import { useRouter } from 'next/router';
+import getPublicUrl from '../../util/getPublicUrl';
+import OptimizedImage from '../OptimizedImage/OptimizedImage';
+import rectifyDateFormat from '../../util/rectifyDateFormat';
+import ProfileLink from '../ProfileLink/ProfileLink';
+import { useUser } from '@supabase/auth-helpers-react';
+import { useQuery } from '@tanstack/react-query';
+import { getIsAdmin } from '../../supabase/api/profiles';
+import dynamic from 'next/dynamic';
 
 const DynamicEditFlow = dynamic(
-  () => import("../FlowPapercraft/FlowPapercraft"),
+  () => import('../FlowPapercraft/FlowPapercraft'),
   {
     suspense: true,
   }
@@ -43,7 +43,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
 
     // get current user, to see if we're an admin or own this craft
     const { user } = useUser();
-    const { data: isAdmin } = useQuery(["isAdmin"], () => getIsAdmin());
+    const { data: isAdmin } = useQuery(['isAdmin'], () => getIsAdmin());
 
     // if editing, replace the entire view with the papercraft flow
     const [editing, setEditing] = useState(false);
@@ -58,8 +58,8 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
           <div className={s.preview_content_container}>
             <TextareaAutosize
               className={s.preview_title}
-              value={papercraft.title || ""}
-              placeholder={"Your title..."}
+              value={papercraft.title || ''}
+              placeholder={'Your title...'}
               spellCheck={false}
               readOnly={true}
             ></TextareaAutosize>
@@ -72,8 +72,8 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
             </div>
             <TextareaAutosize
               className={s.preview_description}
-              value={papercraft.description || ""}
-              placeholder={"Your description..."}
+              value={papercraft.description || ''}
+              placeholder={'Your description...'}
               spellCheck={false}
               minRows={3}
               readOnly={true}
@@ -85,7 +85,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {"> "}Original link{" "}
+                  {'> '}Original link{' '}
                   <i>({new URL(papercraft.xlink).hostname})</i>
                 </a>
               </div>
@@ -105,15 +105,15 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                   </div>
                   {papercraft.dimensions_cm ? (
                     <div className={s.dimensions_container}>
-                      {`${papercraft.dimensions_cm?.join("cm x ")}cm`}
+                      {`${papercraft.dimensions_cm?.join('cm x ')}cm`}
                     </div>
                   ) : null}
                 </div>
                 <ProfileLink user={papercraft.user} full>
                   <div className={s.container_note}>{`DESIGNED${
                     papercraft.user.id === papercraft.display_build?.user_id
-                      ? " AND BUILT"
-                      : ""
+                      ? ' AND BUILT'
+                      : ''
                   } BY`}</div>
                 </ProfileLink>
                 {papercraft.display_build &&
@@ -134,7 +134,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                           {papercraft.collective.avatar_url ? (
                             <OptimizedImage
                               src={papercraft.collective.avatar_url}
-                              sizes={"20vw"}
+                              sizes={'20vw'}
                               className={s.profile_pic_image}
                             />
                           ) : null}
@@ -153,7 +153,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                           {papercraft.collective.n_members[0].count} members
                         </span>
                         <span>
-                          {papercraft.collective.n_papercrafts[0].count}{" "}
+                          {papercraft.collective.n_papercrafts[0].count}{' '}
                           papercrafts
                         </span>
                       </a>
@@ -248,7 +248,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               <FiEdit3 />
             </div>
           ) : null}
-          {typeof navigator !== "undefined" && !!navigator.canShare ? (
+          {typeof navigator !== 'undefined' && !!navigator.canShare ? (
             <div
               className={`${s.sticky_button} ${s.sticky_button_right}`}
               onClick={() => {
@@ -260,10 +260,10 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                     url: router.asPath,
                   })
                   .then(() => {
-                    console.log("shared!");
+                    console.log('shared!');
                   })
                   .catch(() => {
-                    console.log("share cancelled.");
+                    console.log('share cancelled.');
                   });
               }}
             >

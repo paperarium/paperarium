@@ -4,16 +4,16 @@
  * created on Wed Sep 07 2022
  * 2022 the nobot space,
  */
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/router";
-import { useRef, useState } from "react";
-import { AiOutlineUpload, AiOutlineSave } from "react-icons/ai";
-import ReactTextareaAutosize from "react-textarea-autosize";
-import { updateProfile } from "../../supabase/api/profiles";
-import * as APIt from "../../supabase/types";
-import { uploadFile } from "../../util/uploadFile";
-import OptimizedImage from "../OptimizedImage/OptimizedImage";
-import s from "./FormEditProfile.module.scss";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
+import { useRef, useState } from 'react';
+import { AiOutlineUpload, AiOutlineSave } from 'react-icons/ai';
+import ReactTextareaAutosize from 'react-textarea-autosize';
+import { updateProfile } from '../../supabase/api/profiles';
+import * as APIt from '../../supabase/types';
+import { uploadFile } from '../../util/uploadFile';
+import OptimizedImage from '../OptimizedImage/OptimizedImage';
+import s from './FormEditProfile.module.scss';
 import { CSSTransition } from 'react-transition-group';
 
 type FormEditProfileProps = {
@@ -41,16 +41,16 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
     const updateProfileMutation = useMutation(
       async () => {
         // validate correct form inputs
-        if (username && username.length <= 2) throw "username too short!";
+        if (username && username.length <= 2) throw 'username too short!';
         if (newAvatar && newAvatar.size / 1024 / 1024 > 5)
-          throw "avatar must be less than 5 mb";
+          throw 'avatar must be less than 5 mb';
 
         // upload the avatar url if there is one
         let uploaded_avatar_url: string | null = null;
         if (newAvatar) {
           const avatar_file = `${profile.id}/avatars/${newAvatar.name.replace(
             /[^a-zA-Z0-9-_\.]/g,
-            ""
+            ''
           )}`;
           uploaded_avatar_url = await uploadFile(avatar_file, newAvatar);
         }
@@ -74,7 +74,7 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
         },
         // on success, we need to invalidate our previous profile queries
         onSuccess: (profile) => {
-          queryClient.invalidateQueries(["profiles", { id: profile.id }]);
+          queryClient.invalidateQueries(['profiles', { id: profile.id }]);
           if (redirectOnSuccess) {
             router.replace(`/profile/${profile.username}`);
           } else {
@@ -84,7 +84,7 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
         // one error, remove the loading spinner
         onError: () => {
           setIsLoading(false);
-        }
+        },
       }
     );
 
@@ -116,7 +116,7 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
             <OptimizedImage
               src={profile.avatar_url}
               className={s.inner_image}
-              sizes={"150px"}
+              sizes={'150px'}
             />
           )}
           <div className={s.image_overlay}>
@@ -132,7 +132,7 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
             if (e.target.files && e.target.files[0]) {
               setNewAvatar(e.target.files[0]);
               setAvatarUrl(URL.createObjectURL(e.target.files[0]));
-              e.target.value = "";
+              e.target.value = '';
             }
           }}
         />
@@ -142,23 +142,23 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
           className={s.input_field}
           value={`@${username || profile.username}`}
           onChange={(e) =>
-            setUsername(e.target.value.replace(/[^a-zA-Z0-9-_\.]/g, ""))
+            setUsername(e.target.value.replace(/[^a-zA-Z0-9-_\.]/g, ''))
           }
         />
         <div className={s.annotation}>DISPLAY NAME</div>
         <input
           type="text"
           className={s.input_field}
-          placeholder={"Add a display name..."}
-          value={realname || profile.name || ""}
+          placeholder={'Add a display name...'}
+          value={realname || profile.name || ''}
           onChange={(e) => setRealName(e.target.value)}
         />
         <div className={s.annotation}>BIO</div>
         <ReactTextareaAutosize
           className={s.description_input}
-          placeholder={"Write a bio..."}
+          placeholder={'Write a bio...'}
           spellCheck={false}
-          value={about || profile.about || ""}
+          value={about || profile.about || ''}
           minRows={3}
           onChange={(event) => {
             setAbout(event.target.value);
@@ -168,17 +168,17 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
         <input
           type="text"
           className={s.input_field}
-          placeholder={"Link your website..."}
-          value={website || profile.website || ""}
+          placeholder={'Link your website...'}
+          value={website || profile.website || ''}
           onChange={(e) => setWebsite(e.target.value)}
         />
         <div
-          className={`${s.save_button} ${isTheSame ? "disabled" : ""}`}
+          className={`${s.save_button} ${isTheSame ? 'disabled' : ''}`}
           onClick={() => {
             updateProfileMutation.mutate();
           }}
         >
-          {isTheSame ? "UP TO DATE." : "SAVE"}
+          {isTheSame ? 'UP TO DATE.' : 'SAVE'}
           <AiOutlineSave />
         </div>
         <CSSTransition

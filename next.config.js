@@ -1,16 +1,19 @@
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
-  enabled: process.env.ANALYZE === "true",
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
 });
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   images: {
-    domains: ["wcdvzivrzlrhqqewtlem.supabase.co"],
+    domains: ['wcdvzivrzlrhqqewtlem.supabase.co'],
   },
   env: {
-    IMGIX: "papercraftplace.imgix.net",
+    IMGIX: 'papercraftplace.imgix.net',
   },
   webpack: (config, { isServer }) => {
     config.module.rules.push({

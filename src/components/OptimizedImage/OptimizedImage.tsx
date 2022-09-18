@@ -4,12 +4,12 @@
  * created on Mon Sep 05 2022
  * 2022 the nobot space,
  */
-import { useEffect, useState } from "react";
-import Imgix, { buildURL } from "react-imgix";
+import { useEffect, useState } from 'react';
+import Imgix, { buildURL } from 'react-imgix';
 
 type OptimizedImageProps = {
   src?: string;
-  dimensions?: { width: number, height: number };
+  dimensions?: { width: number; height: number };
   className?: string;
   sizes?: string;
 };
@@ -20,14 +20,14 @@ const OptimizedImage: React.FC<OptimizedImageProps> = function OptimizedImage({
   sizes,
 }) {
   // initiate lazyload on client side
-  const [lazyload, setLazyLoad] = useState<string>("");
+  const [lazyload, setLazyLoad] = useState<string>('');
   useEffect(() => {
-    setLazyLoad("lazyload");
+    setLazyLoad('lazyload');
   }, []);
 
   // low-image source
   const LQIP = buildURL(`https://${process.env.IMGIX}/${src}`, {
-    auto: "format",
+    auto: 'format',
     px: 16,
     w: 200,
   });
@@ -43,13 +43,13 @@ const OptimizedImage: React.FC<OptimizedImageProps> = function OptimizedImage({
       // width={dimensions?.width}
       // height={dimensions?.height}
       attributeConfig={{
-        src: "data-src",
-        srcSet: "data-srcset",
-        sizes: "data-sizes",
+        src: 'data-src',
+        srcSet: 'data-srcset',
+        sizes: 'data-sizes',
       }}
       htmlAttributes={{
         src: LQIP,
-        "data-lowsrc": LQIP,
+        'data-lowsrc': LQIP,
       }}
     />
   );

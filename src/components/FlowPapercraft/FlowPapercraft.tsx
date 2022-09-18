@@ -4,20 +4,20 @@
  * created on Sun Sep 18 2022
  * 2022 the nobot space,
  */
-import React, { useRef } from "react";
-import s from "./FlowPapercraft.module.scss";
-import { useState } from "react";
-import * as APIt from "../../supabase/types";
-import { User } from "@supabase/auth-helpers-nextjs";
-import { CSSTransition } from "react-transition-group";
-import PapercraftDisplay from "../../components/PapercraftDisplay/PapercraftDisplay";
-import BlinkEffect from "../../components/BlinkEffect/BlinkEffect";
-import { useRouter } from "next/router";
+import React, { useRef } from 'react';
+import s from './FlowPapercraft.module.scss';
+import { useState } from 'react';
+import * as APIt from '../../supabase/types';
+import { User } from '@supabase/auth-helpers-nextjs';
+import { CSSTransition } from 'react-transition-group';
+import PapercraftDisplay from '../../components/PapercraftDisplay/PapercraftDisplay';
+import BlinkEffect from '../../components/BlinkEffect/BlinkEffect';
+import { useRouter } from 'next/router';
 import FormEditPapercraft, {
   FormEditPapercraftHandleProps,
-} from "../../components/FormEditPapercraft/FormEditPapercraft";
-import { getSelf, profileKeys } from "../../supabase/api/profiles";
-import { useQuery } from "@tanstack/react-query";
+} from '../../components/FormEditPapercraft/FormEditPapercraft';
+import { getSelf, profileKeys } from '../../supabase/api/profiles';
+import { useQuery } from '@tanstack/react-query';
 
 type FlowPapercraftProps = {
   user: User;
@@ -28,7 +28,7 @@ type FlowPapercraftProps = {
 const FlowPapercraft: React.FC<FlowPapercraftProps> = ({
   user,
   defaultPapercraft,
-  redirectOnSuccess
+  redirectOnSuccess,
 }) => {
   // router to redirect on submissions success
   const router = useRouter();
@@ -70,13 +70,13 @@ const FlowPapercraft: React.FC<FlowPapercraftProps> = ({
         in={inPreview}
         nodeRef={formRef}
         timeout={700}
-        classNames={"preview"}
+        classNames={'preview'}
       >
         <div className={s.upload_container} ref={formRef}>
           <div className={s.upload_col}>
             <div className={s.column_header}>
               <b>
-                {!!defaultPapercraft ? "edit" : "upload"} a papercraft design
+                {!!defaultPapercraft ? 'edit' : 'upload'} a papercraft design
                 slip!
               </b>
               <br /> after filling in all of the required fields, the submit
@@ -105,7 +105,7 @@ const FlowPapercraft: React.FC<FlowPapercraftProps> = ({
                 </div>
                 <div
                   className={`${s.preview_show_button} ${
-                    canPreview ? "" : "disabled"
+                    canPreview ? '' : 'disabled'
                   }`}
                   onClick={() => {
                     if (!formHandle.current) return;

@@ -4,10 +4,10 @@
  * created on Tue Aug 23 2022
  * 2022 the nobot space,
  */
-import React from "react";
-import Footer from "../Footer/Footer";
-import NavBar from "../NavBar/NavBar";
-import s from "./Layout.module.scss";
+import React from 'react';
+import Footer from '../Footer/Footer';
+import NavBar from '../NavBar/NavBar';
+import s from './Layout.module.scss';
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -18,7 +18,7 @@ type LayoutProps = {
 const Layout: React.FC<LayoutProps> = function Layout({
   children,
   hideFooter,
-  footerMarginLeft
+  footerMarginLeft,
 }) {
   return (
     <>
@@ -27,9 +27,7 @@ const Layout: React.FC<LayoutProps> = function Layout({
         {/* <Cursor /> */}
         {children}
       </main>
-      {!hideFooter ? (
-       <Footer marginLeft={footerMarginLeft}/>
-      ) : null}
+      {!hideFooter ? <Footer marginLeft={footerMarginLeft} /> : null}
     </>
   );
 };

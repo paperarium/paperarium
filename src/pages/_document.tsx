@@ -4,9 +4,9 @@
  * created on Tue Aug 23 2022
  * 2022 papercraft club
  */
-import { Html, Head, Main, NextScript } from "next/document";
-import Script from "next/script";
-import { useEffect, useState } from "react";
+import { Html, Head, Main, NextScript } from 'next/document';
+import Script from 'next/script';
+import { useEffect, useState } from 'react';
 
 export default function Document() {
   return (
