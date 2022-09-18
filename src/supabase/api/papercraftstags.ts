@@ -26,3 +26,20 @@ export const createPapercraftsTags = async (
   if (error) throw error;
   return papercraftsTags;
 };
+
+/**
+ * Deletes papercrafts tags join entry in the supabase database.
+ * @param input
+ * @returns
+ */
+export const deletePapercraftsTags = async (
+  papercraft_id: string,
+  tag_id: number
+) => {
+  const { data: papercraftsTags, error } = await supabaseClient
+    .from<APIt.PapercraftsTags>("papercrafts_tags")
+    .delete()
+    .match({ papercraft_id, tag_id });
+  if (error) throw error;
+  return papercraftsTags;
+};

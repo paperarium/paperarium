@@ -32,6 +32,17 @@ export const getSelf = async (id: string) => {
 };
 
 /**
+ * Get if the current user is an admin
+ */
+export const getIsAdmin = async () => {
+  const { data: isAdmin, error } = await supabaseClient.rpc<boolean>(
+    "get_is_admin"
+  );
+  if (error) throw error;
+  return isAdmin;
+};
+
+/**
  * Gets a profile by its username
  * @returns a profile
  */
@@ -101,4 +112,5 @@ export const profileKeys = {
     [...profileKeys.lists(), params] as const,
   gets: () => [...profileKeys.all, "get"] as const,
   get: (username: string) => [...profileKeys.gets(), username] as const,
+  getSelf: () => [...profileKeys.all, "get", "#"] as const,
 };

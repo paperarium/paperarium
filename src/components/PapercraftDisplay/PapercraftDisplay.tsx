@@ -4,24 +4,32 @@
  * created on Fri Sep 2 2022
  * 2022 the nobot space,
  */
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useState } from "react";
 import s from "./PapercraftDisplay.module.scss";
-import Image from "next/image";
 import { Papercraft } from "../../supabase/types";
 import TextareaAutosize from "react-textarea-autosize";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper";
 import * as APIt from "../../supabase/types";
 import Link from "next/link";
-import Imgix from "react-imgix";
-
 import { BiArrowBack } from "react-icons/bi";
-import { FiShare } from "react-icons/fi";
-import { Router, useRouter } from "next/router";
+import { FiEdit3, FiShare } from "react-icons/fi";
+import { useRouter } from "next/router";
 import getPublicUrl from "../../util/getPublicUrl";
 import OptimizedImage from "../OptimizedImage/OptimizedImage";
 import rectifyDateFormat from "../../util/rectifyDateFormat";
 import ProfileLink from "../ProfileLink/ProfileLink";
+import { useUser } from "@supabase/auth-helpers-react";
+import { useQuery } from "@tanstack/react-query";
+import { getIsAdmin } from "../../supabase/api/profiles";
+import dynamic from "next/dynamic";
+
+const DynamicEditFlow = dynamic(
+  () => import("../FlowPapercraft/FlowPapercraft"),
+  {
+    suspense: true,
+  }
+);
 
 type PapercraftDisplayProps = {
   papercraft: Papercraft;
@@ -30,8 +38,21 @@ type PapercraftDisplayProps = {
 
 const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
   function PapercraftDisplay({ papercraft, preview }) {
+    // router for rerouting
     const router = useRouter();
-    return (
+
+    // get current user, to see if we're an admin or own this craft
+    const { user } = useUser();
+    const { data: isAdmin } = useQuery(["isAdmin"], () => getIsAdmin());
+
+    // if editing, replace the entire view with the papercraft flow
+    const [editing, setEditing] = useState(false);
+
+    return editing && user ? (
+      <Suspense fallback={`Loading...`}>
+        <DynamicEditFlow user={user} defaultPapercraft={papercraft} />
+      </Suspense>
+    ) : (
       <div className={s.container}>
         <div className={s.display_column}>
           <div className={s.preview_content_container}>
@@ -99,7 +120,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                 papercraft.user.id !== papercraft.display_build.user_id ? (
                   <ProfileLink user={papercraft.display_build.user} full>
                     <div className={s.container_note}>BUILT BY</div>
-                    </ProfileLink>
+                  </ProfileLink>
                 ) : null}
                 {papercraft.collective ? (
                   <div className={s.profile_container}>
@@ -190,7 +211,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                 key={`${imgURL}_${i}`}
                 className={s.inner_image_container}
               >
-                {!preview ? (
+                {!papercraft.pictures[0].key.startsWith('blob') ? (
                   <OptimizedImage
                     src={papercraft.pictures[0].key}
                     className={s.inner_image}
@@ -218,6 +239,15 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
             <BiArrowBack />
             BACK
           </div>
+          <div style={{ flex: 1 }}></div>
+          {papercraft.user_id === user?.id || isAdmin ? (
+            <div
+              className={`${s.sticky_button} ${s.sticky_button_right_2}`}
+              onClick={!preview ? () => setEditing(true) : undefined}
+            >
+              <FiEdit3 />
+            </div>
+          ) : null}
           {typeof navigator !== "undefined" && !!navigator.canShare ? (
             <div
               className={`${s.sticky_button} ${s.sticky_button_right}`}

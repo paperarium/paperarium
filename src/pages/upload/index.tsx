@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import s from "../../styles/Upload.module.scss";
 import { withPageAuth } from '@supabase/auth-helpers-nextjs';
 
 const UploadPage: NextPage = () => {
@@ -14,7 +13,7 @@ const UploadPage: NextPage = () => {
           content="submit a papercraft for publication!"
         />
       </Head>
-      <div className={s.container}>
+      <div>
         <h1>this is the upload page.</h1>
         <Link href="/upload/design" passHref>
           <a>

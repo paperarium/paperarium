@@ -1,0 +1,234 @@
+@import "../../styles/mixins";
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+.form_container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0px 10px;
+  padding-top: 10px;
+  position: relative;
+  margin-top: 30px;
+  background-color: white;
+  border: 1px solid $foreground;
+  border-bottom: none;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+  animation: fadeup 0.4s ease-in-out;
+  transition: transform 0.7s ease-in-out;
+  animation: fadein 0.4s ease-in-out;
+
+  div[class~="preview-enter-active"] & {
+    transform: translateY(calc(100% - 10px));
+  }
+
+  div[class~="preview-enter-done"] & {
+    transform: translateY(calc(100% - 10px));
+  }
+
+  @include respond-to("small") {
+    margin-top: 0px;
+    max-height: calc(100% - 160px);
+  }
+}
+
+.form_inner_container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 10px 0px;
+
+  @include respond-to("small") {
+    overflow: scroll;
+    height: 100%;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                FORM ELEMENTS                               */
+/* -------------------------------------------------------------------------- */
+
+.annotation {
+  width: 100%;
+  opacity: 0.6;
+  font-size: 11px;
+  border-bottom: $border;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: black;
+}
+
+.title_input {
+  border: none;
+  font-size: 30px;
+  outline: none;
+  font-weight: 700;
+  white-space: wrap;
+  width: 100%;
+  overflow-x: scroll;
+  padding: 10px;
+  padding-bottom: 0px;
+  position: relative;
+  border-radius: 5px;
+  border: none;
+  flex-shrink: 0;
+  font-family: "FT88 Gothic";
+}
+
+.description_input {
+  position: relative;
+  padding: 5px 5px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  resize: none;
+  width: 100%;
+  font-size: 15px;
+  font-family: "FT88";
+  flex-shrink: 0;
+
+  @include respond-to("small") {
+    max-height: 300px;
+  }
+}
+
+.date_input {
+  font-size: 17px;
+  opacity: 0.4;
+}
+
+.tag_input {
+  border: none;
+  width: 100%;
+  margin-top: 5px;
+  min-width: 80px;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                           DIMENSIONS & DIFFICULTY                          */
+/* -------------------------------------------------------------------------- */
+
+.difficulty_row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.difficulty_col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-content: center;
+  font-size: 14px;
+
+  flex: 1;
+}
+
+.dimensions_row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+  align-items: center;
+  gap: 5px;
+}
+
+.dimension_input {
+  border: 1px solid #d0d0d0;
+  border-radius: 5px;
+  padding: 7px;
+  width: 50px;
+  margin-top: 5px;
+}
+
+.dimension_select {
+  border: none;
+  margin-top: 5px;
+  min-width: 80px;
+  flex: 1;
+}
+
+.file_row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+  height: 200px;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                    FILES                                   */
+/* -------------------------------------------------------------------------- */
+
+.file_col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex: 1;
+  height: 100%;
+  gap: 5px;
+  overflow: hidden;
+
+  &:last-of-type {
+    flex: 2;
+  }
+}
+
+.file_input {
+  flex: 1;
+  width: 100%;
+  padding: 5px;
+  border: $border;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                 EXTRA INFO                                 */
+/* -------------------------------------------------------------------------- */
+
+.more_row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+
+  & > label {
+    font-size: 15px;
+    font-style: italic;
+    color: #606060;
+    cursor: pointer;
+  }
+
+  & > input {
+    outline: none;
+    font-family: "FT88";
+  }
+}

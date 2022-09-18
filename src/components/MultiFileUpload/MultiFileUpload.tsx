@@ -5,12 +5,13 @@
  * 2022 the nobot space,
  */
 import s from "./MultiFileUpload.module.scss";
+import * as APIt from "../../supabase/types";
 import { FiX, FiCheckCircle, FiUpload } from "react-icons/fi";
 import { ChangeEventHandler, MouseEventHandler, useRef } from "react";
 
 type MultiFileUploadProps = {
-  files: File[] | null;
-  setFiles: (newFiles: File[] | null) => void;
+  files: (File | APIt.Picture)[] | null;
+  setFiles: (newFiles: (File | APIt.Picture)[] | null) => void;
   accept?: string;
   withIcon?: boolean;
   children?: React.ReactNode;
@@ -48,15 +49,19 @@ const MultiFileUpload: React.FC<MultiFileUploadProps> =
             <div className={s.file_container}>
               {files.map((file, i) => (
                 <div className={s.file_row} key={i}>
-                <FiCheckCircle />
+                  <FiCheckCircle />
                   <div className={s.spacer}>
-                    {file.name}
+                    {(file as File).name !== undefined
+                      ? (file as File).name
+                      : (file as APIt.Picture).key.split("/").pop()}
                   </div>
                   <div className={s.file_icon}>
-                    <FiX onClick={() => {
-                      if (files.length == 1) setFiles(null);
-                      else setFiles(files.filter((_, ind) => ind !== i))
-                    }} />
+                    <FiX
+                      onClick={() => {
+                        if (files.length == 1) setFiles(null);
+                        else setFiles(files.filter((_, ind) => ind !== i));
+                      }}
+                    />
                   </div>
                 </div>
               ))}

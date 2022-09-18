@@ -9,8 +9,8 @@ import { FiX, FiCheckCircle, FiUpload } from "react-icons/fi";
 import { ChangeEventHandler, MouseEventHandler, useRef } from "react";
 
 type FileUploadProps = {
-  file: File | null;
-  setFile: (newFile: File | null) => void;
+  file: File | string |  null;
+  setFile: (newFile: File | string |  null) => void;
   accept?: string;
   withIcon?: boolean;
   children?: React.ReactNode;
@@ -55,7 +55,7 @@ const FileUpload: React.FC<FileUploadProps> = function FileUpload({
               {file ? (
                 <>
                   <FiCheckCircle />
-                  {file.name}
+                  {typeof file === "string" ? file.split('/').pop() : file.name}
                 </>
               ) : null}
             </div>
