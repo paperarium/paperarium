@@ -26,29 +26,34 @@ const Footer: React.FC<FooterProps> = function Footer({ marginLeft }) {
             with Nintendo, nor any other corporation.
           </div>
           <div className={s.link_grid}>
-              <NavLink href={"/catalog"}>
-                catalog
-              </NavLink>
-              <NavLink href={"/howto"}>
-                guides
-              </NavLink>
-              <NavLink href={"/about"}>
-                history
-              </NavLink>
-              <NavLink
-                href={"https://forum.paperarium.place"}
-                passHref
-              >
-                forum
-              </NavLink>
+            <NavLink href={"/catalog"}>catalog</NavLink>
+            <NavLink href={"/howto"}>guides</NavLink>
+            <NavLink href={"/about"}>history</NavLink>
+            <NavLink href={"https://forum.paperarium.place"} passHref>
+              forum
+            </NavLink>
           </div>
         </div>
         <div className={s.footer_col}>
           <div className={s.socials_row}>
             <div className={s.socials_line}></div>
-            <RiInstagramLine />
-            <RiFacebookBoxLine />
-            <RiMailLine />
+            <a
+              href="https://instagram.com/paperarium"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <RiInstagramLine />
+            </a>
+            <a
+              href="https://facebook.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <RiFacebookBoxLine />
+            </a>
+            <a href="mailto:kirkilese@gmail.com?subject=[Paperarium] - My subject">
+              <RiMailLine />
+            </a>
             <div className={s.socials_line}></div>
           </div>
           <div className={s.title}>paperarium</div>
