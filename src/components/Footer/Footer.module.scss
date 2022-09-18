@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 20px 0;
+  padding: 10px 0;
   padding-top: 0px;
   width: 100%;
   border-top: $border;
@@ -14,7 +14,7 @@
   background-color: $background;
 
   @media screen and (max-width: 767px) {
-    padding: 20px 0 !important;
+    padding: 10px 0 !important;
     padding-top: 0px !important;
   }
 }
@@ -26,7 +26,7 @@
   border-bottom: $border;
   position: relative;
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 
   &:after {
     content: "୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧ ୭ ˚○◦˚˚◦○˚ ୧";
@@ -38,17 +38,39 @@
   }
 }
 
-.footer_row {
+.footer_col_2 {
   flex-wrap: wrap;
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  gap: 20px;
-  padding: 0px 20px;
+  gap: 10px;
+  padding: 0px 10px;
   height: 100%;
   position: relative;
+}
+
+.footer_row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  padding: 0px 10px;
+  gap: 5px;
+}
+
+.footer_header_row {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 100%;
+  margin-bottom: -5px;
 }
 
 .footer_col {
@@ -56,45 +78,44 @@
   flex: 1;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
-  padding: 0px 10px;
-  min-width: 300px;
+  align-items: flex-start;
+  padding: 0px 5px;
   height: 100%;
 }
 
 .socials_row {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 100%;
-  gap: 5px;
-  margin-bottom: 5px;
+  justify-content: space-evenly;
+  height: 100%;
   font-size: 20px;
 }
 
 .socials_line {
-  flex: 1;
+  width: 100%;
   height: 1px;
   background-color: #303030;
+  margin: 10px 0px;
 }
 
 .legal_row {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
-  width: 80%;
-  max-width: 500px;
+  justify-content: flex-start;
+  width: 100%;
   gap: 20px;
-  margin-top: 5px;
+  margin-top: 8px;
   font-size: 13px;
+  margin-bottom: 5px;
 }
 
 .legal_link {
   border-bottom: $border;
   cursor: pointer;
   transition: opacity 0.1s ease-in-out;
+  white-space: nowrap;
 
   &:hover {
     opacity: 0.5;
@@ -103,7 +124,7 @@
 
 .title {
   font-weight: 700;
-  font-size: calc(var(--header-height) - var(--header-vert-padding) * 2 - 10px);
+  font-size: calc(var(--header-height) - var(--header-vert-padding) * 2 - 5px);
   font-style: italic;
   letter-spacing: -1px;
 }
@@ -128,17 +149,41 @@
   opacity: 0.5;
   font-style: italic;
   text-align: center;
+  text-align: justify;
 }
 
 .link_grid {
-  flex: 1;
-  width: 100%;
+  flex: 4;
   display: grid;
-  margin-top: 10px;
-  gap: 10px;
-  border-left: $border;
-  border-right: $border;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  grid-template-rows: repeat(auto-fit, minmax(10px, 1fr));
+  gap: 10px;
   text-align: center;
+}
+
+.nav_cell {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.nav_header {
+  width: 100%;
+  border-bottom: $border;
+  text-align: left;
+  padding-bottom: 3px;
+  font-style: italic;
+  opacity: 0.5;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 5px;
+  align-items: center;
+}
+
+.nav_option {
+  font-size: 14px;
+  letter-spacing: -1px;
+  text-transform: uppercase;
 }
