@@ -12,9 +12,8 @@ import PapercraftDisplay from '../../components/PapercraftDisplay/PapercraftDisp
 import { getPapercraft, papercraftKeys } from '../../supabase/api/papercrafts';
 import s from '../../components/PapercraftDisplay/PapercraftDisplay.module.scss';
 import { ParsedUrlQuery } from 'node:querystring';
-import { CSSTransition } from 'react-transition-group';
-import { useRef } from 'react';
 import { NextSeo } from 'next-seo';
+import FallbackOverlay from '../../components/FallbackOverlay/FallbackOverlay';
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPING                                   */
@@ -35,8 +34,6 @@ const PapercraftPage: NextPage<PapercraftPageProps> = function PapercraftPage({
 }) {
   // use a fallback loading indicator
   const router = useRouter();
-  const seeFallback = useRef(router.isFallback);
-  const fallbackRef = useRef<HTMLDivElement>(null);
   // get the cached papercraft query. we will also re-get the papercraft likes
   const papercraft = useQuery(
     papercraftKeys.get(pid),
@@ -77,17 +74,7 @@ const PapercraftPage: NextPage<PapercraftPageProps> = function PapercraftPage({
         {papercraft.data ? (
           <PapercraftDisplay papercraft={papercraft.data} />
         ) : null}
-        {seeFallback.current ? (
-          <CSSTransition
-            in={router.isFallback}
-            nodeRef={fallbackRef}
-            timeout={300}
-          >
-            <div className={s.loading_indicator} ref={fallbackRef}>
-              loading...
-            </div>
-          </CSSTransition>
-        ) : null}
+        <FallbackOverlay />
       </div>
     </>
   );

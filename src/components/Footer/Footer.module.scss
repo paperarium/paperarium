@@ -64,13 +64,17 @@
 
 .footer_header_row {
   flex: 1;
-  min-width: 300px;
+  min-width: 250px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
   height: 100%;
   margin-bottom: -5px;
+
+  @include respond-to('small') {
+    min-width: 350px;
+  }
 }
 
 .footer_col {

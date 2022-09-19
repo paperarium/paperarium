@@ -76,7 +76,7 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
         onSuccess: (profile) => {
           queryClient.invalidateQueries(['profiles', { id: profile.id }]);
           if (redirectOnSuccess) {
-            router.replace(`/profile/${profile.username}`);
+            router.replace(`/profiles/${profile.username}`);
           } else {
             setIsLoading(false);
           }

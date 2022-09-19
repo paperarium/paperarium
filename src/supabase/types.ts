@@ -23,9 +23,20 @@ export type Profile = {
   avatar_url?: string;
   n_papercrafts: QueryCount;
   n_builds: QueryCount;
+  n_followers: QueryCount;
+  n_following: QueryCount;
   created_at: string;
   updated_at: string;
   archived: boolean;
+};
+
+export type ProfilesFollowers = {
+  user_id: string;
+  following_id: string;
+  created_at: string;
+  follower: Profile;
+  following: Profile;
+  id: number;
 };
 
 /* -------------------------------------------------------------------------- */

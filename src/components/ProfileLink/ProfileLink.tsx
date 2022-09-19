@@ -26,7 +26,7 @@ const ProfileLink: React.FC<ProfileLinkProps> = function ProfileLink({
     <div className={`${s.profile_container} ${fullClass}`}>
       {children}
       {full ? (
-        <Link href={`/profile/${user.username}`} passHref>
+        <Link href={`/profiles/${user.username}`} passHref>
           <a>
             <div className={s.profile_picture}>
               {user.avatar_url ? (
@@ -40,7 +40,7 @@ const ProfileLink: React.FC<ProfileLinkProps> = function ProfileLink({
           </a>
         </Link>
       ) : null}
-      <Link href={`/profile/${user.username}`} passHref>
+      <Link href={`/profiles/${user.username}`} passHref>
         <a className={s.profile_name}>
           <span className={s.user_name}>
             @{user.username}

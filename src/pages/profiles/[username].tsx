@@ -11,7 +11,11 @@ import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'node:querystring';
 import { CSSTransition } from 'react-transition-group';
 import { useRef } from 'react';
-import { getProfile, profileKeys } from '../../supabase/api/profiles';
+import {
+  getIsFollowing,
+  getProfile,
+  profileKeys,
+} from '../../supabase/api/profiles';
 import s from '../../styles/profile/Profile.module.scss';
 import PapercraftGallery from '../../components/PapercraftGallery/PapercraftGallery';
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
@@ -24,6 +28,8 @@ import { useUser } from '@supabase/auth-helpers-react';
 import Link from 'next/link';
 import OptimizedImage from '../../components/OptimizedImage/OptimizedImage';
 import { NextSeo } from 'next-seo';
+import useWithFollowing from '../../hooks/useWithFollowing';
+import FallbackOverlay from '../../components/FallbackOverlay/FallbackOverlay';
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPING                                   */
@@ -45,8 +51,6 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
   // use a fallback loading indicator
   const router = useRouter();
   const { user } = useUser();
-  const seeFallback = useRef(router.isFallback);
-  const fallbackRef = useRef<HTMLDivElement>(null);
   // get the user's profile and papercrafts
   const profile = useQuery(
     profileKeys.get(username),
@@ -55,13 +59,18 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
       enabled: !!username,
     }
   );
+  // functions for following / unfollowing
+  const { isFollowing, follow, unfollow } = useWithFollowing(
+    user?.id,
+    profile.data?.id
+  );
 
   return (
     <>
       <Head>
         <title>{`@${username} - paperarium`}</title>
         <NextSeo
-          canonical={`https://paperarium.place/profile/${username}`}
+          canonical={`https://paperarium.place/profiles/${username}`}
           description={'about paperarium itself.'}
           title={`@${username}`}
           openGraph={{
@@ -95,9 +104,13 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
             </div>
           </div>
           <div className={s.description}>{profile.data?.about}</div>
+          <div className={s.following_row}>
+            <div>{profile.data?.n_followers[0].count || 0} followers</div>
+            <div>{profile.data?.n_following[0].count || 0} following</div>
+          </div>
           {user && user.id === profile.data?.id ? (
             <>
-              <Link href="/profile/edit" passHref>
+              <Link href="/profiles/edit" passHref>
                 <a className={s.profile_button}>edit profile</a>
               </Link>
               <div
@@ -109,7 +122,22 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
                 sign out
               </div>
             </>
-          ) : null}
+          ) : (
+            <>
+              <div
+                className={s.profile_button}
+                onClick={() => {
+                  if (isFollowing) {
+                    unfollow.mutate();
+                  } else {
+                    follow.mutate();
+                  }
+                }}
+              >
+                {isFollowing ? 'following' : 'follow'}
+              </div>
+            </>
+          )}
           <div className={s.joined_information}>Joined on Aug 21, 2022</div>
         </div>
         <div className={s.main_grid}>
@@ -127,17 +155,7 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
             username={username}
           />
         </div>
-        {seeFallback.current ? (
-          <CSSTransition
-            in={router.isFallback}
-            nodeRef={fallbackRef}
-            timeout={300}
-          >
-            <div className={s.loading_indicator} ref={fallbackRef}>
-              loading...
-            </div>
-          </CSSTransition>
-        ) : null}
+        <FallbackOverlay />
       </div>
     </>
   );

@@ -73,7 +73,7 @@ const NavMenu: React.FC<NavMenuProps> = function NavMenu({
             <div className={s.nav_nav_column}>
               {profile ? (
                 <>
-                  <Link href={`/profile/${profile.username}`}>
+                  <Link href={`/profiles/${profile.username}`}>
                     <div className={s.profile_container} onClick={closeMenu}>
                       <div className={s.profile_picture}>
                         {profile.avatar_url ? (

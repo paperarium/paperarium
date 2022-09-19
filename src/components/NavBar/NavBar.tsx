@@ -59,7 +59,7 @@ const NavBar: React.FC = function NavBar() {
                   <a>upload</a>
                 </div>
               </Link>
-              <Link href={`/profile/${profile.username}`}>
+              <Link href={`/profiles/${profile.username}`}>
                 <div className={s.profile_container}>
                   <div className={s.profile_picture}>
                     {profile.avatar_url ? (

@@ -25,7 +25,7 @@ const EditProfilePage: NextPage = () => {
       <Head>
         <title>edit profile - paperarium</title>
         <NextSeo
-          canonical={'https://paperarium.place/profile/edit'}
+          canonical={'https://paperarium.place/profiles/edit'}
           description={'edit your profile here.'}
         />
       </Head>
@@ -33,7 +33,7 @@ const EditProfilePage: NextPage = () => {
         {profile ? (
           <>
             <div className={s.sticky_header}>
-              <Link href={`/profile/${profile.username}`}>
+              <Link href={`/profiles/${profile.username}`}>
                 <div className={s.sticky_button}>
                   <BiArrowBack />
                   RETURN TO PROFILE
