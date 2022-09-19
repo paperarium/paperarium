@@ -14,6 +14,7 @@ import {
 import {
   RiFacebookBoxLine,
   RiInstagramLine,
+  RiLinkedinBoxLine,
   RiMailLine,
   RiScissorsCutFill,
 } from 'react-icons/ri';
@@ -54,7 +55,7 @@ const Footer: React.FC<FooterProps> = function Footer({ marginLeft }) {
               <RiInstagramLine />
             </a>
             <a
-              href="https://facebook.com"
+              href="https://www.facebook.com/profile.php?id=100085641023066"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -127,6 +128,10 @@ const Footer: React.FC<FooterProps> = function Footer({ marginLeft }) {
             <Link href="/policies/cookies" passHref>
               <a className={s.legal_link}>Cookies</a>
             </Link>
+            <div style={{ flex: 1 }}></div>
+            <div className={s.website_version}>
+              Website version: {COMMITDATE}
+            </div>
             {/* <div style={{ flex: 1}}></div> */}
             {/* <div style={{ border: '1px solid black', padding: '5px'}}>c. 2022</div> */}
           </div>

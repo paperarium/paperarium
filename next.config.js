@@ -1,3 +1,11 @@
+// add last commit date as a variable to webpack
+const webpack = require('webpack'); // eslint-disable-line
+const gitprocess = require('child_process');
+const LoadCommitDate = gitprocess
+  .execSync('git log -1 --date=format:"%Y/%m/%d" --format="%ad"')
+  .toString();
+
+// bundle analyzer for checking bundle makeup
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
@@ -24,6 +32,11 @@ const nextConfig = {
     if (isServer) {
       config.resolve.alias.canvas = false;
     }
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        COMMITDATE: JSON.stringify(LoadCommitDate),
+      })
+    );
     return config;
   },
 };
