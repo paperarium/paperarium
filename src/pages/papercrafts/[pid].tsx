@@ -14,6 +14,7 @@ import s from '../../components/PapercraftDisplay/PapercraftDisplay.module.scss'
 import { ParsedUrlQuery } from 'node:querystring';
 import { CSSTransition } from 'react-transition-group';
 import { useRef } from 'react';
+import { NextSeo } from 'next-seo';
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPING                                   */
@@ -50,20 +51,26 @@ const PapercraftPage: NextPage<PapercraftPageProps> = function PapercraftPage({
       <Head>
         <title>{`${papercraft.data?.title} - paperarium`}</title>
         <meta property="og:url" content={router.asPath} />
-        <meta property="og:type" content="website" />
-        {/* <meta property="fb:app_id" content="your fb id" /> */}
-        <meta
-          property="og:title"
-          content={`${papercraft.data?.title} on paperarium`}
-        />
-        <meta
-          property="og:description"
-          content="a modern compendium and community for everything papercrafting."
-        />
-        <meta name="twitter:card" content="summary" />
-        <meta
-          property="og:image"
-          content={`${process.env.IMGIX}/${papercraft.data?.pictures[0]}`}
+        <NextSeo
+          canonical={`https://paperarium.place/papercrafts/${pid}`}
+          description={'edit your profile here.'}
+          title={papercraft.data ? `${papercraft.data.title}` : undefined}
+          openGraph={{
+            url: router.basePath,
+            title: papercraft.data
+              ? `${papercraft.data.title} on paperarium`
+              : undefined,
+            description: papercraft.data
+              ? `view @${papercraft.data.user.username}'s ${papercraft.data.title} on paperarium!`
+              : undefined,
+            images: papercraft.data
+              ? papercraft.data.pictures.map((pic) => ({
+                  url: `${process.env.IMGIX}/${pic.key}`,
+                  width: pic.width,
+                  height: pic.height,
+                }))
+              : undefined,
+          }}
         />
       </Head>
       <div className={s.page_container}>

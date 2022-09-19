@@ -1,6 +1,7 @@
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
 import type { NextPage } from 'next';
+import { NextSeo } from 'next-seo';
 import Head from 'next/head';
 import Link from 'next/link';
 import PapercraftCard from '../components/PapercraftCard/PapercraftCard';
@@ -13,9 +14,10 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <meta
-          name="description"
-          content="cut, fold, and glue 3d models into the real world!"
+        <title>Paperarium – a papercraft compendium.</title>
+        <NextSeo
+          canonical={'https://paperarium.place'}
+          description={'cut, fold, and glue 3d models into the real world!'}
         />
       </Head>
       <div className={s.styled_container}>

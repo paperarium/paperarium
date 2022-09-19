@@ -6,57 +6,12 @@
  */
 import { Html, Head, Main, NextScript } from 'next/document';
 import Script from 'next/script';
-import { useEffect, useState } from 'react';
 
 export default function Document() {
   return (
-    // <!-- eslint-disable max-len array-element-newline -->
-    <Html>
+    <Html lang="en">
       <Head>
-        {/* META */}
-        <meta lang="en" />
-        <meta name="language" content="en-us"></meta>
-        <meta name="author" content="evan kirkiles"></meta>
-
-        {/* <!-- Primary Meta Tags --> */}
-        <meta name="title" content="Paperarium – a papercraft compendium." />
-        <meta
-          name="description"
-          content="a modern archive and community for everything papercrafting. cut, fold, and glue pieces together into figurines of all of your favorite characters!"
-        />
-        <meta
-          name="keywords"
-          content="art, artist, painting, paper, papercraft, papercrafting, scissors, cut, glue, fold, visuals, graphic design, blender, 3d, 2d, concept, sculpture, game, video, videogame "
-        ></meta>
-
-        {/* <!-- Open Graph / Facebook --> */}
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.paperarium.place/" />
-        <meta
-          property="og:title"
-          content="Paperarium – a papercraft compendium."
-        />
-        <meta
-          property="og:description"
-          content="a modern archive and community for everything papercrafting. cut, fold, and glue pieces together into figurines of all of your favorite characters!"
-        />
-        <meta property="og:image" content="" />
-
-        {/* <!-- Twitter --> */}
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="https://www.paperarium.place/" />
-        <meta
-          property="twitter:title"
-          content="Paperarium – a papercraft compendium."
-        />
-        <meta
-          property="twitter:description"
-          content="a modern archive and community for everything papercrafting. cut, fold, and glue pieces together into figurines of all of your favorite characters!"
-        />
-        <meta property="twitter:image" content=""></meta>
-
-        {/* <!-- Robots --> */}
-        <meta name="robots" content="index, follow"></meta>
+        {/* <!-- Content Type --> */}
         <meta
           httpEquiv="Content-Type"
           content="text/html; charset=utf-8"
@@ -107,6 +62,5 @@ export default function Document() {
         <NextScript />
       </body>
     </Html>
-    // <!-- eslint-enable max-len array-element-newline -->
   );
 }

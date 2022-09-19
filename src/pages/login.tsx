@@ -14,6 +14,7 @@ import s from '../styles/Login.module.scss';
 import Layout from '../components/Layout/Layout';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { NextSeo } from 'next-seo';
 
 const LoginPage: NextPage = () => {
   const router = useRouter();
@@ -28,7 +29,10 @@ const LoginPage: NextPage = () => {
     <>
       <Head>
         <title>login - paperarium</title>
-        <meta name="description" content="login" />
+        <NextSeo
+          canonical={'https://paperarium.place/login'}
+          description={'log in to paperarium.'}
+        />
       </Head>
       <div className={s.login_page_container}>
         <div className={s.login_card}>

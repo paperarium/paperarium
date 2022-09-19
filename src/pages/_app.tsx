@@ -24,6 +24,8 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query';
 import Head from 'next/head';
+import { DefaultSeo } from 'next-seo';
+import SEO from '../../next-seo.config';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = React.useState(() => new QueryClient());
@@ -46,7 +48,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Paperarium – a papercraft compendium.</title>
         {/* <!-- Viewport --> */}
         <meta
           name="viewport"
@@ -55,6 +56,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           }`}
         />
       </Head>
+      <DefaultSeo {...SEO} />
       <ImgixProvider domain={process.env.IMGIX}>
         <UserProvider supabaseClient={supabaseClient}>
           <QueryClientProvider client={queryClient} contextSharing={true}>

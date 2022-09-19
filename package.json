@@ -12,7 +12,8 @@
     "prettier:fix": "yarn prettier --write",
     "format": "yarn prettier:fix && yarn lint:fix",
     "analyze": "ANALYZE=true next build",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@supabase/auth-helpers-nextjs": "^0.2.7",
@@ -50,6 +51,8 @@
     "eslint-config-next": "12.2.5",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "next-seo": "^5.5.0",
+    "next-sitemap": "^3.1.22",
     "husky": ">=6",
     "lint-staged": ">=10",
     "pre-commit": "^1.2.2",
@@ -58,11 +61,7 @@
     "typescript": "4.7.4"
   },
   "lint-staged": {
-    "*.ts": [
-      "prettier --write",
-      "eslint --fix"
-    ],
-    "*.tsx": [
+    "*.{ts,tsx}": [
       "prettier --write",
       "eslint --fix"
     ],

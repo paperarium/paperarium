@@ -4,15 +4,16 @@ import Head from 'next/head';
 import s from '../styles/Explore.module.scss';
 import { listPapercrafts, papercraftKeys } from '../supabase/api/papercrafts';
 import PapercraftGallery from '../components/PapercraftGallery/PapercraftGallery';
+import { NextSeo } from 'next-seo';
 
 const ExplorePage: NextPage = () => {
   return (
     <>
       <Head>
         <title>explore - paperarium</title>
-        <meta
-          name="description"
-          content="see other papercrafts from the community."
+        <NextSeo
+          canonical={'https://paperarium.place/catalog'}
+          description={'see other papercrafts from the community.'}
         />
       </Head>
       <div className={s.main_grid}>

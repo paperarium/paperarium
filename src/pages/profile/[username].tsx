@@ -23,6 +23,7 @@ import Layout from '../../components/Layout/Layout';
 import { useUser } from '@supabase/auth-helpers-react';
 import Link from 'next/link';
 import OptimizedImage from '../../components/OptimizedImage/OptimizedImage';
+import { NextSeo } from 'next-seo';
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPING                                   */
@@ -59,19 +60,16 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
     <>
       <Head>
         <title>{`@${username} - paperarium`}</title>
-        <meta property="og:url" content={router.asPath} />
-        <meta property="og:type" content="website" />
-        {/* <meta property="fb:app_id" content="your fb id" /> */}
-        <meta
-          property="og:title"
-          content={`${profile.data?.username} on paperarium`}
+        <NextSeo
+          canonical={`https://paperarium.place/profile/${username}`}
+          description={'about paperarium itself.'}
+          title={`@${username}`}
+          openGraph={{
+            url: router.basePath,
+            title: `${profile.data?.username} on paperarium`,
+            description: `view @${profile.data?.username}'s papercrafts and builds on paperarium`,
+          }}
         />
-        <meta
-          property="og:description"
-          content="a modern compendium and community for everything papercrafting."
-        />
-        <meta name="twitter:card" content="summary" />
-        {/* <meta property="og:image" content={`${process.env.IMGIX}/${papercraft.data?.pictures[0]}`} /> */}
       </Head>
       <div className={s.profile_container}>
         <div className={s.profile_bar}>

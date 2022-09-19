@@ -7,6 +7,7 @@ import s from '../../styles/profile/Edit.module.scss';
 import { getSelf } from '../../supabase/api/profiles';
 import { useUser } from '@supabase/auth-helpers-react';
 import FormEditProfile from '../../components/FormEditProfile/FormEditProfile';
+import { NextSeo } from 'next-seo';
 
 const EditProfilePage: NextPage = () => {
   // initial queries
@@ -23,7 +24,10 @@ const EditProfilePage: NextPage = () => {
     <>
       <Head>
         <title>edit profile - paperarium</title>
-        <meta name="description" content="edit your profile here." />
+        <NextSeo
+          canonical={'https://paperarium.place/profile/edit'}
+          description={'edit your profile here.'}
+        />
       </Head>
       <div className={s.page_container}>
         {profile ? (
