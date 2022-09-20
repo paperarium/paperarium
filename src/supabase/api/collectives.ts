@@ -93,7 +93,7 @@ export const updateCollective = async (
     .update(input)
     .match({ id });
   if (error) throw error;
-  return collectives;
+  return collectives[0];
 };
 
 /* -------------------------------------------------------------------------- */
