@@ -46,10 +46,11 @@ const FilterBarProfile: React.FC<FilterBarProfileProps> = function FilterBar({
             <div className={s.search_icon}>
               <AiOutlineSearch />
             </div>
-          </div>
-          <div className={s.filter_active_container}>
             {currentSearch ? (
-              <div className={s.search_contents}>
+              <div
+                className={s.search_contents}
+                style={{ borderRadius: '5px' }}
+              >
                 <AiOutlineSearch />
                 {currentSearch}
                 <GrClose

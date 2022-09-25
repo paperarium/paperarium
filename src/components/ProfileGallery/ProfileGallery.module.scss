@@ -136,7 +136,7 @@
 .grid_header {
   width: 100%;
   position: sticky;
-  z-index: 2;
+  z-index: 1;
   padding: 0px;
   letter-spacing: -1px;
   top: calc(
@@ -199,27 +199,6 @@
   }
 
   animation: fadeup 0.3s ease-in-out;
-
-  & td {
-    border: $border;
-    border-style: solid solid solid none;
-  }
-
-  & td:first-child {
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-  }
-  & td:last-child {
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-  }
-
-  &:first-child td {
-    border-top-style: solid;
-  }
-  & td:first-child {
-    border-left-style: solid;
-  }
 }
 
 .grid_cell {
@@ -227,6 +206,18 @@
   max-height: 50px;
   padding: 5px;
   text-align: center;
+  border: $border;
+  border-style: solid solid solid none;
+
+  &:first-child {
+    border-left-style: solid;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+  &:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
 }
 
 .profile_cell {

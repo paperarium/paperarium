@@ -9,13 +9,7 @@ import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'node:querystring';
-import { CSSTransition } from 'react-transition-group';
-import { useRef } from 'react';
-import {
-  getIsFollowing,
-  getProfile,
-  profileKeys,
-} from '../../supabase/api/profiles';
+import { getProfile, profileKeys } from '../../supabase/api/profiles';
 import s from '../../styles/profile/Profile.module.scss';
 import PapercraftGallery from '../../components/PapercraftGallery/PapercraftGallery';
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
@@ -188,9 +182,9 @@ export const getStaticProps: GetStaticProps<
     queryClient.prefetchQuery(profileKeys.get(username), () =>
       getProfile(username)
     ),
-    queryClient.prefetchQuery(papercraftKeys.list(qparams), () =>
-      listPapercrafts(qparams)
-    ),
+    // queryClient.prefetchQuery(papercraftKeys.list(qparams), () =>
+    //   listPapercrafts(qparams)
+    // ),
   ];
   await Promise.all(requests);
   return {
@@ -201,6 +195,7 @@ export const getStaticProps: GetStaticProps<
     revalidate: false,
   };
 };
+
 (ProfilePage as any).getLayout = (page: React.ReactNode) => (
   <Layout footerMarginLeft={'var(--profile-bar-width)'}>{page}</Layout>
 );
