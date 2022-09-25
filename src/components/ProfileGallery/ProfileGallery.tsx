@@ -26,6 +26,7 @@ import {
   profileKeys,
 } from '../../supabase/api/profiles';
 import * as APIt from '../../supabase/types';
+import FilterBarProfile from '../FilterBar/FilterBarProfile';
 import OptimizedImage from '../OptimizedImage/OptimizedImage';
 import s from './ProfileGallery.module.scss';
 
@@ -97,6 +98,10 @@ const ProfileGallery: React.FC<ProfileGalleryProps> = function ProfileGallery({
         </div>
       </div>
       <div className={s.container}>
+        <FilterBarProfile
+          currentSearch={currentSearch}
+          submitSearch={setCurrentSearch}
+        />
         <div className={s.lower_container}>
           <table className={s.main_grid}>
             <thead className={s.grid_header}>

@@ -56,18 +56,14 @@ const NavMenu: React.FC<NavMenuProps> = function NavMenu({
               <NavLink href={'/catalog'} onClick={closeMenu}>
                 catalog
               </NavLink>
+              <NavLink href={'/community'} onClick={closeMenu}>
+                community
+              </NavLink>
               <NavLink href={'/howto'} onClick={closeMenu}>
                 guides
               </NavLink>
               <NavLink href={'/about'} onClick={closeMenu}>
                 history
-              </NavLink>
-              <NavLink
-                href={'https://forum.paperarium.place'}
-                passHref
-                onClick={closeMenu}
-              >
-                forum
               </NavLink>
             </div>
             <div className={s.nav_nav_column}>
