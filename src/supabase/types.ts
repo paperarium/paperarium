@@ -109,8 +109,8 @@ export interface Collective {
   titlecode: string;
   xlink?: string;
   avatar_url?: string;
-  n_members: QueryCount;
-  n_papercrafts: QueryCount;
+  n_members: number;
+  n_papercrafts: number;
 }
 
 export type CollectivesProfiles = {

@@ -18,14 +18,8 @@ import * as APIt from '../types';
  */
 export const getCollective = async (titlecode: string) => {
   const { data: collectives, error } = await supabaseClient
-    .from<APIt.Collective>('collectives')
-    .select(
-      `
-      *,
-      n_members:collectives_profiles(count),
-      n_papercrafts:papercrafts(count)
-    `
-    )
+    .from<APIt.Collective>('collectives_view')
+    .select('*')
     .eq('titlecode', titlecode);
   if (error) throw error;
   return collectives[0];
@@ -47,7 +41,7 @@ export const listCollectives = async ({
       ? supabaseClient.rpc<APIt.Collective>('search_collectives', {
           collective_term: search,
         })
-      : supabaseClient.from<APIt.Collective>('collectives')
+      : supabaseClient.from<APIt.Collective>('collectives_view')
   ).select(
     `*,
     n_members:collectives_profiles(count),

@@ -152,12 +152,9 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                         <span className={s.user_name}>
                           @{papercraft.collective.titlecode}
                         </span>
+                        <span>{papercraft.collective.n_members} members</span>
                         <span>
-                          {papercraft.collective.n_members[0].count} members
-                        </span>
-                        <span>
-                          {papercraft.collective.n_papercrafts[0].count}{' '}
-                          papercrafts
+                          {papercraft.collective.n_papercrafts} papercrafts
                         </span>
                       </a>
                     </Link>

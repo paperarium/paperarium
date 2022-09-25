@@ -84,10 +84,10 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
               <div className={s.user_name}>@{titlecode}</div>
               <div className={s.user_real_name}>{collective.data?.title}</div>
               <div className={s.user_stat}>
-                {collective.data?.n_members[0].count} members
+                {collective.data?.n_members} members
               </div>
               <div className={s.user_stat}>
-                {collective.data?.n_papercrafts[0].count} papercrafts
+                {collective.data?.n_papercrafts} papercrafts
               </div>
             </div>
           </div>

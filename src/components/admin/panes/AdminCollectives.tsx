@@ -73,10 +73,10 @@ const AdminCollectivesPane: React.FC<AdminPaneProps> = () => {
                       @{collective.titlecode}
                     </div>
                     <div className={s.result_username}>
-                      {collective.n_members[0].count} members
+                      {collective.n_members} members
                     </div>
                     <div className={s.result_username}>
-                      {collective.n_papercrafts[0].count} papercrafts
+                      {collective.n_papercrafts} papercrafts
                     </div>
                   </div>
                 ))
