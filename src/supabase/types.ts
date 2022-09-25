@@ -21,13 +21,14 @@ export type Profile = {
   website?: string;
   about?: string;
   avatar_url?: string;
-  n_papercrafts: QueryCount;
-  n_builds: QueryCount;
-  n_followers: QueryCount;
-  n_following: QueryCount;
+  n_papercrafts: number;
+  n_builds: number;
+  n_followers: number;
+  n_following: number;
   created_at: string;
   updated_at: string;
   archived: boolean;
+  is_default: boolean;
 };
 
 export type ProfilesFollowers = {

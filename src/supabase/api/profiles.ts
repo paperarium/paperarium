@@ -62,9 +62,18 @@ export const getProfile = async (username: string) => {
   return profiles[0];
 };
 
+export type ListProfilesOrderBy = {
+  n_papercrafts?: { ascending: boolean };
+  n_builds?: { ascending: boolean };
+  n_followers?: { ascending: boolean };
+  n_following?: { ascending: boolean };
+  created_at?: { ascnding: boolean };
+};
+
 export type ListProfilesQueryVariables = {
   search?: string;
   show_all?: boolean;
+  filter?: ListProfilesOrderBy;
 };
 
 /**
@@ -74,20 +83,36 @@ export type ListProfilesQueryVariables = {
 export const listProfiles = async ({
   search,
   show_all,
+  filter,
 }: ListProfilesQueryVariables) => {
   let req = (
     search
       ? supabaseClient.rpc<APIt.Profile>('search_profiles', {
           username_term: search,
         })
-      : supabaseClient.from<APIt.Profile>('profiles')
+      : supabaseClient.from<APIt.Profile>('profiles_view')
   ).select(`
-    *,
-    n_papercrafts:papercrafts(count),
-    n_builds:builds(count),
-    n_followers:profiles_followers!profiles_followers_following_id_fkey(count),
-    n_following:profiles_followers!profiles_followers_user_id_fkey(count)`);
-  if (!show_all) req = req.filter('created_at', 'not.eq', 'updated_at');
+    *`);
+  if (!show_all) req = req.filter('is_default', 'eq', 'false');
+  // add in filters
+  if (filter) {
+    filter.n_papercrafts &&
+      (req = req.order('n_papercrafts', {
+        ascending: filter.n_papercrafts.ascending,
+      }));
+    filter.n_builds &&
+      (req = req.order('n_builds', {
+        ascending: filter.n_builds.ascending,
+      }));
+    filter.n_following &&
+      (req = req.order('n_following', {
+        ascending: filter.n_following.ascending,
+      }));
+    filter.n_followers &&
+      (req = req.order('n_followers', {
+        ascending: filter.n_followers.ascending,
+      }));
+  }
   const { data: profiles, error } = await req.order('created_at', {
     ascending: false,
   });

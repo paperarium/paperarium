@@ -40,9 +40,10 @@ const NavBar: React.FC = function NavBar() {
         </Link>
         <div className={s.links_container}>
           <NavLink href={'/catalog'}>catalog</NavLink>
-          <NavLink href={'https://forum.paperarium.place'} passHref>
+          <NavLink href={'/community'}>community</NavLink>
+          {/* <NavLink href={'https://forum.paperarium.place'} passHref>
             forum
-          </NavLink>
+          </NavLink> */}
           <NavLink href={'/howto'}>guides</NavLink>
           <NavLink href={'/about'}>history</NavLink>
         </div>
