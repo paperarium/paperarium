@@ -25,7 +25,7 @@ export const getBuild = async (pid: string) => {
     .select(
       `
       *,
-      user:profiles!builds_user_id_fkey(username,avatar_url,builds(count),papercrafts(count)),
+      user:user_id!inner(*),
       papercraft:papercrafts!inner(id,title,description,pictures,user_id)
     `
     )
@@ -56,10 +56,10 @@ export const listBuilds = async ({
       : supabaseClient.from<APIt.Build>('builds')
   ).select(
     `*,
-    user:profiles!builds_user_id_fkey(username,avatar_url),
-    papercraft:papercrafts!builds_papercraft_id_fkey(id,title,description,pictures,user_id)`
+    user:user_id!inner(username,avatar_url),
+    papercraft:papercraft_id!inner(id,title,description,pictures,user_id)`
   );
-  if (username) req = req.eq('profiles.username' as any, username);
+  if (username) req = req.eq('user_id.username' as any, username);
   const { data: builds, error } = await req.order('created_at', {
     ascending: false,
   });
