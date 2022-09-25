@@ -20,6 +20,7 @@ import {
 import Layout from '../../components/Layout/Layout';
 import OptimizedImage from '../../components/OptimizedImage/OptimizedImage';
 import { collectiveKeys, getCollective } from '../../supabase/api/collectives';
+import { BiArrowBack } from 'react-icons/bi';
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPING                                   */
@@ -35,7 +36,7 @@ interface QParams extends ParsedUrlQuery {
 /*                                    PAGE                                    */
 /* -------------------------------------------------------------------------- */
 
-const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
+const CollectivePage: NextPage<ProfilePageProps> = function CollectivePage({
   titlecode,
 }) {
   // use a fallback loading indicator
@@ -71,6 +72,12 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
       <div className={s.profile_container}>
         <div className={s.profile_bar}>
           <div className={s.profile_information}>
+            <div className={s.sticky_header}>
+              <div className={s.sticky_button} onClick={() => router.back()}>
+                <BiArrowBack />
+                <div>BACK</div>
+              </div>
+            </div>
             <div className={s.profile_picture}>
               {collective.data?.avatar_url ? (
                 <OptimizedImage
@@ -167,8 +174,8 @@ export const getStaticProps: GetStaticProps<
     revalidate: false,
   };
 };
-(ProfilePage as any).getLayout = (page: React.ReactNode) => (
+(CollectivePage as any).getLayout = (page: React.ReactNode) => (
   <Layout footerMarginLeft={'var(--profile-bar-width)'}>{page}</Layout>
 );
 
-export default ProfilePage;
+export default CollectivePage;

@@ -22,9 +22,9 @@ export const getPapercraft = async (pid: string) => {
     .select(
       `
       *,
-      user:user_id!inner(*),
-      display_build:build_id!inner(id,description,pictures,user_id,user:profiles_view!builds_user_id_fkey(*)),
-      collective:collectives_view!collective_id(*),
+      user:profiles_view!user_id(*),
+      display_build:builds!build_id(id,description,pictures,user_id,user:profiles_view!builds_user_id_fkey(*)),
+      collective:collectives_view!papercrafts_collective_id_fkey(*),
       tags:tags(*)
     `
     )

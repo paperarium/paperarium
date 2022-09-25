@@ -15,7 +15,6 @@ import {
   IoShapesOutline,
 } from 'react-icons/io5';
 import { MdOutlineTableRows } from 'react-icons/md';
-import { RiUserReceivedLine, RiUserSharedLine } from 'react-icons/ri';
 import {
   collectiveKeys,
   listCollectives,
@@ -27,18 +26,20 @@ import {
 } from '../../supabase/api/profiles';
 import * as APIt from '../../supabase/types';
 import FilterBarProfile from '../FilterBar/FilterBarProfile';
-import OptimizedImage from '../OptimizedImage/OptimizedImage';
+import { CollectiveHeaderRow, CollectiveRow } from './CollectiveRow';
 import s from './ProfileGallery.module.scss';
-
-type ProfileGalleryProps = {
-  children?: React.ReactNode;
-  disabled?: boolean;
-};
+import { ProfileHeaderRow, ProfileRow } from './ProfileRow';
 
 export enum CommunityEntityType {
   Profiles = 'profiles',
   Collectives = 'collectives',
 }
+
+type ProfileGalleryProps = {
+  children?: React.ReactNode;
+  disabled?: boolean;
+  displays: CommunityEntityType[];
+};
 
 type CommunityEntityMeta = {
   icon: JSX.Element;
@@ -50,7 +51,7 @@ const ENTITY_MAP: { [key in CommunityEntityType]: CommunityEntityMeta } = {
   [CommunityEntityType.Profiles]: {
     icon: <IoPersonOutline />,
     query: listProfiles,
-    keys: collectiveKeys,
+    keys: profileKeys,
   },
   [CommunityEntityType.Collectives]: {
     icon: <IoPeopleOutline />,
@@ -62,6 +63,7 @@ const ENTITY_MAP: { [key in CommunityEntityType]: CommunityEntityMeta } = {
 const ProfileGallery: React.FC<ProfileGalleryProps> = function ProfileGallery({
   children,
   disabled,
+  displays,
 }) {
   // the default entity type in the
   const [entityType, setEntityType] = useState<CommunityEntityType>(
@@ -84,13 +86,13 @@ const ProfileGallery: React.FC<ProfileGalleryProps> = function ProfileGallery({
   return (
     <div className={s.meta_container}>
       <div className={s.sidebar}>
-        {Object.entries(ENTITY_MAP).map(([key, { icon }]) => (
+        {displays.map((key) => (
           <div
             className={`${s.layout_type} ${entityType === key ? 'active' : ''}`}
             key={key}
             onClick={() => setEntityType(key as CommunityEntityType)}
           >
-            {key} {icon}
+            {key} {ENTITY_MAP[key].icon}
           </div>
         ))}
         <div className={`${s.layout_button} active`}>
@@ -105,50 +107,21 @@ const ProfileGallery: React.FC<ProfileGalleryProps> = function ProfileGallery({
         <div className={s.lower_container}>
           <table className={s.main_grid}>
             <thead className={s.grid_header}>
-              <tr>
-                <th>Profile</th>
-                <th>
-                  <IoShapesOutline />
-                </th>
-                <th>
-                  <IoCubeOutline />
-                </th>
-                <th>
-                  <RiUserReceivedLine />
-                </th>
-                <th>
-                  <RiUserSharedLine />
-                </th>
-              </tr>
+              {entityType === CommunityEntityType.Collectives ? (
+                <CollectiveHeaderRow />
+              ) : (
+                <ProfileHeaderRow />
+              )}
             </thead>
             <tbody>
-              {entities.data
-                ? (entities.data as APIt.Profile[]).map((entity) => (
-                    <Link href={`/profiles/${entity.username}`} key={entity.id}>
-                      <tr className={s.grid_row}>
-                        <td className={s.grid_cell} style={{ width: '100%' }}>
-                          <div className={s.profile_cell}>
-                            <div className={s.result_pic}>
-                              <OptimizedImage
-                                src={entity.avatar_url}
-                                className={s.inner_image}
-                                sizes={`20px`}
-                              />
-                            </div>
-                            {entity.name}
-                            <br />
-                            <div className={s.result_username}>
-                              @{entity.username}
-                            </div>
-                          </div>
-                        </td>
-                        <td className={s.grid_cell}>{entity.n_papercrafts}</td>
-                        <td className={s.grid_cell}>{entity.n_builds}</td>
-                        <td className={s.grid_cell}>{entity.n_followers}</td>
-                        <td className={s.grid_cell}>{entity.n_following}</td>
-                      </tr>
-                    </Link>
-                  ))
+              {entities.data && !entities.isFetching
+                ? entityType === CommunityEntityType.Collectives
+                  ? (entities.data as APIt.Collective[]).map((entity) => (
+                      <CollectiveRow collective={entity} key={entity.id} />
+                    ))
+                  : (entities.data as APIt.Profile[]).map((entity) => (
+                      <ProfileRow profile={entity} key={entity.id} />
+                    ))
                 : null}
             </tbody>
           </table>

@@ -13,10 +13,6 @@ import { getProfile, profileKeys } from '../../supabase/api/profiles';
 import s from '../../styles/profile/Profile.module.scss';
 import PapercraftGallery from '../../components/PapercraftGallery/PapercraftGallery';
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
-import {
-  listPapercrafts,
-  papercraftKeys,
-} from '../../supabase/api/papercrafts';
 import Layout from '../../components/Layout/Layout';
 import { useUser } from '@supabase/auth-helpers-react';
 import Link from 'next/link';
@@ -24,6 +20,9 @@ import OptimizedImage from '../../components/OptimizedImage/OptimizedImage';
 import { NextSeo } from 'next-seo';
 import useWithFollowing from '../../hooks/useWithFollowing';
 import FallbackOverlay from '../../components/FallbackOverlay/FallbackOverlay';
+import { useContext } from 'react';
+import { BiArrowBack } from 'react-icons/bi';
+import { FiShare } from 'react-icons/fi';
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPING                                   */
@@ -77,6 +76,12 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
       <div className={s.profile_container}>
         <div className={s.profile_bar}>
           <div className={s.profile_information}>
+            <div className={s.sticky_header}>
+              <div className={s.sticky_button} onClick={() => router.back()}>
+                <BiArrowBack />
+                <div>BACK</div>
+              </div>
+            </div>
             <div className={s.profile_picture}>
               {profile.data?.avatar_url ? (
                 <OptimizedImage

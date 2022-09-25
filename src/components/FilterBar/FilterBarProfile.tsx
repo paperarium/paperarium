@@ -36,6 +36,7 @@ const FilterBarProfile: React.FC<FilterBarProfileProps> = function FilterBar({
               autoCorrect={'off'}
               autoCapitalize={'off'}
               spellCheck={false}
+              tabIndex={1}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {

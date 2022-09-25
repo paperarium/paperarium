@@ -57,6 +57,7 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
                 placeholder="Search for a tag"
                 autoCorrect={'off'}
                 autoCapitalize={'off'}
+                tabIndex={1}
                 spellCheck={false}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {

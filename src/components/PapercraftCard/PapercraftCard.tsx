@@ -35,7 +35,6 @@ const PapercraftCard = function PapercraftCard<
               }`
             : `/papercrafts/${entity.id}`
         }
-        passHref
       >
         <a
           // className={s.container}
@@ -73,11 +72,25 @@ const PapercraftCard = function PapercraftCard<
       </Link>
       <div className={s.info_card}>
         <div className={s.info_col}>
-          <div>
-            {entityType === EntityType.Papercrafts
-              ? (entity as APIt.Papercraft).title!
-              : (entity as APIt.Build).papercraft.title}
-          </div>
+          <Link
+            href={
+              entityType === EntityType.Builds
+                ? `/papercrafts/${(entity as APIt.Build).papercraft.id}?build=${
+                    entity.id
+                  }`
+                : `/papercrafts/${entity.id}`
+            }
+          >
+            <div
+              onClick={() => {
+                setClicked(true);
+              }}
+            >
+              {entityType === EntityType.Papercrafts
+                ? (entity as APIt.Papercraft).title!
+                : (entity as APIt.Build).papercraft.title}
+            </div>
+          </Link>
           <ProfileLink user={entity.user} />
         </div>
       </div>

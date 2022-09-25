@@ -110,6 +110,8 @@ export interface Collective {
   xlink?: string;
   avatar_url?: string;
   n_members: number;
+  n_followers: number;
+  n_builds: number;
   n_papercrafts: number;
 }
 

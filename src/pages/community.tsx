@@ -10,7 +10,9 @@ import Head from 'next/head';
 import s from '../styles/Explore.module.scss';
 import { NextSeo } from 'next-seo';
 import { listProfiles, profileKeys } from '../supabase/api/profiles';
-import ProfileGallery from '../components/ProfileGallery/ProfileGallery';
+import ProfileGallery, {
+  CommunityEntityType,
+} from '../components/ProfileGallery/ProfileGallery';
 
 const CommunityPage: NextPage = () => {
   return (
@@ -23,7 +25,12 @@ const CommunityPage: NextPage = () => {
         />
       </Head>
       <div className={s.main_grid}>
-        <ProfileGallery />
+        <ProfileGallery
+          displays={[
+            CommunityEntityType.Profiles,
+            CommunityEntityType.Collectives,
+          ]}
+        />
       </div>
     </>
   );

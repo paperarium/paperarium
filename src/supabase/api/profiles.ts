@@ -79,8 +79,7 @@ export const listProfiles = async ({
           username_term: search,
         })
       : supabaseClient.from<APIt.Profile>('profiles_view')
-  ).select(`
-    *`);
+  ).select(`*`);
   if (!show_all) req = req.filter('is_default', 'eq', 'false');
   // add in filters
   if (filter) {
