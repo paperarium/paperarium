@@ -19,13 +19,8 @@ import * as APIt from '../types';
  */
 export const getSelf = async (id: string) => {
   const { data: profiles, error } = await supabaseClient
-    .from<APIt.Profile>('profiles')
-    .select(
-      `
-      *,
-      n_papercrafts:papercrafts(count),
-      n_builds:builds(count)`
-    )
+    .from<APIt.Profile>('profiles_view')
+    .select('*')
     .eq('id', id);
   if (error) throw error;
   return profiles[0];
@@ -48,15 +43,8 @@ export const getIsAdmin = async () => {
  */
 export const getProfile = async (username: string) => {
   const { data: profiles, error } = await supabaseClient
-    .from<APIt.Profile>('profiles')
-    .select(
-      `
-      *,
-      n_papercrafts:papercrafts(count),
-      n_builds:builds(count),
-      n_followers:profiles_followers!profiles_followers_following_id_fkey(count),
-      n_following:profiles_followers!profiles_followers_user_id_fkey(count)`
-    )
+    .from<APIt.Profile>('profiles_view')
+    .select('*')
     .eq('username', username);
   if (error) throw error;
   return profiles[0];

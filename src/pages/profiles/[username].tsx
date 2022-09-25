@@ -95,18 +95,16 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
             <div className={s.profile_name}>
               <div className={s.user_name}>@{username}</div>
               <div className={s.user_real_name}>{profile.data?.name}</div>
+              <div className={s.user_stat}>{profile.data?.n_builds} builds</div>
               <div className={s.user_stat}>
-                {profile.data?.n_builds[0].count} builds
-              </div>
-              <div className={s.user_stat}>
-                {profile.data?.n_papercrafts[0].count} papercrafts
+                {profile.data?.n_papercrafts} papercrafts
               </div>
             </div>
           </div>
           <div className={s.description}>{profile.data?.about}</div>
           <div className={s.following_row}>
-            <div>{profile.data?.n_followers[0].count || 0} followers</div>
-            <div>{profile.data?.n_following[0].count || 0} following</div>
+            <div>{profile.data?.n_followers || 0} followers</div>
+            <div>{profile.data?.n_following || 0} following</div>
           </div>
           {user && user.id === profile.data?.id ? (
             <>

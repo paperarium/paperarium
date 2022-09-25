@@ -48,8 +48,8 @@ const ProfileLink: React.FC<ProfileLinkProps> = function ProfileLink({
           </span>
           {full ? (
             <>
-              <span>{user.n_builds[0].count} builds</span>
-              <span>{user.n_papercrafts[0].count} papercrafts</span>
+              <span>{user.n_builds} builds</span>
+              <span>{user.n_papercrafts} papercrafts</span>
             </>
           ) : null}
         </a>
