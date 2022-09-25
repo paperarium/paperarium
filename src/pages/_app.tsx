@@ -13,6 +13,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import 'lazysizes';
 import 'lazysizes/plugins/attrchange/ls.attrchange';
+import 'react-datepicker/dist/react-datepicker.css';
 import { ImgixProvider } from 'react-imgix';
 import { UserProvider } from '@supabase/auth-helpers-react';
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';

@@ -19,13 +19,8 @@ import * as APIt from '../types';
  */
 export const getSelf = async (id: string) => {
   const { data: profiles, error } = await supabaseClient
-    .from<APIt.Profile>('profiles')
-    .select(
-      `
-      *,
-      n_papercrafts:papercrafts(count),
-      n_builds:builds(count)`
-    )
+    .from<APIt.Profile>('profiles_view')
+    .select('*')
     .eq('id', id);
   if (error) throw error;
   return profiles[0];
@@ -39,7 +34,7 @@ export const getIsAdmin = async () => {
     'get_is_admin'
   );
   if (error) throw error;
-  return isAdmin;
+  return !!isAdmin;
 };
 
 /**
@@ -48,34 +43,63 @@ export const getIsAdmin = async () => {
  */
 export const getProfile = async (username: string) => {
   const { data: profiles, error } = await supabaseClient
-    .from<APIt.Profile>('profiles')
-    .select(
-      `
-      *,
-      n_papercrafts:papercrafts(count),
-      n_builds:builds(count)`
-    )
+    .from<APIt.Profile>('profiles_view')
+    .select('*')
     .eq('username', username);
   if (error) throw error;
   return profiles[0];
 };
 
-type ListProfilesQueryVariables = {
+export type ListProfilesOrderBy = {
+  n_papercrafts?: { ascending: boolean };
+  n_builds?: { ascending: boolean };
+  n_followers?: { ascending: boolean };
+  n_following?: { ascending: boolean };
+  created_at?: { ascnding: boolean };
+};
+
+export type ListProfilesQueryVariables = {
   search?: string;
+  show_all?: boolean;
+  filter?: ListProfilesOrderBy;
 };
 
 /**
  * Lists a bunch of profiles from the database
  * @returns A list of profiles
  */
-export const listProfiles = async ({ search }: ListProfilesQueryVariables) => {
+export const listProfiles = async ({
+  search,
+  show_all,
+  filter,
+}: ListProfilesQueryVariables) => {
   let req = (
     search
       ? supabaseClient.rpc<APIt.Profile>('search_profiles', {
           username_term: search,
         })
-      : supabaseClient.from<APIt.Profile>('profiles')
+      : supabaseClient.from<APIt.Profile>('profiles_view')
   ).select(`*`);
+  if (!show_all) req = req.filter('is_default', 'eq', 'false');
+  // add in filters
+  if (filter) {
+    filter.n_papercrafts &&
+      (req = req.order('n_papercrafts', {
+        ascending: filter.n_papercrafts.ascending,
+      }));
+    filter.n_builds &&
+      (req = req.order('n_builds', {
+        ascending: filter.n_builds.ascending,
+      }));
+    filter.n_following &&
+      (req = req.order('n_following', {
+        ascending: filter.n_following.ascending,
+      }));
+    filter.n_followers &&
+      (req = req.order('n_followers', {
+        ascending: filter.n_followers.ascending,
+      }));
+  }
   const { data: profiles, error } = await req.order('created_at', {
     ascending: false,
   });
@@ -83,11 +107,32 @@ export const listProfiles = async ({ search }: ListProfilesQueryVariables) => {
   return profiles;
 };
 
+export type ProfileFollowingQueryVariables = Omit<
+  APIt.ProfilesFollowers,
+  'id' | 'created_at' | 'follower' | 'following'
+>;
+
+/**
+ * Gets whether or not a user is following another user
+ * @param id
+ * @param input
+ * @returns
+ */
+export const getIsFollowing = async ({
+  user_id,
+  following_id,
+}: ProfileFollowingQueryVariables) => {
+  let req = supabaseClient.from<APIt.Profile>('profiles_followers');
+  const { data: profiles, error } = await req
+    .select('*')
+    .match({ user_id, following_id });
+  if (error) throw error;
+  return profiles.length > 0;
+};
+
 /* -------------------------------------------------------------------------- */
 /*                                  MUTATIONS                                 */
 /* -------------------------------------------------------------------------- */
-
-export const adminCreateProfile = async () => {};
 
 export const updateProfile = async (
   id: string,
@@ -97,6 +142,41 @@ export const updateProfile = async (
     .from<APIt.Profile>('profiles')
     .update(input)
     .match({ id });
+  if (error) throw error;
+  return profiles[0];
+};
+
+export const followProfile = async ({
+  user_id,
+  following_id,
+}: ProfileFollowingQueryVariables) => {
+  const { data: profiles, error } = await supabaseClient
+    .from<APIt.ProfilesFollowers>('profiles_followers')
+    .insert({
+      user_id,
+      following_id,
+    }).select(`
+      follower:user_id(username),
+      following:following_id(username)
+    `);
+  if (error) throw error;
+  return profiles[0];
+};
+
+export const unfollowProfile = async ({
+  user_id,
+  following_id,
+}: ProfileFollowingQueryVariables) => {
+  const { data: profiles, error } = await supabaseClient
+    .from<APIt.ProfilesFollowers>('profiles_followers')
+    .delete()
+    .match({
+      user_id,
+      following_id,
+    }).select(`
+      follower:user_id(username),
+      following:following_id(username)
+    `);
   if (error) throw error;
   return profiles[0];
 };
@@ -113,4 +193,7 @@ export const profileKeys = {
   gets: () => [...profileKeys.all, 'get'] as const,
   get: (username: string) => [...profileKeys.gets(), username] as const,
   getSelf: () => [...profileKeys.all, 'get', '#'] as const,
+  getsIsFollowing: () => [...profileKeys.all, 'isFollowing'] as const,
+  getIsFollowing: (params: ProfileFollowingQueryVariables) =>
+    [...profileKeys.getsIsFollowing(), params] as const,
 };

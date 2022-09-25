@@ -118,6 +118,7 @@ $search_bar_visible_height: 40px;
   font-family: 'FT88 Gothic';
   font-size: 30px;
   line-height: 1;
+  flex-shrink: 0;
 
   &:hover {
     transform: scale(1.01);
@@ -288,5 +289,70 @@ $search_bar_visible_height: 40px;
   &[class~='enter-done'] {
     opacity: 1;
     pointer-events: all;
+  }
+}
+
+.following_row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  padding: 0px 5px;
+  opacity: 0.5;
+  letter-spacing: -1px;
+}
+
+.sticky_header {
+  position: absolute;
+  pointer-events: all;
+  gap: 5px;
+  padding: 5px;
+  height: 100%;
+  top: 0;
+  right: 0;
+
+  @include respond-to('small') {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: unset;
+    bottom: unset;
+    padding-top: 5px;
+    height: auto;
+  }
+}
+
+.sticky_button {
+  background-color: $background;
+  border: 1px solid $foreground;
+  color: $foreground;
+  padding: 7px;
+  gap: 5px;
+  transition: letter-spacing 0.1s ease-in-out, transform 0.1s ease-in-out;
+  cursor: pointer;
+  letter-spacing: -1px;
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+
+  & div {
+    display: none;
+  }
+
+  &:hover {
+    letter-spacing: 2px;
+    transform: scale(0.9);
+  }
+
+  @include respond-to('small') {
+    flex-direction: row;
+    & div {
+      display: block;
+    }
   }
 }

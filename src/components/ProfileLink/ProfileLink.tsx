@@ -14,19 +14,21 @@ type ProfileLinkProps = {
   user: APIt.Profile;
   full?: boolean;
   children?: React.ReactNode;
+  withIcon?: React.ReactNode;
 };
 
 const ProfileLink: React.FC<ProfileLinkProps> = function ProfileLink({
   user,
   full,
   children,
+  withIcon,
 }) {
   const fullClass = full ? 'full' : '';
   return (
     <div className={`${s.profile_container} ${fullClass}`}>
       {children}
       {full ? (
-        <Link href={`/profile/${user.username}`} passHref>
+        <Link href={`/profiles/${user.username}`} passHref>
           <a>
             <div className={s.profile_picture}>
               {user.avatar_url ? (
@@ -40,16 +42,16 @@ const ProfileLink: React.FC<ProfileLinkProps> = function ProfileLink({
           </a>
         </Link>
       ) : null}
-      <Link href={`/profile/${user.username}`} passHref>
+      <Link href={`/profiles/${user.username}`} passHref>
         <a className={s.profile_name}>
           <span className={s.user_name}>
-            @{user.username}
+            {withIcon}@{user.username}
             {user.archived ? <HiOutlineArchive color="#dba000" /> : null}
           </span>
           {full ? (
             <>
-              <span>{user.n_builds[0].count} builds</span>
-              <span>{user.n_papercrafts[0].count} papercrafts</span>
+              <span>{user.n_builds} builds</span>
+              <span>{user.n_papercrafts} papercrafts</span>
             </>
           ) : null}
         </a>

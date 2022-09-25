@@ -57,6 +57,7 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
                 placeholder="Search for a tag"
                 autoCorrect={'off'}
                 autoCapitalize={'off'}
+                tabIndex={1}
                 spellCheck={false}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
@@ -73,19 +74,25 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
                 {tags.data
                   ? tags.data.map((tag) => {
                       let active = '';
-                      if (
-                        currentTags.findIndex(
-                          ({ id: e_id }) => e_id == tag.id
-                        ) !== -1
-                      )
-                        active = 'active';
+                      const index = currentTags.findIndex(
+                        ({ id: e_id }) => e_id == tag.id
+                      );
+                      if (index !== -1) active = 'active';
                       return (
                         <div
                           key={tag.id}
                           className={`${s.tag} ${active}`}
-                          onClick={() => {
-                            submitTags([...currentTags, tag]);
-                          }}
+                          onClick={
+                            index === -1
+                              ? () => {
+                                  submitTags([...currentTags, tag]);
+                                }
+                              : () => {
+                                  const newTags = [...currentTags];
+                                  newTags.splice(index, 1);
+                                  submitTags(newTags);
+                                }
+                          }
                         >
                           <>
                             {tag.name} <i>({tag.n_papercrafts})</i>

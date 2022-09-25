@@ -40,9 +40,7 @@ const NavBar: React.FC = function NavBar() {
         </Link>
         <div className={s.links_container}>
           <NavLink href={'/catalog'}>catalog</NavLink>
-          <NavLink href={'https://forum.paperarium.place'} passHref>
-            forum
-          </NavLink>
+          <NavLink href={'/community'}>community</NavLink>
           <NavLink href={'/howto'}>guides</NavLink>
           <NavLink href={'/about'}>history</NavLink>
         </div>
@@ -59,7 +57,7 @@ const NavBar: React.FC = function NavBar() {
                   <a>upload</a>
                 </div>
               </Link>
-              <Link href={`/profile/${profile.username}`}>
+              <Link href={`/profiles/${profile.username}`}>
                 <div className={s.profile_container}>
                   <div className={s.profile_picture}>
                     {profile.avatar_url ? (

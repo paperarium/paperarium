@@ -53,6 +53,10 @@
   }
 }
 
+html {
+  overflow-x: hidden;
+}
+
 html,
 body,
 #__next {
@@ -65,6 +69,7 @@ body,
   scroll-padding-top: calc(var(--header-height) + var(--notice-bar-height));
   scroll-snap-type: y proximity;
   color: var(--foreground-color);
+  min-width: 320px;
 
   @media screen and (min-width: 767px) {
     scroll-snap-type: none;

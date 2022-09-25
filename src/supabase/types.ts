@@ -21,11 +21,23 @@ export type Profile = {
   website?: string;
   about?: string;
   avatar_url?: string;
-  n_papercrafts: QueryCount;
-  n_builds: QueryCount;
+  n_papercrafts: number;
+  n_builds: number;
+  n_followers: number;
+  n_following: number;
   created_at: string;
   updated_at: string;
   archived: boolean;
+  is_default: boolean;
+};
+
+export type ProfilesFollowers = {
+  user_id: string;
+  following_id: string;
+  created_at: string;
+  follower: Profile;
+  following: Profile;
+  id: number;
 };
 
 /* -------------------------------------------------------------------------- */
@@ -97,8 +109,10 @@ export interface Collective {
   titlecode: string;
   xlink?: string;
   avatar_url?: string;
-  n_members: QueryCount;
-  n_papercrafts: QueryCount;
+  n_members: number;
+  n_followers: number;
+  n_builds: number;
+  n_papercrafts: number;
 }
 
 export type CollectivesProfiles = {

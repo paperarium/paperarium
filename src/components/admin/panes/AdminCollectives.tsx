@@ -8,8 +8,8 @@ import {
   collectiveKeys,
   listCollectives,
 } from '../../../supabase/api/collectives';
-import s2 from '../../../styles/admin/AdminTags.module.scss';
 import OptimizedImage from '../../OptimizedImage/OptimizedImage';
+import FormEditCollective from '../../FormEditCollective/FormEditCollective';
 
 /**
  * The home page for admin collective activities
@@ -26,12 +26,11 @@ const AdminCollectivesPane: React.FC<AdminPaneProps> = () => {
   const collectives = useQuery(['admin', collectiveKeys.list(qparams)], () =>
     listCollectives(qparams)
   );
-  const [showCreate, setShowCreate] = useState(true);
 
   return (
     <>
       <Head>
-        <title>admin - paperarium</title>
+        <title>admin.collectives - paperarium</title>
         <meta name="description" content="about us." />
       </Head>
       <div className={s.container}>
@@ -74,10 +73,10 @@ const AdminCollectivesPane: React.FC<AdminPaneProps> = () => {
                       @{collective.titlecode}
                     </div>
                     <div className={s.result_username}>
-                      {collective.n_members[0].count} members
+                      {collective.n_members} members
                     </div>
                     <div className={s.result_username}>
-                      {collective.n_papercrafts[0].count} papercrafts
+                      {collective.n_papercrafts} papercrafts
                     </div>
                   </div>
                 ))
@@ -85,13 +84,11 @@ const AdminCollectivesPane: React.FC<AdminPaneProps> = () => {
           </div>
         </div>
         <div className={s.control_col}>
-          {showCreate ? (
-            <div className={s2.container}>CREATE</div>
-          ) : currCollective ? (
-            currCollective.title
-          ) : (
-            <div>SELECT A COLLECTIVE TO SHOW IT HERE</div>
-          )}
+          <div className={s.colored_background}>
+            {currCollective ? (
+              <FormEditCollective collective={currCollective} />
+            ) : null}
+          </div>
         </div>
       </div>
     </>

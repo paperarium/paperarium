@@ -1,16 +1,15 @@
-import {
-  supabaseClient,
-  supabaseServerClient,
-} from '@supabase/auth-helpers-nextjs';
-import { QueryClient, useQuery } from '@tanstack/react-query';
-import type { NextPage } from 'next';
+import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import { useQuery } from '@tanstack/react-query';
 import Head from 'next/head';
 import { useState } from 'react';
 import { AdminPaneProps } from '..';
 import * as APIt from '../../../supabase/types';
 import s from '../../../styles/admin/Admin.module.scss';
-import es from '../../../styles/Profile.module.scss';
-import { listProfiles } from '../../../supabase/api/profiles';
+import {
+  listProfiles,
+  ListProfilesQueryVariables,
+  profileKeys,
+} from '../../../supabase/api/profiles';
 import rectifyDateFormat from '../../../util/rectifyDateFormat';
 import FormEditProfile from '../../FormEditProfile/FormEditProfile';
 import OptimizedImage from '../../OptimizedImage/OptimizedImage';
@@ -29,9 +28,12 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
     activeProfile
   );
   const [currentSearch, setCurrentSearch] = useState<string>(search);
-  const profiles = useQuery(
-    ['admin', 'profiles', { search: currentSearch }],
-    () => listProfiles({ search: currentSearch })
+  const q_params: ListProfilesQueryVariables = {
+    search: currentSearch,
+    show_all: true,
+  };
+  const profiles = useQuery(profileKeys.list(q_params), () =>
+    listProfiles(q_params)
   );
 
   return (

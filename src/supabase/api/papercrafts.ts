@@ -22,9 +22,9 @@ export const getPapercraft = async (pid: string) => {
     .select(
       `
       *,
-      user:profiles(id,username,avatar_url,n_builds:builds(count),n_papercrafts:papercrafts(count),archived),
-      display_build:builds!papercrafts_build_id_fkey(id,description,pictures,user_id,user:profiles(username,avatar_url,n_builds:builds(count),n_papercrafts:papercrafts(count),archived)),
-      collective:collectives!papercrafts_collective_id_fkey(id,titlecode,title,n_members:collectives_profiles(count),n_papercrafts:papercrafts(count)),
+      user:profiles_view!user_id(*),
+      display_build:builds!build_id(id,description,pictures,user_id,user:profiles_view!builds_user_id_fkey(*)),
+      collective:collectives_view!papercrafts_collective_id_fkey(*),
       tags:tags(*)
     `
     )
@@ -58,13 +58,13 @@ export const listPapercrafts = async ({
       : supabaseClient.from<APIt.Papercraft>('papercrafts')
   ).select(`
     *,
-    user:profiles!inner(username,avatar_url,archived),
+    user:user_id!inner(username,avatar_url,archived),
     collective:collectives!${
       collective ? 'inner' : 'left'
     }(titlecode,title,avatar_url),
-    tags!inner(id,name,code)`);
+    tags!left(id,name,code)`);
   if (tags) req = req.in('tags.id' as any, tags);
-  if (username) req = req.eq('profiles.username' as any, username);
+  if (username) req = req.eq('user_id.username' as any, username);
   if (collective) req = req.eq('collectives.titlecode' as any, collective);
   const { data: papercrafts, error } = await req.order('created_at', {
     ascending: false,

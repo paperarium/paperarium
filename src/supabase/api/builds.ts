@@ -25,7 +25,7 @@ export const getBuild = async (pid: string) => {
     .select(
       `
       *,
-      user:profiles(username,avatar_url,builds(count),papercrafts(count)),
+      user:user_id!inner(*),
       papercraft:papercrafts!inner(id,title,description,pictures,user_id)
     `
     )
@@ -36,6 +36,7 @@ export const getBuild = async (pid: string) => {
 
 type ListBuildsQueryVariables = {
   search?: string;
+  collective?: string;
   username?: string;
   tags?: number[];
 };
@@ -46,6 +47,7 @@ type ListBuildsQueryVariables = {
  */
 export const listBuilds = async ({
   search,
+  collective,
   username,
 }: ListBuildsQueryVariables) => {
   let req = (
@@ -53,11 +55,14 @@ export const listBuilds = async ({
       ? supabaseClient.rpc<APIt.Build>('search_builds', {
           build_term: search,
         })
-      : supabaseClient.from<APIt.Build>('builds')
+      : supabaseClient.from<APIt.Build>('builds_view')
   ).select(
-    `*,user:profiles!inner(username,avatar_url),papercraft:papercrafts!builds_papercraft_id_fkey(id,title,description,pictures,user_id)`
+    `*,
+    user:user_id!inner(username,avatar_url),
+    papercraft:papercraft_id!inner(id,title,description,pictures,user_id,collective_id)`
   );
-  if (username) req = req.eq('profiles.username' as any, username);
+  if (username) req = req.eq('user_id.username' as any, username);
+  if (collective) req = req.eq('collective_titlecode' as any, collective);
   const { data: builds, error } = await req.order('created_at', {
     ascending: false,
   });

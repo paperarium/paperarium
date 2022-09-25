@@ -1,5 +1,5 @@
 /*
- * FormEditProfile.tsx
+ * FormEditCollective.tsx
  * author: evan kirkiles
  * created on Wed Sep 07 2022
  * 2022 the nobot space,
@@ -9,20 +9,20 @@ import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 import { AiOutlineUpload, AiOutlineSave } from 'react-icons/ai';
 import ReactTextareaAutosize from 'react-textarea-autosize';
-import { updateProfile } from '../../supabase/api/profiles';
+import { updateCollective } from '../../supabase/api/collectives';
 import * as APIt from '../../supabase/types';
 import { uploadFile } from '../../util/uploadFile';
 import OptimizedImage from '../OptimizedImage/OptimizedImage';
-import s from './FormEditProfile.module.scss';
+import s from './FormEditCollective.module.scss';
 import { CSSTransition } from 'react-transition-group';
 
-type FormEditProfileProps = {
-  profile: APIt.Profile;
+type FormEditCollectiveProps = {
+  collective: APIt.Collective;
   redirectOnSuccess?: boolean;
 };
 
-const FormEditProfile: React.FC<FormEditProfileProps> =
-  function FormEditProfile({ profile, redirectOnSuccess }) {
+const FormEditCollective: React.FC<FormEditCollectiveProps> =
+  function FormEditCollective({ collective, redirectOnSuccess }) {
     // meta statefuls
     const router = useRouter();
     const loadingOverlayRef = useRef<HTMLDivElement>(null);
@@ -31,52 +31,50 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
     // form input fields
     const [newAvatar, setNewAvatar] = useState<File | null>(null);
     const [avatar_url, setAvatarUrl] = useState<string | null>(null);
-    const [username, setUsername] = useState<string | undefined>();
-    const [realname, setRealName] = useState<string | undefined>();
-    const [about, setAbout] = useState<string | undefined>();
-    const [website, setWebsite] = useState<string | undefined>();
+    const [title, setTitle] = useState<string | undefined>();
+    const [titlecode, setTitlecode] = useState<string | undefined>();
+    const [description, setDescription] = useState<string | undefined>();
+    const [xlink, setXlink] = useState<string | undefined>();
 
-    // mutation for updating the profile
+    // mutation for updating the collective
     const queryClient = useQueryClient();
-    const updateProfileMutation = useMutation(
+    const updateCollectiveMutation = useMutation(
       async () => {
         // validate correct form inputs
-        if (username && username.length <= 2) throw 'username too short!';
         if (newAvatar && newAvatar.size / 1024 / 1024 > 5)
           throw 'avatar must be less than 5 mb';
 
         // upload the avatar url if there is one
         let uploaded_avatar_url: string | null = null;
         if (newAvatar) {
-          const avatar_file = `${profile.id}/avatars/${newAvatar.name.replace(
-            /[^a-zA-Z0-9-_\.]/g,
-            ''
-          )}`;
+          const avatar_file = `${
+            collective.id
+          }/avatars/${newAvatar.name.replace(/[^a-zA-Z0-9-_\.]/g, '')}`;
           uploaded_avatar_url = await uploadFile(avatar_file, newAvatar);
         }
 
         // create the mutation input
-        const input: Partial<APIt.Profile> = {};
-        username && (input.username = username);
-        realname !== undefined && (input.name = realname);
-        about !== undefined && (input.about = about);
-        website !== undefined && (input.website = website);
+        const input: Partial<APIt.Collective> = {};
+        title && (input.title = title);
+        titlecode !== undefined && (input.titlecode = titlecode);
+        description !== undefined && (input.description = description);
+        xlink !== undefined && (input.xlink = xlink);
         uploaded_avatar_url !== null &&
           (input.avatar_url = uploaded_avatar_url);
 
         // perform the mutation
-        return await updateProfile(profile.id, input);
+        return await updateCollective(collective.id, input);
       },
       {
         // on begin, start the loading spinner
         onMutate() {
           setIsLoading(true);
         },
-        // on success, we need to invalidate our previous profile queries
-        onSuccess: (profile) => {
-          queryClient.invalidateQueries(['profiles', { id: profile.id }]);
+        // on success, we need to invalidate our previous collective queries
+        onSuccess: (collective) => {
+          queryClient.invalidateQueries(['collectives', { id: collective.id }]);
           if (redirectOnSuccess) {
-            router.replace(`/profiles/${profile.username}`);
+            router.replace(`/collectives/${collective.titlecode}`);
           } else {
             setIsLoading(false);
           }
@@ -91,15 +89,15 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
     // check if there is any necessary change
     const isTheSame =
       !newAvatar &&
-      (username === undefined || username === profile.username) &&
-      (realname === undefined || realname === profile.name) &&
-      (about === undefined || about == profile.about) &&
-      (website === undefined || website == profile.website);
+      (title === undefined || title === collective.title) &&
+      (titlecode === undefined || titlecode === collective.titlecode) &&
+      (description === undefined || description == collective.description) &&
+      (xlink === undefined || xlink == collective.xlink);
 
     return (
-      <div className={s.profile_card}>
+      <div className={s.collective_card}>
         <label
-          className={s.profile_picture}
+          className={s.collective_picture}
           htmlFor="avatar_upload"
           onDrop={(e) => {
             e.preventDefault();
@@ -114,7 +112,7 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
             <img src={avatar_url} className={s.inner_image} alt="avatar" />
           ) : (
             <OptimizedImage
-              src={profile.avatar_url}
+              src={collective.avatar_url}
               className={s.inner_image}
               sizes={'150px'}
             />
@@ -136,32 +134,32 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
             }
           }}
         />
-        <div className={s.annotation}>USERNAME</div>
+        <div className={s.annotation}>TITLE CODE</div>
         <input
           type="text"
           className={s.input_field}
-          value={`@${username || profile.username}`}
+          value={`@${titlecode || collective.titlecode}`}
           onChange={(e) =>
-            setUsername(e.target.value.replace(/[^a-zA-Z0-9-_\.]/g, ''))
+            setTitlecode(e.target.value.replace(/[^a-zA-Z0-9-_\.]/g, ''))
           }
         />
-        <div className={s.annotation}>DISPLAY NAME</div>
+        <div className={s.annotation}>DISPLAY TITLE</div>
         <input
           type="text"
           className={s.input_field}
           placeholder={'Add a display name...'}
-          value={realname || profile.name || ''}
-          onChange={(e) => setRealName(e.target.value)}
+          value={title || collective.title || ''}
+          onChange={(e) => setTitle(e.target.value)}
         />
-        <div className={s.annotation}>BIO</div>
+        <div className={s.annotation}>DESCRIPTION</div>
         <ReactTextareaAutosize
           className={s.description_input}
           placeholder={'Write a bio...'}
           spellCheck={false}
-          value={about || profile.about || ''}
+          value={description || collective.description || ''}
           minRows={3}
           onChange={(event) => {
-            setAbout(event.target.value);
+            setDescription(event.target.value);
           }}
         ></ReactTextareaAutosize>
         <div className={s.annotation}>WEBSITE</div>
@@ -169,13 +167,13 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
           type="text"
           className={s.input_field}
           placeholder={'Link your website...'}
-          value={website || profile.website || ''}
-          onChange={(e) => setWebsite(e.target.value)}
+          value={xlink || collective.xlink || ''}
+          onChange={(e) => setXlink(e.target.value)}
         />
         <div
           className={`${s.save_button} ${isTheSame ? 'disabled' : ''}`}
           onClick={() => {
-            updateProfileMutation.mutate();
+            updateCollectiveMutation.mutate();
           }}
         >
           {isTheSame ? 'UP TO DATE.' : 'SAVE'}
@@ -188,7 +186,7 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
           nodeRef={loadingOverlayRef}
         >
           <div className={s.loading_overlay} ref={loadingOverlayRef}>
-            ...updating profile...
+            ...updating collective...
             <br />
             ┏(-_-)┛
           </div>
@@ -197,4 +195,4 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
     );
   };
 
-export default FormEditProfile;
+export default FormEditCollective;

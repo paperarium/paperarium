@@ -1,0 +1,108 @@
+@import '../../styles/mixins';
+
+.container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - var(--header-height) - var(--notice-bar-height));
+  z-index: 3;
+  // background-color: white;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  letter-spacing: 2px;
+  font-style: italic;
+  color: #707070;
+  pointer-events: all;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+
+  &[class~='exit-active'] {
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  &[class~='exit-done'] {
+    pointer-events: none;
+    opacity: 0;
+  }
+}
+
+.half {
+  height: 100%;
+  flex: 1;
+  background-color: $background;
+  transition: transform 0.4s ease-in-out;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.half1 {
+  @extend .half;
+  border-right: 1px dashed $background2;
+  z-index: 3;
+  justify-content: flex-end;
+
+  div[class~='fallback-exit-done'] & {
+    transform: translateX(-100%);
+  }
+
+  & div {
+    transform: translateX(50%);
+  }
+}
+
+.half2 {
+  @extend .half;
+  border-left: 1px dashed $background2;
+  z-index: 1;
+  justify-content: flex-start;
+
+  div[class~='fallback-exit-done'] & {
+    transform: translateX(100%);
+  }
+
+  & div {
+    transform: translateX(-50%);
+  }
+}
+
+.scissors {
+  position: absolute;
+  bottom: 0%;
+  left: 50%;
+  height: 40px;
+  width: 40px;
+  font-size: 40px;
+  z-index: 2;
+  transition: transform 0.3s linear;
+  transform-origin: 50% 50%;
+  transform: translate(-20px, 40px) rotate(-90deg);
+
+  div[class~='fallback-exit-active'] & {
+    transform: translate(-20px, calc(-100vh - 40px)) rotate(-90deg);
+  }
+
+  div[class~='fallback-exit-done'] & {
+    transform: translate(-20px, calc(-100vh - 40px)) rotate(-90deg);
+  }
+}
+
+.logo {
+  position: relative;
+  font-size: 5vh;
+  text-align: center;
+  font-family: 'FT88 Gothic';
+  line-height: 1;
+}
+
+.loading_text {
+  font-size: 2vh;
+  font-family: 'FT88 School';
+  opacity: 0.4;
+}
