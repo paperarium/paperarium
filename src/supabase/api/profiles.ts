@@ -34,7 +34,7 @@ export const getIsAdmin = async () => {
     'get_is_admin'
   );
   if (error) throw error;
-  return isAdmin;
+  return !!isAdmin;
 };
 
 /**

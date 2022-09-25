@@ -25,6 +25,9 @@ import {
   deletePapercraftsTags,
 } from '../../supabase/api/papercraftstags';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+// lazy load date picker component
+import { DatePicker } from '../misc/DatePicker';
+import rectifyDateFormat from '../../util/rectifyDateFormat';
 
 // debounce the fetch tags function
 const fetchTags = debounce(listTags, 300, { maxWait: 1200 });
@@ -42,6 +45,7 @@ type FormEditPapercraftProps = {
   profile: APIt.Profile;
   defaultPapercraft?: APIt.Papercraft;
   children?: React.ReactNode;
+  isAdmin?: boolean;
   setSubmissionMessage: (message: string) => void;
   setCanPreview: (canPreview: boolean) => void;
   onSuccess: (papercraft: APIt.Papercraft) => void;
@@ -58,10 +62,11 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
   {
     defaultPapercraft,
     profile,
-    children,
+    isAdmin,
     setSubmissionMessage,
     setCanPreview,
     onSuccess,
+    children,
   },
   forwardedRef
 ) {
@@ -73,6 +78,9 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
 
   // input form fields
   const [title, setTitle] = useState<string>(defaultPapercraft?.title || '');
+  const [createdAt, setCreatedAt] = useState<Date>(
+    defaultPapercraft ? new Date(defaultPapercraft.created_at) : new Date()
+  );
   const [description, setDescription] = useState<string>(
     defaultPapercraft?.description || ''
   );
@@ -124,7 +132,7 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
     const papercraft: APIt.Papercraft = {
       id: defaultPapercraft?.id || '',
       user_id: profile.id,
-      created_at: defaultPapercraft?.created_at || new Date().toDateString(),
+      created_at: createdAt.toISOString(),
       updated_at: new Date().toDateString(),
       title: title,
       description: description,
@@ -294,6 +302,8 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
           await createPapercraft({
             user_id: profile.id,
             title,
+            // @ts-ignore
+            created_at: createdAt.toISOString().toLocaleString('zh-TW'),
             description,
             glb_url,
             pdo_url,
@@ -317,6 +327,8 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
         papercraft = (
           await updatePapercraft(papercraft.id, {
             title,
+            // @ts-ignore
+            created_at: createdAt.toISOString().toLocaleString('zh-TW'),
             description,
             glb_url,
             pdo_url,
@@ -418,6 +430,21 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
             setTitle(event.target.value.replace(/  |\r\n|\n|\r/gm, ''));
           }}
         ></TextareaAutosize>
+        {isAdmin ? (
+          <>
+            <div className={s.annotation}>
+              Creation Date (admin) * ––{' '}
+              <i>when was this papercraft created?</i>
+            </div>
+            <DatePicker
+              selected={createdAt}
+              onChange={(date: Date) => {
+                setCreatedAt(date);
+              }}
+              className={s.date_picker}
+            />
+          </>
+        ) : null}
         <div className={s.annotation}>
           Description * ––{' '}
           <i>background information on the character / papercraft?</i>

@@ -52,6 +52,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
       <Suspense fallback={`Loading...`}>
         <DynamicEditFlow
           user={user}
+          isAdmin={isAdmin}
           defaultPapercraft={papercraft}
           onSuccess={() => setEditing(false)}
           onBackButtonClick={() => setEditing(false)}
@@ -231,7 +232,17 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
             ))}
           </Swiper>
         </div>
-        <div className={s.sticky_header}>
+        <div
+          className={s.sticky_header}
+          style={
+            preview
+              ? {
+                  position: 'absolute',
+                  top: '0',
+                }
+              : undefined
+          }
+        >
           <div
             className={s.sticky_button}
             onClick={!preview ? () => router.back() : undefined}

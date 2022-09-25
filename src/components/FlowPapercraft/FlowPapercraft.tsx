@@ -20,6 +20,7 @@ import { useQuery } from '@tanstack/react-query';
 
 type FlowPapercraftProps = {
   user: User;
+  isAdmin?: boolean;
   defaultPapercraft?: APIt.Papercraft;
   onSuccess: (papercraft_id: string) => void;
   onBackButtonClick?: () => void;
@@ -28,6 +29,7 @@ type FlowPapercraftProps = {
 const FlowPapercraft: React.FC<FlowPapercraftProps> = ({
   user,
   defaultPapercraft,
+  isAdmin,
   onSuccess,
   onBackButtonClick,
 }) => {
@@ -91,6 +93,7 @@ const FlowPapercraft: React.FC<FlowPapercraftProps> = ({
               <FormEditPapercraft
                 ref={formHandle}
                 profile={profile}
+                isAdmin={isAdmin}
                 defaultPapercraft={defaultPapercraft}
                 setSubmissionMessage={setSubmissionMessage}
                 setCanPreview={setCanPreview}

@@ -7,11 +7,11 @@
 import React, { useState } from 'react';
 import s from './PapercraftCard.module.scss';
 import * as APIt from '../../supabase/types';
-import { useRouter } from 'next/router';
 import OptimizedImage from '../OptimizedImage/OptimizedImage';
 import Link from 'next/link';
 import { EntityType } from '../PapercraftGallery/PapercraftGallery';
 import ProfileLink from '../ProfileLink/ProfileLink';
+import { IoShapesOutline } from 'react-icons/io5';
 
 interface PapercraftCardProps<T extends APIt.Papercraft | APIt.Build> {
   entity: T;
@@ -91,7 +91,7 @@ const PapercraftCard = function PapercraftCard<
                 : (entity as APIt.Build).papercraft.title}
             </div>
           </Link>
-          <ProfileLink user={entity.user} />
+          <ProfileLink user={entity.user} withIcon={<IoShapesOutline />} />
         </div>
       </div>
     </div>

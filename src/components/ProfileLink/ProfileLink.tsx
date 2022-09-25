@@ -14,12 +14,14 @@ type ProfileLinkProps = {
   user: APIt.Profile;
   full?: boolean;
   children?: React.ReactNode;
+  withIcon?: React.ReactNode;
 };
 
 const ProfileLink: React.FC<ProfileLinkProps> = function ProfileLink({
   user,
   full,
   children,
+  withIcon,
 }) {
   const fullClass = full ? 'full' : '';
   return (
@@ -43,7 +45,7 @@ const ProfileLink: React.FC<ProfileLinkProps> = function ProfileLink({
       <Link href={`/profiles/${user.username}`} passHref>
         <a className={s.profile_name}>
           <span className={s.user_name}>
-            @{user.username}
+            {withIcon}@{user.username}
             {user.archived ? <HiOutlineArchive color="#dba000" /> : null}
           </span>
           {full ? (
