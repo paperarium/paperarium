@@ -8,15 +8,8 @@ import { Canvas } from '@react-three/fiber';
 import {
   AdaptiveDpr,
   AdaptiveEvents,
-  Box,
-  Circle,
-  CubicBezierLine,
   Html,
   OrbitControls,
-  Plane,
-  Preload,
-  QuadraticBezierLine,
-  Sphere,
   Stage,
   Stars,
   useGLTF,
@@ -58,9 +51,12 @@ const Model3DView: React.FC<Model3DViewProps> = function ({ key }) {
               opacity: 0.5,
               position: [0, 0, 0],
             }}
-            shadows={true}
+            adjustCamera
+            shadows
             intensity={1}
             controls={controlsRef}
+            environment={'warehouse'}
+            preset={'rembrandt'}
           >
             {/*
             <Box
@@ -118,9 +114,16 @@ const Model3DView: React.FC<Model3DViewProps> = function ({ key }) {
               lineWidth={2} // In pixels (default)
               dashed={false} // Default
             /> */}
+            {/* <Backdrop
+              floor={0.25} // Stretches the floor segment, 0.25 by default
+              segments={20} // Mesh-resolution, 20 by default
+            >
+              <meshStandardMaterial color="#353540" />
+            </Backdrop> */}
             <RemoteModel />
           </Stage>
         </Suspense>
+        <AdaptiveDpr pixelated />
         <Stars />
       </Canvas>
     </div>
