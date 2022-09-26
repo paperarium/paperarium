@@ -10,9 +10,13 @@ import Head from 'next/head';
 import { withPageAuth, User } from '@supabase/auth-helpers-nextjs';
 import FlowPapercraft from '../../components/FlowPapercraft/FlowPapercraft';
 import { useRouter } from 'next/router';
+import { getIsAdmin } from '../../supabase/api/profiles';
+import { useQuery } from '@tanstack/react-query';
 
 const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
   const router = useRouter();
+  const isAdmin = useQuery(['isAdmin'], () => getIsAdmin());
+
   return (
     <>
       <Head>
@@ -24,6 +28,7 @@ const UploadDesignPage: NextPage<{ user: User }> = ({ user }) => {
       </Head>
       <FlowPapercraft
         user={user}
+        isAdmin={isAdmin.data}
         onSuccess={(pid) => router.push(`/papercrafts/${pid}`)}
         onBackButtonClick={() => router.push(`/upload`)}
       />

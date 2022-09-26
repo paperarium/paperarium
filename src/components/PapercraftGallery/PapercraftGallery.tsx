@@ -161,6 +161,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
         <div className={s.container}>
           <FilterBar
             user_id={user_id}
+            collective_titlecode={collective}
             currentTags={currentTags}
             submitTags={setCurrentTags}
             currentSearch={currentSearch}

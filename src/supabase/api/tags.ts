@@ -17,17 +17,27 @@ import * as APIt from '../types';
 export type ListTagsQueryVariables = {
   search?: string;
   user_id?: string;
+  collective_titlecode?: string;
 };
 
 /**
  * Lists the papercrafts from the supabase database.
  * @returns A list of papercrafts
  */
-export const listTags = async ({ search, user_id }: ListTagsQueryVariables) => {
+export const listTags = async ({
+  search,
+  user_id,
+  collective_titlecode,
+}: ListTagsQueryVariables) => {
   let req = user_id
     ? supabaseClient.rpc<APIt.Tag>('search_tags_user', {
         tag_term: search || '',
         p_user_id: user_id,
+      })
+    : collective_titlecode
+    ? supabaseClient.rpc<APIt.Tag>('search_tags_collective', {
+        tag_term: search || '',
+        p_collective_titlecode: collective_titlecode,
       })
     : supabaseClient.rpc<APIt.Tag>('search_tags', {
         tag_term: search || '',

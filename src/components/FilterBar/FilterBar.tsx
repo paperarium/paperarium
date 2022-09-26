@@ -21,6 +21,7 @@ import { IoPricetagOutline } from 'react-icons/io5';
 
 type FilterBarProps = {
   user_id?: string;
+  collective_titlecode?: string;
   currentTags: APIt.Tag[];
   submitTags: (newTags: APIt.Tag[]) => void;
   currentSearch?: string;
@@ -33,6 +34,7 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
   currentSearch,
   submitSearch,
   user_id,
+  collective_titlecode,
 }) {
   // statefuls
   const menuRef = useRef<HTMLDivElement>(null);
@@ -40,7 +42,11 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
   const [tagSearch, setTagSearch] = useState('');
   const [expanded, setExpanded] = useState(false);
   // list tags
-  const qparams: ListTagsQueryVariables = { search: tagSearch, user_id };
+  const qparams: ListTagsQueryVariables = {
+    search: tagSearch,
+    user_id,
+    collective_titlecode,
+  };
   const tags = useQuery<APIt.Tag[]>(tagsKeys.list(qparams), () =>
     listTags(qparams)
   );
