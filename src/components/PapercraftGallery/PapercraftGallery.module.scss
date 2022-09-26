@@ -25,7 +25,7 @@
   flex-direction: row;
   width: 100%;
   position: relative;
-  padding: 5px;
+  padding: 10px;
   min-height: calc(
     100vh - var(--header-height) - var(--notice-bar-height) -
       $search_bar_visible_height

@@ -58,7 +58,7 @@ $total: 10;
   position: relative;
   transition: transform 0.1s ease-in-out;
   background-color: $background;
-  animation: fadein 0.3s ease-in-out;
+  // animation: fadein 0.3s ease-in-out;
   &:hover {
     transform: scale(0.98) !important;
   }
