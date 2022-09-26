@@ -10,14 +10,22 @@ import { debounce } from 'ts-debounce';
 import { listTags } from '../../supabase/api/tags';
 import * as APIt from '../../supabase/types';
 import FileUpload from '../FileUpload/FileUpload';
-import { AsyncSelect, getSelectTheme, Select } from '../misc/AsyncSelect';
+import {
+  AsyncSelect,
+  CreatableSelect,
+  getSelectTheme,
+  Select,
+} from '../misc/AsyncSelect';
 import MultiFileUpload from '../MultiFileUpload/MultiFileUpload';
 import s from './FormEditPapercraft.module.scss';
 import { uploadFile, uploadImageFile } from '../../util/uploadFile';
 import {
   createPapercraft,
+  deletePapercraftVariants,
+  insertPapercraftVariants,
   papercraftKeys,
   updatePapercraft,
+  upsertPapercraftVariants,
 } from '../../supabase/api/papercrafts';
 import { createBuild } from '../../supabase/api/builds';
 import {
@@ -27,7 +35,8 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 // lazy load date picker component
 import { DatePicker } from '../misc/DatePicker';
-import rectifyDateFormat from '../../util/rectifyDateFormat';
+import MultiItemCreate from '../MultiItemCreate/MultiItemCreate';
+import ItemRendererVariant from '../MultiItemCreate/ItemRendererVariant';
 
 // debounce the fetch tags function
 const fetchTags = debounce(listTags, 300, { maxWait: 1200 });
@@ -115,6 +124,15 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
   const [dUnits, setDUnits] = useState<'in' | 'cm'>('cm');
   const [xLink, setXLink] = useState<string>(defaultPapercraft?.xlink || '');
   const [isBuild, setIsBuild] = useState(false);
+  // keep track of variants
+  const [variants, setVariants] = useState<APIt.PapercraftVariantLocal[]>(
+    defaultPapercraft?.variants.map((variant) => ({
+      ...variant,
+      pdo_url: variant.pdo_url ?? null,
+      pdf_lined_url: variant.pdf_lined_url ?? null,
+      pdf_lineless_url: variant.pdf_lineless_url ?? null,
+    })) ?? []
+  );
 
   /* -------------------------------------------------------------------------- */
   /*                             IMPERATIVE HANDLING                            */
@@ -190,6 +208,24 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
           : undefined,
       user: defaultPapercraft?.user || profile,
       tags: tags,
+      variants: variants.map((variant) => ({
+        ...variant,
+        pdo_url: variant.pdo_url
+          ? typeof variant.pdo_url !== 'string'
+            ? URL.createObjectURL(variant.pdo_url)
+            : variant.pdo_url
+          : undefined,
+        pdf_lineless_url: variant.pdf_lineless_url
+          ? typeof variant.pdf_lineless_url !== 'string'
+            ? URL.createObjectURL(variant.pdf_lineless_url)
+            : variant.pdf_lineless_url
+          : undefined,
+        pdf_lined_url: variant.pdf_lined_url
+          ? typeof variant.pdf_lined_url !== 'string'
+            ? URL.createObjectURL(variant.pdf_lined_url)
+            : variant.pdf_lined_url
+          : undefined,
+      })),
     };
     return papercraft;
   };
@@ -211,6 +247,9 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
       // now generate the key for uploading things to the papercraft––note
       // that papercrafts with the same name WILL overlap. but this is imperative
       // for allowing both updating and creating of crafts.
+      // ! TODO: update this to use a UUID retrieved from the papercraft. if a
+      // user changes the title of their papercraft, files will be uploaded in
+      // a different directory.
       const PAPERCRAFT_KEY_PREFIX = `${profile.id}/papercrafts/${title.replace(
         /[^a-zA-Z0-9-_\.]/g,
         ''
@@ -347,6 +386,89 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
         )[0];
       }
 
+      // 4. upload the variants' files. if the file is a string, it is already
+      // uploaded. if not, then we need to create it.
+      setSubmissionMessage('Uploading variant files...');
+      const variantCreates: Partial<APIt.PapercraftVariant>[] = [];
+      const variantUpserts: Partial<APIt.PapercraftVariant>[] = [];
+      for (let i = 0; i < variants.length; i++) {
+        const variant = variants[i];
+        if (
+          !variant.title ||
+          (!variant.pdf_lineless_url && !variant.pdf_lined_url)
+        )
+          continue;
+        const VARIANT_FILES: {
+          [key in 'pdo_url' | 'pdf_lined_url' | 'pdf_lineless_url']:
+            | string
+            | undefined;
+        } = {
+          pdo_url: undefined,
+          pdf_lined_url: undefined,
+          pdf_lineless_url: undefined,
+        };
+        // attempt to upload local files
+        for (const fileType in VARIANT_FILES) {
+          const url_type = fileType as
+            | 'pdo_url'
+            | 'pdf_lined_url'
+            | 'pdf_lineless_url';
+          switch (typeof variant[url_type]) {
+            // if no file, we don't care
+            case 'undefined':
+              break;
+            // if string, file is already uploaded
+            case 'string':
+              VARIANT_FILES[url_type] = variant[url_type] as string;
+              break;
+            // if a local file, we need to upload the file
+            default:
+              const file = variant[url_type] as File;
+              const file_name = `${PAPERCRAFT_KEY_PREFIX}/${file.name.replace(
+                /[^a-zA-Z0-9-_\.]/g,
+                ''
+              )}`;
+              VARIANT_FILES[url_type] = await uploadFile(file_name, file);
+          }
+        }
+
+        // add the upsert to the list
+        const newVariant: Partial<APIt.PapercraftVariant> = {
+          ...variant,
+          ...VARIANT_FILES,
+          user_id: profile.id,
+          papercraft_id: papercraft.id,
+          id: !!variant.created_at ? variant.id : undefined,
+        };
+        // if this is a new variant, don't update
+        if (!variant.created_at) {
+          delete newVariant['id'];
+          // @ts-ignore
+          newVariant.created_at = new Date()
+            .toISOString()
+            .toLocaleString('zh-TW');
+          variantCreates.push(newVariant);
+        } else {
+          variantUpserts.push(newVariant);
+        }
+      }
+      // also keep track of all variants that are no longer present
+      const variantDeletes: number[] = [];
+      if (defaultPapercraft) {
+        for (const variant of defaultPapercraft.variants) {
+          if (!variants.some(({ id }) => id === variant.id)) {
+            variantDeletes.push(variant.id);
+          }
+        }
+      }
+
+      // 5. perform upserts + pruning
+      setSubmissionMessage('Pruning variant entries...');
+      await deletePapercraftVariants(variantDeletes);
+      setSubmissionMessage('Upserting variant entries...');
+      await insertPapercraftVariants(variantCreates);
+      await upsertPapercraftVariants(variantUpserts);
+
       // 6. if this was uploaded as a build, cross-post it to user's builds
       if (isBuild) {
         setSubmissionMessage('Creating build entry...');
@@ -471,9 +593,11 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
           className={s.tag_input}
           defaultValue={tags || []}
           getOptionLabel={(option: unknown) => (option as APIt.Tag).name}
-          getOptionValue={(option: unknown) => (option as APIt.Tag).id}
+          getOptionValue={(option: unknown) =>
+            (option as APIt.Tag).id as unknown as string
+          }
           isOptionDisabled={() => tags.length >= 5}
-          onChange={(tags: APIt.Tag[]) => setTags(tags as APIt.Tag[])}
+          onChange={(tags: readonly APIt.Tag[]) => setTags(tags as APIt.Tag[])}
           theme={getSelectTheme}
         />
         <div className={s.difficulty_row}>
@@ -552,94 +676,118 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
               />
             </div>
           </div>
-          <div className={s.file_row}>
-            <div className={s.file_col} style={{ flex: 1 }}>
-              <div className={s.annotation}>
-                Image * –– <i>what does the craft look like?</i>
-              </div>
-              <MultiFileUpload
-                files={images}
-                setFiles={(newimgs) => {
-                  if (newimgs == null) {
-                    setImages(null);
-                  } else {
-                    const newImages: typeof images = [];
-                    for (let i = 0; i < newimgs.length; i++) {
-                      if ((newimgs[i] as File).name !== undefined) {
-                        (newimgs[i] as any).blobURL = URL.createObjectURL(
-                          newimgs[i] as File
-                        );
-                      }
-                      newImages.push(newimgs[i] as any);
-                    }
-                    setImages(newImages);
-                  }
-                }}
-                accept={'image/*'}
-              >
-                .PNG, .JPG...
-              </MultiFileUpload>
-            </div>
-            <div className={s.file_col} style={{ flex: 2 }}>
-              <div className={s.annotation}>
-                Files * –– <i>the craft itself.</i>
-              </div>
-              <FileUpload file={pdo} setFile={setPdo} accept={'.pdo'} withIcon>
-                .PDO
-              </FileUpload>
-              <FileUpload
-                file={pdfLineless ? pdfLineless : null}
-                setFile={setPdfLineless}
-                accept={'application/pdf'}
-                withIcon
-              >
-                .PDF - lineless
-              </FileUpload>
-              <FileUpload
-                file={pdfLined ? pdfLined : null}
-                setFile={setPdfLined}
-                accept={'application/pdf'}
-                withIcon
-              >
-                .PDF - lined
-              </FileUpload>
-              <FileUpload file={glb} setFile={setGlb} accept={'.glb'} withIcon>
-                .GLB
-              </FileUpload>
-            </div>
-          </div>
-          <div className={s.annotation}>
-            Source link? ––{' '}
-            <i>feel free to link your own hosted version here.</i>
-          </div>
-          <div className={s.more_row}>
-            <input
-              type="text"
-              className={s.file_input}
-              value={xLink}
-              onChange={(e) => setXLink(e.target.value)}
-            />
-          </div>
-          {!defaultPapercraft ? (
-            <>
-              <div className={s.annotation}>
-                Did you build this? ––{' '}
-                <i>check to cross-upload the images as your own build.</i>
-              </div>
-              <div className={s.more_row}>
-                <input
-                  type="checkbox"
-                  id="ibuiltthis"
-                  checked={isBuild}
-                  onChange={(e) => setIsBuild(e.target.checked)}
-                />
-                <label htmlFor="ibuiltthis">
-                  yes, i confirm that this is my build!
-                </label>
-              </div>
-            </>
-          ) : null}
         </div>
+        <div className={s.file_row}>
+          <div className={s.file_col} style={{ flex: 1 }}>
+            <div className={s.annotation}>
+              Image * –– <i>what does the craft look like?</i>
+            </div>
+            <MultiFileUpload
+              files={images}
+              setFiles={(newimgs) => {
+                if (newimgs == null) {
+                  setImages(null);
+                } else {
+                  const newImages: typeof images = [];
+                  for (let i = 0; i < newimgs.length; i++) {
+                    if ((newimgs[i] as File).name !== undefined) {
+                      (newimgs[i] as any).blobURL = URL.createObjectURL(
+                        newimgs[i] as File
+                      );
+                    }
+                    newImages.push(newimgs[i] as any);
+                  }
+                  setImages(newImages);
+                }
+              }}
+              accept={'image/*'}
+            >
+              .PNG, .JPG...
+            </MultiFileUpload>
+          </div>
+          <div className={s.file_col} style={{ flex: 2 }}>
+            <div className={s.annotation}>
+              Files * –– <i>the craft itself.</i>
+            </div>
+            <FileUpload file={pdo} setFile={setPdo} accept={'.pdo'} withIcon>
+              .PDO
+            </FileUpload>
+            <FileUpload
+              file={pdfLineless ? pdfLineless : null}
+              setFile={setPdfLineless}
+              accept={'application/pdf'}
+              withIcon
+            >
+              .PDF - lineless
+            </FileUpload>
+            <FileUpload
+              file={pdfLined ? pdfLined : null}
+              setFile={setPdfLined}
+              accept={'application/pdf'}
+              withIcon
+            >
+              .PDF - lined
+            </FileUpload>
+            <FileUpload file={glb} setFile={setGlb} accept={'.glb'} withIcon>
+              .GLB
+            </FileUpload>
+          </div>
+        </div>
+        <div className={s.annotation}>
+          Variants? ––{' '}
+          <i>add more PDOs and PDFs here, be they parts or recolors.</i>
+        </div>
+        <MultiItemCreate
+          contentsAddButton={'+ Add a variant +'}
+          items={variants}
+          defaultItem={{
+            user_id: profile.id,
+            created_at: '',
+            papercraft_id: '',
+            title: '',
+            pdo_url: null,
+            pdf_lined_url: null,
+            pdf_lineless_url: null,
+          }}
+          setItems={setVariants}
+          ItemComponent={ItemRendererVariant}
+          validateItem={(variant) =>
+            !!(
+              variant.title &&
+              (variant.pdf_lineless_url || variant.pdf_lined_url)
+            )
+          }
+        />
+        <div className={s.annotation}>
+          Source link? –– <i>feel free to link your own hosted version here.</i>
+        </div>
+        <div className={s.more_row}>
+          <input
+            type="text"
+            className={s.file_input}
+            value={xLink}
+            onChange={(e) => setXLink(e.target.value)}
+          />
+        </div>
+        {!defaultPapercraft ? (
+          <>
+            <div className={s.annotation}>
+              Is this built? ––{' '}
+              <i>check to cross-upload the images as your own build.</i>
+            </div>
+            <div className={s.more_row}>
+              <input
+                type="checkbox"
+                id="ibuiltthis"
+                checked={isBuild}
+                onChange={(e) => setIsBuild(e.target.checked)}
+              />
+              <label htmlFor="ibuiltthis">
+                yes, i confirm that this papercraft is built!
+              </label>
+            </div>
+          </>
+        ) : null}
       </div>
     </div>
   );

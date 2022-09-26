@@ -66,9 +66,38 @@ export interface Papercraft {
   collective?: Collective;
   user: Profile;
   tags: Tag[];
+  variants: PapercraftVariant[];
 }
 
-export type PapercraftInput = PartialBy<Papercraft, RowMetadata | 'tags'>;
+export interface PapercraftVariant {
+  id: number;
+  user_id: string;
+  created_at: string;
+  title: string;
+  papercraft_id: string;
+  pdo_url?: string;
+  pdf_lineless_url?: string;
+  pdf_lined_url?: string;
+}
+
+export type PapercraftInput = PartialBy<
+  Papercraft,
+  RowMetadata | 'tags' | 'variants'
+>;
+
+export type PapercraftVariantInput = PartialBy<
+  PapercraftVariant,
+  'id' | 'created_at'
+>;
+
+export type PapercraftVariantLocal = Omit<
+  PapercraftVariant,
+  'pdo_url' | 'pdf_lineless_url' | 'pdf_lined_url'
+> & {
+  pdo_url: File | string | null;
+  pdf_lineless_url: File | string | null;
+  pdf_lined_url: File | string | null;
+};
 
 /* -------------------------------------------------------------------------- */
 /*                                   BUILDS                                   */

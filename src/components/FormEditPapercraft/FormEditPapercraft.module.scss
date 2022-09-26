@@ -207,7 +207,6 @@
   align-items: flex-start;
 
   &:last-of-type {
-    margin-top: -8px;
     border: 1px dashed var(--border-color);
     opacity: 0.6;
   }
@@ -245,4 +244,55 @@
   padding: 5px;
   border-radius: 5px;
   font-family: 'FT88';
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                  VARIANTS                                  */
+/* -------------------------------------------------------------------------- */
+
+@keyframes fadeleft {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
+.add_variant_button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border-radius: 5px;
+  padding: 5px;
+  border: 1px dashed $foreground2;
+  opacity: 0.3;
+  cursor: pointer;
+  font-style: italic;
+  transition: transform 0.1s ease-in-out;
+  &:hover {
+    transform: scale(0.95);
+  }
+}
+
+.variant_meta_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 5px;
+}
+
+.variant_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+  align-items: center;
+  width: 100%;
+  animation: fadeleft 0.3s ease-in-out;
 }

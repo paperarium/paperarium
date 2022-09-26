@@ -26,7 +26,8 @@ export const getPapercraft = async (pid: string) => {
       user:profiles_view!user_id(*),
       display_build:builds!build_id(id,description,pictures,user_id,user:profiles_view!builds_user_id_fkey(*)),
       collective:collectives_view!papercrafts_collective_id_fkey(*),
-      tags:tags(*)
+      tags:tags(*),
+      variants:papercrafts_variants(*)
     `
     )
     .eq('id', pid);
@@ -107,6 +108,54 @@ export const updatePapercraft = async (
     .from<APIt.Papercraft>('papercrafts')
     .update(input)
     .match({ id });
+  if (error) throw error;
+  return papercrafts;
+};
+
+/* -------------------------------------------------------------------------- */
+/*                             PAPERCRAFT VARIANTS                            */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Inserts papercraft variants into the database
+ * @param input
+ * @returns
+ */
+export const insertPapercraftVariants = async (
+  input: Partial<APIt.PapercraftVariant> | Partial<APIt.PapercraftVariant>[]
+) => {
+  const { data: papercrafts, error } = await supabaseClient
+    .from<APIt.PapercraftVariant>('papercrafts_variants')
+    .insert(input);
+  if (error) throw error;
+  return papercrafts;
+};
+
+/**
+ * Upserts papercraft variants into the database
+ * @param input
+ * @returns
+ */
+export const upsertPapercraftVariants = async (
+  input: Partial<APIt.PapercraftVariant> | Partial<APIt.PapercraftVariant>[]
+) => {
+  const { data: papercrafts, error } = await supabaseClient
+    .from<APIt.PapercraftVariant>('papercrafts_variants')
+    .upsert(input);
+  if (error) throw error;
+  return papercrafts;
+};
+
+/**
+ * Deletes papercraft variants from the database
+ * @param input
+ * @returns
+ */
+export const deletePapercraftVariants = async (ids: number[]) => {
+  const { data: papercrafts, error } = await supabaseClient
+    .from<APIt.PapercraftVariant>('papercrafts_variants')
+    .delete()
+    .in('id', ids);
   if (error) throw error;
   return papercrafts;
 };

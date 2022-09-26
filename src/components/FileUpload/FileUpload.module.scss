@@ -18,6 +18,9 @@
   background: linear-gradient(to right, $highlight 50%, white 50%);
   background-size: 200% 100%;
   background-position: right bottom;
+  letter-spacing: -1px;
+  white-space: nowrap;
+  min-width: 200px;
 
   &:hover {
     transform: scale(0.95);
@@ -26,18 +29,10 @@
 }
 
 .file_input_filled {
-  flex: 1;
-  width: 100%;
-  padding-left: 10px;
-  border: 1px solid #606060;
-  border-radius: 5px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
+  @extend .file_input;
+  opacity: 1;
   transition: transform 0.1s ease-in-out, opacity 0.1s ease-in-out,
     background-position 0.5s ease-in-out;
-  gap: 10px;
   pointer-events: none;
   background: linear-gradient(to right, $highlight 50%, white 50%);
   background-size: 200% 100%;
@@ -85,4 +80,5 @@
   justify-content: flex-end;
   align-items: center;
   gap: 5px;
+  overflow-x: hidden;
 }

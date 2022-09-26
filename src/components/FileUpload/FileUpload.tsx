@@ -6,7 +6,12 @@
  */
 import s from './FileUpload.module.scss';
 import { FiX, FiCheckCircle, FiUpload } from 'react-icons/fi';
-import { ChangeEventHandler, MouseEventHandler, useRef } from 'react';
+import {
+  ChangeEventHandler,
+  HTMLAttributes,
+  MouseEventHandler,
+  useRef,
+} from 'react';
 
 type FileUploadProps = {
   file: File | string | null;
@@ -14,6 +19,8 @@ type FileUploadProps = {
   accept?: string;
   withIcon?: boolean;
   children?: React.ReactNode;
+  style?: HTMLAttributes<HTMLLabelElement>['style'];
+  showName?: boolean;
 };
 
 const FileUpload: React.FC<FileUploadProps> = function FileUpload({
@@ -22,6 +29,8 @@ const FileUpload: React.FC<FileUploadProps> = function FileUpload({
   setFile,
   children,
   withIcon,
+  style,
+  showName,
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const onChange: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -47,6 +56,7 @@ const FileUpload: React.FC<FileUploadProps> = function FileUpload({
               }
             : undefined
         }
+        style={style}
       >
         {children}
         {withIcon ? (
@@ -55,7 +65,11 @@ const FileUpload: React.FC<FileUploadProps> = function FileUpload({
               {file ? (
                 <>
                   <FiCheckCircle />
-                  {typeof file === 'string' ? file.split('/').pop() : file.name}
+                  {showName
+                    ? typeof file === 'string'
+                      ? file.split('/').pop()
+                      : file.name
+                    : null}
                 </>
               ) : null}
             </div>

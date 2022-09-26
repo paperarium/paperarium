@@ -23,6 +23,7 @@ import { useUser } from '@supabase/auth-helpers-react';
 import { useQuery } from '@tanstack/react-query';
 import { getIsAdmin } from '../../supabase/api/profiles';
 import dynamic from 'next/dynamic';
+import { getSelectTheme, Select } from '../misc/AsyncSelect';
 
 const DynamicEditFlow = dynamic(
   () => import('../FlowPapercraft/FlowPapercraft'),
@@ -47,6 +48,12 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
 
     // if editing, replace the entire view with the papercraft flow
     const [editing, setEditing] = useState(false);
+    // choose which variant to display from the dropdown
+    const [selectedVariant, setSelectedVariant] = useState<number | null>(null);
+    const currVariant =
+      selectedVariant === null
+        ? papercraft
+        : papercraft.variants[selectedVariant];
 
     return editing && user ? (
       <Suspense fallback={`Loading...`}>
@@ -164,9 +171,28 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               </div>
               <div className={s.info_col}>
                 <div className={s.download_container}>
-                  {papercraft.pdo_url ? (
+                  <Select
+                    instanceId={'tag_select'}
+                    isClearable={false}
+                    defaultValue={{
+                      value: null,
+                      label: 'Main',
+                    }}
+                    options={[
+                      { value: null, label: 'Main' },
+                      ...papercraft.variants.map((variant, i) => ({
+                        value: i,
+                        label: variant.title,
+                      })),
+                    ]}
+                    onChange={(variant: { value: number | null }) =>
+                      setSelectedVariant(variant.value)
+                    }
+                    theme={getSelectTheme}
+                  />
+                  {currVariant.pdo_url ? (
                     <a
-                      href={getPublicUrl(papercraft.pdo_url)}
+                      href={getPublicUrl(currVariant.pdo_url)}
                       target="_blank"
                       rel="noreferrer noopener"
                       className={s.download_button}
@@ -174,9 +200,9 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                       .PDO
                     </a>
                   ) : null}
-                  {papercraft.pdf_lined_url ? (
+                  {currVariant.pdf_lined_url ? (
                     <a
-                      href={getPublicUrl(papercraft.pdf_lined_url)}
+                      href={getPublicUrl(currVariant.pdf_lined_url)}
                       target="_blank"
                       rel="noreferrer noopener"
                       className={s.download_button}
@@ -184,9 +210,9 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                       .PDF - lined
                     </a>
                   ) : null}
-                  {papercraft.pdf_lineless_url ? (
+                  {currVariant.pdf_lineless_url ? (
                     <a
-                      href={getPublicUrl(papercraft.pdf_lineless_url)}
+                      href={getPublicUrl(currVariant.pdf_lineless_url)}
                       target="_blank"
                       rel="noreferrer noopener"
                       className={s.download_button}
