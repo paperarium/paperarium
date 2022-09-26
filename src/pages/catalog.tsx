@@ -5,6 +5,7 @@ import s from '../styles/Explore.module.scss';
 import { listPapercrafts, papercraftKeys } from '../supabase/api/papercrafts';
 import PapercraftGallery from '../components/PapercraftGallery/PapercraftGallery';
 import { NextSeo } from 'next-seo';
+import { PAGE_SIZE } from '../util/getPagination';
 
 const ExplorePage: NextPage = () => {
   return (
@@ -32,12 +33,19 @@ const ExplorePage: NextPage = () => {
 export async function getStaticProps(context: any) {
   const queryClient = new QueryClient();
   const params = { search: '' };
-  await queryClient.prefetchQuery(papercraftKeys.list(params), () =>
-    listPapercrafts(params)
+  await queryClient.prefetchInfiniteQuery(
+    papercraftKeys.list(params),
+    ({ pageParam = null }) => listPapercrafts(params, pageParam),
+    {
+      getNextPageParam: (lastPage) =>
+        lastPage.length === PAGE_SIZE
+          ? lastPage[lastPage.length - 1].created_at
+          : null,
+    }
   );
   return {
     props: {
-      dehydratedState: dehydrate(queryClient),
+      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
     },
     revalidate: 10,
   };

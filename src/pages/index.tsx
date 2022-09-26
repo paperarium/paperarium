@@ -9,6 +9,7 @@ import PapercraftGallery from '../components/PapercraftGallery/PapercraftGallery
 import s from '../styles/Home.module.scss';
 import { listAnnouncements } from '../supabase/api/announcements';
 import { listPapercrafts, papercraftKeys } from '../supabase/api/papercrafts';
+import { PAGE_SIZE } from '../util/getPagination';
 
 const Home: NextPage = () => {
   return (
@@ -88,15 +89,22 @@ export async function getStaticProps(context: any) {
   const queryClient = new QueryClient();
   const params = { search: '' };
   const req = [
-    queryClient.prefetchQuery(papercraftKeys.list(params), async () => {
-      return await listPapercrafts(params);
-    }),
+    queryClient.prefetchInfiniteQuery(
+      papercraftKeys.list(params),
+      ({ pageParam = null }) => listPapercrafts(params, pageParam),
+      {
+        getNextPageParam: (lastPage) =>
+          lastPage.length === PAGE_SIZE
+            ? lastPage[lastPage.length - 1].created_at
+            : null,
+      }
+    ),
     queryClient.prefetchQuery(['announcements'], listAnnouncements),
   ];
   await Promise.all(req);
   return {
     props: {
-      dehydratedState: dehydrate(queryClient),
+      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
     },
     revalidate: 10,
   };

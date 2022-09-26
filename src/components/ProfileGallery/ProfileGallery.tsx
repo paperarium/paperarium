@@ -15,6 +15,7 @@ import {
   IoShapesOutline,
 } from 'react-icons/io5';
 import { MdOutlineTableRows } from 'react-icons/md';
+
 import {
   collectiveKeys,
   listCollectives,

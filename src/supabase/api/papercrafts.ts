@@ -6,6 +6,7 @@
  */
 
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import { PAGE_SIZE } from '../../util/getPagination';
 import * as APIt from '../types';
 
 /* -------------------------------------------------------------------------- */
@@ -33,8 +34,8 @@ export const getPapercraft = async (pid: string) => {
   return papercrafts[0];
 };
 
-type ListPapercraftsQueryVariables = {
-  search?: string;
+export type ListPapercraftsQueryVariables = {
+  search: string;
   username?: string;
   collective?: string;
   tags?: number[];
@@ -44,12 +45,10 @@ type ListPapercraftsQueryVariables = {
  * Lists the papercrafts from the supabase database.
  * @returns A list of papercrafts
  */
-export const listPapercrafts = async ({
-  search,
-  username,
-  collective,
-  tags,
-}: ListPapercraftsQueryVariables) => {
+export const listPapercrafts = async (
+  { search, username, collective, tags }: ListPapercraftsQueryVariables,
+  ltCreated: string | null
+) => {
   let req = (
     search
       ? supabaseClient.rpc<APIt.Papercraft>('search_papercrafts', {
@@ -63,13 +62,15 @@ export const listPapercrafts = async ({
       collective ? 'inner' : 'left'
     }(titlecode,title,avatar_url),
     tags!${tags?.length ? 'inner' : 'left'}(id,name,code)`);
-  console.log(tags);
   if (tags) req = req.in('tags.id' as any, tags);
   if (username) req = req.eq('user_id.username' as any, username);
   if (collective) req = req.eq('collectives.titlecode' as any, collective);
-  const { data: papercrafts, error } = await req.order('created_at', {
-    ascending: false,
-  });
+  if (ltCreated) req = req.lt('created_at', ltCreated);
+  const { data: papercrafts, error } = await req
+    .order('created_at', {
+      ascending: false,
+    })
+    .limit(PAGE_SIZE);
   if (error) throw error;
   return papercrafts;
 };

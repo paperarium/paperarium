@@ -23,6 +23,11 @@ import FallbackOverlay from '../../components/FallbackOverlay/FallbackOverlay';
 import { useContext } from 'react';
 import { BiArrowBack } from 'react-icons/bi';
 import { FiShare } from 'react-icons/fi';
+import {
+  listPapercrafts,
+  papercraftKeys,
+} from '../../supabase/api/papercrafts';
+import { PAGE_SIZE } from '../../util/getPagination';
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPING                                   */
@@ -187,14 +192,21 @@ export const getStaticProps: GetStaticProps<
     queryClient.prefetchQuery(profileKeys.get(username), () =>
       getProfile(username)
     ),
-    // queryClient.prefetchQuery(papercraftKeys.list(qparams), () =>
-    //   listPapercrafts(qparams)
-    // ),
+    queryClient.prefetchInfiniteQuery(
+      papercraftKeys.list(qparams),
+      ({ pageParam = null }) => listPapercrafts(qparams, pageParam),
+      {
+        getNextPageParam: (lastPage) =>
+          lastPage.length === PAGE_SIZE
+            ? lastPage[lastPage.length - 1].created_at
+            : null,
+      }
+    ),
   ];
   await Promise.all(requests);
   return {
     props: {
-      dehydratedState: dehydrate(queryClient),
+      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
       username,
     },
     revalidate: false,
