@@ -91,7 +91,9 @@ const PapercraftCard = function PapercraftCard<
                 : (entity as APIt.Build).papercraft.title}
             </div>
           </Link>
-          <ProfileLink user={entity.user} withIcon={<IoShapesOutline />} />
+          <div className={s.user_container}>
+            <ProfileLink user={entity.user} withIcon={<IoShapesOutline />} />
+          </div>
         </div>
       </div>
     </div>
