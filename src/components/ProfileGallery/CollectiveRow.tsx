@@ -46,7 +46,7 @@ export const CollectiveHeaderRow: React.FC<{}> = React.memo(
 export const CollectiveRow: React.FC<CollectiveRowProps> = React.memo(
   function CollectiveRow({ collective }) {
     return (
-      <Link href={`/collectives/${collective.titlecode}`}>
+      <Link href={`/collectives/${collective.titlecode}`} prefetch={false}>
         <tr className={s.grid_row}>
           <td className={s.grid_cell} style={{ width: '100%' }}>
             <div className={s.profile_cell}>

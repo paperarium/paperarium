@@ -35,6 +35,7 @@ const PapercraftCard = function PapercraftCard<
               }`
             : `/papercrafts/${entity.id}`
         }
+        prefetch={false}
       >
         <a
           // className={s.container}
@@ -80,6 +81,7 @@ const PapercraftCard = function PapercraftCard<
                   }`
                 : `/papercrafts/${entity.id}`
             }
+            prefetch={false}
           >
             <div
               onClick={() => {

@@ -42,7 +42,7 @@ export const ProfileHeaderRow: React.FC<{}> = React.memo(
 export const ProfileRow: React.FC<ProfileRowProps> = React.memo(
   function ProfileRow({ profile }) {
     return (
-      <Link href={`/profiles/${profile.username}`}>
+      <Link href={`/profiles/${profile.username}`} prefetch={false}>
         <tr className={s.grid_row}>
           <td className={s.grid_cell} style={{ width: '100%' }}>
             <div className={s.profile_cell}>
