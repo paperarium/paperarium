@@ -62,7 +62,8 @@ export const listPapercrafts = async ({
     collective:collectives!${
       collective ? 'inner' : 'left'
     }(titlecode,title,avatar_url),
-    tags!left(id,name,code)`);
+    tags!${tags?.length ? 'inner' : 'left'}(id,name,code)`);
+  console.log(tags);
   if (tags) req = req.in('tags.id' as any, tags);
   if (username) req = req.eq('user_id.username' as any, username);
   if (collective) req = req.eq('collectives.titlecode' as any, collective);
