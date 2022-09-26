@@ -4,9 +4,13 @@
  * created on Sun Sep 04 2022
  * 2022 the nobot space,
  */
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import s from './PapercraftGallery.module.scss';
-import Masonry, { MasonryProps } from 'react-masonry-css';
+import { Masonry } from 'masonic';
+import {
+  // Masonry,
+  MasonryProps,
+} from 'react-masonry-css';
 import FilterBar from '../FilterBar/FilterBar';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -117,6 +121,12 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
       { enabled: !disabled }
     );
 
+    // only render grid on client side
+    const [hasMounted, setHasMounted] = useState(false);
+    useEffect(() => {
+      setHasMounted(true);
+    }, []);
+
     return (
       <div className={s.meta_container}>
         <div className={s.sidebar}>
@@ -153,12 +163,26 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
             submitSearch={setCurrentSearch}
           />
           <div className={s.lower_container}>
-            <Masonry
-              breakpointCols={breakPointOverride || breakpointColumnsObj}
-              className={s.mason_grid}
-              columnClassName={s.mason_grid_col}
-            >
-              {entities.data
+            {hasMounted && entities.data ? (
+              <Masonry
+                items={entities.data as (APIt.Papercraft | APIt.Build)[]}
+                rowGutter={5}
+                columnGutter={5}
+                ssrWidth={1440}
+                ssrHeight={1080}
+                render={({ index, data: entity }) => (
+                  <PapercraftCard
+                    entityType={entityType}
+                    key={entity!.id}
+                    entity={entity}
+                  />
+                )}
+                // breakpointCols={breakPointOverride || breakpointColumnsObj}
+                className={s.masonic_grid}
+                // columnClassName={s.mason_grid_col}
+              />
+            ) : null}
+            {/* {entities.data
                 ? entities.data.map((entity) => (
                     <PapercraftCard
                       entityType={entityType}
@@ -167,7 +191,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
                     />
                   ))
                 : null}
-            </Masonry>
+            </Masonry> */}
           </div>
           <CSSTransition
             appear
