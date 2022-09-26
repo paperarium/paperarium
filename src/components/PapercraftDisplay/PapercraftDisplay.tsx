@@ -195,6 +195,15 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                     </a>
                   ) : null}
                 </div>
+                <div className={s.preview_container}>
+                  {papercraft.pdo_url ? (
+                    <Link href={`/papercrafts/preview?pid=${papercraft.id}`}>
+                      <a className={s.preview_button}>
+                        <div>ENTER</div>
+                      </a>
+                    </Link>
+                  ) : null}
+                </div>
               </div>
             </div>
           </div>

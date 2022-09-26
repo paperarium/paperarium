@@ -8,12 +8,15 @@ import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import PapercraftDisplay from '../../components/PapercraftDisplay/PapercraftDisplay';
-import { getPapercraft, papercraftKeys } from '../../supabase/api/papercrafts';
-import s from '../../components/PapercraftDisplay/PapercraftDisplay.module.scss';
+import PapercraftDisplay from '../../../components/PapercraftDisplay/PapercraftDisplay';
+import {
+  getPapercraft,
+  papercraftKeys,
+} from '../../../supabase/api/papercrafts';
+import s from '../../../components/PapercraftDisplay/PapercraftDisplay.module.scss';
 import { ParsedUrlQuery } from 'node:querystring';
 import { NextSeo } from 'next-seo';
-import FallbackOverlay from '../../components/FallbackOverlay/FallbackOverlay';
+import FallbackOverlay from '../../../components/FallbackOverlay/FallbackOverlay';
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPING                                   */

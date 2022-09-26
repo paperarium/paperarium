@@ -1,0 +1,17 @@
+@import '../mixins';
+
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+}
+
+.model_display {
+  height: calc(100vh - var(--notice-bar-height) - var(--header-height));
+  width: 100%;
+  padding: 10px;
+  position: relative;
+}
