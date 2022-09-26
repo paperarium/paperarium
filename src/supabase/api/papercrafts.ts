@@ -47,7 +47,7 @@ export type ListPapercraftsQueryVariables = {
  */
 export const listPapercrafts = async (
   { search, username, collective, tags }: ListPapercraftsQueryVariables,
-  ltCreated: string | null
+  ltCreated: string | null = null
 ) => {
   let req = (
     search

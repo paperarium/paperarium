@@ -48,7 +48,7 @@ type ListBuildsQueryVariables = {
  */
 export const listBuilds = async (
   { search, collective, username }: ListBuildsQueryVariables,
-  ltCreated: string | null
+  ltCreated: string | null = null
 ) => {
   let req = (
     search
