@@ -9,6 +9,7 @@ import {
   supabaseClient,
   supabaseServerClient,
 } from '@supabase/auth-helpers-nextjs';
+import { PAGE_SIZE } from '../../util/getPagination';
 import * as APIt from '../types';
 
 /* -------------------------------------------------------------------------- */
@@ -45,11 +46,10 @@ type ListBuildsQueryVariables = {
  * Lists the builds from the supabase database.
  * @returns A list of builds
  */
-export const listBuilds = async ({
-  search,
-  collective,
-  username,
-}: ListBuildsQueryVariables) => {
+export const listBuilds = async (
+  { search, collective, username }: ListBuildsQueryVariables,
+  ltCreated: string | null
+) => {
   let req = (
     search
       ? supabaseClient.rpc<APIt.Build>('search_builds', {
@@ -63,9 +63,12 @@ export const listBuilds = async ({
   );
   if (username) req = req.eq('user_id.username' as any, username);
   if (collective) req = req.eq('collective_titlecode' as any, collective);
-  const { data: builds, error } = await req.order('created_at', {
-    ascending: false,
-  });
+  if (ltCreated) req = req.lt('created_at', ltCreated);
+  const { data: builds, error } = await req
+    .order('created_at', {
+      ascending: false,
+    })
+    .limit(PAGE_SIZE);
   if (error) throw error;
   return builds;
 };

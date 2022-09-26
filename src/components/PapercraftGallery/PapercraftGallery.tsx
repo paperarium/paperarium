@@ -8,9 +8,10 @@ import React, { useRef, useState } from 'react';
 import s from './PapercraftGallery.module.scss';
 import Masonry, { MasonryProps } from 'react-masonry-css';
 import FilterBar from '../FilterBar/FilterBar';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import {
   listPapercrafts,
+  ListPapercraftsQueryVariables,
   papercraftKeys,
 } from '../../supabase/api/papercrafts';
 import PapercraftCard from '../PapercraftCard/PapercraftCard';
@@ -20,6 +21,8 @@ import { RiLayoutGridLine, RiLayoutBottomLine } from 'react-icons/ri';
 import { IoCubeOutline, IoShapesOutline } from 'react-icons/io5';
 import * as APIt from '../../supabase/types';
 import { buildKeys, listBuilds } from '../../supabase/api/builds';
+import InfiniteScroll from 'react-infinite-scroller';
+import { PAGE_SIZE } from '../../util/getPagination';
 
 const breakpointColumnsObj = {
   default: 5,
@@ -63,23 +66,9 @@ export enum EntityType {
   Builds = 'builds',
 }
 
-type EntityMeta = {
-  icon: JSX.Element;
-  query: typeof listPapercrafts | typeof listBuilds;
-  keys: typeof papercraftKeys | typeof buildKeys;
-};
-
-const ENTITY_MAP: { [key in EntityType]: EntityMeta } = {
-  [EntityType.Papercrafts]: {
-    icon: <IoShapesOutline />,
-    query: listPapercrafts,
-    keys: papercraftKeys,
-  },
-  [EntityType.Builds]: {
-    icon: <IoCubeOutline />,
-    query: listBuilds,
-    keys: buildKeys,
-  },
+const ENTITY_ICONS: { [key in EntityType]: JSX.Element } = {
+  [EntityType.Papercrafts]: <IoShapesOutline />,
+  [EntityType.Builds]: <IoCubeOutline />,
 };
 
 /* -------------------------------------------------------------------------- */
@@ -104,23 +93,49 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
     );
     const [currentSearch, setCurrentSearch] = useState<string>('');
     const [currentTags, setCurrentTags] = useState<APIt.Tag[]>([]);
-    const params = {
+
+    // same params used across queries
+    const params: ListPapercraftsQueryVariables = {
       search: currentSearch,
       username,
       collective,
       tags:
         currentTags.length > 0 ? currentTags.map(({ id }) => id) : undefined,
     };
-    const entities = useQuery<APIt.Papercraft[] | APIt.Build[]>(
-      ENTITY_MAP[entityType].keys.list(params),
-      () => ENTITY_MAP[entityType].query(params),
-      { enabled: !disabled }
+
+    // maintain two infinite queries, one for papercrafts and one for builds
+    const papercraftsQuery = useInfiniteQuery<APIt.Papercraft[]>(
+      papercraftKeys.list(params),
+      ({ pageParam = null }) => listPapercrafts(params, pageParam),
+      {
+        enabled: !disabled && entityType === EntityType.Papercrafts,
+        getNextPageParam: (lastPage) =>
+          lastPage.length === PAGE_SIZE
+            ? lastPage[lastPage.length - 1].created_at
+            : null,
+      }
     );
+    const buildsQuery = useInfiniteQuery<APIt.Build[]>(
+      buildKeys.list(params),
+      ({ pageParam = null }) => listBuilds(params, pageParam),
+      {
+        enabled: !disabled && entityType === EntityType.Builds,
+        getNextPageParam: (lastPage) =>
+          lastPage.length === PAGE_SIZE
+            ? lastPage[lastPage.length - 1].created_at
+            : null,
+      }
+    );
+
+    // combine the two types of infinite queries back into one
+    const currQuery =
+      entityType === EntityType.Papercrafts ? papercraftsQuery : buildsQuery;
+    const { data, hasNextPage, isLoading, isPaused, fetchNextPage } = currQuery;
 
     return (
       <div className={s.meta_container}>
         <div className={s.sidebar}>
-          {Object.entries(ENTITY_MAP).map(([key, { icon }]) => (
+          {Object.entries(ENTITY_ICONS).map(([key, icon]) => (
             <div
               className={`${s.layout_type} ${
                 entityType === key ? 'active' : ''
@@ -131,7 +146,6 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
               {key} {icon}
             </div>
           ))}
-          {/* <div className={s.spacer}></div> */}
           {Object.entries(LAYOUT_ICONS).map(([key, icon]) => (
             <div
               className={`${s.layout_button} ${
@@ -153,25 +167,39 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
             submitSearch={setCurrentSearch}
           />
           <div className={s.lower_container}>
-            <Masonry
-              breakpointCols={breakPointOverride || breakpointColumnsObj}
-              className={s.mason_grid}
-              columnClassName={s.mason_grid_col}
+            <InfiniteScroll
+              pageStart={0}
+              hasMore={hasNextPage}
+              threshold={400}
+              loadMore={() => fetchNextPage()}
+              loader={
+                <div className="loader" key={0}>
+                  Loading ...
+                </div>
+              }
             >
-              {entities.data
-                ? entities.data.map((entity) => (
-                    <PapercraftCard
-                      entityType={entityType}
-                      key={entity!.id}
-                      entity={entity}
-                    />
-                  ))
-                : null}
-            </Masonry>
+              <Masonry
+                breakpointCols={breakPointOverride || breakpointColumnsObj}
+                className={s.mason_grid}
+                columnClassName={s.mason_grid_col}
+              >
+                {data?.pages
+                  ? data.pages.flatMap((page) =>
+                      page.map((entity) => (
+                        <PapercraftCard
+                          entityType={entityType}
+                          key={entity!.id}
+                          entity={entity}
+                        />
+                      ))
+                    )
+                  : null}
+              </Masonry>
+            </InfiniteScroll>
           </div>
           <CSSTransition
             appear
-            in={entities.isPaused || entities.isLoading}
+            in={isPaused || isLoading}
             nodeRef={loadingOverlayRef}
             timeout={300}
           >
