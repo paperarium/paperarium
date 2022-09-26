@@ -167,37 +167,36 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
             currentSearch={currentSearch}
             submitSearch={setCurrentSearch}
           />
-          <div className={s.lower_container}>
-            <InfiniteScroll
-              pageStart={0}
-              hasMore={hasNextPage}
-              threshold={400}
-              loadMore={() => fetchNextPage()}
-              loader={
-                <div className="loader" key={0}>
-                  Loading ...
-                </div>
-              }
+          <InfiniteScroll
+            pageStart={0}
+            hasMore={hasNextPage}
+            threshold={400}
+            loadMore={() => fetchNextPage()}
+            className={s.lower_container}
+            loader={
+              <div className="loader" key={0}>
+                Loading ...
+              </div>
+            }
+          >
+            <Masonry
+              breakpointCols={breakPointOverride || breakpointColumnsObj}
+              className={s.mason_grid}
+              columnClassName={s.mason_grid_col}
             >
-              <Masonry
-                breakpointCols={breakPointOverride || breakpointColumnsObj}
-                className={s.mason_grid}
-                columnClassName={s.mason_grid_col}
-              >
-                {data?.pages
-                  ? data.pages.flatMap((page) =>
-                      page.map((entity) => (
-                        <PapercraftCard
-                          entityType={entityType}
-                          key={entity!.id}
-                          entity={entity}
-                        />
-                      ))
-                    )
-                  : null}
-              </Masonry>
-            </InfiniteScroll>
-          </div>
+              {data?.pages
+                ? data.pages.flatMap((page) =>
+                    page.map((entity) => (
+                      <PapercraftCard
+                        entityType={entityType}
+                        key={entity!.id}
+                        entity={entity}
+                      />
+                    ))
+                  )
+                : null}
+            </Masonry>
+          </InfiniteScroll>
           <CSSTransition
             appear
             in={isPaused || isLoading}

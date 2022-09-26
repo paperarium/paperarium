@@ -22,7 +22,7 @@
 
 .lower_container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: 100%;
   min-height: calc(
     100vh - var(--header-height) - var(--notice-bar-height) -
