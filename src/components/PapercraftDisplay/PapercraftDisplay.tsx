@@ -171,25 +171,27 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               </div>
               <div className={s.info_col}>
                 <div className={s.download_container}>
-                  <Select
-                    instanceId={'tag_select'}
-                    isClearable={false}
-                    defaultValue={{
-                      value: null,
-                      label: 'Main',
-                    }}
-                    options={[
-                      { value: null, label: 'Main' },
-                      ...papercraft.variants.map((variant, i) => ({
-                        value: i,
-                        label: variant.title,
-                      })),
-                    ]}
-                    onChange={(variant: { value: number | null }) =>
-                      setSelectedVariant(variant.value)
-                    }
-                    theme={getSelectTheme}
-                  />
+                  {papercraft.variants.length > 0 ? (
+                    <Select
+                      instanceId={'tag_select'}
+                      isClearable={false}
+                      defaultValue={{
+                        value: null,
+                        label: 'Main',
+                      }}
+                      options={[
+                        { value: null, label: 'Main' },
+                        ...papercraft.variants.map((variant, i) => ({
+                          value: i,
+                          label: variant.title,
+                        })),
+                      ]}
+                      onChange={(variant: { value: number | null }) =>
+                        setSelectedVariant(variant.value)
+                      }
+                      theme={getSelectTheme}
+                    />
+                  ) : null}
                   {currVariant.pdo_url ? (
                     <a
                       href={getPublicUrl(currVariant.pdo_url)}
