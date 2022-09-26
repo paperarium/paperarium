@@ -165,7 +165,18 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
           <div className={s.lower_container}>
             {hasMounted && entities.data ? (
               <Masonry
-                items={entities.data as (APIt.Papercraft | APIt.Build)[]}
+                items={
+                  [
+                    ...entities.data,
+                    ...entities.data,
+                    ...entities.data,
+                    ...entities.data,
+                    ...entities.data,
+                    ...entities.data,
+                    ...entities.data,
+                    ...entities.data,
+                  ] as (APIt.Papercraft | APIt.Build)[]
+                }
                 rowGutter={5}
                 columnGutter={5}
                 ssrWidth={1440}
