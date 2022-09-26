@@ -15,7 +15,10 @@ import FormEditCollective from '../../FormEditCollective/FormEditCollective';
  * The home page for admin collective activities
  * @returns
  */
-const AdminCollectivesPane: React.FC<AdminPaneProps> = () => {
+const AdminCollectivesPane: React.FC<AdminPaneProps> = ({
+  activeCollective,
+  setActiveCollective,
+}) => {
   // search for collectives
   const [search, setSearch] = useState<string>('');
   const [currentSearch, setCurrentSearch] = useState<string>(search);
@@ -82,6 +85,14 @@ const AdminCollectivesPane: React.FC<AdminPaneProps> = () => {
                 ))
               : null}
           </div>
+          <div
+            className={s.add_button}
+            onClick={() => {
+              setActiveCollective(currCollective);
+            }}
+          >
+            SELECT COLLECTIVE
+          </div>
         </div>
         <div className={s.control_col}>
           <div className={s.colored_background}>
@@ -89,6 +100,22 @@ const AdminCollectivesPane: React.FC<AdminPaneProps> = () => {
               <FormEditCollective collective={currCollective} />
             ) : null}
           </div>
+          {activeCollective ? (
+            <div className={s.collective_container}>
+              SELECTED COLLECTIVE
+              <div className={s.profile_picture}>
+                <OptimizedImage
+                  src={activeCollective.avatar_url}
+                  className={s.inner_image}
+                  sizes={`200px`}
+                />
+              </div>
+              <div className={s.result_username}>
+                @{activeCollective.titlecode}
+              </div>
+              {activeCollective.title}
+            </div>
+          ) : null}
         </div>
       </div>
     </>

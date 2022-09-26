@@ -1,5 +1,5 @@
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Head from 'next/head';
 import { useState } from 'react';
 import { AdminPaneProps } from '..';
@@ -13,6 +13,10 @@ import {
 import rectifyDateFormat from '../../../util/rectifyDateFormat';
 import FormEditProfile from '../../FormEditProfile/FormEditProfile';
 import OptimizedImage from '../../OptimizedImage/OptimizedImage';
+import {
+  collectiveKeys,
+  createCollectivesProfiles,
+} from '../../../supabase/api/collectives';
 
 /**
  * The home page for admin activities
@@ -21,6 +25,7 @@ import OptimizedImage from '../../OptimizedImage/OptimizedImage';
 const AdminProfilesPane: React.FC<AdminPaneProps> = ({
   activeProfile,
   setActiveProfile,
+  activeCollective,
 }) => {
   // search for profiles
   const [search, setSearch] = useState<string>('');
@@ -34,6 +39,28 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
   };
   const profiles = useQuery(profileKeys.list(q_params), () =>
     listProfiles(q_params)
+  );
+
+  // mutation for adding a user to a collective
+  const queryClient = useQueryClient();
+  const createCollectiveProfileMutation = useMutation(
+    async ({
+      collective_id,
+      profile_id,
+    }: {
+      collective_id: number;
+      profile_id: string;
+    }) => {
+      return createCollectivesProfiles({
+        collective_id,
+        profile_id,
+      });
+    },
+    {
+      onSuccess: (collectives_profiles) => {
+        queryClient.invalidateQueries(collectiveKeys.gets());
+      },
+    }
   );
 
   return (
@@ -123,6 +150,45 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
               </div>
               <div className={s.result_username}>@{activeProfile.username}</div>
               {activeProfile.name}
+            </div>
+          ) : null}
+          {activeCollective ? (
+            <div className={s.collective_container}>
+              SELECTED COLLECTIVE
+              <div className={s.profile_picture}>
+                <OptimizedImage
+                  src={activeCollective.avatar_url}
+                  className={s.inner_image}
+                  sizes={`200px`}
+                />
+              </div>
+              <div className={s.result_username}>
+                @{activeCollective.titlecode}
+              </div>
+              {activeCollective.title}
+              <div
+                className={`${s.action_button} ${
+                  currProfile && !createCollectiveProfileMutation.isLoading
+                    ? ''
+                    : 'disabled'
+                }`}
+                onClick={() => {
+                  if (!currProfile) return;
+                  createCollectiveProfileMutation.mutate({
+                    collective_id: activeCollective.id,
+                    profile_id: currProfile.id,
+                  });
+                }}
+              >
+                ADD TO
+                <br />
+                COLLECTIVE
+              </div>
+              <div className={s.action_button_note}>
+                adds @{currProfile?.username} as a member of{' '}
+                {activeCollective.title}. no current way to undo this from the
+                admin console! talk to evan if you fuck up
+              </div>
             </div>
           ) : null}
         </div>

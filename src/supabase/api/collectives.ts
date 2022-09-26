@@ -115,6 +115,21 @@ export const updateCollective = async (
   return collectives[0];
 };
 
+/**
+ * Creates a papercraft in the supabase database.
+ * @param input
+ * @returns
+ */
+export const createCollectivesProfiles = async (
+  input: Partial<APIt.CollectivesProfiles> | Partial<APIt.CollectivesProfiles>[]
+) => {
+  const { data: collectives, error } = await supabaseClient
+    .from<APIt.CollectivesProfiles>('collectives_profiles')
+    .insert(input);
+  if (error) throw error;
+  return collectives;
+};
+
 /* -------------------------------------------------------------------------- */
 /*                                 KEY FACTORY                                */
 /* -------------------------------------------------------------------------- */

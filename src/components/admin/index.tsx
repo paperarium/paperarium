@@ -67,4 +67,6 @@ export const ADMIN_PANES: { [key in AdminPane]: AdminPaneObj } = {
 export type AdminPaneProps = {
   activeProfile: APIt.Profile | null;
   setActiveProfile: (newProfile: APIt.Profile | null) => void;
+  activeCollective: APIt.Collective | null;
+  setActiveCollective: (newCollective: APIt.Collective | null) => void;
 };

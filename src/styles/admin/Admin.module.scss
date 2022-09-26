@@ -191,6 +191,12 @@
   width: 250px;
 }
 
+.collective_container {
+  @extend .profile_container;
+  top: unset;
+  bottom: 15px;
+}
+
 .profile_picture {
   width: 80%;
   aspect-ratio: 1;
