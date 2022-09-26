@@ -443,9 +443,9 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
         // if this is a new variant, don't update
         if (!variant.created_at) {
           delete newVariant['id'];
-          // @ts-ignore
           newVariant.created_at = new Date()
             .toISOString()
+            // @ts-ignore
             .toLocaleString('zh-TW');
           variantCreates.push(newVariant);
         } else {
