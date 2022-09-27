@@ -98,7 +98,8 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
     const [entityType, setEntityType] = useState<EntityType>(displays[0]);
     useEffect(() => {
       setEntityType(displays[0]);
-    }, [displays]);
+      // @ts-ignore
+    }, [displays.length]);
     const [currentSearch, setCurrentSearch] = useState<string>('');
     const [currentTags, setCurrentTags] = useState<APIt.Tag[]>([]);
 
