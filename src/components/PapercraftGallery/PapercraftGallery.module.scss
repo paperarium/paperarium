@@ -28,6 +28,7 @@
     100vh - var(--header-height) - var(--notice-bar-height) -
       $search_bar_visible_height
   );
+  padding: 0px 10px;
 }
 
 .sidebar {
@@ -125,7 +126,7 @@
   justify-content: stretch;
   width: 100% !important;
   gap: 5px;
-  padding: 10px;
+  padding: 5px 0px;
   min-height: calc(100vh - var(--header-height) - var(--notice-bar-height));
 }
 

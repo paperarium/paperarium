@@ -28,6 +28,12 @@ import {
 import InfiniteScroll from 'react-infinite-scroller';
 import { PAGE_SIZE } from '../../util/getPagination';
 import getNextPageParam from '../../util/getNextPageParam';
+import InfiniteTableView from '../InfiniteTableView/InfiniteTableView';
+import {
+  PapercraftHeaderRow,
+  PapercraftRow,
+} from '../InfiniteTableView/atoms/PapercraftRow';
+import { BuildHeaderRow, BuildRow } from '../InfiniteTableView/atoms/BuildRow';
 
 const breakpointColumnsObj = {
   default: 5,
@@ -182,23 +188,42 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
               </div>
             }
           >
-            <Masonry
-              breakpointCols={breakPointOverride || breakpointColumnsObj}
-              className={s.mason_grid}
-              columnClassName={s.mason_grid_col}
-            >
-              {data?.pages
-                ? data.pages.flatMap((page) =>
-                    page.map((entity) => (
-                      <PapercraftCard
-                        entityType={entityType}
-                        key={entity!.id}
-                        entity={entity}
-                      />
-                    ))
-                  )
-                : null}
-            </Masonry>
+            {layoutType === LayoutType.Compact ? (
+              <InfiniteTableView
+                pages={currQuery.data?.pages}
+                // @ts-ignore
+                HeaderComponent={
+                  entityType === EntityType.Papercrafts
+                    ? PapercraftHeaderRow
+                    : BuildHeaderRow
+                }
+                // @ts-ignore
+                RowComponent={
+                  entityType === EntityType.Papercrafts
+                    ? PapercraftRow
+                    : BuildRow
+                }
+                onColumnClick={() => {}}
+              />
+            ) : (
+              <Masonry
+                breakpointCols={breakPointOverride || breakpointColumnsObj}
+                className={s.mason_grid}
+                columnClassName={s.mason_grid_col}
+              >
+                {data?.pages
+                  ? data.pages.flatMap((page) =>
+                      page.map((entity) => (
+                        <PapercraftCard
+                          entityType={entityType}
+                          key={entity!.id}
+                          entity={entity}
+                        />
+                      ))
+                    )
+                  : null}
+              </Masonry>
+            )}
           </InfiniteScroll>
           <CSSTransition
             appear
