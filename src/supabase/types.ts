@@ -132,7 +132,7 @@ export type BuildInput = PartialBy<Build, RowMetadata | 'papercraft'>;
 
 export interface Collective {
   id: number;
-  created_at?: string;
+  created_at: string;
   title: string;
   description: string;
   titlecode: string;

@@ -4,7 +4,7 @@
  * created on Sun Sep 04 2022
  * 2022 the nobot space,
  */
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import s from './PapercraftGallery.module.scss';
 import Masonry, { MasonryProps } from 'react-masonry-css';
 import FilterBar from '../FilterBar/FilterBar';
@@ -20,9 +20,14 @@ import { MdOutlineTableRows } from 'react-icons/md';
 import { RiLayoutGridLine, RiLayoutBottomLine } from 'react-icons/ri';
 import { IoCubeOutline, IoShapesOutline } from 'react-icons/io5';
 import * as APIt from '../../supabase/types';
-import { buildKeys, listBuilds } from '../../supabase/api/builds';
+import {
+  buildKeys,
+  listBuilds,
+  ListBuildsQueryVariables,
+} from '../../supabase/api/builds';
 import InfiniteScroll from 'react-infinite-scroller';
 import { PAGE_SIZE } from '../../util/getPagination';
+import getNextPageParam from '../../util/getNextPageParam';
 
 const breakpointColumnsObj = {
   default: 5,
@@ -43,6 +48,7 @@ type PapercraftGalleryProps = {
   user_id?: string;
   collective?: string;
   disabled?: boolean;
+  displays?: EntityType[];
 };
 
 /* --------------------------------- layout --------------------------------- */
@@ -82,20 +88,22 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
     user_id,
     collective,
     disabled,
+    displays = [EntityType.Papercrafts, EntityType.Builds],
   }) {
     // refs
     const loadingOverlayRef = useRef<HTMLDivElement>(null);
 
     // statefuls
     const [layoutType, setLayoutType] = useState<LayoutType>(LayoutType.Grid);
-    const [entityType, setEntityType] = useState<EntityType>(
-      EntityType.Papercrafts
-    );
+    const [entityType, setEntityType] = useState<EntityType>(displays[0]);
+    useEffect(() => {
+      setEntityType(displays[0]);
+    }, [displays]);
     const [currentSearch, setCurrentSearch] = useState<string>('');
     const [currentTags, setCurrentTags] = useState<APIt.Tag[]>([]);
 
     // same params used across queries
-    const params: ListPapercraftsQueryVariables = {
+    const params: ListPapercraftsQueryVariables & ListBuildsQueryVariables = {
       search: currentSearch,
       username,
       collective,
@@ -109,10 +117,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
       ({ pageParam = null }) => listPapercrafts(params, pageParam),
       {
         enabled: !disabled && entityType === EntityType.Papercrafts,
-        getNextPageParam: (lastPage) =>
-          lastPage.length === PAGE_SIZE
-            ? lastPage[lastPage.length - 1].created_at
-            : null,
+        getNextPageParam: getNextPageParam(params),
       }
     );
     const buildsQuery = useInfiniteQuery<APIt.Build[]>(
@@ -120,10 +125,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
       ({ pageParam = null }) => listBuilds(params, pageParam),
       {
         enabled: !disabled && entityType === EntityType.Builds,
-        getNextPageParam: (lastPage) =>
-          lastPage.length === PAGE_SIZE
-            ? lastPage[lastPage.length - 1].created_at
-            : null,
+        getNextPageParam: getNextPageParam(params),
       }
     );
 
@@ -135,7 +137,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
     return (
       <div className={s.meta_container}>
         <div className={s.sidebar}>
-          {Object.entries(ENTITY_ICONS).map(([key, icon]) => (
+          {displays.map((key) => (
             <div
               className={`${s.layout_type} ${
                 entityType === key ? 'active' : ''
@@ -143,7 +145,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
               key={key}
               onClick={() => setEntityType(key as EntityType)}
             >
-              {key} {icon}
+              {key} {ENTITY_ICONS[key]}
             </div>
           ))}
           {Object.entries(LAYOUT_ICONS).map(([key, icon]) => (
@@ -212,4 +214,4 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
     );
   };
 
-export default PapercraftGallery;
+export default React.memo(PapercraftGallery);

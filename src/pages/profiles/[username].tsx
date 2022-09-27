@@ -11,7 +11,9 @@ import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'node:querystring';
 import { getProfile, profileKeys } from '../../supabase/api/profiles';
 import s from '../../styles/profile/Profile.module.scss';
-import PapercraftGallery from '../../components/PapercraftGallery/PapercraftGallery';
+import PapercraftGallery, {
+  EntityType,
+} from '../../components/PapercraftGallery/PapercraftGallery';
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import Layout from '../../components/Layout/Layout';
 import { useUser } from '@supabase/auth-helpers-react';
@@ -25,9 +27,16 @@ import { BiArrowBack } from 'react-icons/bi';
 import { FiShare } from 'react-icons/fi';
 import {
   listPapercrafts,
+  ListPapercraftsQueryVariables,
   papercraftKeys,
 } from '../../supabase/api/papercrafts';
 import { PAGE_SIZE } from '../../util/getPagination';
+import getNextPageParam from '../../util/getNextPageParam';
+import {
+  buildKeys,
+  listBuilds,
+  ListBuildsQueryVariables,
+} from '../../supabase/api/builds';
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPING                                   */
@@ -155,6 +164,15 @@ const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
               480: 2,
             }}
             username={username}
+            displays={[
+              ...(!!profile.data?.n_papercrafts
+                ? [EntityType.Papercrafts]
+                : []),
+              ...(!!profile.data?.n_builds ? [EntityType.Builds] : []),
+              ...(!profile.data?.n_papercrafts && !profile.data?.n_builds
+                ? [EntityType.Papercrafts, EntityType.Builds]
+                : []),
+            ]}
           />
         </div>
         <FallbackOverlay />
@@ -187,23 +205,28 @@ export const getStaticProps: GetStaticProps<
 > = async ({ params }) => {
   const queryClient = new QueryClient();
   const username = params!.username!;
-  const qparams = { search: '', username };
-  const requests = [
+  const papercraftParams: ListPapercraftsQueryVariables &
+    ListBuildsQueryVariables = {
+    search: '',
+    username,
+    collective: undefined,
+    tags: [],
+  };
+  await Promise.all([
     queryClient.prefetchQuery(profileKeys.get(username), () =>
       getProfile(username)
     ),
     queryClient.prefetchInfiniteQuery(
-      papercraftKeys.list(qparams),
-      ({ pageParam = null }) => listPapercrafts(qparams, pageParam),
-      {
-        getNextPageParam: (lastPage) =>
-          lastPage.length === PAGE_SIZE
-            ? lastPage[lastPage.length - 1].created_at
-            : null,
-      }
+      papercraftKeys.list(papercraftParams),
+      ({ pageParam = null }) => listPapercrafts(papercraftParams, pageParam),
+      { getNextPageParam: getNextPageParam(papercraftParams) }
     ),
-  ];
-  await Promise.all(requests);
+    queryClient.prefetchInfiniteQuery(
+      buildKeys.list(papercraftParams),
+      ({ pageParam = null }) => listBuilds(papercraftParams, pageParam),
+      { getNextPageParam: getNextPageParam(papercraftParams) }
+    ),
+  ]);
   return {
     props: {
       dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),

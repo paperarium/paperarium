@@ -9,6 +9,7 @@ import {
   supabaseClient,
   supabaseServerClient,
 } from '@supabase/auth-helpers-nextjs';
+import { InfiniteQueryFilter } from '../../util/getNextPageParam';
 import { PAGE_SIZE } from '../../util/getPagination';
 import * as APIt from '../types';
 
@@ -35,12 +36,12 @@ export const getBuild = async (pid: string) => {
   return builds[0];
 };
 
-type ListBuildsQueryVariables = {
+export type ListBuildsQueryVariables = {
   search?: string;
   collective?: string;
   username?: string;
   tags?: number[];
-};
+} & InfiniteQueryFilter<APIt.Build>;
 
 /**
  * Lists the builds from the supabase database.
