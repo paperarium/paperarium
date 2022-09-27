@@ -13,38 +13,50 @@ import {
   IoShapesOutline,
 } from 'react-icons/io5';
 import { RiUserReceivedLine, RiUserSharedLine } from 'react-icons/ri';
-import * as APIt from '../../supabase/types';
-import OptimizedImage from '../OptimizedImage/OptimizedImage';
-import s from './ProfileGallery.module.scss';
+import * as APIt from '../../../supabase/types';
+import OptimizedImage from '../../OptimizedImage/OptimizedImage';
+import {
+  InfiniteTableHeaderProps,
+  InfiniteTableRowProps,
+} from '../InfiniteTableView';
+import s from './InfiniteTableRow.module.scss';
 
-type CollectiveRowProps = {
-  collective: APIt.Collective;
-};
+export const CollectiveHeaderRow: React.FC<
+  InfiniteTableHeaderProps<APIt.Collective>
+> = React.memo(function CollectiveHeaderRow({ onColumnClick }) {
+  return (
+    <tr>
+      <th>Collective</th>
+      <th
+        className={s.sortable_header}
+        onClick={() => onColumnClick('n_members')}
+      >
+        <IoPeopleOutline />
+      </th>
+      <th
+        className={s.sortable_header}
+        onClick={() => onColumnClick('n_papercrafts')}
+      >
+        <IoShapesOutline />
+      </th>
+      <th
+        className={s.sortable_header}
+        onClick={() => onColumnClick('n_builds')}
+      >
+        <IoCubeOutline />
+      </th>
+      <th
+        className={s.sortable_header}
+        onClick={() => onColumnClick('n_followers')}
+      >
+        <RiUserReceivedLine />
+      </th>
+    </tr>
+  );
+});
 
-export const CollectiveHeaderRow: React.FC<{}> = React.memo(
-  function CollectiveHeaderRow() {
-    return (
-      <tr>
-        <th>Collective</th>
-        <th>
-          <IoPeopleOutline />
-        </th>
-        <th>
-          <IoShapesOutline />
-        </th>
-        <th>
-          <IoCubeOutline />
-        </th>
-        <th>
-          <RiUserReceivedLine />
-        </th>
-      </tr>
-    );
-  }
-);
-
-export const CollectiveRow: React.FC<CollectiveRowProps> = React.memo(
-  function CollectiveRow({ collective }) {
+export const CollectiveRow: React.FC<InfiniteTableRowProps<APIt.Collective>> =
+  React.memo(function CollectiveRow({ content: collective }) {
     return (
       <Link href={`/collectives/${collective.titlecode}`} prefetch={false}>
         <tr className={s.grid_row}>
@@ -69,5 +81,4 @@ export const CollectiveRow: React.FC<CollectiveRowProps> = React.memo(
         </tr>
       </Link>
     );
-  }
-);
+  });

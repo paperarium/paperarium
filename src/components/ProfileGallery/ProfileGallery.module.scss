@@ -124,56 +124,6 @@
   }
 }
 
-.main_grid {
-  width: 100%;
-  position: relative;
-  border-collapse: separate;
-  border-spacing: 0px 5px;
-  table-layout: fixed;
-  flex-shrink: 1;
-}
-
-.grid_header {
-  width: 100%;
-  position: sticky;
-  z-index: 1;
-  padding: 0px;
-  letter-spacing: -1px;
-  top: calc(
-    var(--header-height) + var(--notice-bar-height) + var(--layout-bar-height) +
-      var(--search-bar-height)
-  );
-
-  @include respond-to('small') {
-    top: calc(
-      var(--header-height) + var(--notice-bar-height) + var(--search-bar-height)
-    );
-  }
-
-  & > tr {
-    background-color: $background;
-    margin-top: -5px;
-    height: calc(100% + 10px);
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
-  }
-
-  & th {
-    border: $border;
-    border-style: solid none solid solid;
-    padding: 5px;
-    font-family: 'FT88 School';
-    color: $foreground2;
-    width: 50px;
-  }
-  & th:first-child {
-    text-align: left;
-    width: 100%;
-  }
-  & th:last-child {
-    border-right-style: solid;
-  }
-}
-
 @keyframes fadeup {
   from {
     opacity: 0;

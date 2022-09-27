@@ -5,20 +5,16 @@
  * 2022 the nobot space,
  */
 
-import { useQuery } from '@tanstack/react-query';
-import Link from 'next/link';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import React from 'react';
 import { useState } from 'react';
-import {
-  IoCubeOutline,
-  IoPeopleOutline,
-  IoPersonOutline,
-  IoShapesOutline,
-} from 'react-icons/io5';
+import { IoPeopleOutline, IoPersonOutline } from 'react-icons/io5';
 import { MdOutlineTableRows } from 'react-icons/md';
-
+import InfiniteScroll from 'react-infinite-scroller';
 import {
   collectiveKeys,
   listCollectives,
+  ListCollectivesQueryVariables,
 } from '../../supabase/api/collectives';
 import {
   listProfiles,
@@ -26,10 +22,19 @@ import {
   profileKeys,
 } from '../../supabase/api/profiles';
 import * as APIt from '../../supabase/types';
+import getNextPageParam from '../../util/getNextPageParam';
+import { PAGE_SIZE } from '../../util/getPagination';
 import FilterBarProfile from '../FilterBar/FilterBarProfile';
-import { CollectiveHeaderRow, CollectiveRow } from './CollectiveRow';
+import {
+  CollectiveHeaderRow,
+  CollectiveRow,
+} from '../InfiniteTableView/atoms/CollectiveRow';
 import s from './ProfileGallery.module.scss';
-import { ProfileHeaderRow, ProfileRow } from './ProfileRow';
+import {
+  ProfileHeaderRow,
+  ProfileRow,
+} from '../InfiniteTableView/atoms/ProfileRow';
+import InfiniteTableView from '../InfiniteTableView/InfiniteTableView';
 
 export enum CommunityEntityType {
   Profiles = 'profiles',
@@ -42,27 +47,12 @@ type ProfileGalleryProps = {
   displays: CommunityEntityType[];
 };
 
-type CommunityEntityMeta = {
-  icon: JSX.Element;
-  query: typeof listProfiles | typeof listCollectives;
-  keys: typeof profileKeys | typeof collectiveKeys;
-};
-
-const ENTITY_MAP: { [key in CommunityEntityType]: CommunityEntityMeta } = {
-  [CommunityEntityType.Profiles]: {
-    icon: <IoPersonOutline />,
-    query: listProfiles,
-    keys: profileKeys,
-  },
-  [CommunityEntityType.Collectives]: {
-    icon: <IoPeopleOutline />,
-    query: listCollectives,
-    keys: collectiveKeys,
-  },
+const ENTITY_ICONS: { [key in CommunityEntityType]: JSX.Element } = {
+  [CommunityEntityType.Profiles]: <IoPersonOutline />,
+  [CommunityEntityType.Collectives]: <IoPeopleOutline />,
 };
 
 const ProfileGallery: React.FC<ProfileGalleryProps> = function ProfileGallery({
-  children,
   disabled,
   displays,
 }) {
@@ -72,17 +62,48 @@ const ProfileGallery: React.FC<ProfileGalleryProps> = function ProfileGallery({
   );
   // search information
   const [currentSearch, setCurrentSearch] = useState<string>('');
-  const params: ListProfilesQueryVariables = {
-    search: currentSearch,
-    filter: {
-      n_papercrafts: { ascending: false },
-    },
-  };
-  const entities = useQuery<APIt.Profile[] | APIt.Collective[]>(
-    ENTITY_MAP[entityType].keys.list(params),
-    () => ENTITY_MAP[entityType].query(params),
-    { enabled: !disabled }
+  // same params used across queries
+  const [profileParams, setProfileParams] =
+    useState<ListProfilesQueryVariables>({
+      search: currentSearch,
+      filter: {
+        column: 'n_papercrafts',
+        ascending: false,
+      },
+    });
+  const [collectivesParams, setCollectiveParams] =
+    useState<ListCollectivesQueryVariables>({
+      search: currentSearch,
+      filter: {
+        column: 'n_members',
+        ascending: false,
+      },
+    });
+
+  // maintain two infinite queries, one for papercrafts and one for builds
+  const profilesQuery = useInfiniteQuery<APIt.Profile[]>(
+    profileKeys.list(profileParams),
+    ({ pageParam = null }) => listProfiles(profileParams, pageParam),
+    {
+      enabled: !disabled && entityType === CommunityEntityType.Profiles,
+      getNextPageParam: getNextPageParam(profileParams),
+      keepPreviousData: true,
+    }
   );
+  const collectivesQuery = useInfiniteQuery<APIt.Collective[]>(
+    collectiveKeys.list(collectivesParams),
+    ({ pageParam = null }) => listCollectives(collectivesParams, pageParam),
+    {
+      enabled: !disabled && entityType === CommunityEntityType.Collectives,
+      getNextPageParam: getNextPageParam(collectivesParams),
+      keepPreviousData: true,
+    }
+  );
+
+  // combine the two types of infinite queries back into one
+  const isColl = entityType === CommunityEntityType.Collectives;
+  const currQuery = isColl ? collectivesQuery : profilesQuery;
+  const { hasNextPage, fetchNextPage } = currQuery;
 
   return (
     <div className={s.meta_container}>
@@ -93,7 +114,7 @@ const ProfileGallery: React.FC<ProfileGalleryProps> = function ProfileGallery({
             key={key}
             onClick={() => setEntityType(key as CommunityEntityType)}
           >
-            {key} {ENTITY_MAP[key].icon}
+            {key} {ENTITY_ICONS[key]}
           </div>
         ))}
         <div className={`${s.layout_button} active`}>
@@ -105,28 +126,60 @@ const ProfileGallery: React.FC<ProfileGalleryProps> = function ProfileGallery({
           currentSearch={currentSearch}
           submitSearch={setCurrentSearch}
         />
-        <div className={s.lower_container}>
-          <table className={s.main_grid}>
-            <thead className={s.grid_header}>
-              {entityType === CommunityEntityType.Collectives ? (
-                <CollectiveHeaderRow />
-              ) : (
-                <ProfileHeaderRow />
-              )}
-            </thead>
-            <tbody>
-              {entities.data && !entities.isFetching
-                ? entityType === CommunityEntityType.Collectives
-                  ? (entities.data as APIt.Collective[]).map((entity) => (
-                      <CollectiveRow collective={entity} key={entity.id} />
-                    ))
-                  : (entities.data as APIt.Profile[]).map((entity) => (
-                      <ProfileRow profile={entity} key={entity.id} />
-                    ))
-                : null}
-            </tbody>
-          </table>
-        </div>
+        <InfiniteScroll
+          pageStart={0}
+          hasMore={hasNextPage}
+          threshold={400}
+          loadMore={() => fetchNextPage()}
+          className={s.lower_container}
+          loader={
+            <div className="loader" key={0}>
+              Loading ...
+            </div>
+          }
+        >
+          <InfiniteTableView
+            pages={currQuery.data?.pages}
+            // @ts-ignore
+            HeaderComponent={isColl ? CollectiveHeaderRow : ProfileHeaderRow}
+            // @ts-ignore
+            RowComponent={isColl ? CollectiveRow : ProfileRow}
+            onColumnClick={(column: keyof APIt.Profile | APIt.Collective) => {
+              let currFilter = (
+                entityType === CommunityEntityType.Collectives
+                  ? collectivesParams
+                  : profileParams
+              ).filter;
+              // if no filter, sort by descending
+              if (!currFilter || currFilter.column !== column) {
+                currFilter = {
+                  column: column as any,
+                  ascending: false,
+                };
+                // if filter, and sorted by ascending, remove filter
+              } else {
+                if (currFilter.ascending) {
+                  currFilter = undefined;
+                  // if filter, and sorted by descending, sort by ascending
+                } else {
+                  currFilter.ascending = true;
+                }
+              }
+              // apply the filter
+              if (isColl) {
+                setCollectiveParams({
+                  ...collectivesParams,
+                  filter: currFilter as any,
+                });
+              } else {
+                setProfileParams({
+                  ...profileParams,
+                  filter: currFilter as any,
+                });
+              }
+            }}
+          />
+        </InfiniteScroll>
       </div>
     </div>
   );

@@ -6,6 +6,7 @@
  */
 
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import { InfiniteQueryFilter } from '../../util/getNextPageParam';
 import { PAGE_SIZE } from '../../util/getPagination';
 import * as APIt from '../types';
 
@@ -40,7 +41,7 @@ export type ListPapercraftsQueryVariables = {
   username?: string;
   collective?: string;
   tags?: number[];
-};
+} & InfiniteQueryFilter<APIt.Papercraft>;
 
 /**
  * Lists the papercrafts from the supabase database.

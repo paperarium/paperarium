@@ -6,6 +6,8 @@
  */
 
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import { InfiniteQueryFilter } from '../../util/getNextPageParam';
+import { PAGE_SIZE } from '../../util/getPagination';
 import * as APIt from '../types';
 
 /* -------------------------------------------------------------------------- */
@@ -51,28 +53,23 @@ export const getProfile = async (username: string) => {
 };
 
 export type ListProfilesOrderBy = {
-  n_papercrafts?: { ascending: boolean };
-  n_builds?: { ascending: boolean };
-  n_followers?: { ascending: boolean };
-  n_following?: { ascending: boolean };
-  created_at?: { ascnding: boolean };
+  column: keyof APIt.Profile;
+  ascending: boolean;
 };
 
 export type ListProfilesQueryVariables = {
   search?: string;
   show_all?: boolean;
-  filter?: ListProfilesOrderBy;
-};
+} & InfiniteQueryFilter<APIt.Profile>;
 
 /**
  * Lists a bunch of profiles from the database
  * @returns A list of profiles
  */
-export const listProfiles = async ({
-  search,
-  show_all,
-  filter,
-}: ListProfilesQueryVariables) => {
+export const listProfiles = async (
+  { search, show_all, filter }: ListProfilesQueryVariables,
+  pageParam: string | number | null = null
+) => {
   let req = (
     search
       ? supabaseClient.rpc<APIt.Profile>('search_profiles', {
@@ -81,28 +78,26 @@ export const listProfiles = async ({
       : supabaseClient.from<APIt.Profile>('profiles_view')
   ).select(`*`);
   if (!show_all) req = req.filter('is_default', 'eq', 'false');
-  // add in filters
+  // add in filter if it exists
   if (filter) {
-    filter.n_papercrafts &&
-      (req = req.order('n_papercrafts', {
-        ascending: filter.n_papercrafts.ascending,
-      }));
-    filter.n_builds &&
-      (req = req.order('n_builds', {
-        ascending: filter.n_builds.ascending,
-      }));
-    filter.n_following &&
-      (req = req.order('n_following', {
-        ascending: filter.n_following.ascending,
-      }));
-    filter.n_followers &&
-      (req = req.order('n_followers', {
-        ascending: filter.n_followers.ascending,
-      }));
+    if (pageParam) {
+      if (filter.ascending) {
+        req = req.lt(filter.column, pageParam);
+      } else {
+        req = req.gt(filter.column, pageParam);
+      }
+    }
+    req = req.order(filter.column, { ascending: filter.ascending });
+    // default is filtering by created_at
+  } else if (pageParam) {
+    req = req.lt('created_at', pageParam);
   }
-  const { data: profiles, error } = await req.order('created_at', {
-    ascending: false,
-  });
+  // add in created_at ordering
+  const { data: profiles, error } = await req
+    .order('created_at', {
+      ascending: false,
+    })
+    .limit(PAGE_SIZE);
   if (error) throw error;
   return profiles;
 };
@@ -115,7 +110,6 @@ export type ProfileFollowingQueryVariables = Omit<
 /**
  * Gets whether or not a user is following another user
  * @param id
- * @param input
  * @returns
  */
 export const getIsFollowing = async ({

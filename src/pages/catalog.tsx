@@ -2,10 +2,15 @@ import { dehydrate, QueryClient } from '@tanstack/react-query';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import s from '../styles/Explore.module.scss';
-import { listPapercrafts, papercraftKeys } from '../supabase/api/papercrafts';
+import {
+  listPapercrafts,
+  ListPapercraftsQueryVariables,
+  papercraftKeys,
+} from '../supabase/api/papercrafts';
 import PapercraftGallery from '../components/PapercraftGallery/PapercraftGallery';
 import { NextSeo } from 'next-seo';
 import { PAGE_SIZE } from '../util/getPagination';
+import getNextPageParam from '../util/getNextPageParam';
 
 const ExplorePage: NextPage = () => {
   return (
@@ -30,18 +35,13 @@ const ExplorePage: NextPage = () => {
  * @param context
  * @returns
  */
-export async function getStaticProps(context: any) {
+export async function getStaticProps() {
   const queryClient = new QueryClient();
-  const params = { search: '' };
+  const params: ListPapercraftsQueryVariables = { search: '' };
   await queryClient.prefetchInfiniteQuery(
     papercraftKeys.list(params),
     ({ pageParam = null }) => listPapercrafts(params, pageParam),
-    {
-      getNextPageParam: (lastPage) =>
-        lastPage.length === PAGE_SIZE
-          ? lastPage[lastPage.length - 1].created_at
-          : null,
-    }
+    { getNextPageParam: getNextPageParam(params) }
   );
   return {
     props: {

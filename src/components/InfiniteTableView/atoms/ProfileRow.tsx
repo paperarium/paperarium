@@ -9,38 +9,50 @@ import Link from 'next/link';
 import React from 'react';
 import { IoCubeOutline, IoShapesOutline } from 'react-icons/io5';
 import { RiUserReceivedLine, RiUserSharedLine } from 'react-icons/ri';
-import * as APIt from '../../supabase/types';
-import OptimizedImage from '../OptimizedImage/OptimizedImage';
-import s from './ProfileGallery.module.scss';
+import * as APIt from '../../../supabase/types';
+import OptimizedImage from '../../OptimizedImage/OptimizedImage';
+import {
+  InfiniteTableHeaderProps,
+  InfiniteTableRowProps,
+} from '../InfiniteTableView';
+import s from './InfiniteTableRow.module.scss';
 
-type ProfileRowProps = {
-  profile: APIt.Profile;
-};
+export const ProfileHeaderRow: React.FC<
+  InfiniteTableHeaderProps<APIt.Profile>
+> = React.memo(function ProfileHeaderRow({ onColumnClick }) {
+  return (
+    <tr>
+      <th>Profile</th>
+      <th
+        className={s.sortable_header}
+        onClick={() => onColumnClick('n_papercrafts')}
+      >
+        <IoShapesOutline />
+      </th>
+      <th
+        className={s.sortable_header}
+        onClick={() => onColumnClick('n_builds')}
+      >
+        <IoCubeOutline />
+      </th>
+      <th
+        className={s.sortable_header}
+        onClick={() => onColumnClick('n_followers')}
+      >
+        <RiUserReceivedLine />
+      </th>
+      <th
+        className={s.sortable_header}
+        onClick={() => onColumnClick('n_following')}
+      >
+        <RiUserSharedLine />
+      </th>
+    </tr>
+  );
+});
 
-export const ProfileHeaderRow: React.FC<{}> = React.memo(
-  function ProfileHeaderRow() {
-    return (
-      <tr>
-        <th>Profile</th>
-        <th>
-          <IoShapesOutline />
-        </th>
-        <th>
-          <IoCubeOutline />
-        </th>
-        <th>
-          <RiUserReceivedLine />
-        </th>
-        <th>
-          <RiUserSharedLine />
-        </th>
-      </tr>
-    );
-  }
-);
-
-export const ProfileRow: React.FC<ProfileRowProps> = React.memo(
-  function ProfileRow({ profile }) {
+export const ProfileRow: React.FC<InfiniteTableRowProps<APIt.Profile>> =
+  React.memo(function ProfileRow({ content: profile }) {
     return (
       <Link href={`/profiles/${profile.username}`} prefetch={false}>
         <tr className={s.grid_row}>
@@ -65,5 +77,4 @@ export const ProfileRow: React.FC<ProfileRowProps> = React.memo(
         </tr>
       </Link>
     );
-  }
-);
+  });
