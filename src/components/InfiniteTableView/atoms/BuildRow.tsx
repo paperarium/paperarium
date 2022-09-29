@@ -7,8 +7,10 @@
 
 import Link from 'next/link';
 import React from 'react';
+import { IoHeartOutline } from 'react-icons/io5';
 import * as APIt from '../../../supabase/types';
 import OptimizedImage from '../../OptimizedImage/OptimizedImage';
+import BuildTitle from '../../ResourceTitle/BuildTitle';
 import {
   InfiniteTableHeaderProps,
   InfiniteTableRowProps,
@@ -21,6 +23,12 @@ export const BuildHeaderRow: React.FC<
   return (
     <tr>
       <th>Build</th>
+      <th
+        className={s.sortable_header}
+        onClick={() => onColumnClick('n_likes')}
+      >
+        <IoHeartOutline />
+      </th>
     </tr>
   );
 });
@@ -46,11 +54,10 @@ export const BuildRow: React.FC<InfiniteTableRowProps<APIt.Build>> = React.memo(
                   sizes={`20px`}
                 />
               </div>
-              {build.papercraft.title}
-              <br />
-              <div className={s.result_username}>@{build.user.username}</div>
+              <BuildTitle build={build} />
             </div>
           </td>
+          <td className={s.grid_cell}>{build.n_likes}</td>
         </tr>
       </Link>
     );

@@ -6,7 +6,10 @@
  */
 
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
-import { InfiniteQueryFilter } from '../../util/getNextPageParam';
+import {
+  applyNextPageParam,
+  InfiniteQueryFilter,
+} from '../../util/getNextPageParam';
 import { PAGE_SIZE } from '../../util/getPagination';
 import * as APIt from '../types';
 
@@ -46,25 +49,12 @@ export const listCollectives = async (
         })
       : supabaseClient.from<APIt.Collective>('collectives_view')
   ).select(`*`);
-  // add in filter if it exists
-  if (filter) {
-    if (pageParam) {
-      if (filter.ascending) {
-        req = req.lt(filter.column, pageParam);
-      } else {
-        req = req.gt(filter.column, pageParam);
-      }
-    }
-    req = req.order(filter.column, { ascending: filter.ascending });
-    // default is filtering by created_at
-  } else if (pageParam) {
-    req = req.lt('created_at', pageParam);
-  }
-  const { data: collectives, error } = await req
-    .order('created_at', {
-      ascending: false,
-    })
-    .limit(PAGE_SIZE);
+  // now apply the filters using the next page param
+  const { data: collectives, error } = await applyNextPageParam(
+    req,
+    filter,
+    pageParam
+  );
   if (error) throw error;
   return collectives;
 };

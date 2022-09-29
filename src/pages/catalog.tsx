@@ -11,6 +11,11 @@ import PapercraftGallery from '../components/PapercraftGallery/PapercraftGallery
 import { NextSeo } from 'next-seo';
 import { PAGE_SIZE } from '../util/getPagination';
 import getNextPageParam from '../util/getNextPageParam';
+import {
+  buildKeys,
+  listBuilds,
+  ListBuildsQueryVariables,
+} from '../supabase/api/builds';
 
 const ExplorePage: NextPage = () => {
   return (
@@ -37,12 +42,25 @@ const ExplorePage: NextPage = () => {
  */
 export async function getStaticProps() {
   const queryClient = new QueryClient();
-  const params: ListPapercraftsQueryVariables = { search: '' };
-  await queryClient.prefetchInfiniteQuery(
-    papercraftKeys.list(params),
-    ({ pageParam = null }) => listPapercrafts(params, pageParam),
-    { getNextPageParam: getNextPageParam(params) }
-  );
+  const params: ListPapercraftsQueryVariables & ListBuildsQueryVariables = {
+    search: '',
+    username: undefined,
+    collective: undefined,
+    tags: undefined,
+    filter: undefined,
+  };
+  await Promise.all([
+    queryClient.prefetchInfiniteQuery(
+      papercraftKeys.list(params),
+      ({ pageParam = null }) => listPapercrafts(params, pageParam),
+      { getNextPageParam: getNextPageParam(params) }
+    ),
+    queryClient.prefetchInfiniteQuery(
+      buildKeys.list(params),
+      ({ pageParam = null }) => listBuilds(params, pageParam),
+      { getNextPageParam: getNextPageParam(params) }
+    ),
+  ]);
   return {
     props: {
       dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),

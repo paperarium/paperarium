@@ -204,6 +204,7 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
               pictures: [],
               verified: true,
               papercraft: undefined as unknown as APIt.Papercraft,
+              n_likes: 0,
             }
           : undefined,
       user: defaultPapercraft?.user || profile,
@@ -226,6 +227,8 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
             : variant.pdf_lined_url
           : undefined,
       })),
+      n_builds: 1,
+      n_likes: 0,
     };
     return papercraft;
   };

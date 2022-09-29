@@ -7,10 +7,15 @@
 
 import Link from 'next/link';
 import React from 'react';
-import { IoCubeOutline, IoShapesOutline } from 'react-icons/io5';
+import {
+  IoCubeOutline,
+  IoHeartOutline,
+  IoShapesOutline,
+} from 'react-icons/io5';
 import { RiUserReceivedLine, RiUserSharedLine } from 'react-icons/ri';
 import * as APIt from '../../../supabase/types';
 import OptimizedImage from '../../OptimizedImage/OptimizedImage';
+import PapercraftTitle from '../../ResourceTitle/PapercraftTitle';
 import {
   InfiniteTableHeaderProps,
   InfiniteTableRowProps,
@@ -23,6 +28,18 @@ export const PapercraftHeaderRow: React.FC<
   return (
     <tr>
       <th>Papercraft</th>
+      <th
+        className={s.sortable_header}
+        onClick={() => onColumnClick('n_likes')}
+      >
+        <IoHeartOutline />
+      </th>
+      <th
+        className={s.sortable_header}
+        onClick={() => onColumnClick('n_builds')}
+      >
+        <IoShapesOutline />
+      </th>
     </tr>
   );
 });
@@ -45,13 +62,11 @@ export const PapercraftRow: React.FC<InfiniteTableRowProps<APIt.Papercraft>> =
                   sizes={`20px`}
                 />
               </div>
-              {papercraft.title}
-              <br />
-              <div className={s.result_username}>
-                @{papercraft.user.username}
-              </div>
+              <PapercraftTitle papercraft={papercraft} />
             </div>
           </td>
+          <td className={s.grid_cell}>{papercraft.n_likes}</td>
+          <td className={s.grid_cell}>{papercraft.n_builds}</td>
         </tr>
       </Link>
     );

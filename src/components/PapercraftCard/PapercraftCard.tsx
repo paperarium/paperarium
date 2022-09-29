@@ -12,6 +12,8 @@ import Link from 'next/link';
 import { EntityType } from '../PapercraftGallery/PapercraftGallery';
 import ProfileLink from '../ProfileLink/ProfileLink';
 import { IoShapesOutline } from 'react-icons/io5';
+import BuildTitle from '../ResourceTitle/BuildTitle';
+import PapercraftTitle from '../ResourceTitle/PapercraftTitle';
 
 interface PapercraftCardProps<T extends APIt.Papercraft | APIt.Build> {
   entity: T;
@@ -72,31 +74,14 @@ const PapercraftCard = function PapercraftCard<
         </a>
       </Link>
       <div className={s.info_card}>
-        <div className={s.info_col}>
-          <Link
-            href={
-              entityType === EntityType.Builds
-                ? `/papercrafts/${(entity as APIt.Build).papercraft.id}?build=${
-                    entity.id
-                  }`
-                : `/papercrafts/${entity.id}`
-            }
-            prefetch={false}
-          >
-            <div
-              onClick={() => {
-                setClicked(true);
-              }}
-            >
-              {entityType === EntityType.Papercrafts
-                ? (entity as APIt.Papercraft).title!
-                : (entity as APIt.Build).papercraft.title}
-            </div>
-          </Link>
-          <div className={s.user_container}>
-            <ProfileLink user={entity.user} withIcon={<IoShapesOutline />} />
-          </div>
-        </div>
+        {entityType === EntityType.Builds ? (
+          <BuildTitle build={entity as APIt.Build} onClick={setClicked} />
+        ) : (
+          <PapercraftTitle
+            papercraft={entity as APIt.Papercraft}
+            onClick={setClicked}
+          />
+        )}
       </div>
     </div>
   );

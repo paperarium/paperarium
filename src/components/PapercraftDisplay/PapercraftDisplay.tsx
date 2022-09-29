@@ -24,6 +24,8 @@ import { useQuery } from '@tanstack/react-query';
 import { getIsAdmin } from '../../supabase/api/profiles';
 import dynamic from 'next/dynamic';
 import { getSelectTheme, Select } from '../misc/AsyncSelect';
+import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
+import useWithLikes, { LikeableEntity } from '../../hooks/useWithLikes';
 
 const DynamicEditFlow = dynamic(
   () => import('../FlowPapercraft/FlowPapercraft'),
@@ -55,6 +57,14 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
         ? papercraft
         : papercraft.variants[selectedVariant];
 
+    // mutations for liking and unliking a papercraft
+    const { isLiked, like, unlike } = useWithLikes(
+      LikeableEntity.Papercraft,
+      papercraft,
+      user?.id,
+      preview
+    );
+
     return editing && user ? (
       <Suspense fallback={`Loading...`}>
         <DynamicEditFlow
@@ -69,13 +79,39 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
       <div className={s.container}>
         <div className={s.display_column}>
           <div className={s.preview_content_container}>
-            <TextareaAutosize
-              className={s.preview_title}
-              value={papercraft.title || ''}
-              placeholder={'Your title...'}
-              spellCheck={false}
-              readOnly={true}
-            ></TextareaAutosize>
+            <div
+              className={s.inner_image_container}
+              style={{ marginTop: '5px' }}
+            >
+              <TextareaAutosize
+                className={s.preview_title}
+                value={papercraft.title || ''}
+                placeholder={'Your title...'}
+                spellCheck={false}
+                readOnly={true}
+              ></TextareaAutosize>
+              <div
+                className={s.like_container}
+                style={preview ? { pointerEvents: 'none' } : undefined}
+              >
+                {isLiked ? (
+                  <AiFillHeart
+                    className={s.like_heart_filled}
+                    onClick={() => unlike.mutate()}
+                  />
+                ) : (
+                  <AiOutlineHeart
+                    className={s.like_heart}
+                    onClick={() => like.mutate()}
+                  />
+                )}
+                <div className={s.like_number}>
+                  {Intl.NumberFormat('en', { notation: 'compact' }).format(
+                    papercraft.n_likes
+                  )}
+                </div>
+              </div>
+            </div>
             <div className={s.date_input}>
               {new Date(
                 rectifyDateFormat(papercraft.created_at)

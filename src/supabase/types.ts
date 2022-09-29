@@ -67,7 +67,18 @@ export interface Papercraft {
   user: Profile;
   tags: Tag[];
   variants: PapercraftVariant[];
+  n_builds: number;
+  n_likes: number;
 }
+
+export interface PapercraftLike {
+  id: number;
+  user_id: string;
+  papercraft_id: string;
+  created_at: string;
+}
+
+export type PapercraftLikeInput = Omit<PapercraftLike, 'id' | 'created_at'>;
 
 export interface PapercraftVariant {
   id: number;
@@ -82,7 +93,7 @@ export interface PapercraftVariant {
 
 export type PapercraftInput = PartialBy<
   Papercraft,
-  RowMetadata | 'tags' | 'variants'
+  RowMetadata | 'tags' | 'variants' | 'n_likes' | 'n_builds'
 >;
 
 export type PapercraftVariantInput = PartialBy<
@@ -115,6 +126,7 @@ export interface Build {
   verified: boolean;
   papercraft: Papercraft;
   user: Profile;
+  n_likes: number;
 }
 
 export type Announcement = {
@@ -124,7 +136,10 @@ export type Announcement = {
   text: string;
 };
 
-export type BuildInput = PartialBy<Build, RowMetadata | 'papercraft'>;
+export type BuildInput = PartialBy<
+  Build,
+  RowMetadata | 'papercraft' | 'n_likes'
+>;
 
 /* -------------------------------------------------------------------------- */
 /*                                 COLLECTIVES                                */

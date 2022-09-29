@@ -111,35 +111,55 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
     const [currentTags, setCurrentTags] = useState<APIt.Tag[]>([]);
 
     // same params used across queries
-    const params: ListPapercraftsQueryVariables & ListBuildsQueryVariables = {
+    const [papercraftParams, setPapercraftParams] =
+      useState<ListPapercraftsQueryVariables>({
+        search: currentSearch,
+        username,
+        collective,
+        tags: undefined,
+        filter: undefined,
+      });
+    const [buildsParams, setBuildsParams] = useState<ListBuildsQueryVariables>({
       search: currentSearch,
       username,
       collective,
+      tags: undefined,
+      filter: undefined,
+    });
+
+    // add the tags to the params
+    const fullPParams = {
+      ...papercraftParams,
+      tags:
+        currentTags.length > 0 ? currentTags.map(({ id }) => id) : undefined,
+    };
+    const fullBParams = {
+      ...buildsParams,
       tags:
         currentTags.length > 0 ? currentTags.map(({ id }) => id) : undefined,
     };
 
     // maintain two infinite queries, one for papercrafts and one for builds
     const papercraftsQuery = useInfiniteQuery<APIt.Papercraft[]>(
-      papercraftKeys.list(params),
-      ({ pageParam = null }) => listPapercrafts(params, pageParam),
+      papercraftKeys.list(fullPParams),
+      ({ pageParam = null }) => listPapercrafts(fullPParams, pageParam),
       {
         enabled: !disabled && entityType === EntityType.Papercrafts,
-        getNextPageParam: getNextPageParam(params),
+        getNextPageParam: getNextPageParam(fullPParams),
       }
     );
     const buildsQuery = useInfiniteQuery<APIt.Build[]>(
-      buildKeys.list(params),
-      ({ pageParam = null }) => listBuilds(params, pageParam),
+      buildKeys.list(fullBParams),
+      ({ pageParam = null }) => listBuilds(fullBParams, pageParam),
       {
         enabled: !disabled && entityType === EntityType.Builds,
-        getNextPageParam: getNextPageParam(params),
+        getNextPageParam: getNextPageParam(fullBParams),
       }
     );
 
     // combine the two types of infinite queries back into one
-    const currQuery =
-      entityType === EntityType.Papercrafts ? papercraftsQuery : buildsQuery;
+    const isPapercrafts = entityType === EntityType.Papercrafts;
+    const currQuery = isPapercrafts ? papercraftsQuery : buildsQuery;
     const { data, hasNextPage, isLoading, isPaused, fetchNextPage } = currQuery;
 
     return (
@@ -206,7 +226,38 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
                     ? PapercraftRow
                     : BuildRow
                 }
-                onColumnClick={() => {}}
+                onColumnClick={(column: keyof APIt.Build | APIt.Papercraft) => {
+                  let { filter } = isPapercrafts
+                    ? papercraftParams
+                    : buildsParams;
+                  // if no filter, sort by descending
+                  if (!filter || filter.column !== column) {
+                    filter = {
+                      column: column as any,
+                      ascending: false,
+                    };
+                    // if filter, and sorted by ascending, remove filter
+                  } else {
+                    if (filter.ascending) {
+                      filter = undefined;
+                      // if filter, and sorted by descending, sort by ascending
+                    } else {
+                      filter.ascending = true;
+                    }
+                  }
+                  // apply the filter
+                  if (isPapercrafts) {
+                    setPapercraftParams({
+                      ...papercraftParams,
+                      filter: filter as any,
+                    });
+                  } else {
+                    setBuildsParams({
+                      ...buildsParams,
+                      filter: filter as any,
+                    });
+                  }
+                }}
               />
             ) : (
               <Masonry
@@ -230,7 +281,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
           </InfiniteScroll>
           <CSSTransition
             appear
-            in={isPaused || isLoading}
+            in={layoutType !== LayoutType.Compact && (isPaused || isLoading)}
             nodeRef={loadingOverlayRef}
             timeout={300}
           >

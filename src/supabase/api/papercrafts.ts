@@ -6,7 +6,10 @@
  */
 
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
-import { InfiniteQueryFilter } from '../../util/getNextPageParam';
+import {
+  applyNextPageParam,
+  InfiniteQueryFilter,
+} from '../../util/getNextPageParam';
 import { PAGE_SIZE } from '../../util/getPagination';
 import * as APIt from '../types';
 
@@ -20,7 +23,7 @@ import * as APIt from '../types';
  */
 export const getPapercraft = async (pid: string) => {
   const { data: papercrafts, error } = await supabaseClient
-    .from<APIt.Papercraft>('papercrafts')
+    .from<APIt.Papercraft>('papercrafts_view')
     .select(
       `
       *,
@@ -48,15 +51,15 @@ export type ListPapercraftsQueryVariables = {
  * @returns A list of papercrafts
  */
 export const listPapercrafts = async (
-  { search, username, collective, tags }: ListPapercraftsQueryVariables,
-  ltCreated: string | null = null
+  { search, username, collective, tags, filter }: ListPapercraftsQueryVariables,
+  pageParam: string | number | null = null
 ) => {
   let req = (
     search
       ? supabaseClient.rpc<APIt.Papercraft>('search_papercrafts', {
           papercraft_term: search,
         })
-      : supabaseClient.from<APIt.Papercraft>('papercrafts')
+      : supabaseClient.from<APIt.Papercraft>('papercrafts_view')
   ).select(`
     *,
     user:user_id!inner(username,avatar_url,archived),
@@ -67,12 +70,12 @@ export const listPapercrafts = async (
   if (tags) req = req.in('tags.id' as any, tags);
   if (username) req = req.eq('user_id.username' as any, username);
   if (collective) req = req.eq('collectives.titlecode' as any, collective);
-  if (ltCreated) req = req.lt('created_at', ltCreated);
-  const { data: papercrafts, error } = await req
-    .order('created_at', {
-      ascending: false,
-    })
-    .limit(PAGE_SIZE);
+  // now apply the filters using the next page param
+  const { data: papercrafts, error } = await applyNextPageParam(
+    req,
+    filter,
+    pageParam
+  );
   if (error) throw error;
   return papercrafts;
 };
@@ -162,6 +165,42 @@ export const deletePapercraftVariants = async (ids: number[]) => {
 };
 
 /* -------------------------------------------------------------------------- */
+/*                              PAPERCRAFT LIKES                              */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Likes a papercraft in the supabase database.
+ * @param input
+ * @returns
+ */
+export const likePapercraft = async (
+  input: APIt.PapercraftLikeInput | APIt.PapercraftLikeInput[]
+) => {
+  const { data: papercraft_like, error } = await supabaseClient
+    .from<APIt.Papercraft>('papercrafts_likes')
+    .insert(input);
+  if (error) throw error;
+  return papercraft_like;
+};
+
+/**
+ * Unlikes a papercraft in the supabase database.
+ * @param input
+ * @returns
+ */
+export const unlikePaprcraft = async ({
+  user_id,
+  papercraft_id,
+}: APIt.PapercraftLikeInput) => {
+  const { data: papercraft_like, error } = await supabaseClient
+    .from<APIt.Papercraft>('papercrafts_likes')
+    .delete()
+    .match({ user_id, papercraft_id });
+  if (error) throw error;
+  return papercraft_like;
+};
+
+/* -------------------------------------------------------------------------- */
 /*                                 KEY FACTORY                                */
 /* -------------------------------------------------------------------------- */
 
@@ -172,4 +211,6 @@ export const papercraftKeys = {
     [...papercraftKeys.lists(), params] as const,
   gets: () => [...papercraftKeys.all, 'get'] as const,
   get: (id: string) => [...papercraftKeys.gets(), id] as const,
+  isLikeds: () => [...papercraftKeys.all, 'isLiked'] as const,
+  isLiked: (id: string) => [...papercraftKeys.isLikeds(), id] as const,
 };
