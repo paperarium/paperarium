@@ -28,7 +28,9 @@ import {
 } from '../../supabase/api/builds';
 import InfiniteScroll from 'react-infinite-scroller';
 import { PAGE_SIZE } from '../../util/getPagination';
-import getNextPageParam from '../../util/getNextPageParam';
+import getNextPageParam, {
+  InfiniteQueryFilter,
+} from '../../util/getNextPageParam';
 import InfiniteTableView from '../InfiniteTableView/InfiniteTableView';
 import {
   PapercraftHeaderRow,
@@ -109,34 +111,27 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
     }, [displays.length]);
     const [currentSearch, setCurrentSearch] = useState<string>('');
     const [currentTags, setCurrentTags] = useState<APIt.Tag[]>([]);
-
-    // same params used across queries
-    const [papercraftParams, setPapercraftParams] =
-      useState<ListPapercraftsQueryVariables>({
-        search: currentSearch,
-        username,
-        collective,
-        tags: undefined,
-        filter: undefined,
-      });
-    const [buildsParams, setBuildsParams] = useState<ListBuildsQueryVariables>({
-      search: currentSearch,
-      username,
-      collective,
-      tags: undefined,
-      filter: undefined,
-    });
+    const [papercraftFilter, setCurrentPapercraftFilter] =
+      useState<InfiniteQueryFilter<APIt.Papercraft>['filter']>(undefined);
+    const [buildFilter, setCurrentBuildFilter] =
+      useState<InfiniteQueryFilter<APIt.Build>['filter']>(undefined);
 
     // add the tags to the params
     const fullPParams = {
-      ...papercraftParams,
+      search: currentSearch,
+      username,
+      collective,
       tags:
         currentTags.length > 0 ? currentTags.map(({ id }) => id) : undefined,
+      filter: papercraftFilter,
     };
     const fullBParams = {
-      ...buildsParams,
+      search: currentSearch,
+      username,
+      collective,
       tags:
         currentTags.length > 0 ? currentTags.map(({ id }) => id) : undefined,
+      filter: buildFilter,
     };
 
     // maintain two infinite queries, one for papercrafts and one for builds
@@ -227,9 +222,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
                     : BuildRow
                 }
                 onColumnClick={(column: keyof APIt.Build | APIt.Papercraft) => {
-                  let { filter } = isPapercrafts
-                    ? papercraftParams
-                    : buildsParams;
+                  let filter = isPapercrafts ? papercraftFilter : buildFilter;
                   // if no filter, sort by descending
                   if (!filter || filter.column !== column) {
                     filter = {
@@ -247,15 +240,9 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
                   }
                   // apply the filter
                   if (isPapercrafts) {
-                    setPapercraftParams({
-                      ...papercraftParams,
-                      filter: filter as any,
-                    });
+                    setCurrentPapercraftFilter(filter as any);
                   } else {
-                    setBuildsParams({
-                      ...buildsParams,
-                      filter: filter as any,
-                    });
+                    setCurrentBuildFilter(filter as any);
                   }
                 }}
               />
