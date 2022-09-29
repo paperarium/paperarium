@@ -35,6 +35,7 @@ import {
   ProfileRow,
 } from '../InfiniteTableView/atoms/ProfileRow';
 import InfiniteTableView from '../InfiniteTableView/InfiniteTableView';
+import { CgSpinnerTwoAlt } from 'react-icons/cg';
 
 export enum CommunityEntityType {
   Profiles = 'profiles',
@@ -133,8 +134,10 @@ const ProfileGallery: React.FC<ProfileGalleryProps> = function ProfileGallery({
           loadMore={() => fetchNextPage()}
           className={s.lower_container}
           loader={
-            <div className="loader" key={0}>
-              Loading ...
+            <div className={s.loader} key={0}>
+              <div className={s.loader_text}>
+                Loading <CgSpinnerTwoAlt />
+              </div>
             </div>
           }
         >

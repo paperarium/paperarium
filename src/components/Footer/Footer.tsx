@@ -11,13 +11,8 @@ import {
   IoShapesOutline,
   IoTelescopeOutline,
 } from 'react-icons/io5';
-import {
-  RiFacebookBoxLine,
-  RiInstagramLine,
-  RiLinkedinBoxLine,
-  RiMailLine,
-  RiScissorsCutFill,
-} from 'react-icons/ri';
+import { RiFacebookBoxLine, RiInstagramLine, RiMailLine } from 'react-icons/ri';
+import { TbBrandDiscord } from 'react-icons/tb';
 import NavLink from '../NavLink/NavLink';
 import s from './Footer.module.scss';
 
@@ -46,24 +41,35 @@ const Footer: React.FC<FooterProps> = function Footer({ marginLeft }) {
               ✧.*·:·
             </div>
           </div>
-          <div className={s.socials_row}>
-            <a
-              href="https://instagram.com/paperarium"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <RiInstagramLine />
-            </a>
-            <a
-              href="https://www.facebook.com/profile.php?id=100085641023066"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <RiFacebookBoxLine />
-            </a>
-            <a href="mailto:kirkilese@gmail.com?subject=[Paperarium] - My subject">
-              <RiMailLine />
-            </a>
+          <div className={s.socials_container}>
+            <div className={s.socials_row}>
+              <a
+                href="https://instagram.com/paperarium"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <RiInstagramLine />
+              </a>
+              <a
+                href="https://www.facebook.com/profile.php?id=100085641023066"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <RiFacebookBoxLine />
+              </a>
+              <a href="mailto:kirkilese@gmail.com?subject=[Paperarium] - My subject">
+                <RiMailLine />
+              </a>
+            </div>
+            <div className={s.socials_row}>
+              <a
+                href="https://discord.gg/qVRhF7UHVu"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <TbBrandDiscord />
+              </a>
+            </div>
           </div>
         </div>
 

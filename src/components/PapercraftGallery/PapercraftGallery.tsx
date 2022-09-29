@@ -17,6 +17,7 @@ import {
 import PapercraftCard from '../PapercraftCard/PapercraftCard';
 import { CSSTransition } from 'react-transition-group';
 import { MdOutlineTableRows } from 'react-icons/md';
+import { CgSpinnerTwoAlt } from 'react-icons/cg';
 import { RiLayoutGridLine, RiLayoutBottomLine } from 'react-icons/ri';
 import { IoCubeOutline, IoShapesOutline } from 'react-icons/io5';
 import * as APIt from '../../supabase/types';
@@ -66,9 +67,9 @@ enum LayoutType {
 }
 
 const LAYOUT_ICONS: { [key in LayoutType]: JSX.Element } = {
+  [LayoutType.Grid]: <RiLayoutGridLine />,
   [LayoutType.Compact]: <MdOutlineTableRows />,
   [LayoutType.Rows]: <RiLayoutBottomLine />,
-  [LayoutType.Grid]: <RiLayoutGridLine />,
 };
 
 /* -------------------------------- entities -------------------------------- */
@@ -183,8 +184,10 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
             loadMore={() => fetchNextPage()}
             className={s.lower_container}
             loader={
-              <div className="loader" key={0}>
-                Loading ...
+              <div className={s.loader} key={0}>
+                <div className={s.loader_text}>
+                  Loading <CgSpinnerTwoAlt />
+                </div>
               </div>
             }
           >
