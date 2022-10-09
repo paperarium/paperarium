@@ -18,15 +18,18 @@ import FormEditBuild, {
   FormEditBuildHandleProps,
 } from '../../_forms/FormEditBuild/FormEditBuild';
 import {
+  getPapercraft,
   listPapercrafts,
   papercraftKeys,
 } from '../../../supabase/api/papercrafts';
 import getNextPageParam from '../../../util/getNextPageParam';
+import SearchModal from '../../SearchModal/SearchModal';
+import { EBuildable } from '../../../util/enums';
 
 type FlowBuildProps = {
   user: User;
   isAdmin?: boolean;
-  defaultPapercraft?: APIt.Papercraft;
+  defaultPapercraftId?: string;
   defaultBuild?: APIt.Build;
   onSuccess: (papercraft_id: string, build_id: string) => void;
   onBackButtonClick?: () => void;
@@ -34,7 +37,7 @@ type FlowBuildProps = {
 
 const FlowBuild: React.FC<FlowBuildProps> = ({
   user,
-  defaultPapercraft,
+  defaultPapercraftId,
   defaultBuild,
   isAdmin,
   onSuccess,
@@ -49,8 +52,8 @@ const FlowBuild: React.FC<FlowBuildProps> = ({
   /* -------------------------------------------------------------------------- */
 
   // statefuls for the build in the preview
-  const [papercraft, setPapercraft] = useState<APIt.Papercraft | null>(
-    defaultPapercraft ?? null
+  const [papercraftId, setPapercraftId] = useState<string | null>(
+    defaultPapercraftId ?? null
   );
   const [build, setBuild] = useState<APIt.Build | null>(defaultBuild ?? null);
   const [canPreview, setCanPreview] = useState<boolean>(false);
@@ -81,9 +84,15 @@ const FlowBuild: React.FC<FlowBuildProps> = ({
     papercraftKeys.list(fullPParams),
     ({ pageParam = null }) => listPapercrafts(fullPParams, pageParam),
     {
-      enabled: !defaultPapercraft,
+      enabled: !papercraftId,
       getNextPageParam: getNextPageParam(fullPParams),
     }
+  );
+  // and when we have a papercraft id, query the papercraft
+  const papercraft = useQuery<APIt.Papercraft>(
+    papercraftKeys.get(papercraftId!),
+    () => getPapercraft(papercraftId!),
+    { enabled: !!papercraftId }
   );
 
   /* -------------------------------------------------------------------------- */
@@ -114,12 +123,13 @@ const FlowBuild: React.FC<FlowBuildProps> = ({
             </div>
             <div className={s.spacer}></div>
             {profile ? (
-              papercraft ? (
+              papercraft.data ? (
                 <FormEditBuild
                   ref={formHandle}
                   profile={profile}
                   isAdmin={isAdmin}
-                  papercraft={papercraft}
+                  papercraft={papercraft.data}
+                  setPapercraftId={setPapercraftId}
                   setSubmissionMessage={setSubmissionMessage}
                   setCanPreview={setCanPreview}
                   onSuccess={({ id }) => onSuccess(build!.papercraft_id, id)}
@@ -156,7 +166,21 @@ const FlowBuild: React.FC<FlowBuildProps> = ({
                     REVIEW
                   </div>
                 </FormEditBuild>
-              ) : null
+              ) : (
+                <SearchModal
+                  entityType={EBuildable.Papercraft}
+                  defaultParams={{
+                    search: '',
+                    username: undefined,
+                    collective: undefined,
+                    tags: undefined,
+                    filter: undefined,
+                  }}
+                  query={listPapercrafts}
+                  keyFactory={papercraftKeys}
+                  onCellClick={({ id }) => setPapercraftId(id)}
+                />
+              )
             ) : null}
           </div>
           {/* SUBMISSION */}
@@ -175,8 +199,8 @@ const FlowBuild: React.FC<FlowBuildProps> = ({
               SUBMIT
             </div>
             <div className={s.preview_hidden_container}>
-              {papercraft ? (
-                <PapercraftDisplay papercraft={papercraft} preview />
+              {papercraft.data ? (
+                <PapercraftDisplay papercraft={papercraft.data} preview />
               ) : null}
             </div>
             <CSSTransition in={inConfirm} nodeRef={backdropRef} timeout={300}>
@@ -197,7 +221,10 @@ const FlowBuild: React.FC<FlowBuildProps> = ({
                       of the design
                       <br />
                       <br />
-                      <i className={s.confirm_title}>{papercraft?.title}</i>.
+                      <i className={s.confirm_title}>
+                        {papercraft.data?.title}
+                      </i>
+                      .
                       <br />
                       <br />
                       <br />

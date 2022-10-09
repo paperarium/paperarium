@@ -142,6 +142,23 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
   const getPapercraft = () => {
     if (!images) throw 'no images!';
     if (!profile) throw 'no profile yet!';
+    const builds: APIt.Build[] = defaultPapercraft?.builds || [];
+    const display_build: APIt.Build | undefined =
+      defaultPapercraft?.display_build ??
+      (isBuild
+        ? {
+            user: profile,
+            id: '',
+            created_at: '',
+            updated_at: '',
+            user_id: profile.id,
+            papercraft_id: '',
+            pictures: [],
+            verified: true,
+            papercraft: undefined as unknown as APIt.Papercraft,
+            n_likes: 0,
+          }
+        : undefined);
     const papercraft: APIt.Papercraft = {
       id: defaultPapercraft?.id || '',
       user_id: profile.id,
@@ -187,21 +204,8 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
           : undefined,
       verified: false,
       xlink: xLink,
-      display_build:
-        defaultPapercraft?.display_build || isBuild
-          ? {
-              user: profile,
-              id: '',
-              created_at: '',
-              updated_at: '',
-              user_id: profile.id,
-              papercraft_id: '',
-              pictures: [],
-              verified: true,
-              papercraft: undefined as unknown as APIt.Papercraft,
-              n_likes: 0,
-            }
-          : undefined,
+      display_build,
+      builds,
       user: defaultPapercraft?.user || profile,
       tags: tags,
       variants: variants.map((variant) => ({

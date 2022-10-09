@@ -96,7 +96,7 @@ const ProfileGallery: React.FC<ProfileGalleryProps> = function ProfileGallery({
             key={key}
             onClick={() => setEntityType(key)}
           >
-            {key} {ENTITY_ICONS[key]}
+            {key}s {ENTITY_ICONS[key]}
           </div>
         ))}
         <div className={`${s.layout_button} active`}>

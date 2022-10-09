@@ -11,8 +11,12 @@ import * as APIt from '../../../supabase/types';
 import { uploadImageFile } from '../../../util/uploadFile';
 import { DatePicker } from '../../misc/DatePicker';
 import s from '../FormEditPapercraft/FormEditPapercraft.module.scss';
+import s2 from './FormEditBuild.module.scss';
 import TextareaAutosize from 'react-textarea-autosize';
 import MultiFileUpload from '../../MultiFileUpload/MultiFileUpload';
+import OptimizedImage from '../../OptimizedImage/OptimizedImage';
+import PapercraftTitle from '../../ResourceTitle/PapercraftTitle';
+import { IoCloseOutline } from 'react-icons/io5';
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPINGS                                  */
@@ -29,6 +33,7 @@ type FormEditBuildProps = {
   defaultBuild?: APIt.Build;
   children?: React.ReactNode;
   isAdmin?: boolean;
+  setPapercraftId?: (newId: string | null) => void;
   setSubmissionMessage: (message: string) => void;
   setCanPreview: (canPreview: boolean) => void;
   onSuccess: (build: APIt.Build) => void;
@@ -47,6 +52,7 @@ const FormEditBuild: React.ForwardRefRenderFunction<
     papercraft,
     profile,
     isAdmin,
+    setPapercraftId,
     setSubmissionMessage,
     setCanPreview,
     onSuccess,
@@ -74,8 +80,8 @@ const FormEditBuild: React.ForwardRefRenderFunction<
 
   // checks if can show preview
   useEffect(() => {
-    setCanPreview(!!images?.length && !!description);
-  }, [images, description]);
+    setCanPreview(!!images?.length);
+  }, [images, description, setCanPreview]);
 
   // builds a preview papercraft from the user's information
   const getBuild = () => {
@@ -108,7 +114,6 @@ const FormEditBuild: React.ForwardRefRenderFunction<
   // specified) or updating it (if a default build was specified).
   const submitBuild = useMutation(async () => {
     // do some quick form validation
-    if (!description) throw 'missing description!';
     if (images === null || images.length === 0) throw 'missing images!';
 
     // set submitting message
@@ -188,9 +193,41 @@ const FormEditBuild: React.ForwardRefRenderFunction<
   return (
     <div className={s.form_container}>
       {children}
-      <div className={s.form_inner_container}>
+      <div className={s.form_inner_container} style={{ padding: '0px' }}>
         <div className={s.annotation}>
-          Image * –– <i>what does the craft look like?</i>
+          Papercraft * –– <i>the papercraft this is a build of.</i>
+        </div>
+        <div className={s2.papercraft_preview}>
+          <div className={s2.profile_cell}>
+            <div className={s2.result_pic} style={{ borderRadius: '3px' }}>
+              <OptimizedImage
+                src={papercraft.pictures[0].key}
+                className={s2.inner_image}
+                dimensions={{
+                  width: papercraft.pictures[0].width,
+                  height: papercraft.pictures[0].height,
+                }}
+                sizes={`20px`}
+              />
+            </div>
+            <PapercraftTitle
+              papercraft={papercraft}
+              style={{ pointerEvents: 'none' }}
+            />
+          </div>
+          {setPapercraftId ? (
+            <div
+              className={s2.close_button}
+              onClick={() => {
+                setPapercraftId(null);
+              }}
+            >
+              <IoCloseOutline />
+            </div>
+          ) : null}
+        </div>
+        <div className={s.annotation}>
+          Images * –– <i>what does the build look like?</i>
         </div>
         <MultiFileUpload
           files={images}
@@ -230,14 +267,14 @@ const FormEditBuild: React.ForwardRefRenderFunction<
           </>
         ) : null}
         <div className={s.annotation}>
-          Description * –– <i>how did the build go?</i>
+          Notes –– <i>how did the build go?</i>
         </div>
         <TextareaAutosize
           className={s.description_input}
-          placeholder={'Write a description...'}
+          placeholder={'Write some helpful notes...'}
           spellCheck={false}
           value={description}
-          minRows={3}
+          minRows={5}
           onChange={(event) => {
             setDescription(event.target.value);
           }}

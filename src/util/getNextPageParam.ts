@@ -17,9 +17,10 @@ export type InfiniteQueryFilter<T extends object> = {
   };
 };
 
-export default function getNextPageParam<
-  T extends object & { created_at: string }
->(params: InfiniteQueryFilter<T>, page_size: number = PAGE_SIZE) {
+export default function getNextPageParam<T extends { created_at: string }>(
+  params: InfiniteQueryFilter<T>,
+  page_size: number = PAGE_SIZE
+) {
   return (lastPage: T[]) =>
     lastPage.length === page_size
       ? lastPage[lastPage.length - 1][params.filter?.column ?? 'created_at']

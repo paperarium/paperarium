@@ -412,6 +412,12 @@ $completion_bar_height: 0px;
   padding: 10px;
   height: 100%;
   margin-left: 5px;
+  letter-spacing: -1px;
+
+  & > b {
+    display: inline-block;
+    padding-bottom: 5px;
+  }
 }
 
 .spacer {

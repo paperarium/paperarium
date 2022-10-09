@@ -24,11 +24,6 @@ import getNextPageParam, {
   InfiniteQueryFilter,
 } from '../../util/getNextPageParam';
 import InfiniteTableView from '../InfiniteTableView/InfiniteTableView';
-import {
-  PapercraftHeaderRow,
-  PapercraftRow,
-} from '../InfiniteTableView/atoms/PapercraftRow';
-import { BuildHeaderRow, BuildRow } from '../InfiniteTableView/atoms/BuildRow';
 import { EBuildable, Layout } from '../../util/enums';
 import { ENTITY_ICONS, LAYOUT_ICONS } from '../../util/icons';
 
@@ -136,7 +131,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
               key={key}
               onClick={() => setEntityType(key)}
             >
-              {key} {ENTITY_ICONS[key]}
+              {key}s {ENTITY_ICONS[key]}
             </div>
           ))}
           {Object.entries(LAYOUT_ICONS).map(([key, icon]) => (

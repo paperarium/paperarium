@@ -5,7 +5,7 @@
  * 2022 the nobot space,
  */
 import Link from 'next/link';
-import React from 'react';
+import React, { HTMLAttributes } from 'react';
 import * as APIt from '../../supabase/types';
 import { EBuildable, ECommunity } from '../../util/enums';
 import { FIELD_ICONS } from '../../util/icons';
@@ -18,132 +18,217 @@ import s from './InfiniteTableView.module.scss';
 /*                             MAIN TABLE DISPLAYS                            */
 /* -------------------------------------------------------------------------- */
 
-type RowProps<T> = { entity: T; columns: (keyof T)[] };
+type RowProps<T> = {
+  entity: T;
+  onClick?: (arg0: T) => void;
+  columns: (keyof T)[];
+};
 
 const PapercraftRow: React.FC<RowProps<APIt.Papercraft>> =
-  function PapercraftRow({ entity: papercraft, columns }) {
+  function PapercraftRow({ entity: papercraft, onClick, columns }) {
+    const wrapper = (rest: React.ReactNode) =>
+      !!onClick ? (
+        rest
+      ) : (
+        <Link href={`/papercrafts/${papercraft.id}`} prefetch={false}>
+          {rest}
+        </Link>
+      );
     return (
-      <Link href={`/papercrafts/${papercraft.id}`} prefetch={false}>
-        <tr className={s.grid_row}>
-          <td className={s.grid_cell} style={{ width: '100%' }}>
-            <div className={s.profile_cell}>
-              <div className={s.result_pic} style={{ borderRadius: '3px' }}>
-                <OptimizedImage
-                  src={papercraft.pictures[0].key}
-                  className={s.inner_image}
-                  dimensions={{
-                    width: papercraft.pictures[0].width,
-                    height: papercraft.pictures[0].height,
-                  }}
-                  sizes={`20px`}
+      <>
+        {wrapper(
+          <tr
+            className={s.grid_row}
+            onClick={(e) => {
+              if (onClick) {
+                e.stopPropagation();
+                e.preventDefault();
+                onClick(papercraft);
+              }
+            }}
+          >
+            <td className={s.grid_cell} style={{ width: '100%' }}>
+              <div className={s.profile_cell}>
+                <div className={s.result_pic} style={{ borderRadius: '3px' }}>
+                  <OptimizedImage
+                    src={papercraft.pictures[0].key}
+                    className={s.inner_image}
+                    dimensions={{
+                      width: papercraft.pictures[0].width,
+                      height: papercraft.pictures[0].height,
+                    }}
+                    sizes={`20px`}
+                  />
+                </div>
+                <PapercraftTitle
+                  papercraft={papercraft}
+                  style={onClick ? { pointerEvents: 'none' } : undefined}
                 />
               </div>
-              <PapercraftTitle papercraft={papercraft} />
-            </div>
-          </td>
-          {columns.map((col) => (
-            <td key={col} className={s.grid_cell}>
-              {papercraft[col] as number}
             </td>
-          ))}
-        </tr>
-      </Link>
+            {columns.map((col) => (
+              <td key={col} className={s.grid_cell}>
+                {papercraft[col] as number}
+              </td>
+            ))}
+          </tr>
+        )}
+      </>
     );
   };
 
 const BuildRow: React.FC<RowProps<APIt.Build>> = function BuildRow({
   entity: build,
   columns,
+  onClick,
 }) {
+  const wrapper = (rest: React.ReactNode) =>
+    !!onClick ? (
+      rest
+    ) : (
+      <Link
+        href={`/papercrafts/${build.papercraft_id}?build=${build.id}`}
+        prefetch={false}
+      >
+        {rest}
+      </Link>
+    );
   return (
-    <Link
-      href={`/papercrafts/${build.papercraft_id}?build=${build.id}`}
-      prefetch={false}
-    >
-      <tr className={s.grid_row}>
-        <td className={s.grid_cell} style={{ width: '100%' }}>
-          <div className={s.profile_cell}>
-            <div className={s.result_pic} style={{ borderRadius: '3px' }}>
-              <OptimizedImage
-                src={build.pictures[0].key}
-                className={s.inner_image}
-                dimensions={{
-                  width: build.pictures[0].width,
-                  height: build.pictures[0].height,
-                }}
-                sizes={`20px`}
-              />
+    <>
+      {wrapper(
+        <tr
+          className={s.grid_row}
+          onClick={(e) => {
+            if (onClick) {
+              e.stopPropagation();
+              e.preventDefault();
+              onClick(build);
+            }
+          }}
+        >
+          <td className={s.grid_cell} style={{ width: '100%' }}>
+            <div className={s.profile_cell}>
+              <div className={s.result_pic} style={{ borderRadius: '3px' }}>
+                <OptimizedImage
+                  src={build.pictures[0].key}
+                  className={s.inner_image}
+                  dimensions={{
+                    width: build.pictures[0].width,
+                    height: build.pictures[0].height,
+                  }}
+                  sizes={`20px`}
+                />
+              </div>
+              <BuildTitle build={build} />
             </div>
-            <BuildTitle build={build} />
-          </div>
-        </td>
-        {columns.map((col) => (
-          <td key={col} className={s.grid_cell}>
-            {build[col] as number}
           </td>
-        ))}
-      </tr>
-    </Link>
+          {columns.map((col) => (
+            <td key={col} className={s.grid_cell}>
+              {build[col] as number}
+            </td>
+          ))}
+        </tr>
+      )}
+    </>
   );
 };
 
 const ProfileRow: React.FC<RowProps<APIt.Profile>> = function ProfileRow({
   entity: profile,
   columns,
+  onClick,
 }) {
+  const wrapper = (rest: React.ReactNode) =>
+    !!onClick ? (
+      rest
+    ) : (
+      <Link href={`/profiles/${profile.username}`} prefetch={false}>
+        {rest}
+      </Link>
+    );
   return (
-    <Link href={`/profiles/${profile.username}`} prefetch={false}>
-      <tr className={s.grid_row}>
-        <td className={s.grid_cell} style={{ width: '100%' }}>
-          <div className={s.profile_cell}>
-            <div className={s.result_pic}>
-              <OptimizedImage
-                src={profile.avatar_url}
-                className={s.inner_image}
-                sizes={`20px`}
-              />
-            </div>
-            {profile.name}
-            <br />
-            <div className={s.result_username}>@{profile.username}</div>
-          </div>
-        </td>
-        {columns.map((col) => (
-          <td key={col} className={s.grid_cell}>
-            {profile[col]}
-          </td>
-        ))}
-      </tr>
-    </Link>
-  );
-};
-
-const CollectiveRow: React.FC<RowProps<APIt.Collective>> =
-  function CollectiveRow({ entity: collective, columns }) {
-    return (
-      <Link href={`/collectives/${collective.titlecode}`} prefetch={false}>
-        <tr className={s.grid_row}>
+    <>
+      {wrapper(
+        <tr
+          className={s.grid_row}
+          onClick={(e) => {
+            if (onClick) {
+              e.stopPropagation();
+              e.preventDefault();
+              onClick(profile);
+            }
+          }}
+        >
           <td className={s.grid_cell} style={{ width: '100%' }}>
             <div className={s.profile_cell}>
               <div className={s.result_pic}>
                 <OptimizedImage
-                  src={collective.avatar_url}
+                  src={profile.avatar_url}
                   className={s.inner_image}
                   sizes={`20px`}
                 />
               </div>
-              {collective.title}
+              {profile.name}
               <br />
-              <div className={s.result_username}>@{collective.titlecode}</div>
+              <div className={s.result_username}>@{profile.username}</div>
             </div>
           </td>
           {columns.map((col) => (
             <td key={col} className={s.grid_cell}>
-              {collective[col]}
+              {profile[col]}
             </td>
           ))}
         </tr>
-      </Link>
+      )}
+    </>
+  );
+};
+
+const CollectiveRow: React.FC<RowProps<APIt.Collective>> =
+  function CollectiveRow({ entity: collective, columns, onClick }) {
+    const wrapper = (rest: React.ReactNode) =>
+      !!onClick ? (
+        rest
+      ) : (
+        <Link href={`/collectives/${collective.titlecode}`} prefetch={false}>
+          {rest}
+        </Link>
+      );
+    return (
+      <>
+        {wrapper(
+          <tr
+            className={s.grid_row}
+            onClick={(e) => {
+              if (onClick) {
+                e.stopPropagation();
+                e.preventDefault();
+                onClick(collective);
+              }
+            }}
+          >
+            <td className={s.grid_cell} style={{ width: '100%' }}>
+              <div className={s.profile_cell}>
+                <div className={s.result_pic}>
+                  <OptimizedImage
+                    src={collective.avatar_url}
+                    className={s.inner_image}
+                    sizes={`20px`}
+                  />
+                </div>
+                {collective.title}
+                <br />
+                <div className={s.result_username}>@{collective.titlecode}</div>
+              </div>
+            </td>
+            {columns.map((col) => (
+              <td key={col} className={s.grid_cell}>
+                {collective[col]}
+              </td>
+            ))}
+          </tr>
+        )}
+      </>
     );
   };
 
@@ -191,18 +276,27 @@ type InfiniteTableViewProps<T extends { id: any }> = {
   pages?: T[][];
   columns?: (keyof T)[];
   onColumnClick: (column: keyof T) => void;
+  onCellClick?: (cell: T) => void;
+  headerStyle?: HTMLAttributes<HTMLTableSectionElement>['style'];
 };
 
 const InfiniteTableView = React.memo(function InfiniteTableView<
   T extends { id: string | number }
->({ type, pages, columns, onColumnClick }: InfiniteTableViewProps<T>) {
+>({
+  type,
+  pages,
+  columns,
+  onColumnClick,
+  onCellClick,
+  headerStyle,
+}: InfiniteTableViewProps<T>) {
   // if columns is not set, use all columns
-  const cols = columns || (TableMap[type].cols as (keyof T)[]);
+  const cols = columns ?? (TableMap[type].cols as (keyof T)[]);
   const ViewComponent = TableMap[type].Main;
 
   return (
     <table className={s.main_grid}>
-      <thead className={s.grid_header}>
+      <thead className={s.grid_header} style={headerStyle}>
         <tr>
           <th>{type}</th>
           {cols.map((col) => (
@@ -220,7 +314,12 @@ const InfiniteTableView = React.memo(function InfiniteTableView<
         {pages
           ? pages.flatMap((page) =>
               page.map((entity) => (
-                <ViewComponent entity={entity} key={entity.id} columns={cols} />
+                <ViewComponent
+                  entity={entity}
+                  key={entity.id}
+                  columns={cols}
+                  onClick={onCellClick}
+                />
               ))
             )
           : null}

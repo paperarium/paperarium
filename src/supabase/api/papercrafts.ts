@@ -188,7 +188,7 @@ export const likePapercraft = async (
  * @param input
  * @returns
  */
-export const unlikePaprcraft = async ({
+export const unlikePapercraft = async ({
   user_id,
   papercraft_id,
 }: APIt.PapercraftLikeInput) => {

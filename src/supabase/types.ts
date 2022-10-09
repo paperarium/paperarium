@@ -5,189 +5,231 @@
  * 2022 the nobot space,
  */
 
-type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+import * as APIt from './API';
 
-type RowMetadata = 'id' | 'created_at' | 'updated_at' | 'user';
-type QueryCount = { count: number }[];
+/* -------------------------------------------------------------------------- */
+/*                                   HELPERS                                  */
+/* -------------------------------------------------------------------------- */
+
+type Modify<T, R> = Omit<T, keyof R> & R;
+type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+// expands object types one level deep
+type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
+
+/* -------------------------------------------------------------------------- */
+/*                                MAIN GENERICS                               */
+/* -------------------------------------------------------------------------- */
+
+// fields generated db-side
+type GeneratedFields = 'id' | 'created_at' | 'updated_at';
+// required fields on all entities
+type RequiredFields = GeneratedFields | 'user_id';
+// file fields, which need to support local files sometimes
+type FileFields = 'pdo_url' | 'pdf_lineless_url' | 'pdf_lined_url' | 'glb_url';
+type ExpansiveFileType = File | string | null;
+
+// helper generic:
+//  T: the base entity type
+//  S: a view for the entity
+//  R: the incorrectly typed fields of the base definitiion
+//  V: additional information not retrieved from the DB
+type SupabaseEntityFactory<T, S = {}, R = {}, V = {}> = {
+  entity: Expand<
+    Modify<
+      Omit<T, RequiredFields> &
+        Required<Pick<T, Extract<keyof T, RequiredFields>>> & // make required fields required
+        Required<Omit<S, keyof T>> & // add in view fields
+        V, // add in any additional fields we want
+      R
+    >
+  >;
+  input: Expand<Modify<Omit<T, GeneratedFields | keyof Omit<S, keyof T>>, R>>;
+};
+
+// helper generic for join tables
+//  T: the base join table entity type
+//  S: additional fields representing the entities being joined
+type SupabaseJoinEntityFactory<T, S = {}> = {
+  entity: Expand<
+    Omit<T, RequiredFields> &
+      Required<Pick<T, Extract<keyof T, RequiredFields>>> & // make required fields required
+      S
+  >; // add in the augmenting fields
+  input: Expand<Omit<T, GeneratedFields>>;
+};
+
+// localizes files in a type, to allow for storing uploaded versions in the model
+type SupabaseLocalEntity<T> = Expand<
+  Omit<T, FileFields> &
+    Pick<Record<FileFields, ExpansiveFileType>, Extract<keyof T, FileFields>>
+>;
 
 /* -------------------------------------------------------------------------- */
 /*                                   PROFILE                                  */
 /* -------------------------------------------------------------------------- */
 
-export type Profile = {
-  id: string;
-  username: string;
-  name?: string;
-  website?: string;
-  about?: string;
-  avatar_url?: string;
-  n_papercrafts: number;
-  n_builds: number;
-  n_followers: number;
-  n_following: number;
-  created_at: string;
-  updated_at: string;
-  archived: boolean;
-  is_default: boolean;
-};
+type ProfileFactory = SupabaseEntityFactory<
+  APIt.definitions['profiles'],
+  APIt.definitions['profiles_view']
+>;
+export type Profile = ProfileFactory['entity'];
 
-export type ProfilesFollowers = {
-  user_id: string;
-  following_id: string;
-  created_at: string;
+/* --------------------------- profiles followers --------------------------- */
+
+// additional fields we need to add
+type _ProfilesFollowersAdditionalFields = {
   follower: Profile;
   following: Profile;
-  id: number;
 };
+
+type ProfilesFollowersFactory = SupabaseJoinEntityFactory<
+  APIt.definitions['profiles_followers'],
+  _ProfilesFollowersAdditionalFields
+>;
+
+export type ProfilesFollowers = ProfilesFollowersFactory['entity'];
+export type ProfilesFollowersInput = ProfilesFollowersFactory['input'];
 
 /* -------------------------------------------------------------------------- */
 /*                                 PAPERCRAFTS                                */
 /* -------------------------------------------------------------------------- */
 
-export interface Papercraft {
-  id: string;
-  user_id: string;
-  created_at: string;
-  updated_at: string;
-  title: string;
-  description: string;
-  pdo_url?: string;
-  glb_url?: string;
-  pdf_lineless_url?: string;
-  pdf_lined_url?: string;
-  xlink?: string;
+// these are incorrectly typed fields we need to overwrite
+type _PapercraftOverwriteFields = {
   pictures: Picture[];
-  difficulty: number;
   dimensions_cm?: number[];
-  verified: boolean;
-  build_id?: string;
-  display_build?: Build;
-  collective_id?: number;
-  collective?: Collective;
-  user: Profile;
-  tags: Tag[];
-  variants: PapercraftVariant[];
-  n_builds: number;
-  n_likes: number;
-}
-
-export interface PapercraftLike {
-  id: number;
-  user_id: string;
-  papercraft_id: string;
-  created_at: string;
-}
-
-export type PapercraftLikeInput = Omit<PapercraftLike, 'id' | 'created_at'>;
-
-export interface PapercraftVariant {
-  id: number;
-  user_id: string;
-  created_at: string;
-  title: string;
-  papercraft_id: string;
-  pdo_url?: string;
-  pdf_lineless_url?: string;
-  pdf_lined_url?: string;
-}
-
-export type PapercraftInput = PartialBy<
-  Papercraft,
-  RowMetadata | 'tags' | 'variants' | 'n_likes' | 'n_builds'
->;
-
-export type PapercraftVariantInput = PartialBy<
-  PapercraftVariant,
-  'id' | 'created_at'
->;
-
-export type PapercraftVariantLocal = Omit<
-  PapercraftVariant,
-  'pdo_url' | 'pdf_lineless_url' | 'pdf_lined_url'
-> & {
-  pdo_url: File | string | null;
-  pdf_lineless_url: File | string | null;
-  pdf_lined_url: File | string | null;
 };
+
+// these are additional fields we need to add
+type _PapercraftAdditionalFields = {
+  user: Profile;
+  display_build?: Build;
+  collective?: Collective;
+  tags: Tag[];
+  builds: Build[];
+  variants: PapercraftVariant[];
+};
+
+type PapercraftFactory = SupabaseEntityFactory<
+  APIt.definitions['papercrafts'],
+  APIt.definitions['papercrafts_view'],
+  _PapercraftOverwriteFields,
+  _PapercraftAdditionalFields
+>;
+
+export type Papercraft = PapercraftFactory['entity'];
+export type PapercraftInput = PapercraftFactory['input'];
+
+/* ---------------------------- papercraft likes ---------------------------- */
+
+type _PapercraftsLikeAdditionalFields = {
+  papercraft: Papercraft;
+  user: Profile;
+};
+
+type PapercraftsLikesFactory = SupabaseJoinEntityFactory<
+  APIt.definitions['papercrafts_likes'],
+  _PapercraftsLikeAdditionalFields
+>;
+
+export type PapercraftLike = PapercraftsLikesFactory['entity'];
+export type PapercraftLikeInput = PapercraftsLikesFactory['input'];
+
+/* ----------------------------- papercraft tags ---------------------------- */
+
+type PapercraftsTagsFactory = SupabaseJoinEntityFactory<
+  APIt.definitions['papercrafts_tags']
+>;
+
+export type PapercraftsTags = PapercraftsTagsFactory['entity'];
+export type PapercraftsTagsInput = PapercraftsTagsFactory['input'];
+
+/* --------------------------- papercraft variants -------------------------- */
+
+type PapercraftVariantFactory = SupabaseEntityFactory<
+  APIt.definitions['papercrafts_variants']
+>;
+
+export type PapercraftVariant = PapercraftVariantFactory['entity'];
+export type PapercraftVariantInput = PapercraftVariantFactory['input'];
+export type PapercraftVariantLocal = SupabaseLocalEntity<PapercraftVariant>;
 
 /* -------------------------------------------------------------------------- */
 /*                                   BUILDS                                   */
 /* -------------------------------------------------------------------------- */
 
-export interface Build {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  user_id: string;
-  papercraft_id: string;
+// these are incorrectly typed fields we need to overwrite
+type _BuildOverwriteFields = {
   pictures: Picture[];
-  xlink?: string;
-  description?: string;
-  verified: boolean;
-  papercraft: Papercraft;
-  user: Profile;
-  n_likes: number;
-}
-
-export type Announcement = {
-  id: number;
-  created_at: string;
-  active: boolean;
-  text: string;
+  collective_titlecode?: string;
+  collective_id?: string;
 };
 
-export type BuildInput = PartialBy<
-  Build,
-  RowMetadata | 'papercraft' | 'n_likes'
+// these are additional fields we need to add
+type _BuildAdditionalFields = {
+  user: Profile;
+  collective?: Collective;
+  papercraft?: Papercraft;
+};
+
+type BuildFactory = SupabaseEntityFactory<
+  APIt.definitions['builds'],
+  APIt.definitions['builds_view'],
+  _BuildOverwriteFields,
+  _BuildAdditionalFields
 >;
+
+export type Build = BuildFactory['entity'];
+export type BuildInput = BuildFactory['input'];
 
 /* -------------------------------------------------------------------------- */
 /*                                 COLLECTIVES                                */
 /* -------------------------------------------------------------------------- */
 
-export interface Collective {
-  id: number;
-  created_at: string;
-  title: string;
-  description: string;
-  titlecode: string;
-  xlink?: string;
-  avatar_url?: string;
-  n_members: number;
-  n_followers: number;
-  n_builds: number;
-  n_papercrafts: number;
-}
+type CollectiveFactory = SupabaseEntityFactory<
+  APIt.definitions['collectives'],
+  APIt.definitions['collectives_view']
+>;
 
-export type CollectivesProfiles = {
-  id: number;
-  profile_id: string;
-  collective_id: number;
+export type Collective = CollectiveFactory['entity'];
+export type CollectiveInput = CollectiveFactory['input'];
+
+/* -------------------------- collectives profiles -------------------------- */
+
+type _CollectivesProfilesAdditionalFields = {
+  collective: Collective;
+  user: Profile;
 };
 
-export type CollectiveInput = PartialBy<
-  Collective,
-  'id' | 'created_at' | 'n_members' | 'n_papercrafts'
+type CollectivesProfilesFactory = SupabaseJoinEntityFactory<
+  APIt.definitions['collectives_profiles'],
+  _CollectivesProfilesAdditionalFields
 >;
+
+export type CollectivesProfiles = CollectivesProfilesFactory['entity'];
+
+/* -------------------------------------------------------------------------- */
+/*                                ANNOUNCEMENTS                               */
+/* -------------------------------------------------------------------------- */
+
+type AnnouncementFactory = SupabaseEntityFactory<
+  APIt.definitions['announcements']
+>;
+
+export type Announcement = AnnouncementFactory['entity'];
+export type AnnouncementInput = AnnouncementFactory['input'];
 
 /* -------------------------------------------------------------------------- */
 /*                                    TAGS                                    */
 /* -------------------------------------------------------------------------- */
 
-export type PapercraftsTags = {
-  id: number;
-  papercraft_id: string;
-  tag_id: number;
-};
+type TagsFactory = SupabaseEntityFactory<
+  APIt.definitions['tags'],
+  APIt.definitions['tags_view']
+>;
 
-export type Tag = {
-  id: number;
-  name: string;
-  code: string;
-  n_papercrafts: number;
-};
-
-export type PapercraftsTagsInput = Omit<PapercraftsTags, 'id'>;
+export type Tag = TagsFactory['entity'];
+export type TagInput = TagsFactory['input'];
 
 /* -------------------------------------------------------------------------- */
 /*                                 PRIMITIVES                                 */

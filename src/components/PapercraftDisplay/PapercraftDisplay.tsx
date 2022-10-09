@@ -6,7 +6,6 @@
  */
 import React, { Suspense, useState } from 'react';
 import s from './PapercraftDisplay.module.scss';
-import { Papercraft } from '../../supabase/types';
 import TextareaAutosize from 'react-textarea-autosize';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper';
@@ -35,12 +34,13 @@ const DynamicEditFlow = dynamic(
 );
 
 type PapercraftDisplayProps = {
-  papercraft: Papercraft;
+  papercraft: APIt.Papercraft;
+  buildId?: string;
   preview?: boolean;
 };
 
 const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
-  function PapercraftDisplay({ papercraft, preview }) {
+  function PapercraftDisplay({ papercraft, buildId, preview }) {
     // router for rerouting
     const router = useRouter();
 
@@ -64,6 +64,10 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
       user?.id,
       preview
     );
+
+    // if there is a build specified, use it's pictures. if a different build
+    // was specified,
+    const build_id = buildId || papercraft.build_id;
 
     return editing && user ? (
       <Suspense fallback={`Loading...`}>
