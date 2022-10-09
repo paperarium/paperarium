@@ -17,10 +17,13 @@ const PrivacyPolicyPage: NextPage = () => {
         <meta name="description" content="about us." />
       </Head>
       <div className={s.container}>
-        <iframe
-          className={s.embed}
-          src="https://app.termly.io/document/privacy-policy/dd621107-2523-488f-8ef4-fa512eeb0a7f"
-        ></iframe>
+        <div className={s.terms_container}>
+          <h2>
+            <strong>Privacy policy</strong>
+          </h2>
+
+          <p>We only collect the information that you give us.</p>
+        </div>
       </div>
     </>
   );
