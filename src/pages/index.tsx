@@ -1,14 +1,22 @@
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 import type { NextPage } from 'next';
 import { NextSeo } from 'next-seo';
 import Head from 'next/head';
 import Link from 'next/link';
-import PapercraftCard from '../components/PapercraftCard/PapercraftCard';
 import PapercraftGallery from '../components/PapercraftGallery/PapercraftGallery';
 import s from '../styles/Home.module.scss';
+import getNextPageParam from '../util/getNextPageParam';
 import { listAnnouncements } from '../supabase/api/announcements';
-import { listPapercrafts, papercraftKeys } from '../supabase/api/papercrafts';
+import {
+  buildKeys,
+  listBuilds,
+  ListBuildsQueryVariables,
+} from '../supabase/api/builds';
+import {
+  listPapercrafts,
+  ListPapercraftsQueryVariables,
+  papercraftKeys,
+} from '../supabase/api/papercrafts';
 import { PAGE_SIZE } from '../util/getPagination';
 
 const Home: NextPage = () => {
@@ -85,23 +93,28 @@ const Home: NextPage = () => {
  * @param context
  * @returns
  */
-export async function getStaticProps(context: any) {
+export async function getStaticProps() {
   const queryClient = new QueryClient();
-  const params = { search: '' };
-  const req = [
+  const params: ListPapercraftsQueryVariables & ListBuildsQueryVariables = {
+    search: '',
+    username: undefined,
+    collective: undefined,
+    tags: undefined,
+    filter: undefined,
+  };
+  await Promise.all([
     queryClient.prefetchInfiniteQuery(
       papercraftKeys.list(params),
       ({ pageParam = null }) => listPapercrafts(params, pageParam),
-      {
-        getNextPageParam: (lastPage) =>
-          lastPage.length === PAGE_SIZE
-            ? lastPage[lastPage.length - 1].created_at
-            : null,
-      }
+      { getNextPageParam: getNextPageParam(params) }
+    ),
+    queryClient.prefetchInfiniteQuery(
+      buildKeys.list(params),
+      ({ pageParam = null }) => listBuilds(params, pageParam),
+      { getNextPageParam: getNextPageParam(params) }
     ),
     queryClient.prefetchQuery(['announcements'], listAnnouncements),
-  ];
-  await Promise.all(req);
+  ]);
   return {
     props: {
       dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
