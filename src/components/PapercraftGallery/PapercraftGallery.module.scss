@@ -28,6 +28,7 @@
     100vh - var(--header-height) - var(--notice-bar-height) -
       $search_bar_visible_height
   );
+  padding: 0px 10px;
 }
 
 .sidebar {
@@ -125,7 +126,7 @@
   justify-content: stretch;
   width: 100% !important;
   gap: 5px;
-  padding: 10px;
+  padding: 5px 0px;
   min-height: calc(100vh - var(--header-height) - var(--notice-bar-height));
 }
 
@@ -191,4 +192,36 @@
   transition: height 0.3s ease-in-out;
   background-color: $foreground;
   border: 1px solid $foreground;
+}
+
+@keyframes load_rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loader {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  transform-origin: 50% 50%;
+
+  & svg {
+    animation: load_rotate 1s linear infinite;
+  }
+}
+
+.loader_text {
+  padding: 5px 10px;
+  background-color: $background;
+  border-radius: 5px;
+  border: 1px solid $foreground;
+  opacity: 0.4;
 }

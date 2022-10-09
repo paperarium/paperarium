@@ -66,9 +66,49 @@ export interface Papercraft {
   collective?: Collective;
   user: Profile;
   tags: Tag[];
+  variants: PapercraftVariant[];
+  n_builds: number;
+  n_likes: number;
 }
 
-export type PapercraftInput = PartialBy<Papercraft, RowMetadata | 'tags'>;
+export interface PapercraftLike {
+  id: number;
+  user_id: string;
+  papercraft_id: string;
+  created_at: string;
+}
+
+export type PapercraftLikeInput = Omit<PapercraftLike, 'id' | 'created_at'>;
+
+export interface PapercraftVariant {
+  id: number;
+  user_id: string;
+  created_at: string;
+  title: string;
+  papercraft_id: string;
+  pdo_url?: string;
+  pdf_lineless_url?: string;
+  pdf_lined_url?: string;
+}
+
+export type PapercraftInput = PartialBy<
+  Papercraft,
+  RowMetadata | 'tags' | 'variants' | 'n_likes' | 'n_builds'
+>;
+
+export type PapercraftVariantInput = PartialBy<
+  PapercraftVariant,
+  'id' | 'created_at'
+>;
+
+export type PapercraftVariantLocal = Omit<
+  PapercraftVariant,
+  'pdo_url' | 'pdf_lineless_url' | 'pdf_lined_url'
+> & {
+  pdo_url: File | string | null;
+  pdf_lineless_url: File | string | null;
+  pdf_lined_url: File | string | null;
+};
 
 /* -------------------------------------------------------------------------- */
 /*                                   BUILDS                                   */
@@ -86,6 +126,7 @@ export interface Build {
   verified: boolean;
   papercraft: Papercraft;
   user: Profile;
+  n_likes: number;
 }
 
 export type Announcement = {
@@ -95,7 +136,10 @@ export type Announcement = {
   text: string;
 };
 
-export type BuildInput = PartialBy<Build, RowMetadata | 'papercraft'>;
+export type BuildInput = PartialBy<
+  Build,
+  RowMetadata | 'papercraft' | 'n_likes'
+>;
 
 /* -------------------------------------------------------------------------- */
 /*                                 COLLECTIVES                                */
@@ -103,7 +147,7 @@ export type BuildInput = PartialBy<Build, RowMetadata | 'papercraft'>;
 
 export interface Collective {
   id: number;
-  created_at?: string;
+  created_at: string;
   title: string;
   description: string;
   titlecode: string;

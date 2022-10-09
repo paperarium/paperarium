@@ -7,8 +7,11 @@
  */
 
 import dynamic from 'next/dynamic';
+import type ReactSelect from 'react-select';
+import type AsyncSelect from 'react-select/dist/declarations/src/Async';
+import type CreatableSelect from 'react-select/dist/declarations/src/Creatable';
 
-export const AsyncSelect: any = dynamic(
+export const AsyncSelect: AsyncSelect = dynamic(
   () => import('react-select/async').then((mod) => mod.default),
   {
     ssr: false,
@@ -25,8 +28,16 @@ export const getSelectTheme = (theme) => ({
   },
 });
 
-export const Select: any = dynamic(
+export const Select: RreactSelect = dynamic(
   () => import('react-select').then((mod) => mod.default),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
+
+export const CreatableSelect: CreatableSelect = dynamic(
+  () => import('react-select/creatable').then((mod) => mod.default),
   {
     ssr: false,
     loading: () => null,

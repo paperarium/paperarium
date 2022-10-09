@@ -6,6 +6,11 @@
  */
 
 import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import {
+  applyNextPageParam,
+  InfiniteQueryFilter,
+} from '../../util/getNextPageParam';
+import { PAGE_SIZE } from '../../util/getPagination';
 import * as APIt from '../types';
 
 /* -------------------------------------------------------------------------- */
@@ -25,27 +30,18 @@ export const getCollective = async (titlecode: string) => {
   return collectives[0];
 };
 
-export type ListCollectivesOrderBy = {
-  n_papercrafts?: { ascending: boolean };
-  n_builds?: { ascending: boolean };
-  n_members?: { ascending: boolean };
-  n_followers?: { ascending: boolean };
-  created_at?: { ascnding: boolean };
-};
-
-type ListCollectivesQueryVariables = {
+export type ListCollectivesQueryVariables = {
   search?: string;
-  filter?: ListCollectivesOrderBy;
-};
+} & InfiniteQueryFilter<APIt.Collective>;
 
 /**
  * Lists the collectives from the supabase database.
  * @returns A list of collectives
  */
-export const listCollectives = async ({
-  search,
-  filter,
-}: ListCollectivesQueryVariables) => {
+export const listCollectives = async (
+  { search, filter }: ListCollectivesQueryVariables,
+  pageParam: string | number | null = null
+) => {
   let req = (
     search
       ? supabaseClient.rpc<APIt.Collective>('search_collectives', {
@@ -53,28 +49,12 @@ export const listCollectives = async ({
         })
       : supabaseClient.from<APIt.Collective>('collectives_view')
   ).select(`*`);
-  // add in filters
-  if (filter) {
-    filter.n_papercrafts &&
-      (req = req.order('n_papercrafts', {
-        ascending: filter.n_papercrafts.ascending,
-      }));
-    filter.n_builds &&
-      (req = req.order('n_builds', {
-        ascending: filter.n_builds.ascending,
-      }));
-    filter.n_members &&
-      (req = req.order('n_members', {
-        ascending: filter.n_members.ascending,
-      }));
-    filter.n_followers &&
-      (req = req.order('n_followers', {
-        ascending: filter.n_followers.ascending,
-      }));
-  }
-  const { data: collectives, error } = await req.order('created_at', {
-    ascending: false,
-  });
+  // now apply the filters using the next page param
+  const { data: collectives, error } = await applyNextPageParam(
+    req,
+    filter,
+    pageParam
+  );
   if (error) throw error;
   return collectives;
 };

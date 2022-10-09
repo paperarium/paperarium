@@ -97,6 +97,7 @@
   letter-spacing: -4px;
   padding-left: 0px;
   margin-top: -5px;
+  padding-right: 50px;
 }
 
 .date_input {
@@ -104,6 +105,7 @@
   opacity: 0.4;
   color: $foreground;
   font-style: italic;
+  width: 100%;
 }
 
 .preview_description {
@@ -458,6 +460,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
+  width: 100%;
 }
 
 .inner_image {
@@ -535,4 +539,37 @@
 .profile_pic_image {
   width: 100%;
   height: 100%;
+}
+
+.like_container {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 2;
+  font-size: 40px;
+  margin-top: -5px;
+  opacity: 0.6;
+}
+
+.like_heart {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(0.9) rotate(10deg);
+  }
+}
+
+.like_heart_filled {
+  @extend .like_heart;
+  color: #e85662;
+}
+
+.like_number {
+  font-size: 15px;
+  letter-spacing: -1px;
 }

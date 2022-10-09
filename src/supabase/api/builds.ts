@@ -9,6 +9,10 @@ import {
   supabaseClient,
   supabaseServerClient,
 } from '@supabase/auth-helpers-nextjs';
+import {
+  applyNextPageParam,
+  InfiniteQueryFilter,
+} from '../../util/getNextPageParam';
 import { PAGE_SIZE } from '../../util/getPagination';
 import * as APIt from '../types';
 
@@ -35,20 +39,20 @@ export const getBuild = async (pid: string) => {
   return builds[0];
 };
 
-type ListBuildsQueryVariables = {
+export type ListBuildsQueryVariables = {
   search?: string;
   collective?: string;
   username?: string;
   tags?: number[];
-};
+} & InfiniteQueryFilter<APIt.Build>;
 
 /**
  * Lists the builds from the supabase database.
  * @returns A list of builds
  */
 export const listBuilds = async (
-  { search, collective, username }: ListBuildsQueryVariables,
-  ltCreated: string | null = null
+  { search, collective, username, filter }: ListBuildsQueryVariables,
+  pageParam: string | number | null = null
 ) => {
   let req = (
     search
@@ -58,17 +62,17 @@ export const listBuilds = async (
       : supabaseClient.from<APIt.Build>('builds_view')
   ).select(
     `*,
-    user:user_id!inner(username,avatar_url),
+    user:user_id!inner(username,avatar_url,archived),
     papercraft:papercraft_id!inner(id,title,description,pictures,user_id,collective_id)`
   );
   if (username) req = req.eq('user_id.username' as any, username);
   if (collective) req = req.eq('collective_titlecode' as any, collective);
-  if (ltCreated) req = req.lt('created_at', ltCreated);
-  const { data: builds, error } = await req
-    .order('created_at', {
-      ascending: false,
-    })
-    .limit(PAGE_SIZE);
+  // now apply the filters using the next page param
+  const { data: builds, error } = await applyNextPageParam(
+    req,
+    filter,
+    pageParam
+  );
   if (error) throw error;
   return builds;
 };
@@ -112,6 +116,10 @@ export const updateBuild = async (id: string, input: Partial<APIt.Build>) => {
 export const buildKeys = {
   all: ['builds'] as const,
   lists: () => [...buildKeys.all, 'list'] as const,
-  list: (params: { search: string; username?: string }) =>
+  list: (params: ListBuildsQueryVariables) =>
     [...buildKeys.lists(), params] as const,
+  gets: () => [...buildKeys.all, 'get'] as const,
+  get: (id: string) => [...buildKeys.gets(), id] as const,
+  isLikeds: () => [...buildKeys.all, 'isLiked'] as const,
+  isLiked: (id: string) => [...buildKeys.isLikeds(), id] as const,
 };

@@ -23,6 +23,9 @@ import { useUser } from '@supabase/auth-helpers-react';
 import { useQuery } from '@tanstack/react-query';
 import { getIsAdmin } from '../../supabase/api/profiles';
 import dynamic from 'next/dynamic';
+import { getSelectTheme, Select } from '../misc/AsyncSelect';
+import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
+import useWithLikes, { LikeableEntity } from '../../hooks/useWithLikes';
 
 const DynamicEditFlow = dynamic(
   () => import('../FlowPapercraft/FlowPapercraft'),
@@ -47,6 +50,20 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
 
     // if editing, replace the entire view with the papercraft flow
     const [editing, setEditing] = useState(false);
+    // choose which variant to display from the dropdown
+    const [selectedVariant, setSelectedVariant] = useState<number | null>(null);
+    const currVariant =
+      selectedVariant === null
+        ? papercraft
+        : papercraft.variants[selectedVariant];
+
+    // mutations for liking and unliking a papercraft
+    const { isLiked, like, unlike } = useWithLikes(
+      LikeableEntity.Papercraft,
+      papercraft,
+      user?.id,
+      preview
+    );
 
     return editing && user ? (
       <Suspense fallback={`Loading...`}>
@@ -62,13 +79,39 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
       <div className={s.container}>
         <div className={s.display_column}>
           <div className={s.preview_content_container}>
-            <TextareaAutosize
-              className={s.preview_title}
-              value={papercraft.title || ''}
-              placeholder={'Your title...'}
-              spellCheck={false}
-              readOnly={true}
-            ></TextareaAutosize>
+            <div
+              className={s.inner_image_container}
+              style={{ marginTop: '5px' }}
+            >
+              <TextareaAutosize
+                className={s.preview_title}
+                value={papercraft.title || ''}
+                placeholder={'Your title...'}
+                spellCheck={false}
+                readOnly={true}
+              ></TextareaAutosize>
+              <div
+                className={s.like_container}
+                style={preview ? { pointerEvents: 'none' } : undefined}
+              >
+                {isLiked ? (
+                  <AiFillHeart
+                    className={s.like_heart_filled}
+                    onClick={() => unlike.mutate()}
+                  />
+                ) : (
+                  <AiOutlineHeart
+                    className={s.like_heart}
+                    onClick={() => like.mutate()}
+                  />
+                )}
+                <div className={s.like_number}>
+                  {Intl.NumberFormat('en', { notation: 'compact' }).format(
+                    papercraft.n_likes
+                  )}
+                </div>
+              </div>
+            </div>
             <div className={s.date_input}>
               {new Date(
                 rectifyDateFormat(papercraft.created_at)
@@ -164,9 +207,30 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
               </div>
               <div className={s.info_col}>
                 <div className={s.download_container}>
-                  {papercraft.pdo_url ? (
+                  {papercraft.variants.length > 0 ? (
+                    <Select
+                      instanceId={'tag_select'}
+                      isClearable={false}
+                      defaultValue={{
+                        value: null,
+                        label: 'Main',
+                      }}
+                      options={[
+                        { value: null, label: 'Main' },
+                        ...papercraft.variants.map((variant, i) => ({
+                          value: i,
+                          label: variant.title,
+                        })),
+                      ]}
+                      onChange={(variant: { value: number | null }) =>
+                        setSelectedVariant(variant.value)
+                      }
+                      theme={getSelectTheme}
+                    />
+                  ) : null}
+                  {currVariant.pdo_url ? (
                     <a
-                      href={getPublicUrl(papercraft.pdo_url)}
+                      href={getPublicUrl(currVariant.pdo_url)}
                       target="_blank"
                       rel="noreferrer noopener"
                       className={s.download_button}
@@ -174,9 +238,9 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                       .PDO
                     </a>
                   ) : null}
-                  {papercraft.pdf_lined_url ? (
+                  {currVariant.pdf_lined_url ? (
                     <a
-                      href={getPublicUrl(papercraft.pdf_lined_url)}
+                      href={getPublicUrl(currVariant.pdf_lined_url)}
                       target="_blank"
                       rel="noreferrer noopener"
                       className={s.download_button}
@@ -184,9 +248,9 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                       .PDF - lined
                     </a>
                   ) : null}
-                  {papercraft.pdf_lineless_url ? (
+                  {currVariant.pdf_lineless_url ? (
                     <a
-                      href={getPublicUrl(papercraft.pdf_lineless_url)}
+                      href={getPublicUrl(currVariant.pdf_lineless_url)}
                       target="_blank"
                       rel="noreferrer noopener"
                       className={s.download_button}
