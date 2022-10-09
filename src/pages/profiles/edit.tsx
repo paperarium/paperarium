@@ -6,7 +6,7 @@ import { BiArrowBack } from 'react-icons/bi';
 import s from '../../styles/profile/Edit.module.scss';
 import { getSelf } from '../../supabase/api/profiles';
 import { useUser } from '@supabase/auth-helpers-react';
-import FormEditProfile from '../../components/FormEditProfile/FormEditProfile';
+import FormEditProfile from '../../components/_forms/FormEditProfile/FormEditProfile';
 import { NextSeo } from 'next-seo';
 
 const EditProfilePage: NextPage = () => {

@@ -1,15 +1,12 @@
-import { supabaseServerClient } from '@supabase/auth-helpers-nextjs';
 import {
-  QueryClient,
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
-import { AdminPane, AdminPaneProps } from '..';
+import { AdminPaneProps } from '..';
 import * as APIt from '../../../supabase/types';
 import s from '../../../styles/admin/Admin.module.scss';
 import {
@@ -19,7 +16,6 @@ import {
   updatePapercraft,
 } from '../../../supabase/api/papercrafts';
 import PapercraftDisplay from '../../PapercraftDisplay/PapercraftDisplay';
-import Imgix from 'react-imgix';
 import OptimizedImage from '../../OptimizedImage/OptimizedImage';
 import InfiniteScroll from 'react-infinite-scroller';
 import { PAGE_SIZE } from '../../../util/getPagination';

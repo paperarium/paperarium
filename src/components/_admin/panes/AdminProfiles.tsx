@@ -11,7 +11,7 @@ import {
   profileKeys,
 } from '../../../supabase/api/profiles';
 import rectifyDateFormat from '../../../util/rectifyDateFormat';
-import FormEditProfile from '../../FormEditProfile/FormEditProfile';
+import FormEditProfile from '../../_forms/FormEditProfile/FormEditProfile';
 import OptimizedImage from '../../OptimizedImage/OptimizedImage';
 import {
   collectiveKeys,
