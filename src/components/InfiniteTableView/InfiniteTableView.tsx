@@ -119,7 +119,10 @@ const BuildRow: React.FC<RowProps<APIt.Build>> = function BuildRow({
                   sizes={`20px`}
                 />
               </div>
-              <BuildTitle build={build} />
+              <BuildTitle
+                build={build}
+                style={onClick ? { pointerEvents: 'none' } : undefined}
+              />
             </div>
           </td>
           {columns.map((col) => (

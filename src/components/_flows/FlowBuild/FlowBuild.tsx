@@ -199,8 +199,12 @@ const FlowBuild: React.FC<FlowBuildProps> = ({
               SUBMIT
             </div>
             <div className={s.preview_hidden_container}>
-              {papercraft.data ? (
-                <PapercraftDisplay papercraft={papercraft.data} preview />
+              {papercraft.data && build ? (
+                <PapercraftDisplay
+                  papercraft={papercraft.data}
+                  defaultBuild={build}
+                  preview
+                />
               ) : null}
             </div>
             <CSSTransition in={inConfirm} nodeRef={backdropRef} timeout={300}>
@@ -217,8 +221,8 @@ const FlowBuild: React.FC<FlowBuildProps> = ({
                   ) : (
                     <>
                       <h1>ready?</h1>
-                      click the submit button again to confirm your submission
-                      of the design
+                      click the submit button again to confirm the submission of
+                      your build of @{papercraft.data?.user.username}&apos;s
                       <br />
                       <br />
                       <i className={s.confirm_title}>

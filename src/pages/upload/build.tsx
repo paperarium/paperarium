@@ -8,7 +8,6 @@ import type { NextPage } from 'next';
 import React from 'react';
 import Head from 'next/head';
 import { withPageAuth, User } from '@supabase/auth-helpers-nextjs';
-import FlowPapercraft from '../../components/_flows/FlowPapercraft/FlowPapercraft';
 import { useRouter } from 'next/router';
 import { getIsAdmin } from '../../supabase/api/profiles';
 import { useQuery } from '@tanstack/react-query';

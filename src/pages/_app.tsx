@@ -11,6 +11,7 @@ import '../styles/lazyloadimgs.scss';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+import '../styles/swiper.scss';
 import 'lazysizes';
 import 'lazysizes/plugins/attrchange/ls.attrchange';
 import 'react-datepicker/dist/react-datepicker.css';

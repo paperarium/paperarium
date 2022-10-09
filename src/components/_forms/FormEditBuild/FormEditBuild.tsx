@@ -151,8 +151,7 @@ const FormEditBuild: React.ForwardRefRenderFunction<
       build = (
         await createBuild({
           user_id: profile.id,
-          // @ts-ignore
-          created_at: createdAt.toISOString().toLocaleString('zh-TW'),
+          created_at: createdAt.toISOString(),
           description,
           pictures,
           verified: false,
@@ -165,8 +164,7 @@ const FormEditBuild: React.ForwardRefRenderFunction<
       build = (
         await updateBuild(build.id, {
           user_id: profile.id,
-          // @ts-ignore
-          created_at: createdAt.toISOString().toLocaleString('zh-TW'),
+          created_at: createdAt.toISOString(),
           description,
           pictures,
           papercraft_id: papercraft.id,
@@ -227,7 +225,7 @@ const FormEditBuild: React.ForwardRefRenderFunction<
           ) : null}
         </div>
         <div className={s.annotation}>
-          Images * –– <i>what does the build look like?</i>
+          Images * –– <i>show us your build!</i>
         </div>
         <MultiFileUpload
           files={images}
@@ -254,8 +252,7 @@ const FormEditBuild: React.ForwardRefRenderFunction<
         {isAdmin ? (
           <>
             <div className={s.annotation}>
-              Creation Date (admin) * ––{' '}
-              <i>when was this papercraft created?</i>
+              Creation Date (admin) * –– <i>when was this build made?</i>
             </div>
             <DatePicker
               selected={createdAt}

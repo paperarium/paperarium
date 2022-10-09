@@ -5,6 +5,7 @@
  * 2022 the nobot space,
  */
 import Link from 'next/link';
+import { HTMLAttributes } from 'react';
 import { IoCubeOutline } from 'react-icons/io5';
 import * as APIt from '../../supabase/types';
 import ProfileLink from '../ProfileLink/ProfileLink';
@@ -13,15 +14,20 @@ import s from './ResourceTitle.module.scss';
 type BuildTitleProps = {
   build: APIt.Build;
   onClick?: (clickState: boolean) => void;
+  style?: HTMLAttributes<HTMLDivElement>['style'];
 };
 
 const BuildTitle: React.FC<BuildTitleProps> = function BuildTitle({
   build,
   onClick,
+  style,
 }) {
   return (
-    <div className={s.info_col}>
-      <Link href={`/builds/${build.id}`} prefetch={false}>
+    <div className={s.info_col} style={style}>
+      <Link
+        href={`/papercrafts/${build.papercraft_id}?build=${build.id}`}
+        prefetch={false}
+      >
         <div
           onClick={() => {
             onClick && onClick(true);

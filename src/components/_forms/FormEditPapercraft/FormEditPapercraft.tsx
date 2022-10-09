@@ -343,8 +343,7 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
           await createPapercraft({
             user_id: profile.id,
             title,
-            // @ts-ignore
-            created_at: createdAt.toISOString().toLocaleString('zh-TW'),
+            created_at: createdAt.toISOString(),
             description,
             glb_url,
             pdo_url,
@@ -368,8 +367,7 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
         papercraft = (
           await updatePapercraft(papercraft.id, {
             title,
-            // @ts-ignore
-            created_at: createdAt.toISOString().toLocaleString('zh-TW'),
+            created_at: createdAt.toISOString(),
             description,
             glb_url,
             pdo_url,
@@ -445,10 +443,7 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
         // if this is a new variant, don't update
         if (!variant.created_at) {
           delete newVariant['id'];
-          newVariant.created_at = new Date()
-            .toISOString()
-            // @ts-ignore
-            .toLocaleString('zh-TW');
+          newVariant.created_at = new Date().toISOString();
           variantCreates.push(newVariant);
         } else {
           variantUpserts.push(newVariant);

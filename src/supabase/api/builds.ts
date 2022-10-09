@@ -24,17 +24,17 @@ import * as APIt from '../types';
  * Gets a papercraf by its id
  * @returns A list of builds
  */
-export const getBuild = async (pid: string) => {
+export const getBuild = async (bid: string) => {
   const { data: builds, error } = await supabaseClient
     .from<APIt.Build>('builds')
     .select(
       `
       *,
       user:user_id!inner(*),
-      papercraft:papercrafts!inner(id,title,description,pictures,user_id)
+      papercraft:papercraft_id!inner(id,title,description,pictures,user_id)
     `
     )
-    .eq('id', pid);
+    .eq('id', bid);
   if (error) throw error;
   return builds[0];
 };

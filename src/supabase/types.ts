@@ -43,7 +43,11 @@ type SupabaseEntityFactory<T, S = {}, R = {}, V = {}> = {
       R
     >
   >;
-  input: Expand<Modify<Omit<T, GeneratedFields | keyof Omit<S, keyof T>>, R>>;
+  input: Expand<
+    Modify<Omit<T, GeneratedFields | keyof Omit<S, keyof T>>, R> & {
+      created_at?: string;
+    }
+  >;
 };
 
 // helper generic for join tables
@@ -54,8 +58,8 @@ type SupabaseJoinEntityFactory<T, S = {}> = {
     Omit<T, RequiredFields> &
       Required<Pick<T, Extract<keyof T, RequiredFields>>> & // make required fields required
       S
-  >; // add in the augmenting fields
-  input: Expand<Omit<T, GeneratedFields>>;
+  >; // add in the augmenting fields, allowing created_at to be changed by admins
+  input: Expand<Omit<T, GeneratedFields> & { created_at?: string }>;
 };
 
 // localizes files in a type, to allow for storing uploaded versions in the model

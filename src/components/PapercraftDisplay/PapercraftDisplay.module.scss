@@ -33,6 +33,7 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+  background-color: $background;
   @include respond-to('small') {
     flex: 1;
     width: auto;

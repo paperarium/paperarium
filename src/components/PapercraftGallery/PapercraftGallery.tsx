@@ -140,7 +140,14 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
                 layoutType === key ? 'active' : ''
               }`}
               key={key}
-              onClick={() => setLayoutType(key as Layout)}
+              onClick={() => {
+                window.scrollTo({
+                  top: 0,
+                  left: 0,
+                  behavior: 'smooth',
+                });
+                setLayoutType(key as Layout);
+              }}
             >
               {icon}
             </div>
@@ -171,7 +178,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
           >
             {layoutType === Layout.Compact ? (
               <InfiniteTableView
-                type={EBuildable.Papercraft}
+                type={entityType}
                 pages={currQuery.data?.pages}
                 onColumnClick={(column: keyof APIt.Build | APIt.Papercraft) => {
                   let filter = isPapercrafts ? papercraftFilter : buildFilter;

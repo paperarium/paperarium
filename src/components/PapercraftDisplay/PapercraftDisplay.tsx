@@ -25,6 +25,7 @@ import dynamic from 'next/dynamic';
 import { getSelectTheme, Select } from '../misc/AsyncSelect';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import useWithLikes, { LikeableEntity } from '../../hooks/useWithLikes';
+import { buildKeys, getBuild } from '../../supabase/api/builds';
 
 const DynamicEditFlow = dynamic(
   () => import('../_flows/FlowPapercraft/FlowPapercraft'),
@@ -35,12 +36,18 @@ const DynamicEditFlow = dynamic(
 
 type PapercraftDisplayProps = {
   papercraft: APIt.Papercraft;
-  buildId?: string;
+  defaultBuildId?: string;
+  defaultBuild?: APIt.Build; // a build to preview. not uploaded yet!
   preview?: boolean;
 };
 
 const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
-  function PapercraftDisplay({ papercraft, buildId, preview }) {
+  function PapercraftDisplay({
+    papercraft,
+    defaultBuildId,
+    defaultBuild,
+    preview,
+  }) {
     // router for rerouting
     const router = useRouter();
 
@@ -65,9 +72,31 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
       preview
     );
 
-    // if there is a build specified, use it's pictures. if a different build
-    // was specified,
-    const build_id = buildId || papercraft.build_id;
+    // if there is a default build specified, use it's pictures. if a different build
+    // was specified, use those pictures.
+    const [buildId, setBuildId] = useState(
+      defaultBuildId || papercraft.build_id
+    );
+
+    // pre-populate the build with the papercraft's display build, which
+    // should already be provided. only do this if we didn't specify a diff build.
+    const { data: build_data } = useQuery(
+      buildKeys.get(buildId!),
+      () => getBuild(buildId!),
+      {
+        enabled: !!buildId,
+        initialData:
+          buildId === papercraft.build_id
+            ? papercraft.display_build
+            : undefined,
+      }
+    );
+
+    // this is the build to show, either a provided preview build, or a queried build, or a provided display build
+    const build = defaultBuild || build_data || papercraft.display_build;
+
+    // use the build to denote which pictures are used
+    const pictures = build?.pictures || papercraft.pictures;
 
     return editing && user ? (
       <Suspense fallback={`Loading...`}>
@@ -162,14 +191,11 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                 </div>
                 <ProfileLink user={papercraft.user} full>
                   <div className={s.container_note}>{`DESIGNED${
-                    papercraft.user.id === papercraft.display_build?.user_id
-                      ? ' AND BUILT'
-                      : ''
+                    papercraft.user.id === build?.user_id ? ' AND BUILT' : ''
                   } BY`}</div>
                 </ProfileLink>
-                {papercraft.display_build &&
-                papercraft.user.id !== papercraft.display_build.user_id ? (
-                  <ProfileLink user={papercraft.display_build.user} full>
+                {build && papercraft.user.id !== build.user_id ? (
+                  <ProfileLink user={build.user} full>
                     <div className={s.container_note}>BUILT BY</div>
                   </ProfileLink>
                 ) : null}
@@ -270,19 +296,26 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
         <div className={s.divider}></div>
         <div className={s.picture_column}>
           <Swiper
-            pagination={true}
             navigation={true}
+            spaceBetween={150}
             className={s.image_container}
             modules={[Pagination, Navigation]}
+            pagination={{
+              clickable: true,
+              renderBullet: (index, className) =>
+                `<div class="swiper-pagination-bullet ${className}">${
+                  index + 1
+                }</div>`,
+            }}
           >
-            {papercraft.pictures.map((imgURL, i) => (
+            {pictures.map(({ key }, i) => (
               <SwiperSlide
-                key={`${imgURL}_${i}`}
+                key={`${key}_${i}`}
                 className={s.inner_image_container}
               >
-                {!papercraft.pictures[0].key.startsWith('blob') ? (
+                {!key.startsWith('blob') ? (
                   <OptimizedImage
-                    src={papercraft.pictures[0].key}
+                    src={key}
                     className={s.inner_image}
                     sizes={`
                     (max-width: 767px) 100vw,
@@ -291,7 +324,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                   />
                 ) : (
                   <img
-                    src={papercraft.pictures[0].key}
+                    src={key}
                     className={s.inner_image}
                     alt={papercraft.title}
                   />
