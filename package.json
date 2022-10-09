@@ -19,9 +19,9 @@
   "dependencies": {
     "@supabase/auth-helpers-nextjs": "^0.2.7",
     "@supabase/auth-helpers-react": "^0.2.3",
-    "@supabase/supabase-js": "^1.35.6",
+    "@supabase/supabase-js": "^1.35.7",
     "@supabase/ui": "^0.36.5",
-    "@tanstack/react-query": "^4.6.0",
+    "@tanstack/react-query": "^4.10.3",
     "@types/react-infinite-scroller": "^1.2.3",
     "hamburger-react": "^2.5.0",
     "jose": "^4.9.2",
@@ -44,9 +44,9 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^12.2.5",
+    "@next/bundle-analyzer": "^12.3.1",
     "@types/node": "18.7.18",
-    "@types/react": "18.0.20",
+    "@types/react": "18.0.21",
     "@types/react-dom": "18.0.6",
     "@types/react-imgix": "^9.5.0",
     "@types/react-pdf": "^5.7.2",
