@@ -162,14 +162,14 @@ export type PapercraftVariantLocal = SupabaseLocalEntity<PapercraftVariant>;
 type _BuildOverwriteFields = {
   pictures: Picture[];
   collective_titlecode?: string;
-  collective_id?: string;
+  collective_id?: number;
 };
 
 // these are additional fields we need to add
 type _BuildAdditionalFields = {
   user: Profile;
+  papercraft: Papercraft;
   collective?: Collective;
-  papercraft?: Papercraft;
 };
 
 type BuildFactory = SupabaseEntityFactory<

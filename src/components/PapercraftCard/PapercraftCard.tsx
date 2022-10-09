@@ -9,8 +9,6 @@ import s from './PapercraftCard.module.scss';
 import * as APIt from '../../supabase/types';
 import OptimizedImage from '../OptimizedImage/OptimizedImage';
 import Link from 'next/link';
-import ProfileLink from '../ProfileLink/ProfileLink';
-import { IoShapesOutline } from 'react-icons/io5';
 import BuildTitle from '../ResourceTitle/BuildTitle';
 import PapercraftTitle from '../ResourceTitle/PapercraftTitle';
 import { EBuildable } from '../../util/enums';

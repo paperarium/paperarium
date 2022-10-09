@@ -28,7 +28,10 @@ import Head from 'next/head';
 import { DefaultSeo } from 'next-seo';
 import SEO from '../../next-seo.config';
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({
+  Component,
+  pageProps,
+}: AppProps<{ dehydratedState: unknown }>) {
   const [queryClient] = React.useState(() => new QueryClient());
   const getLayout =
     (Component as any).getLayout ||
