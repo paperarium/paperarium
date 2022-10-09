@@ -9,10 +9,10 @@ import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 import { AiOutlineUpload, AiOutlineSave } from 'react-icons/ai';
 import ReactTextareaAutosize from 'react-textarea-autosize';
-import { updateProfile } from '../../supabase/api/profiles';
-import * as APIt from '../../supabase/types';
-import { uploadFile } from '../../util/uploadFile';
-import OptimizedImage from '../OptimizedImage/OptimizedImage';
+import { updateProfile } from '../../../supabase/api/profiles';
+import * as APIt from '../../../supabase/types';
+import { uploadFile } from '../../../util/uploadFile';
+import OptimizedImage from '../../OptimizedImage/OptimizedImage';
 import s from './FormEditProfile.module.scss';
 import { CSSTransition } from 'react-transition-group';
 

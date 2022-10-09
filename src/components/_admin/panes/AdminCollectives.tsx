@@ -9,7 +9,7 @@ import {
   listCollectives,
 } from '../../../supabase/api/collectives';
 import OptimizedImage from '../../OptimizedImage/OptimizedImage';
-import FormEditCollective from '../../FormEditCollective/FormEditCollective';
+import FormEditCollective from '../../_forms/FormEditCollective/FormEditCollective';
 
 /**
  * The home page for admin collective activities

@@ -28,7 +28,7 @@ import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import useWithLikes, { LikeableEntity } from '../../hooks/useWithLikes';
 
 const DynamicEditFlow = dynamic(
-  () => import('../FlowPapercraft/FlowPapercraft'),
+  () => import('../_flows/FlowPapercraft/FlowPapercraft'),
   {
     suspense: true,
   }

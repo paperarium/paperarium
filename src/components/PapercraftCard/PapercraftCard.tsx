@@ -9,15 +9,15 @@ import s from './PapercraftCard.module.scss';
 import * as APIt from '../../supabase/types';
 import OptimizedImage from '../OptimizedImage/OptimizedImage';
 import Link from 'next/link';
-import { EntityType } from '../PapercraftGallery/PapercraftGallery';
 import ProfileLink from '../ProfileLink/ProfileLink';
 import { IoShapesOutline } from 'react-icons/io5';
 import BuildTitle from '../ResourceTitle/BuildTitle';
 import PapercraftTitle from '../ResourceTitle/PapercraftTitle';
+import { EBuildable } from '../../util/enums';
 
 interface PapercraftCardProps<T extends APIt.Papercraft | APIt.Build> {
   entity: T;
-  entityType: EntityType;
+  entityType: EBuildable;
   priority?: boolean;
 }
 
@@ -31,7 +31,7 @@ const PapercraftCard = function PapercraftCard<
     <div className={s.inner_container}>
       <Link
         href={
-          entityType === EntityType.Builds
+          entityType === EBuildable.Build
             ? `/papercrafts/${(entity as APIt.Build).papercraft.id}?build=${
                 entity.id
               }`
@@ -74,7 +74,7 @@ const PapercraftCard = function PapercraftCard<
         </a>
       </Link>
       <div className={s.info_card}>
-        {entityType === EntityType.Builds ? (
+        {entityType === EBuildable.Build ? (
           <BuildTitle build={entity as APIt.Build} onClick={setClicked} />
         ) : (
           <PapercraftTitle

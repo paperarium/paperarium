@@ -7,18 +7,13 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { debounce } from 'ts-debounce';
-import { listTags } from '../../supabase/api/tags';
-import * as APIt from '../../supabase/types';
-import FileUpload from '../FileUpload/FileUpload';
-import {
-  AsyncSelect,
-  CreatableSelect,
-  getSelectTheme,
-  Select,
-} from '../misc/AsyncSelect';
-import MultiFileUpload from '../MultiFileUpload/MultiFileUpload';
+import { listTags } from '../../../supabase/api/tags';
+import * as APIt from '../../../supabase/types';
+import FileUpload from '../../FileUpload/FileUpload';
+import { AsyncSelect, getSelectTheme, Select } from '../../misc/AsyncSelect';
+import MultiFileUpload from '../../MultiFileUpload/MultiFileUpload';
 import s from './FormEditPapercraft.module.scss';
-import { uploadFile, uploadImageFile } from '../../util/uploadFile';
+import { uploadFile, uploadImageFile } from '../../../util/uploadFile';
 import {
   createPapercraft,
   deletePapercraftVariants,
@@ -26,17 +21,17 @@ import {
   papercraftKeys,
   updatePapercraft,
   upsertPapercraftVariants,
-} from '../../supabase/api/papercrafts';
-import { createBuild } from '../../supabase/api/builds';
+} from '../../../supabase/api/papercrafts';
+import { createBuild } from '../../../supabase/api/builds';
 import {
   createPapercraftsTags,
   deletePapercraftsTags,
-} from '../../supabase/api/papercraftstags';
+} from '../../../supabase/api/papercraftstags';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 // lazy load date picker component
-import { DatePicker } from '../misc/DatePicker';
-import MultiItemCreate from '../MultiItemCreate/MultiItemCreate';
-import ItemRendererVariant from '../MultiItemCreate/ItemRendererVariant';
+import { DatePicker } from '../../misc/DatePicker';
+import MultiItemCreate from '../../MultiItemCreate/MultiItemCreate';
+import ItemRendererVariant from '../../MultiItemCreate/ItemRendererVariant';
 
 // debounce the fetch tags function
 const fetchTags = debounce(listTags, 300, { maxWait: 1200 });
@@ -479,6 +474,7 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
           await createBuild({
             user_id: profile.id,
             papercraft_id: papercraft.id,
+            description: '',
             pictures,
             xlink: xLink,
             verified: false,

@@ -16,18 +16,10 @@ import {
 } from '../../supabase/api/papercrafts';
 import PapercraftCard from '../PapercraftCard/PapercraftCard';
 import { CSSTransition } from 'react-transition-group';
-import { MdOutlineTableRows } from 'react-icons/md';
 import { CgSpinnerTwoAlt } from 'react-icons/cg';
-import { RiLayoutGridLine, RiLayoutBottomLine } from 'react-icons/ri';
-import { IoCubeOutline, IoShapesOutline } from 'react-icons/io5';
 import * as APIt from '../../supabase/types';
-import {
-  buildKeys,
-  listBuilds,
-  ListBuildsQueryVariables,
-} from '../../supabase/api/builds';
+import { buildKeys, listBuilds } from '../../supabase/api/builds';
 import InfiniteScroll from 'react-infinite-scroller';
-import { PAGE_SIZE } from '../../util/getPagination';
 import getNextPageParam, {
   InfiniteQueryFilter,
 } from '../../util/getNextPageParam';
@@ -37,6 +29,8 @@ import {
   PapercraftRow,
 } from '../InfiniteTableView/atoms/PapercraftRow';
 import { BuildHeaderRow, BuildRow } from '../InfiniteTableView/atoms/BuildRow';
+import { EBuildable, Layout } from '../../util/enums';
+import { ENTITY_ICONS, LAYOUT_ICONS } from '../../util/icons';
 
 const breakpointColumnsObj = {
   default: 5,
@@ -57,33 +51,7 @@ type PapercraftGalleryProps = {
   user_id?: string;
   collective?: string;
   disabled?: boolean;
-  displays?: EntityType[];
-};
-
-/* --------------------------------- layout --------------------------------- */
-
-enum LayoutType {
-  Compact = 'compact',
-  Rows = 'rows',
-  Grid = 'grid',
-}
-
-const LAYOUT_ICONS: { [key in LayoutType]: JSX.Element } = {
-  [LayoutType.Grid]: <RiLayoutGridLine />,
-  [LayoutType.Compact]: <MdOutlineTableRows />,
-  [LayoutType.Rows]: <RiLayoutBottomLine />,
-};
-
-/* -------------------------------- entities -------------------------------- */
-
-export enum EntityType {
-  Papercrafts = 'papercrafts',
-  Builds = 'builds',
-}
-
-const ENTITY_ICONS: { [key in EntityType]: JSX.Element } = {
-  [EntityType.Papercrafts]: <IoShapesOutline />,
-  [EntityType.Builds]: <IoCubeOutline />,
+  displays?: EBuildable[];
 };
 
 /* -------------------------------------------------------------------------- */
@@ -97,14 +65,14 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
     user_id,
     collective,
     disabled,
-    displays = [EntityType.Papercrafts, EntityType.Builds],
+    displays = [EBuildable.Papercraft, EBuildable.Build],
   }) {
     // refs
     const loadingOverlayRef = useRef<HTMLDivElement>(null);
 
     // statefuls
-    const [layoutType, setLayoutType] = useState<LayoutType>(LayoutType.Grid);
-    const [entityType, setEntityType] = useState<EntityType>(displays[0]);
+    const [layoutType, setLayoutType] = useState<Layout>(Layout.Grid);
+    const [entityType, setEntityType] = useState<EBuildable>(displays[0]);
     useEffect(() => {
       setEntityType(displays[0]);
       // @ts-ignore
@@ -139,7 +107,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
       papercraftKeys.list(fullPParams),
       ({ pageParam = null }) => listPapercrafts(fullPParams, pageParam),
       {
-        enabled: !disabled && entityType === EntityType.Papercrafts,
+        enabled: !disabled && entityType === EBuildable.Papercraft,
         getNextPageParam: getNextPageParam(fullPParams),
       }
     );
@@ -147,13 +115,13 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
       buildKeys.list(fullBParams),
       ({ pageParam = null }) => listBuilds(fullBParams, pageParam),
       {
-        enabled: !disabled && entityType === EntityType.Builds,
+        enabled: !disabled && entityType === EBuildable.Build,
         getNextPageParam: getNextPageParam(fullBParams),
       }
     );
 
     // combine the two types of infinite queries back into one
-    const isPapercrafts = entityType === EntityType.Papercrafts;
+    const isPapercrafts = entityType === EBuildable.Papercraft;
     const currQuery = isPapercrafts ? papercraftsQuery : buildsQuery;
     const { data, hasNextPage, isLoading, isPaused, fetchNextPage } = currQuery;
 
@@ -166,7 +134,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
                 entityType === key ? 'active' : ''
               }`}
               key={key}
-              onClick={() => setEntityType(key as EntityType)}
+              onClick={() => setEntityType(key)}
             >
               {key} {ENTITY_ICONS[key]}
             </div>
@@ -177,7 +145,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
                 layoutType === key ? 'active' : ''
               }`}
               key={key}
-              onClick={() => setLayoutType(key as LayoutType)}
+              onClick={() => setLayoutType(key as Layout)}
             >
               {icon}
             </div>
@@ -206,21 +174,10 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
               </div>
             }
           >
-            {layoutType === LayoutType.Compact ? (
+            {layoutType === Layout.Compact ? (
               <InfiniteTableView
+                type={EBuildable.Papercraft}
                 pages={currQuery.data?.pages}
-                // @ts-ignore
-                HeaderComponent={
-                  entityType === EntityType.Papercrafts
-                    ? PapercraftHeaderRow
-                    : BuildHeaderRow
-                }
-                // @ts-ignore
-                RowComponent={
-                  entityType === EntityType.Papercrafts
-                    ? PapercraftRow
-                    : BuildRow
-                }
                 onColumnClick={(column: keyof APIt.Build | APIt.Papercraft) => {
                   let filter = isPapercrafts ? papercraftFilter : buildFilter;
                   // if no filter, sort by descending
@@ -268,7 +225,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
           </InfiniteScroll>
           <CSSTransition
             appear
-            in={layoutType !== LayoutType.Compact && (isPaused || isLoading)}
+            in={layoutType !== Layout.Compact && (isPaused || isLoading)}
             nodeRef={loadingOverlayRef}
             timeout={300}
           >

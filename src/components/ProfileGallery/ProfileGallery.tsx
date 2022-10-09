@@ -23,34 +23,17 @@ import {
 } from '../../supabase/api/profiles';
 import * as APIt from '../../supabase/types';
 import getNextPageParam from '../../util/getNextPageParam';
-import { PAGE_SIZE } from '../../util/getPagination';
 import FilterBarProfile from '../FilterBar/FilterBarProfile';
-import {
-  CollectiveHeaderRow,
-  CollectiveRow,
-} from '../InfiniteTableView/atoms/CollectiveRow';
 import s from './ProfileGallery.module.scss';
-import {
-  ProfileHeaderRow,
-  ProfileRow,
-} from '../InfiniteTableView/atoms/ProfileRow';
 import InfiniteTableView from '../InfiniteTableView/InfiniteTableView';
 import { CgSpinnerTwoAlt } from 'react-icons/cg';
-
-export enum CommunityEntityType {
-  Profiles = 'profiles',
-  Collectives = 'collectives',
-}
+import { ECommunity } from '../../util/enums';
+import { ENTITY_ICONS } from '../../util/icons';
 
 type ProfileGalleryProps = {
   children?: React.ReactNode;
   disabled?: boolean;
-  displays: CommunityEntityType[];
-};
-
-const ENTITY_ICONS: { [key in CommunityEntityType]: JSX.Element } = {
-  [CommunityEntityType.Profiles]: <IoPersonOutline />,
-  [CommunityEntityType.Collectives]: <IoPeopleOutline />,
+  displays: ECommunity[];
 };
 
 const ProfileGallery: React.FC<ProfileGalleryProps> = function ProfileGallery({
@@ -58,9 +41,7 @@ const ProfileGallery: React.FC<ProfileGalleryProps> = function ProfileGallery({
   displays,
 }) {
   // the default entity type in the
-  const [entityType, setEntityType] = useState<CommunityEntityType>(
-    CommunityEntityType.Profiles
-  );
+  const [entityType, setEntityType] = useState<ECommunity>(ECommunity.Profile);
   // search information
   const [currentSearch, setCurrentSearch] = useState<string>('');
   // same params used across queries
@@ -86,7 +67,7 @@ const ProfileGallery: React.FC<ProfileGalleryProps> = function ProfileGallery({
     profileKeys.list(profileParams),
     ({ pageParam = null }) => listProfiles(profileParams, pageParam),
     {
-      enabled: !disabled && entityType === CommunityEntityType.Profiles,
+      enabled: !disabled && entityType === ECommunity.Profile,
       getNextPageParam: getNextPageParam(profileParams),
       keepPreviousData: true,
     }
@@ -95,14 +76,14 @@ const ProfileGallery: React.FC<ProfileGalleryProps> = function ProfileGallery({
     collectiveKeys.list(collectivesParams),
     ({ pageParam = null }) => listCollectives(collectivesParams, pageParam),
     {
-      enabled: !disabled && entityType === CommunityEntityType.Collectives,
+      enabled: !disabled && entityType === ECommunity.Collective,
       getNextPageParam: getNextPageParam(collectivesParams),
       keepPreviousData: true,
     }
   );
 
   // combine the two types of infinite queries back into one
-  const isColl = entityType === CommunityEntityType.Collectives;
+  const isColl = entityType === ECommunity.Collective;
   const currQuery = isColl ? collectivesQuery : profilesQuery;
   const { hasNextPage, fetchNextPage } = currQuery;
 
@@ -113,7 +94,7 @@ const ProfileGallery: React.FC<ProfileGalleryProps> = function ProfileGallery({
           <div
             className={`${s.layout_type} ${entityType === key ? 'active' : ''}`}
             key={key}
-            onClick={() => setEntityType(key as CommunityEntityType)}
+            onClick={() => setEntityType(key)}
           >
             {key} {ENTITY_ICONS[key]}
           </div>
@@ -143,13 +124,10 @@ const ProfileGallery: React.FC<ProfileGalleryProps> = function ProfileGallery({
         >
           <InfiniteTableView
             pages={currQuery.data?.pages}
-            // @ts-ignore
-            HeaderComponent={isColl ? CollectiveHeaderRow : ProfileHeaderRow}
-            // @ts-ignore
-            RowComponent={isColl ? CollectiveRow : ProfileRow}
+            type={entityType}
             onColumnClick={(column: keyof APIt.Profile | APIt.Collective) => {
               let currFilter = (
-                entityType === CommunityEntityType.Collectives
+                entityType === ECommunity.Collective
                   ? collectivesParams
                   : profileParams
               ).filter;

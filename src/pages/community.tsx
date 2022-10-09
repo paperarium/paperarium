@@ -14,9 +14,7 @@ import {
   ListProfilesQueryVariables,
   profileKeys,
 } from '../supabase/api/profiles';
-import ProfileGallery, {
-  CommunityEntityType,
-} from '../components/ProfileGallery/ProfileGallery';
+import ProfileGallery from '../components/ProfileGallery/ProfileGallery';
 import { PAGE_SIZE } from '../util/getPagination';
 import getNextPageParam from '../util/getNextPageParam';
 import {
@@ -24,6 +22,7 @@ import {
   listCollectives,
   ListCollectivesQueryVariables,
 } from '../supabase/api/collectives';
+import { ECommunity } from '../util/enums';
 
 const CommunityPage: NextPage = () => {
   return (
@@ -37,10 +36,7 @@ const CommunityPage: NextPage = () => {
       </Head>
       <div className={s.main_grid}>
         <ProfileGallery
-          displays={[
-            CommunityEntityType.Profiles,
-            CommunityEntityType.Collectives,
-          ]}
+          displays={[ECommunity.Profile, ECommunity.Collective]}
         />
       </div>
     </>

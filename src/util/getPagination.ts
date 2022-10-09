@@ -5,7 +5,7 @@
  * 2022 the nobot space,
  */
 
-export const PAGE_SIZE = 20;
+export const PAGE_SIZE = 30;
 
 // https://github.com/supabase/supabase/discussions/1223
 export const getPagination = (page: number, size: number = PAGE_SIZE) => {

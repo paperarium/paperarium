@@ -5,30 +5,37 @@
  * 2022 the nobot space,
  */
 import React, { useRef } from 'react';
-import s from './FlowPapercraft.module.scss';
+import s from '../FlowPapercraft/FlowPapercraft.module.scss';
 import { useState } from 'react';
-import * as APIt from '../../supabase/types';
+import * as APIt from '../../../supabase/types';
 import { User } from '@supabase/auth-helpers-nextjs';
 import { CSSTransition } from 'react-transition-group';
-import PapercraftDisplay from '../../components/PapercraftDisplay/PapercraftDisplay';
-import BlinkEffect from '../../components/BlinkEffect/BlinkEffect';
-import FormEditPapercraft, {
-  FormEditPapercraftHandleProps,
-} from '../../components/FormEditPapercraft/FormEditPapercraft';
-import { getSelf, profileKeys } from '../../supabase/api/profiles';
-import { useQuery } from '@tanstack/react-query';
+import PapercraftDisplay from '../../PapercraftDisplay/PapercraftDisplay';
+import BlinkEffect from '../../BlinkEffect/BlinkEffect';
+import { getSelf, profileKeys } from '../../../supabase/api/profiles';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import FormEditBuild, {
+  FormEditBuildHandleProps,
+} from '../../_forms/FormEditBuild/FormEditBuild';
+import {
+  listPapercrafts,
+  papercraftKeys,
+} from '../../../supabase/api/papercrafts';
+import getNextPageParam from '../../../util/getNextPageParam';
 
-type FlowPapercraftProps = {
+type FlowBuildProps = {
   user: User;
   isAdmin?: boolean;
   defaultPapercraft?: APIt.Papercraft;
-  onSuccess: (papercraft_id: string) => void;
+  defaultBuild?: APIt.Build;
+  onSuccess: (papercraft_id: string, build_id: string) => void;
   onBackButtonClick?: () => void;
 };
 
-const FlowPapercraft: React.FC<FlowPapercraftProps> = ({
+const FlowBuild: React.FC<FlowBuildProps> = ({
   user,
   defaultPapercraft,
+  defaultBuild,
   isAdmin,
   onSuccess,
   onBackButtonClick,
@@ -41,10 +48,11 @@ const FlowPapercraft: React.FC<FlowPapercraftProps> = ({
   /*                                PREVIEW STATE                               */
   /* -------------------------------------------------------------------------- */
 
-  // statefuls for the papercraft in the preview
+  // statefuls for the build in the preview
   const [papercraft, setPapercraft] = useState<APIt.Papercraft | null>(
-    defaultPapercraft || null
+    defaultPapercraft ?? null
   );
+  const [build, setBuild] = useState<APIt.Build | null>(defaultBuild ?? null);
   const [canPreview, setCanPreview] = useState<boolean>(false);
   const [inPreview, setInPreview] = useState(false);
   const [inConfirm, setInConfirm] = useState(false);
@@ -53,11 +61,29 @@ const FlowPapercraft: React.FC<FlowPapercraftProps> = ({
   >(undefined);
 
   // we forward an imperative ref to the form handle
-  const formHandle = useRef<FormEditPapercraftHandleProps>(null);
+  const formHandle = useRef<FormEditBuildHandleProps>(null);
 
   // query the user's current profile to be able to render it in the display
   const { data: profile } = useQuery(profileKeys.getSelf(), () =>
     getSelf(user.id)
+  );
+
+  // search for papercrafts when no papercraft is set
+  const [currentSearch, setCurrentSearch] = useState<string>('');
+  const fullPParams = {
+    search: currentSearch,
+    username: undefined,
+    collective: undefined,
+    tags: undefined,
+    filter: undefined,
+  };
+  const papercraftsQuery = useInfiniteQuery<APIt.Papercraft[]>(
+    papercraftKeys.list(fullPParams),
+    ({ pageParam = null }) => listPapercrafts(fullPParams, pageParam),
+    {
+      enabled: !defaultPapercraft,
+      getNextPageParam: getNextPageParam(fullPParams),
+    }
   );
 
   /* -------------------------------------------------------------------------- */
@@ -80,57 +106,57 @@ const FlowPapercraft: React.FC<FlowPapercraftProps> = ({
               </div>
               <div className={s.column_label}>
                 <b>
-                  {!!defaultPapercraft ? 'edit' : 'upload'} a papercraft design
-                  slip!
+                  {!!defaultBuild ? 'edit' : 'upload'} a papercraft build slip!
                 </b>
                 <br /> after filling in all of the required fields, the submit
-                button will activate and you can post your papercraft to our
-                website.
+                button will activate and you can post your build to our website.
               </div>
             </div>
             <div className={s.spacer}></div>
             {profile ? (
-              <FormEditPapercraft
-                ref={formHandle}
-                profile={profile}
-                isAdmin={isAdmin}
-                defaultPapercraft={defaultPapercraft}
-                setSubmissionMessage={setSubmissionMessage}
-                setCanPreview={setCanPreview}
-                onSuccess={({ id }) => onSuccess(id)}
-              >
-                <div
-                  className={s.input_form_title}
-                  onClick={() => {
-                    if (inPreview) {
-                      setInPreview(false);
-                      setInConfirm(false);
-                    }
-                  }}
+              papercraft ? (
+                <FormEditBuild
+                  ref={formHandle}
+                  profile={profile}
+                  isAdmin={isAdmin}
+                  papercraft={papercraft}
+                  setSubmissionMessage={setSubmissionMessage}
+                  setCanPreview={setCanPreview}
+                  onSuccess={({ id }) => onSuccess(build!.papercraft_id, id)}
                 >
-                  INPUT FORM
-                </div>
-                <div
-                  className={`${s.preview_show_button} ${
-                    canPreview ? '' : 'disabled'
-                  }`}
-                  onClick={() => {
-                    if (!formHandle.current) return;
-                    if (!inPreview) {
-                      if (canPreview) {
-                        setPapercraft(formHandle.current.getPapercraft());
-                        setInPreview(true);
+                  <div
+                    className={s.input_form_title}
+                    onClick={() => {
+                      if (inPreview) {
+                        setInPreview(false);
+                        setInConfirm(false);
                       }
-                    } else {
-                      setInPreview(false);
-                      setInConfirm(false);
-                    }
-                  }}
-                >
-                  <BlinkEffect active={!!(canPreview && !inPreview)} />
-                  REVIEW
-                </div>
-              </FormEditPapercraft>
+                    }}
+                  >
+                    INPUT FORM
+                  </div>
+                  <div
+                    className={`${s.preview_show_button} ${
+                      canPreview ? '' : 'disabled'
+                    }`}
+                    onClick={() => {
+                      if (!formHandle.current) return;
+                      if (!inPreview) {
+                        if (canPreview) {
+                          setBuild(formHandle.current.getBuild());
+                          setInPreview(true);
+                        }
+                      } else {
+                        setInPreview(false);
+                        setInConfirm(false);
+                      }
+                    }}
+                  >
+                    <BlinkEffect active={!!(canPreview && !inPreview)} />
+                    REVIEW
+                  </div>
+                </FormEditBuild>
+              ) : null
             ) : null}
           </div>
           {/* SUBMISSION */}
@@ -139,7 +165,7 @@ const FlowPapercraft: React.FC<FlowPapercraftProps> = ({
               className={s.submit_button}
               onClick={async () => {
                 if (inConfirm && formHandle.current) {
-                  formHandle.current.submitPapercraft();
+                  formHandle.current.submitBuild();
                 } else {
                   setInConfirm(true);
                 }
@@ -192,4 +218,4 @@ const FlowPapercraft: React.FC<FlowPapercraftProps> = ({
   );
 };
 
-export default FlowPapercraft;
+export default FlowBuild;

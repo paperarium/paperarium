@@ -3,7 +3,11 @@ import { QueryClient } from '@tanstack/react-query';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
-import { AdminPane, AdminPaneProps, ADMIN_PANES } from '../../components/admin';
+import {
+  AdminPane,
+  AdminPaneProps,
+  ADMIN_PANES,
+} from '../../components/_admin';
 import OptimizedImage from '../../components/OptimizedImage/OptimizedImage';
 import s from '../../styles/admin/Admin.module.scss';
 import * as APIt from '../../supabase/types';

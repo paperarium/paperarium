@@ -1,0 +1,68 @@
+@import './mixins';
+
+.container {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  @include respond-to('small') {
+    flex-direction: row;
+  }
+}
+
+.half {
+  flex: 1;
+  height: 100%;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'FT88 School';
+  opacity: 0.3;
+  transition: opacity 0.1s ease-in-out;
+  width: 100%;
+
+  &:first-of-type {
+    border-bottom: $border;
+  }
+
+  &:hover {
+    opacity: 1;
+
+    & div {
+      transform: rotate(10deg);
+    }
+  }
+
+  &:last-of-type:hover {
+    & div {
+      transform: rotate(-10deg);
+    }
+  }
+
+  @include respond-to('small') {
+    width: auto;
+    min-height: calc(100vh - var(--header-height) - var(--notice-bar-height));
+
+    &:first-of-type {
+      border-bottom: none;
+      border-right: $border;
+    }
+  }
+}
+
+.choice_icon {
+  font-size: 100px;
+  transition: transform 0.1s ease-in-out;
+
+  & path {
+    stroke-width: 10px;
+  }
+}

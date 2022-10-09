@@ -17,12 +17,30 @@ import {
 } from '../InfiniteTableView';
 import s from './InfiniteTableRow.module.scss';
 
+const ProfileColumns: { [key in keyof APIt.Profile]?: JSX.Element } = {
+  n_papercrafts: <IoShapesOutline />,
+  n_builds: <IoCubeOutline />,
+  n_followers: <RiUserReceivedLine />,
+  n_following: <RiUserSharedLine />,
+};
+
 export const ProfileHeaderRow: React.FC<
   InfiniteTableHeaderProps<APIt.Profile>
-> = React.memo(function ProfileHeaderRow({ onColumnClick }) {
+> = React.memo(function ProfileHeaderRow({ onColumnClick, columns }) {
+  const columnNames = columns || Object.keys(ProfileColumns);
+
   return (
     <tr>
       <th>Profile</th>
+      {(columns as (keyof APIt.Profile)[]).map((col) => (
+        <th
+          key={col}
+          className={s.sortable_header}
+          onClick={() => onColumnClick(col)}
+        >
+          {ProfileColumns[col]}
+        </th>
+      ))}
       <th
         className={s.sortable_header}
         onClick={() => onColumnClick('n_papercrafts')}
