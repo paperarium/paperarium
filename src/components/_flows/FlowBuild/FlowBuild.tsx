@@ -25,6 +25,7 @@ import {
 import getNextPageParam from '../../../util/getNextPageParam';
 import SearchModal from '../../SearchModal/SearchModal';
 import { EBuildable } from '../../../util/enums';
+import { useSessionContext } from '@supabase/auth-helpers-react';
 
 type FlowBuildProps = {
   user: User;
@@ -43,6 +44,7 @@ const FlowBuild: React.FC<FlowBuildProps> = ({
   onSuccess,
   onBackButtonClick,
 }) => {
+  const { supabaseClient } = useSessionContext();
   // reference to the form for CSS transitions
   const formRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -68,7 +70,7 @@ const FlowBuild: React.FC<FlowBuildProps> = ({
 
   // query the user's current profile to be able to render it in the display
   const { data: profile } = useQuery(profileKeys.getSelf(), () =>
-    getSelf(user.id)
+    getSelf(supabaseClient)(user.id)
   );
 
   // search for papercrafts when no papercraft is set
@@ -80,9 +82,10 @@ const FlowBuild: React.FC<FlowBuildProps> = ({
     tags: undefined,
     filter: undefined,
   };
-  const papercraftsQuery = useInfiniteQuery<APIt.Papercraft[]>(
+  const papercraftsQuery = useInfiniteQuery(
     papercraftKeys.list(fullPParams),
-    ({ pageParam = null }) => listPapercrafts(fullPParams, pageParam),
+    ({ pageParam = 0 }) =>
+      listPapercrafts(supabaseClient)(fullPParams, pageParam),
     {
       enabled: !papercraftId,
       getNextPageParam: getNextPageParam(fullPParams),
@@ -91,7 +94,7 @@ const FlowBuild: React.FC<FlowBuildProps> = ({
   // and when we have a papercraft id, query the papercraft
   const papercraft = useQuery<APIt.Papercraft>(
     papercraftKeys.get(papercraftId!),
-    () => getPapercraft(papercraftId!),
+    () => getPapercraft(supabaseClient)(papercraftId!),
     { enabled: !!papercraftId }
   );
 
@@ -176,7 +179,7 @@ const FlowBuild: React.FC<FlowBuildProps> = ({
                     tags: undefined,
                     filter: undefined,
                   }}
-                  query={listPapercrafts}
+                  query={listPapercrafts(supabaseClient)}
                   keyFactory={papercraftKeys}
                   onCellClick={({ id }) => setPapercraftId(id)}
                 />

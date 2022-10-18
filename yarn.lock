@@ -450,26 +450,24 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.2.0.tgz#8be36a1f66f3265389e90b5f9c9962146758f728"
   integrity sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==
 
-"@supabase/auth-helpers-nextjs@^0.2.9":
-  version "0.2.9"
-  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-nextjs/-/auth-helpers-nextjs-0.2.9.tgz#20b17d2046355d2bc808ba692e6a8bea63bb54b4"
-  integrity sha512-wDzQyYkaF6YKIfkiGo8PH56TaFs5WpwMqfSuGUFoN7LQLD6jaRaO2XMfGLtbcM2bQ/4RGWL0nRRbEB6nZ1dz7w==
+"@supabase/auth-helpers-nextjs@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-nextjs/-/auth-helpers-nextjs-0.4.1.tgz#6d93520119232563283cece5d383d13866e21c73"
+  integrity sha512-qrtMYlLoxm/Xf2U1l+OeDlckEzQHbRusIRcj5JKOj+gV/r62/VkDpB92cgjt3bbVtPDka5szXF4tBku6ZZkMeQ==
   dependencies:
-    "@supabase/auth-helpers-shared" "0.1.4"
+    "@supabase/auth-helpers-shared" "0.2.0"
 
-"@supabase/auth-helpers-react@^0.2.3":
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-react/-/auth-helpers-react-0.2.4.tgz#f189b1ae02eee6186e83abc20a0f36a67e1019b3"
-  integrity sha512-o/6VcnkCQnlPFBOVVlmk5w37fhlalDZKxPV9w5eYwgM4uzg1FwH6b70YNuOhA3EwCcy/S8e3pKVEsKAx/LjFcA==
+"@supabase/auth-helpers-react@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-react/-/auth-helpers-react-0.3.0.tgz#a0221c2bad6d8ec82dd42804e5b7e8c8abdff1a7"
+  integrity sha512-yCJPUdtElPxmlk6FXZJdMWLnCuYU1qD7pzHxVjF+vO+NwddZ00qKTi53UJu83+H3QeDgZZrNR1ueCi/sLY+kYw==
   dependencies:
-    "@supabase/auth-helpers-shared" "0.1.4"
+    "@supabase/auth-helpers-shared" "0.2.0"
 
-"@supabase/auth-helpers-shared@0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-shared/-/auth-helpers-shared-0.1.4.tgz#8d946d08e9a574edf3c842f5c320d5afdd3aab23"
-  integrity sha512-5jsy8pxrdFIBjcpGWihBb1gsiK2WMO8lKKnNlrZCgAzTdC/rZHVnYs7zK8yaLyoHidLfp6N5ZnocJUm7ZKSABQ==
-  dependencies:
-    jose "^4.8.1"
+"@supabase/auth-helpers-shared@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-shared/-/auth-helpers-shared-0.2.0.tgz#9d740ddbb2a3bb7c4d8a4a30842646aa0afc64aa"
+  integrity sha512-GaWzuP3RjLSdSlFajbgwQkZO24A14DSEIJG5sUva/sUYWkriEWROjf8Vbwg4YsSxqeU6fP3lloFeync9BwgyYA==
 
 "@supabase/functions-js@^2.0.0":
   version "2.0.0"
@@ -2019,7 +2017,7 @@ isexe@^2.0.0:
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==
 
-jose@^4.10.0, jose@^4.8.1:
+jose@^4.10.0:
   version "4.10.0"
   resolved "https://registry.yarnpkg.com/jose/-/jose-4.10.0.tgz#2e0b7bcc80dd0775f8a4588e55beb9460c37d60a"
   integrity sha512-KEhB/eLGLomWGPTb+/RNbYsTjIyx03JmbqAyIyiXBuNSa7CmNrJd5ysFhblayzs/e/vbOPMUaLnjHUMhGp4yLw==

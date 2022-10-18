@@ -17,6 +17,7 @@ import FormEditPapercraft, {
 } from '../../_forms/FormEditPapercraft/FormEditPapercraft';
 import { getSelf, profileKeys } from '../../../supabase/api/profiles';
 import { useQuery } from '@tanstack/react-query';
+import { useSessionContext } from '@supabase/auth-helpers-react';
 
 type FlowPapercraftProps = {
   user: User;
@@ -33,6 +34,7 @@ const FlowPapercraft: React.FC<FlowPapercraftProps> = ({
   onSuccess,
   onBackButtonClick,
 }) => {
+  const { supabaseClient } = useSessionContext();
   // reference to the form for CSS transitions
   const formRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
@@ -57,7 +59,7 @@ const FlowPapercraft: React.FC<FlowPapercraftProps> = ({
 
   // query the user's current profile to be able to render it in the display
   const { data: profile } = useQuery(profileKeys.getSelf(), () =>
-    getSelf(user.id)
+    getSelf(supabaseClient)(user.id)
   );
 
   /* -------------------------------------------------------------------------- */

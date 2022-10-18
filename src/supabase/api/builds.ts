@@ -5,15 +5,13 @@
  * 2022 the nobot space,
  */
 
-import {
-  supabaseClient,
-  supabaseServerClient,
-} from '@supabase/auth-helpers-nextjs';
+import { SupabaseClient } from '@supabase/auth-helpers-nextjs';
 import {
   applyNextPageParam,
   InfiniteQueryFilter,
 } from '../../util/getNextPageParam';
-import { PAGE_SIZE } from '../../util/getPagination';
+import { PostgrestFilterBuilder } from '@supabase/postgrest-js';
+import { Database } from '../API';
 import * as APIt from '../types';
 
 /* -------------------------------------------------------------------------- */
@@ -24,20 +22,21 @@ import * as APIt from '../types';
  * Gets a papercraf by its id
  * @returns A list of builds
  */
-export const getBuild = async (bid: string) => {
-  const { data: builds, error } = await supabaseClient
-    .from<APIt.Build>('builds')
-    .select(
-      `
+export const getBuild =
+  (supabaseClient: SupabaseClient<Database>) => async (bid: string) => {
+    const { data: builds, error } = await supabaseClient
+      .from('builds')
+      .select(
+        `
       *,
       user:user_id!inner(*),
       papercraft:papercraft_id!inner(id,title,description,pictures,user_id)
     `
-    )
-    .eq('id', bid);
-  if (error) throw error;
-  return builds[0];
-};
+      )
+      .eq('id', bid);
+    if (error) throw error;
+    return builds[0] as APIt.Build;
+  };
 
 export type ListBuildsQueryVariables = {
   search?: string;
@@ -50,32 +49,37 @@ export type ListBuildsQueryVariables = {
  * Lists the builds from the supabase database.
  * @returns A list of builds
  */
-export const listBuilds = async (
-  { search, collective, username, filter }: ListBuildsQueryVariables,
-  pageParam: string | number | null = null
-) => {
-  let req = (
-    search
-      ? supabaseClient.rpc<APIt.Build>('search_builds', {
-          build_term: search,
-        })
-      : supabaseClient.from<APIt.Build>('builds_view')
-  ).select(
-    `*,
+export const listBuilds =
+  (supabaseClient: SupabaseClient<Database>) =>
+  async (
+    { search, collective, username, filter }: ListBuildsQueryVariables,
+    pageParam: number = 0
+  ) => {
+    let req = (
+      search
+        ? supabaseClient.rpc('search_builds', {
+            build_term: search,
+          })
+        : supabaseClient.from('builds_view')
+    ).select(
+      `*,
     user:user_id!inner(username,avatar_url,archived),
     papercraft:papercraft_id!inner(id,title,description,pictures,user_id,collective_id)`
-  );
-  if (username) req = req.eq('user_id.username' as any, username);
-  if (collective) req = req.eq('collective_titlecode' as any, collective);
-  // now apply the filters using the next page param
-  const { data: builds, error } = await applyNextPageParam(
-    req,
-    filter,
-    pageParam
-  );
-  if (error) throw error;
-  return builds;
-};
+    ) as PostgrestFilterBuilder<APIt.Build, APIt.Build>;
+    if (username) req = req.eq('user_id.username' as any, username);
+    if (collective) req = req.eq('collective_titlecode' as any, collective);
+    // now apply the filters using the next page param
+    const { data: builds, error } = await applyNextPageParam(
+      req,
+      filter,
+      pageParam
+    );
+    if (error) throw error;
+    return {
+      data: builds,
+      page: pageParam,
+    };
+  };
 /* -------------------------------------------------------------------------- */
 /*                                  MUTATIONS                                 */
 /* -------------------------------------------------------------------------- */
@@ -85,29 +89,33 @@ export const listBuilds = async (
  * @param input
  * @returns
  */
-export const createBuild = async (
-  input: APIt.BuildInput | APIt.BuildInput[]
-) => {
-  const { data: builds, error } = await supabaseClient
-    .from<APIt.Build>('builds')
-    .insert(input);
-  if (error) throw error;
-  return builds;
-};
+export const createBuild =
+  (supabaseClient: SupabaseClient<Database>) =>
+  async (input: APIt.BuildInput | APIt.BuildInput[]) => {
+    const { data: builds, error } = await supabaseClient
+      .from('builds')
+      .insert(input)
+      .select('*');
+    if (error) throw error;
+    return builds as unknown as APIt.Build[];
+  };
 
 /**
  * Updates a build in the supabase database.
  * @param input
  * @returns
  */
-export const updateBuild = async (id: string, input: Partial<APIt.Build>) => {
-  const { data: builds, error } = await supabaseClient
-    .from<APIt.Build>('builds')
-    .update(input)
-    .match({ id });
-  if (error) throw error;
-  return builds;
-};
+export const updateBuild =
+  (supabaseClient: SupabaseClient<Database>) =>
+  async (id: string, input: APIt.BuildUpdate) => {
+    const { data: builds, error } = await supabaseClient
+      .from('builds')
+      .update(input)
+      .match({ id })
+      .select('*');
+    if (error) throw error;
+    return builds as APIt.Build[];
+  };
 
 /* -------------------------------------------------------------------------- */
 /*                                 KEY FACTORY                                */

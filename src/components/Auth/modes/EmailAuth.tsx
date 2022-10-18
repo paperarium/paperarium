@@ -18,6 +18,7 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { RedirectTo, VIEWS, ViewType } from '../Auth';
 import s from '../../../components/Auth/Auth.module.scss';
+import { useRouter } from 'next/router';
 
 type EmailAuthProps = {
   authView?: ViewType;
@@ -45,6 +46,7 @@ export function EmailAuth({
   magicLink,
 }: EmailAuthProps) {
   // statefuls
+  const router = useRouter();
   const isMounted = useRef<boolean>(true);
   const [email, setEmail] = useState(defaultEmail);
   const [password, setPassword] = useState(defaultPassword);
@@ -79,31 +81,25 @@ export function EmailAuth({
     setLoading(true);
     switch (authView) {
       case 'sign_in':
-        const { error: signInError } = await supabaseClient.auth.signIn(
-          {
+        const { error: signInError } =
+          await supabaseClient.auth.signInWithPassword({
             email,
             password,
-          },
-          { redirectTo }
-        );
+          });
         if (signInError) setError(signInError.message);
+        else if (redirectTo) router.replace(redirectTo);
         break;
       case 'sign_up':
-        const {
-          user: signUpUser,
-          session: signUpSession,
-          error: signUpError,
-        } = await supabaseClient.auth.signUp(
-          {
+        const { data: signUpData, error: signUpError } =
+          await supabaseClient.auth.signUp({
             email,
             password,
-          },
-          { redirectTo }
-        );
+          });
         if (signUpError) setError(signUpError.message);
         // Check if session is null -> email confirmation setting is turned on
-        else if (signUpUser && !signUpSession)
+        else if (signUpData.user && !signUpData.session)
           setMessage('Check your email for the confirmation link.');
+        else if (redirectTo) router.replace(redirectTo);
         break;
     }
 

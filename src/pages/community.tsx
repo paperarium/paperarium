@@ -15,7 +15,6 @@ import {
   profileKeys,
 } from '../supabase/api/profiles';
 import ProfileGallery from '../components/ProfileGallery/ProfileGallery';
-import { PAGE_SIZE } from '../util/getPagination';
 import getNextPageParam from '../util/getNextPageParam';
 import {
   collectiveKeys,
@@ -23,6 +22,9 @@ import {
   ListCollectivesQueryVariables,
 } from '../supabase/api/collectives';
 import { ECommunity } from '../util/enums';
+import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '../supabase/API';
+import supabaseClient from '../supabase/client';
 
 const CommunityPage: NextPage = () => {
   return (
@@ -68,12 +70,14 @@ export async function getStaticProps(context: any) {
   await Promise.all([
     queryClient.prefetchInfiniteQuery(
       profileKeys.list(profileParams),
-      ({ pageParam = null }) => listProfiles(profileParams, pageParam),
+      ({ pageParam = 0 }) =>
+        listProfiles(supabaseClient)(profileParams, pageParam),
       { getNextPageParam: getNextPageParam(profileParams) }
     ),
     queryClient.prefetchInfiniteQuery(
       collectiveKeys.list(collectiveParams),
-      ({ pageParam = null }) => listCollectives(collectiveParams, pageParam),
+      ({ pageParam = 0 }) =>
+        listCollectives(supabaseClient)(collectiveParams, pageParam),
       { getNextPageParam: getNextPageParam(collectiveParams) }
     ),
   ]);

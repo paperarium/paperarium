@@ -10,6 +10,7 @@ import {
 } from '../../../supabase/api/collectives';
 import OptimizedImage from '../../OptimizedImage/OptimizedImage';
 import FormEditCollective from '../../_forms/FormEditCollective/FormEditCollective';
+import { useSessionContext } from '@supabase/auth-helpers-react';
 
 /**
  * The home page for admin collective activities
@@ -19,6 +20,7 @@ const AdminCollectivesPane: React.FC<AdminPaneProps> = ({
   activeCollective,
   setActiveCollective,
 }) => {
+  const { supabaseClient } = useSessionContext();
   // search for collectives
   const [search, setSearch] = useState<string>('');
   const [currentSearch, setCurrentSearch] = useState<string>(search);
@@ -27,7 +29,7 @@ const AdminCollectivesPane: React.FC<AdminPaneProps> = ({
   );
   const qparams = { search: currentSearch };
   const collectives = useQuery(['admin', collectiveKeys.list(qparams)], () =>
-    listCollectives(qparams)
+    listCollectives(supabaseClient)(qparams)
   );
 
   return (
@@ -54,7 +56,7 @@ const AdminCollectivesPane: React.FC<AdminPaneProps> = ({
           />
           <div className={s.results_container}>
             {collectives.data
-              ? collectives.data.map((collective) => (
+              ? collectives.data.data.map((collective) => (
                   <div
                     className={`${s.result} ${
                       currCollective && currCollective.id === collective.id
@@ -66,7 +68,7 @@ const AdminCollectivesPane: React.FC<AdminPaneProps> = ({
                   >
                     <div className={s.result_pic}>
                       <OptimizedImage
-                        src={collective.avatar_url}
+                        src={collective.avatar_url || undefined}
                         className={s.inner_image}
                         sizes={`20px`}
                       />
@@ -105,7 +107,7 @@ const AdminCollectivesPane: React.FC<AdminPaneProps> = ({
               SELECTED COLLECTIVE
               <div className={s.profile_picture}>
                 <OptimizedImage
-                  src={activeCollective.avatar_url}
+                  src={activeCollective.avatar_url || undefined}
                   className={s.inner_image}
                   sizes={`200px`}
                 />

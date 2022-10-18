@@ -12,6 +12,7 @@ import * as APIt from './API';
 /* -------------------------------------------------------------------------- */
 
 type Modify<T, R> = Omit<T, keyof R> & R;
+type NonNullableFields<T> = { [P in keyof T]: NonNullable<T[P]> };
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 // expands object types one level deep
 type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
@@ -33,20 +34,33 @@ type ExpansiveFileType = File | string | null;
 //  S: a view for the entity
 //  R: the incorrectly typed fields of the base definitiion
 //  V: additional information not retrieved from the DB
-type SupabaseEntityFactory<T, S = {}, R = {}, V = {}> = {
+//  W: omitted fields
+type SupabaseEntityFactory<
+  T,
+  S = {},
+  R = {},
+  V = {},
+  W extends string | number | symbol = ''
+> = {
   entity: Expand<
-    Modify<
-      Omit<T, RequiredFields> &
-        Required<Pick<T, Extract<keyof T, RequiredFields>>> & // make required fields required
-        Required<Omit<S, keyof T>> & // add in view fields
-        V, // add in any additional fields we want
-      R
+    Omit<
+      Modify<
+        Omit<T, RequiredFields> &
+          Required<Pick<T, Extract<keyof T, RequiredFields>>> & // make required fields required
+          Required<NonNullableFields<Omit<S, keyof T>>> & // add in view fields
+          V, // add in any additional fields we want
+        R
+      >,
+      W
     >
   >;
   input: Expand<
-    Modify<Omit<T, GeneratedFields | keyof Omit<S, keyof T>>, R> & {
-      created_at?: string;
-    }
+    Omit<
+      Modify<Omit<T, GeneratedFields | keyof Omit<S, keyof T>>, R> & {
+        created_at?: string;
+      },
+      W
+    >
   >;
 };
 
@@ -73,35 +87,40 @@ type SupabaseLocalEntity<T> = Expand<
 /* -------------------------------------------------------------------------- */
 
 type ProfileFactory = SupabaseEntityFactory<
-  APIt.definitions['profiles'],
-  APIt.definitions['profiles_view']
+  APIt.Database['public']['Tables']['profiles']['Row'],
+  APIt.Database['public']['Views']['profiles_view']['Row']
 >;
+// export type Profile = ProfileFactory['entity'];
 export type Profile = ProfileFactory['entity'];
+export type ProfileInput =
+  APIt.Database['public']['Tables']['profiles']['Update'];
 
 /* --------------------------- profiles followers --------------------------- */
 
-// additional fields we need to add
 type _ProfilesFollowersAdditionalFields = {
   follower: Profile;
   following: Profile;
 };
 
 type ProfilesFollowersFactory = SupabaseJoinEntityFactory<
-  APIt.definitions['profiles_followers'],
+  APIt.Database['public']['Tables']['profiles_followers']['Row'],
   _ProfilesFollowersAdditionalFields
 >;
 
 export type ProfilesFollowers = ProfilesFollowersFactory['entity'];
-export type ProfilesFollowersInput = ProfilesFollowersFactory['input'];
+export type ProfilesFollowersInput =
+  APIt.Database['public']['Tables']['profiles_followers']['Insert'];
 
 /* -------------------------------------------------------------------------- */
 /*                                 PAPERCRAFTS                                */
 /* -------------------------------------------------------------------------- */
 
+// these are falsely added join table fields we have renamed
+type _PapercraftOmitFields = 'profiles' | 'profile';
+
 // these are incorrectly typed fields we need to overwrite
 type _PapercraftOverwriteFields = {
   pictures: Picture[];
-  dimensions_cm?: number[];
 };
 
 // these are additional fields we need to add
@@ -115,14 +134,18 @@ type _PapercraftAdditionalFields = {
 };
 
 type PapercraftFactory = SupabaseEntityFactory<
-  APIt.definitions['papercrafts'],
-  APIt.definitions['papercrafts_view'],
+  APIt.Database['public']['Tables']['papercrafts']['Row'],
+  APIt.Database['public']['Views']['papercrafts_view']['Row'],
   _PapercraftOverwriteFields,
-  _PapercraftAdditionalFields
+  _PapercraftAdditionalFields,
+  _PapercraftOmitFields
 >;
 
 export type Papercraft = PapercraftFactory['entity'];
-export type PapercraftInput = PapercraftFactory['input'];
+export type PapercraftInput =
+  APIt.Database['public']['Tables']['papercrafts']['Insert'];
+export type PapercraftUpdate =
+  APIt.Database['public']['Tables']['papercrafts']['Update'];
 
 /* ---------------------------- papercraft likes ---------------------------- */
 
@@ -132,30 +155,33 @@ type _PapercraftsLikeAdditionalFields = {
 };
 
 type PapercraftsLikesFactory = SupabaseJoinEntityFactory<
-  APIt.definitions['papercrafts_likes'],
+  APIt.Database['public']['Tables']['papercrafts_likes']['Row'],
   _PapercraftsLikeAdditionalFields
 >;
 
 export type PapercraftLike = PapercraftsLikesFactory['entity'];
-export type PapercraftLikeInput = PapercraftsLikesFactory['input'];
+export type PapercraftLikeInput =
+  APIt.Database['public']['Tables']['papercrafts_likes']['Insert'];
 
 /* ----------------------------- papercraft tags ---------------------------- */
 
 type PapercraftsTagsFactory = SupabaseJoinEntityFactory<
-  APIt.definitions['papercrafts_tags']
+  APIt.Database['public']['Tables']['papercrafts_tags']['Row']
 >;
 
 export type PapercraftsTags = PapercraftsTagsFactory['entity'];
-export type PapercraftsTagsInput = PapercraftsTagsFactory['input'];
+export type PapercraftsTagsInput =
+  APIt.Database['public']['Tables']['papercrafts_tags']['Insert'];
 
 /* --------------------------- papercraft variants -------------------------- */
 
 type PapercraftVariantFactory = SupabaseEntityFactory<
-  APIt.definitions['papercrafts_variants']
+  APIt.Database['public']['Tables']['papercrafts_variants']['Row']
 >;
 
 export type PapercraftVariant = PapercraftVariantFactory['entity'];
-export type PapercraftVariantInput = PapercraftVariantFactory['input'];
+export type PapercraftVariantInput =
+  APIt.Database['public']['Tables']['papercrafts_variants']['Insert'];
 export type PapercraftVariantLocal = SupabaseLocalEntity<PapercraftVariant>;
 
 /* -------------------------------------------------------------------------- */
@@ -177,26 +203,28 @@ type _BuildAdditionalFields = {
 };
 
 type BuildFactory = SupabaseEntityFactory<
-  APIt.definitions['builds'],
-  APIt.definitions['builds_view'],
+  APIt.Database['public']['Tables']['builds']['Row'],
+  APIt.Database['public']['Views']['builds_view']['Row'],
   _BuildOverwriteFields,
   _BuildAdditionalFields
 >;
 
 export type Build = BuildFactory['entity'];
-export type BuildInput = BuildFactory['input'];
+export type BuildInput = APIt.Database['public']['Tables']['builds']['Insert'];
+export type BuildUpdate = APIt.Database['public']['Tables']['builds']['Update'];
 
 /* -------------------------------------------------------------------------- */
 /*                                 COLLECTIVES                                */
 /* -------------------------------------------------------------------------- */
 
 type CollectiveFactory = SupabaseEntityFactory<
-  APIt.definitions['collectives'],
-  APIt.definitions['collectives_view']
+  APIt.Database['public']['Tables']['collectives']['Row'],
+  APIt.Database['public']['Views']['collectives_view']['Row']
 >;
 
 export type Collective = CollectiveFactory['entity'];
-export type CollectiveInput = CollectiveFactory['input'];
+export type CollectiveInput =
+  APIt.Database['public']['Tables']['collectives']['Insert'];
 
 /* -------------------------- collectives profiles -------------------------- */
 
@@ -206,18 +234,20 @@ type _CollectivesProfilesAdditionalFields = {
 };
 
 type CollectivesProfilesFactory = SupabaseJoinEntityFactory<
-  APIt.definitions['collectives_profiles'],
+  APIt.Database['public']['Tables']['collectives_profiles']['Row'],
   _CollectivesProfilesAdditionalFields
 >;
 
 export type CollectivesProfiles = CollectivesProfilesFactory['entity'];
+export type CollectivesProfilesInput =
+  APIt.Database['public']['Tables']['collectives_profiles']['Insert'];
 
 /* -------------------------------------------------------------------------- */
 /*                                ANNOUNCEMENTS                               */
 /* -------------------------------------------------------------------------- */
 
 type AnnouncementFactory = SupabaseEntityFactory<
-  APIt.definitions['announcements']
+  APIt.Database['public']['Tables']['announcements']['Row']
 >;
 
 export type Announcement = AnnouncementFactory['entity'];
@@ -228,8 +258,8 @@ export type AnnouncementInput = AnnouncementFactory['input'];
 /* -------------------------------------------------------------------------- */
 
 type TagsFactory = SupabaseEntityFactory<
-  APIt.definitions['tags'],
-  APIt.definitions['tags_view']
+  APIt.Database['public']['Tables']['tags']['Row'],
+  APIt.Database['public']['Views']['tags_view']['Row']
 >;
 
 export type Tag = TagsFactory['entity'];

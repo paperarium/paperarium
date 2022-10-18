@@ -22,13 +22,16 @@ import {
   profileKeys,
 } from '../../supabase/api/profiles';
 import * as APIt from '../../supabase/types';
-import getNextPageParam from '../../util/getNextPageParam';
+import getNextPageParam, {
+  InfiniteQueryPage,
+} from '../../util/getNextPageParam';
 import FilterBarProfile from '../FilterBar/FilterBarProfile';
 import s from './ProfileGallery.module.scss';
 import InfiniteTableView from '../InfiniteTableView/InfiniteTableView';
 import { CgSpinnerTwoAlt } from 'react-icons/cg';
 import { ECommunity } from '../../util/enums';
 import { ENTITY_ICONS } from '../../util/icons';
+import { useSessionContext } from '@supabase/auth-helpers-react';
 
 type ProfileGalleryProps = {
   children?: React.ReactNode;
@@ -40,6 +43,7 @@ const ProfileGallery: React.FC<ProfileGalleryProps> = function ProfileGallery({
   disabled,
   displays,
 }) {
+  const { supabaseClient } = useSessionContext();
   // the default entity type in the
   const [entityType, setEntityType] = useState<ECommunity>(ECommunity.Profile);
   // search information
@@ -63,18 +67,20 @@ const ProfileGallery: React.FC<ProfileGalleryProps> = function ProfileGallery({
     });
 
   // maintain two infinite queries, one for papercrafts and one for builds
-  const profilesQuery = useInfiniteQuery<APIt.Profile[]>(
+  const profilesQuery = useInfiniteQuery<InfiniteQueryPage<APIt.Profile>>(
     profileKeys.list(profileParams),
-    ({ pageParam = null }) => listProfiles(profileParams, pageParam),
+    ({ pageParam = null }) =>
+      listProfiles(supabaseClient)(profileParams, pageParam),
     {
       enabled: !disabled && entityType === ECommunity.Profile,
       getNextPageParam: getNextPageParam(profileParams),
       keepPreviousData: true,
     }
   );
-  const collectivesQuery = useInfiniteQuery<APIt.Collective[]>(
+  const collectivesQuery = useInfiniteQuery<InfiniteQueryPage<APIt.Collective>>(
     collectiveKeys.list(collectivesParams),
-    ({ pageParam = null }) => listCollectives(collectivesParams, pageParam),
+    ({ pageParam = null }) =>
+      listCollectives(supabaseClient)(collectivesParams, pageParam),
     {
       enabled: !disabled && entityType === ECommunity.Collective,
       getNextPageParam: getNextPageParam(collectivesParams),

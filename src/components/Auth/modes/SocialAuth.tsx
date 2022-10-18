@@ -4,13 +4,13 @@
  * created on Tue Sep 06 2022
  * 2022 the nobot space,
  */
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import { Provider, SupabaseClient } from '@supabase/supabase-js';
 import { Button, Divider, Space, Typography } from '@supabase/ui';
 import { useState } from 'react';
 import { RedirectTo, VIEWS, ViewType } from '../Auth';
 import * as SocialIcons from '../SocialIcons';
 import s from '../Auth.module.scss';
+import { useRouter } from 'next/router';
 
 const buttonStyles: any = {
   azure: {
@@ -69,19 +69,19 @@ export function SocialAuth({
   providers,
   redirectTo,
   view,
+  supabaseClient,
   verticalSocialLayout,
 }: SocialAuthProps) {
   // statefuls
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleProviderSignIn = async (provider: Provider) => {
     setLoading(true);
-    const { error } = await supabaseClient.auth.signIn(
-      { provider },
-      { redirectTo }
-    );
+    const { error } = await supabaseClient.auth.signInWithOAuth({ provider });
     if (error) setError(error.message);
+    else if (redirectTo) router.replace(redirectTo);
     setLoading(false);
   };
 

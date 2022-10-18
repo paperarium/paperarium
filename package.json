@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "get-types": "npx openapi-typescript https://wcdvzivrzlrhqqewtlem.supabase.co/rest/v1/?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjZHZ6aXZyemxyaHFxZXd0bGVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjE4OTc1NTEsImV4cCI6MTk3NzQ3MzU1MX0.jOKU0V2KVijxFj15YBH_BpI2a0x57YkQuuzGCCIbZX0 --output src/supabase/API.ts",
+    "get-types": "supabase gen types typescript --project-id wcdvzivrzlrhqqewtlem > src/supabase/API.ts",
     "lint:fix": "yarn lint --fix",
     "prettier": "npx prettier src --check",
     "prettier:fix": "yarn prettier --write",
@@ -17,8 +17,8 @@
     "postbuild": "next-sitemap"
   },
   "dependencies": {
-    "@supabase/auth-helpers-nextjs": "^0.2.9",
-    "@supabase/auth-helpers-react": "^0.2.3",
+    "@supabase/auth-helpers-nextjs": "^0.4.1",
+    "@supabase/auth-helpers-react": "^0.3.0",
     "@supabase/supabase-js": "^2.0.0",
     "@supabase/ui": "^0.36.5",
     "@tanstack/react-query": "^4.10.3",

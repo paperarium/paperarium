@@ -21,6 +21,10 @@ import Layout from '../../components/Layout/Layout';
 import OptimizedImage from '../../components/OptimizedImage/OptimizedImage';
 import { collectiveKeys, getCollective } from '../../supabase/api/collectives';
 import { BiArrowBack } from 'react-icons/bi';
+import { useSessionContext } from '@supabase/auth-helpers-react';
+import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '../../supabase/API';
+import supabaseClient from '../../supabase/client';
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPING                                   */
@@ -41,12 +45,13 @@ const CollectivePage: NextPage<ProfilePageProps> = function CollectivePage({
 }) {
   // use a fallback loading indicator
   const router = useRouter();
+  const { supabaseClient } = useSessionContext();
   const seeFallback = useRef(router.isFallback);
   const fallbackRef = useRef<HTMLDivElement>(null);
-  // get the user's profile and papercrafts
+  // get the collective's profile and papercrafts
   const collective = useQuery(
     collectiveKeys.get(titlecode),
-    () => getCollective(titlecode),
+    () => getCollective(supabaseClient)(titlecode),
     {
       enabled: !!titlecode,
     }
@@ -159,10 +164,10 @@ export const getStaticProps: GetStaticProps<
   const qparams = { search: '', titlecode };
   const requests = [
     queryClient.prefetchQuery(collectiveKeys.get(titlecode), () =>
-      getCollective(titlecode)
+      getCollective(supabaseClient)(titlecode)
     ),
     queryClient.prefetchQuery(papercraftKeys.list(qparams), () =>
-      listPapercrafts(qparams)
+      listPapercrafts(supabaseClient)(qparams)
     ),
   ];
   await Promise.all(requests);
