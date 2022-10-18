@@ -1,26 +1,24 @@
 import Hamburger from 'hamburger-react';
 import Link from 'next/link';
-import Image from 'next/image';
 import React, { useState } from 'react';
 import NavLink from '../NavLink/NavLink';
 import NavMenu from '../NavMenu/NavMenu';
 import { RiScissorsCutLine } from 'react-icons/ri';
 import s from './NavBar.module.scss';
 import { useRouter } from 'next/router';
-import { useUser } from '@supabase/auth-helpers-react';
-import LOGO from '../../../public/img/logo.svg';
+import { useSessionContext, useUser } from '@supabase/auth-helpers-react';
 import { useQuery } from '@tanstack/react-query';
-import { listAnnouncements } from '../../supabase/api/announcements';
 import { getSelf } from '../../supabase/api/profiles';
 import OptimizedImage from '../OptimizedImage/OptimizedImage';
 
 const NavBar: React.FC = function NavBar() {
+  const { supabaseClient } = useSessionContext();
   const router = useRouter();
   const [navOpen, setNavOpen] = useState(false);
-  const { user } = useUser();
+  const user = useUser();
   const { data: profile } = useQuery(
     ['profiles', { id: user?.id }],
-    () => getSelf(user!.id),
+    () => getSelf(supabaseClient)(user!.id),
     {
       enabled: !!user?.id,
     }

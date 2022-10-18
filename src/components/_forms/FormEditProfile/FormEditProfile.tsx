@@ -15,6 +15,7 @@ import { uploadFile } from '../../../util/uploadFile';
 import OptimizedImage from '../../OptimizedImage/OptimizedImage';
 import s from './FormEditProfile.module.scss';
 import { CSSTransition } from 'react-transition-group';
+import { useSessionContext } from '@supabase/auth-helpers-react';
 
 type FormEditProfileProps = {
   profile: APIt.Profile;
@@ -24,6 +25,7 @@ type FormEditProfileProps = {
 const FormEditProfile: React.FC<FormEditProfileProps> =
   function FormEditProfile({ profile, redirectOnSuccess }) {
     // meta statefuls
+    const { supabaseClient } = useSessionContext();
     const router = useRouter();
     const loadingOverlayRef = useRef<HTMLDivElement>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -52,7 +54,11 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
             /[^a-zA-Z0-9-_\.]/g,
             ''
           )}`;
-          uploaded_avatar_url = await uploadFile(avatar_file, newAvatar);
+          uploaded_avatar_url = await uploadFile(
+            supabaseClient,
+            avatar_file,
+            newAvatar
+          );
         }
 
         // create the mutation input
@@ -65,7 +71,7 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
           (input.avatar_url = uploaded_avatar_url);
 
         // perform the mutation
-        return await updateProfile(profile.id, input);
+        return await updateProfile(supabaseClient)(profile.id, input);
       },
       {
         // on begin, start the loading spinner
@@ -114,7 +120,7 @@ const FormEditProfile: React.FC<FormEditProfileProps> =
             <img src={avatar_url} className={s.inner_image} alt="avatar" />
           ) : (
             <OptimizedImage
-              src={profile.avatar_url}
+              src={profile.avatar_url || undefined}
               className={s.inner_image}
               sizes={'150px'}
             />

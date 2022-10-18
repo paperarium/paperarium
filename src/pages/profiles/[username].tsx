@@ -24,6 +24,10 @@ import {
   ListBuildsQueryVariables,
 } from '../../supabase/api/builds';
 import ProfileDisplay from '../../components/ProfileDisplay/ProfileDisplay';
+import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '../../supabase/API';
+import { useSessionContext } from '@supabase/auth-helpers-react';
+import supabaseClient from '../../supabase/client';
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPING                                   */
@@ -42,12 +46,13 @@ interface QParams extends ParsedUrlQuery {
 const ProfilePage: NextPage<ProfilePageProps> = function ProfilePage({
   username,
 }) {
+  const { supabaseClient } = useSessionContext();
   // use a fallback loading indicator
   const router = useRouter();
   // get the user's profile and papercrafts
   const profile = useQuery(
     profileKeys.get(username),
-    () => getProfile(username),
+    () => getProfile(supabaseClient)(username),
     {
       enabled: !!username,
     }
@@ -106,16 +111,18 @@ export const getStaticProps: GetStaticProps<
   };
   await Promise.all([
     queryClient.prefetchQuery(profileKeys.get(username), () =>
-      getProfile(username)
+      getProfile(supabaseClient)(username)
     ),
     queryClient.prefetchInfiniteQuery(
       papercraftKeys.list(papercraftParams),
-      ({ pageParam = null }) => listPapercrafts(papercraftParams, pageParam),
+      ({ pageParam = 0 }) =>
+        listPapercrafts(supabaseClient)(papercraftParams, pageParam),
       { getNextPageParam: getNextPageParam(papercraftParams) }
     ),
     queryClient.prefetchInfiniteQuery(
       buildKeys.list(papercraftParams),
-      ({ pageParam = null }) => listBuilds(papercraftParams, pageParam),
+      ({ pageParam = 0 }) =>
+        listBuilds(supabaseClient)(papercraftParams, pageParam),
       { getNextPageParam: getNextPageParam(papercraftParams) }
     ),
   ]);

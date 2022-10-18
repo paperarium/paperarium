@@ -1,11 +1,4 @@
-import { supabaseServerClient } from '@supabase/auth-helpers-nextjs';
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
-import type { NextPage } from 'next';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Head from 'next/head';
 import { useState } from 'react';
 import { AdminPaneProps } from '..';
@@ -22,6 +15,7 @@ import {
   getPapercraft,
   papercraftKeys,
 } from '../../../supabase/api/papercrafts';
+import { useSessionContext } from '@supabase/auth-helpers-react';
 
 /**
  * The home page for admin papercraft activities
@@ -31,6 +25,7 @@ const AdminBuildsPane: React.FC<AdminPaneProps> = ({
   activeProfile,
   setActiveProfile,
 }) => {
+  const { supabaseClient } = useSessionContext();
   // search for builds
   const [search, setSearch] = useState<string>('');
   const [currentSearch, setCurrentSearch] = useState<string>(search);
@@ -39,19 +34,19 @@ const AdminBuildsPane: React.FC<AdminPaneProps> = ({
   // queries
   const builds = useQuery(
     ['admin', ...buildKeys.list({ search: currentSearch })],
-    () => listBuilds({ search: currentSearch })
+    () => listBuilds(supabaseClient)({ search: currentSearch })
   );
   const selectedPapercraft = useQuery(
     ['admin', papercraftKeys.get(currBuild?.papercraft_id || '')],
-    () => getPapercraft(currBuild!.papercraft_id),
+    () => getPapercraft(supabaseClient)(currBuild!.papercraft_id),
     { enabled: !!currBuild }
   );
 
   // mutation for transferring ownership of a build / updating it
   const queryClient = useQueryClient();
   const updateBuildMutation = useMutation(
-    async ({ id, input }: { id: string; input: Partial<APIt.Papercraft> }) => {
-      return updateBuild(id, input);
+    async ({ id, input }: { id: string; input: APIt.BuildUpdate }) => {
+      return updateBuild(supabaseClient)(id, input);
     },
     {
       onSuccess: (build) => {
@@ -88,7 +83,7 @@ const AdminBuildsPane: React.FC<AdminPaneProps> = ({
           />
           <div className={s.results_container}>
             {builds.data
-              ? builds.data.map((build) => (
+              ? builds.data.data.map((build) => (
                   <div
                     className={`${s.result} ${
                       currBuild && currBuild.id === build.id ? 'active' : null
@@ -123,7 +118,7 @@ const AdminBuildsPane: React.FC<AdminPaneProps> = ({
               SELECTED PROFILE
               <div className={s.profile_picture}>
                 <OptimizedImage
-                  src={activeProfile.avatar_url}
+                  src={activeProfile.avatar_url || undefined}
                   className={s.inner_image}
                   sizes={`200px`}
                 />
