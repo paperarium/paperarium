@@ -8,6 +8,7 @@ import s2 from '../../../styles/admin/AdminTags.module.scss';
 import { createTag, listTags, tagsKeys } from '../../../supabase/api/tags';
 import { GrClose } from 'react-icons/gr';
 import { CSSTransition } from 'react-transition-group';
+import { useSessionContext } from '@supabase/auth-helpers-react';
 
 let nTags = 0;
 
@@ -17,12 +18,13 @@ let nTags = 0;
  */
 const AdminTagsPane: React.FC<AdminPaneProps> = () => {
   // search for tags
+  const { supabaseClient } = useSessionContext();
   const [search, setSearch] = useState<string>('');
   const [currentSearch, setCurrentSearch] = useState<string>(search);
   const [currTag, setCurrTag] = useState<APIt.Tag | null>(null);
   const tags = useQuery(
     ['admin', ...tagsKeys.list({ search: currentSearch })],
-    () => listTags({ search: currentSearch })
+    () => listTags(supabaseClient)({ search: currentSearch })
   );
   const [showCreate, setShowCreate] = useState(true);
   const [createTagsInput, setCreateTagsInput] = useState<APIt.Tag[]>([
@@ -39,7 +41,7 @@ const AdminTagsPane: React.FC<AdminPaneProps> = () => {
   const createTagsMutation = useMutation(
     async () => {
       if (createTagsMutation.isLoading) return;
-      const inputtedTags = createTagsInput.reduce<Partial<APIt.Tag>[]>(
+      const inputtedTags = createTagsInput.reduce<APIt.TagInput[]>(
         (acc, tag) => {
           if (!tag.name && !tag.code) return acc;
           acc.push({
@@ -51,7 +53,7 @@ const AdminTagsPane: React.FC<AdminPaneProps> = () => {
         []
       );
       // adds all the tags
-      await createTag(inputtedTags);
+      await createTag(supabaseClient)(inputtedTags);
     },
     {
       onSuccess: () => {

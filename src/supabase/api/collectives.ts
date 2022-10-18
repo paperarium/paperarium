@@ -5,12 +5,13 @@
  * 2022 the nobot space,
  */
 
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import { SupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { PostgrestFilterBuilder } from '@supabase/postgrest-js';
 import {
   applyNextPageParam,
   InfiniteQueryFilter,
 } from '../../util/getNextPageParam';
-import { PAGE_SIZE } from '../../util/getPagination';
+import { Database } from '../API';
 import * as APIt from '../types';
 
 /* -------------------------------------------------------------------------- */
@@ -21,14 +22,15 @@ import * as APIt from '../types';
  * Gets a collective by its titlecode
  * @returns A list of collectives
  */
-export const getCollective = async (titlecode: string) => {
-  const { data: collectives, error } = await supabaseClient
-    .from<APIt.Collective>('collectives_view')
-    .select('*')
-    .eq('titlecode', titlecode);
-  if (error) throw error;
-  return collectives[0];
-};
+export const getCollective =
+  (supabaseClient: SupabaseClient<Database>) => async (titlecode: string) => {
+    const { data: collectives, error } = await supabaseClient
+      .from('collectives_view')
+      .select('*')
+      .eq('titlecode', titlecode);
+    if (error) throw error;
+    return collectives[0];
+  };
 
 export type ListCollectivesQueryVariables = {
   search?: string;
@@ -38,26 +40,31 @@ export type ListCollectivesQueryVariables = {
  * Lists the collectives from the supabase database.
  * @returns A list of collectives
  */
-export const listCollectives = async (
-  { search, filter }: ListCollectivesQueryVariables,
-  pageParam: string | number | null = null
-) => {
-  let req = (
-    search
-      ? supabaseClient.rpc<APIt.Collective>('search_collectives', {
-          collective_term: search,
-        })
-      : supabaseClient.from<APIt.Collective>('collectives_view')
-  ).select(`*`);
-  // now apply the filters using the next page param
-  const { data: collectives, error } = await applyNextPageParam(
-    req,
-    filter,
-    pageParam
-  );
-  if (error) throw error;
-  return collectives;
-};
+export const listCollectives =
+  (supabaseClient: SupabaseClient<Database>) =>
+  async (
+    { search, filter }: ListCollectivesQueryVariables,
+    pageParam: number = 0
+  ) => {
+    let req = (
+      search
+        ? supabaseClient.rpc('search_collectives', {
+            collective_term: search,
+          })
+        : supabaseClient.from('collectives_view')
+    ).select(`*`) as PostgrestFilterBuilder<APIt.Collective, APIt.Collective>;
+    // now apply the filters using the next page param
+    const { data: collectives, error } = await applyNextPageParam(
+      req,
+      filter,
+      pageParam
+    );
+    if (error) throw error;
+    return {
+      data: collectives,
+      page: pageParam,
+    };
+  };
 
 /* -------------------------------------------------------------------------- */
 /*                                  MUTATIONS                                 */
@@ -68,47 +75,51 @@ export const listCollectives = async (
  * @param input
  * @returns
  */
-export const createCollective = async (
-  input: APIt.CollectiveInput | APIt.CollectiveInput[]
-) => {
-  const { data: collectives, error } = await supabaseClient
-    .from<APIt.Collective>('collectives')
-    .insert(input);
-  if (error) throw error;
-  return collectives;
-};
+export const createCollective =
+  (supabaseClient: SupabaseClient<Database>) =>
+  async (input: APIt.CollectiveInput | APIt.CollectiveInput[]) => {
+    const { data: collectives, error } = await supabaseClient
+      .from('collectives')
+      .insert(input);
+    if (error) throw error;
+    return collectives;
+  };
 
 /**
  * Updates a collective in the supabase database.
  * @param input
  * @returns
  */
-export const updateCollective = async (
-  id: number,
-  input: Partial<APIt.Collective>
-) => {
-  const { data: collectives, error } = await supabaseClient
-    .from<APIt.Collective>('collectives')
-    .update(input)
-    .match({ id });
-  if (error) throw error;
-  return collectives[0];
-};
+export const updateCollective =
+  (supabaseClient: SupabaseClient<Database>) =>
+  async (id: number, input: APIt.CollectiveInput) => {
+    const { data: collectives, error } = await supabaseClient
+      .from('collectives')
+      .update(input)
+      .match({ id })
+      .select('*')
+      .limit(1)
+      .single();
+    if (error) throw error;
+    return collectives;
+  };
 
 /**
  * Creates a papercraft in the supabase database.
  * @param input
  * @returns
  */
-export const createCollectivesProfiles = async (
-  input: Partial<APIt.CollectivesProfiles> | Partial<APIt.CollectivesProfiles>[]
-) => {
-  const { data: collectives, error } = await supabaseClient
-    .from<APIt.CollectivesProfiles>('collectives_profiles')
-    .insert(input);
-  if (error) throw error;
-  return collectives;
-};
+export const createCollectivesProfiles =
+  (supabaseClient: SupabaseClient<Database>) =>
+  async (
+    input: APIt.CollectivesProfilesInput | APIt.CollectivesProfilesInput[]
+  ) => {
+    const { data: collectives, error } = await supabaseClient
+      .from('collectives_profiles')
+      .insert(input);
+    if (error) throw error;
+    return collectives;
+  };
 
 /* -------------------------------------------------------------------------- */
 /*                                 KEY FACTORY                                */

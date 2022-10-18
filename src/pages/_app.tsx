@@ -15,9 +15,13 @@ import '../styles/swiper.scss';
 import 'lazysizes';
 import 'lazysizes/plugins/attrchange/ls.attrchange';
 import 'react-datepicker/dist/react-datepicker.css';
+import type { Database } from '../supabase/API';
 import { ImgixProvider } from 'react-imgix';
-import { UserProvider } from '@supabase/auth-helpers-react';
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import { SessionContextProvider } from '@supabase/auth-helpers-react';
+import {
+  createBrowserSupabaseClient,
+  Session,
+} from '@supabase/auth-helpers-nextjs';
 import Layout from '../components/Layout/Layout';
 import React, { useEffect, useState } from 'react';
 import {
@@ -32,13 +36,16 @@ import SEO from '../../next-seo.config';
 function MyApp({
   Component,
   pageProps,
-}: AppProps<{ dehydratedState: unknown }>) {
+}: AppProps<{ dehydratedState: unknown; initialSession?: Session | null }>) {
   const [queryClient] = React.useState(() => new QueryClient());
   const getLayout =
     (Component as any).getLayout ||
     ((page: React.ReactNode) => <Layout>{page}</Layout>);
 
   // prevent focus zoom on input fields
+  const [supabaseClient] = useState(() =>
+    createBrowserSupabaseClient<Database>()
+  );
   const [disableInputZoom, setDisableInputZoom] = useState(false);
   useEffect(() => {
     // check if on iOS
@@ -63,13 +70,16 @@ function MyApp({
       </Head>
       <DefaultSeo {...SEO} />
       <ImgixProvider domain={process.env.IMGIX}>
-        <UserProvider supabaseClient={supabaseClient}>
+        <SessionContextProvider
+          supabaseClient={supabaseClient}
+          initialSession={pageProps.initialSession}
+        >
           <QueryClientProvider client={queryClient} contextSharing={true}>
             <Hydrate state={pageProps.dehydratedState}>
               {getLayout(<Component {...pageProps} />)}
             </Hydrate>
           </QueryClientProvider>
-        </UserProvider>
+        </SessionContextProvider>
       </ImgixProvider>
     </>
   );

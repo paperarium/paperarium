@@ -17,6 +17,7 @@ import MultiFileUpload from '../../MultiFileUpload/MultiFileUpload';
 import OptimizedImage from '../../OptimizedImage/OptimizedImage';
 import PapercraftTitle from '../../ResourceTitle/PapercraftTitle';
 import { IoCloseOutline } from 'react-icons/io5';
+import { useSessionContext } from '@supabase/auth-helpers-react';
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPINGS                                  */
@@ -55,20 +56,19 @@ const FormEditBuild: React.ForwardRefRenderFunction<
     setPapercraftId,
     setSubmissionMessage,
     setCanPreview,
-    onSuccess,
     children,
   },
   forwardedRef
 ) {
   // state managers for the state of the papercraft
-  const queryClient = useQueryClient();
+  const { supabaseClient } = useSessionContext();
 
   // input form fields
   const [images, setImages] = useState<
     ((File & { blobURL: string }) | APIt.Picture)[] | null
   >(defaultBuild?.pictures || null);
   const [createdAt, setCreatedAt] = useState<Date>(
-    defaultBuild ? new Date(defaultBuild.created_at) : new Date()
+    defaultBuild?.created_at ? new Date(defaultBuild.created_at) : new Date()
   );
   const [description, setDescription] = useState<string>(
     defaultBuild?.description || ''
@@ -106,6 +106,7 @@ const FormEditBuild: React.ForwardRefRenderFunction<
       user: defaultBuild?.user || profile,
       papercraft: papercraft,
       n_likes: 0,
+      xlink: null,
     };
     return build;
   };
@@ -140,7 +141,7 @@ const FormEditBuild: React.ForwardRefRenderFunction<
         /[^a-zA-Z0-9-_\.]/g,
         ''
       )}`;
-      pictures.push(await uploadImageFile(fileName, i_file));
+      pictures.push(await uploadImageFile(supabaseClient, fileName, i_file));
     }
 
     // 2. build the build
@@ -149,7 +150,7 @@ const FormEditBuild: React.ForwardRefRenderFunction<
     if (!build) {
       setSubmissionMessage('Creating build entry...');
       build = (
-        await createBuild({
+        await createBuild(supabaseClient)({
           user_id: profile.id,
           created_at: createdAt.toISOString(),
           description,
@@ -162,7 +163,7 @@ const FormEditBuild: React.ForwardRefRenderFunction<
     } else {
       setSubmissionMessage('Updating build entry...');
       build = (
-        await updateBuild(build.id, {
+        await updateBuild(supabaseClient)(build.id, {
           user_id: profile.id,
           created_at: createdAt.toISOString(),
           description,

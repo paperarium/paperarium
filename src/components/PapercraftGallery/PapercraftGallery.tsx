@@ -8,10 +8,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import s from './PapercraftGallery.module.scss';
 import Masonry, { MasonryProps } from 'react-masonry-css';
 import FilterBar from '../FilterBar/FilterBar';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import {
   listPapercrafts,
-  ListPapercraftsQueryVariables,
   papercraftKeys,
 } from '../../supabase/api/papercrafts';
 import PapercraftCard from '../PapercraftCard/PapercraftCard';
@@ -26,6 +25,7 @@ import getNextPageParam, {
 import InfiniteTableView from '../InfiniteTableView/InfiniteTableView';
 import { EBuildable, Layout } from '../../util/enums';
 import { ENTITY_ICONS, LAYOUT_ICONS } from '../../util/icons';
+import { useSessionContext } from '@supabase/auth-helpers-react';
 
 const breakpointColumnsObj = {
   default: 5,
@@ -62,6 +62,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
     disabled,
     displays = [EBuildable.Papercraft, EBuildable.Build],
   }) {
+    const { supabaseClient } = useSessionContext();
     // refs
     const loadingOverlayRef = useRef<HTMLDivElement>(null);
 
@@ -98,17 +99,18 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
     };
 
     // maintain two infinite queries, one for papercrafts and one for builds
-    const papercraftsQuery = useInfiniteQuery<APIt.Papercraft[]>(
+    const papercraftsQuery = useInfiniteQuery(
       papercraftKeys.list(fullPParams),
-      ({ pageParam = null }) => listPapercrafts(fullPParams, pageParam),
+      ({ pageParam = 0 }) =>
+        listPapercrafts(supabaseClient)(fullPParams, pageParam),
       {
         enabled: !disabled && entityType === EBuildable.Papercraft,
         getNextPageParam: getNextPageParam(fullPParams),
       }
     );
-    const buildsQuery = useInfiniteQuery<APIt.Build[]>(
+    const buildsQuery = useInfiniteQuery(
       buildKeys.list(fullBParams),
-      ({ pageParam = null }) => listBuilds(fullBParams, pageParam),
+      ({ pageParam = 0 }) => listBuilds(supabaseClient)(fullBParams, pageParam),
       {
         enabled: !disabled && entityType === EBuildable.Build,
         getNextPageParam: getNextPageParam(fullBParams),
@@ -213,7 +215,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
               >
                 {data?.pages
                   ? data.pages.flatMap((page) =>
-                      page.map((entity) => (
+                      page.data.map((entity) => (
                         <PapercraftCard
                           entityType={entityType}
                           key={entity!.id}

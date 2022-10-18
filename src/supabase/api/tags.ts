@@ -4,10 +4,9 @@
  * created on Sat Sep 10 2022
  * 2022 the nobot space,
  */
-import {
-  supabaseClient,
-  supabaseServerClient,
-} from '@supabase/auth-helpers-nextjs';
+import { SupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { PostgrestTransformBuilder } from '@supabase/postgrest-js';
+import { Database } from '../API';
 import * as APIt from '../types';
 
 /* -------------------------------------------------------------------------- */
@@ -24,29 +23,27 @@ export type ListTagsQueryVariables = {
  * Lists the papercrafts from the supabase database.
  * @returns A list of papercrafts
  */
-export const listTags = async ({
-  search,
-  user_id,
-  collective_titlecode,
-}: ListTagsQueryVariables) => {
-  let req = user_id
-    ? supabaseClient.rpc<APIt.Tag>('search_tags_user', {
-        tag_term: search || '',
-        p_user_id: user_id,
-      })
-    : collective_titlecode
-    ? supabaseClient.rpc<APIt.Tag>('search_tags_collective', {
-        tag_term: search || '',
-        p_collective_titlecode: collective_titlecode,
-      })
-    : supabaseClient.rpc<APIt.Tag>('search_tags', {
-        tag_term: search || '',
-      });
-  req = req.select(`*`);
-  const { data: tags, error } = await req;
-  if (error) throw error;
-  return tags;
-};
+export const listTags =
+  (supabaseClient: SupabaseClient<Database>) =>
+  async ({ search, user_id, collective_titlecode }: ListTagsQueryVariables) => {
+    let req: PostgrestTransformBuilder<APIt.Tag, APIt.Tag> = user_id
+      ? (supabaseClient.rpc('search_tags_user', {
+          tag_term: search || '',
+          p_user_id: user_id,
+        }) as any)
+      : collective_titlecode
+      ? (supabaseClient.rpc('search_tags_collective', {
+          tag_term: search || '',
+          p_collective_titlecode: collective_titlecode,
+        }) as any)
+      : (supabaseClient.rpc('search_tags', {
+          tag_term: search || '',
+        }) as any);
+    req = req.select(`*`);
+    const { data: tags, error } = await req;
+    if (error) throw error;
+    return tags;
+  };
 
 /* -------------------------------------------------------------------------- */
 /*                                  MUTATIONS                                 */
@@ -57,15 +54,15 @@ export const listTags = async ({
  * @param input
  * @returns
  */
-export const createTag = async (
-  input: Partial<APIt.Tag> | Partial<APIt.Tag>[]
-) => {
-  const { data: tags, error } = await supabaseClient
-    .from<APIt.Tag>('tags')
-    .insert(input);
-  if (error) throw error;
-  return tags;
-};
+export const createTag =
+  (supabaseClient: SupabaseClient<Database>) =>
+  async (input: APIt.TagInput | APIt.TagInput[]) => {
+    const { data: tags, error } = await supabaseClient
+      .from('tags')
+      .insert(input);
+    if (error) throw error;
+    return tags;
+  };
 
 /* -------------------------------------------------------------------------- */
 /*                                 KEY FACTORY                                */

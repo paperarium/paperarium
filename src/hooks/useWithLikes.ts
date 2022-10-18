@@ -4,12 +4,10 @@
  * created on Thu Sep 29 2022
  * 2022 the nobot space,
  */
-import * as APIt from '../supabase/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import { papercraftKeys } from '../supabase/api/papercrafts';
-import { collectiveKeys } from '../supabase/api/collectives';
 import { buildKeys } from '../supabase/api/builds';
+import { useSessionContext } from '@supabase/auth-helpers-react';
 
 export enum LikeableEntity {
   Papercraft = 'papercraft',
@@ -42,13 +40,14 @@ export default function useWithLikes<T extends { id: string; n_likes: number }>(
   const { keyFactory } = LIKEABLE_ENTITY_MAP[entity_type];
   // use the query client for invalidating queries
   const queryClient = useQueryClient();
+  const { supabaseClient } = useSessionContext();
   const accessor = `${entity_type}_id`;
   // get whether or not the logged-in user has liked this entity
   const q_params = { user_id: user_id!, [accessor]: entity?.id };
   const isLiked = useQuery(
     keyFactory.isLiked(entity!.id),
     async () => {
-      let req = supabaseClient.from<T>(`${entity_type}s_likes`);
+      let req = supabaseClient.from(`${entity_type}s_likes`);
       const { data, error } = await req.select('*').match(q_params);
       if (error) throw error;
       return !!data[0];
@@ -63,10 +62,13 @@ export default function useWithLikes<T extends { id: string; n_likes: number }>(
       if (like.isLoading || isLiked || is_preview) return;
       // creates a link between user_id and following in the database
       const { data: like_entity, error } = await supabaseClient
-        .from<T>(`${entity_type}s_likes`)
-        .insert(q_params as any);
+        .from(`${entity_type}s_likes`)
+        .insert(q_params as any)
+        .select('*')
+        .limit(1)
+        .maybeSingle();
       if (error) throw error;
-      return like_entity;
+      return like_entity as T;
     },
     {
       onMutate: async () => {
@@ -100,11 +102,14 @@ export default function useWithLikes<T extends { id: string; n_likes: number }>(
       if (unlike.isLoading || !isLiked || is_preview) return;
       // creates a link between user_id and following in the database
       const { data: like_entity, error } = await supabaseClient
-        .from<T>(`${entity_type}s_likes`)
+        .from(`${entity_type}s_likes`)
         .delete()
-        .match(q_params as any);
+        .match(q_params as any)
+        .select('*')
+        .limit(1)
+        .maybeSingle();
       if (error) throw error;
-      return like_entity;
+      return like_entity as T;
     },
     {
       onMutate: async () => {

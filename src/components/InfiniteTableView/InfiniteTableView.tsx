@@ -8,6 +8,7 @@ import Link from 'next/link';
 import React, { HTMLAttributes } from 'react';
 import * as APIt from '../../supabase/types';
 import { EBuildable, ECommunity } from '../../util/enums';
+import { InfiniteQueryPage } from '../../util/getNextPageParam';
 import { FIELD_ICONS } from '../../util/icons';
 import OptimizedImage from '../OptimizedImage/OptimizedImage';
 import BuildTitle from '../ResourceTitle/BuildTitle';
@@ -166,7 +167,7 @@ const ProfileRow: React.FC<RowProps<APIt.Profile>> = function ProfileRow({
             <div className={s.profile_cell}>
               <div className={s.result_pic}>
                 <OptimizedImage
-                  src={profile.avatar_url}
+                  src={profile.avatar_url || undefined}
                   className={s.inner_image}
                   sizes={`20px`}
                 />
@@ -214,7 +215,7 @@ const CollectiveRow: React.FC<RowProps<APIt.Collective>> =
               <div className={s.profile_cell}>
                 <div className={s.result_pic}>
                   <OptimizedImage
-                    src={collective.avatar_url}
+                    src={collective.avatar_url || undefined}
                     className={s.inner_image}
                     sizes={`20px`}
                   />
@@ -276,7 +277,7 @@ export type InfiniteTableRowProps<T extends { id: any }> = {
 
 type InfiniteTableViewProps<T extends { id: any }> = {
   type: EBuildable | ECommunity;
-  pages?: T[][];
+  pages?: InfiniteQueryPage<T>[];
   columns?: (keyof T)[];
   onColumnClick: (column: keyof T) => void;
   onCellClick?: (cell: T) => void;
@@ -316,7 +317,7 @@ const InfiniteTableView = React.memo(function InfiniteTableView<
       <tbody>
         {pages
           ? pages.flatMap((page) =>
-              page.map((entity) => (
+              page.data.map((entity) => (
                 <ViewComponent
                   entity={entity}
                   key={entity.id}

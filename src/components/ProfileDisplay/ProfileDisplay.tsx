@@ -9,8 +9,7 @@ import { useRouter } from 'next/router';
 import { getProfile, profileKeys } from '../../supabase/api/profiles';
 import s from './ProfileDisplay.module.scss';
 import PapercraftGallery from '../../components/PapercraftGallery/PapercraftGallery';
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
-import { useUser } from '@supabase/auth-helpers-react';
+import { useSessionContext, useUser } from '@supabase/auth-helpers-react';
 import Link from 'next/link';
 import OptimizedImage from '../../components/OptimizedImage/OptimizedImage';
 import useWithFollowing from '../../hooks/useWithFollowing';
@@ -32,12 +31,13 @@ const ProfileDisplay: React.FC<ProfileDisplayProps> = function ProfileDisplay({
   username,
 }) {
   // use a fallback loading indicator
+  const { supabaseClient } = useSessionContext();
   const router = useRouter();
-  const { user } = useUser();
+  const user = useUser();
   // get the user's profile and papercrafts
   const profile = useQuery(
     profileKeys.get(username),
-    () => getProfile(username),
+    () => getProfile(supabaseClient)(username),
     {
       enabled: !!username,
     }
@@ -45,7 +45,7 @@ const ProfileDisplay: React.FC<ProfileDisplayProps> = function ProfileDisplay({
   // functions for following / unfollowing
   const { isFollowing, follow, unfollow } = useWithFollowing(
     user?.id,
-    profile.data?.id
+    profile.data?.id || undefined
   );
 
   return (
@@ -115,7 +115,7 @@ const ProfileDisplay: React.FC<ProfileDisplayProps> = function ProfileDisplay({
       </div>
       <div className={s.main_grid}>
         <PapercraftGallery
-          user_id={profile.data?.id}
+          user_id={profile.data?.id || undefined}
           breakPointOverride={{
             default: 5,
             2900: 7,

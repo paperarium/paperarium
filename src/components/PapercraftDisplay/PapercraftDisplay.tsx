@@ -18,7 +18,7 @@ import getPublicUrl from '../../util/getPublicUrl';
 import OptimizedImage from '../OptimizedImage/OptimizedImage';
 import rectifyDateFormat from '../../util/rectifyDateFormat';
 import ProfileLink from '../ProfileLink/ProfileLink';
-import { useUser } from '@supabase/auth-helpers-react';
+import { useSessionContext, useUser } from '@supabase/auth-helpers-react';
 import { useQuery } from '@tanstack/react-query';
 import { getIsAdmin } from '../../supabase/api/profiles';
 import dynamic from 'next/dynamic';
@@ -48,12 +48,15 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
     defaultBuild,
     preview,
   }) {
+    const { supabaseClient } = useSessionContext();
     // router for rerouting
     const router = useRouter();
 
     // get current user, to see if we're an admin or own this craft
-    const { user } = useUser();
-    const { data: isAdmin } = useQuery(['isAdmin'], () => getIsAdmin());
+    const user = useUser();
+    const { data: isAdmin } = useQuery(['isAdmin'], () =>
+      getIsAdmin(supabaseClient)()
+    );
 
     // if editing, replace the entire view with the papercraft flow
     const [editing, setEditing] = useState(false);
@@ -82,7 +85,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
     // should already be provided. only do this if we didn't specify a diff build.
     const { data: build_data } = useQuery(
       buildKeys.get(buildId!),
-      () => getBuild(buildId!),
+      () => getBuild(supabaseClient)(buildId!),
       {
         enabled: !!buildId,
         initialData:
@@ -260,7 +263,7 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                   ) : null}
                   {currVariant.pdo_url ? (
                     <a
-                      href={getPublicUrl(currVariant.pdo_url)}
+                      href={getPublicUrl(supabaseClient, currVariant.pdo_url)}
                       target="_blank"
                       rel="noreferrer noopener"
                       className={s.download_button}
@@ -270,7 +273,10 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                   ) : null}
                   {currVariant.pdf_lined_url ? (
                     <a
-                      href={getPublicUrl(currVariant.pdf_lined_url)}
+                      href={getPublicUrl(
+                        supabaseClient,
+                        currVariant.pdf_lined_url
+                      )}
                       target="_blank"
                       rel="noreferrer noopener"
                       className={s.download_button}
@@ -280,7 +286,10 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                   ) : null}
                   {currVariant.pdf_lineless_url ? (
                     <a
-                      href={getPublicUrl(currVariant.pdf_lineless_url)}
+                      href={getPublicUrl(
+                        supabaseClient,
+                        currVariant.pdf_lineless_url
+                      )}
                       target="_blank"
                       rel="noreferrer noopener"
                       className={s.download_button}

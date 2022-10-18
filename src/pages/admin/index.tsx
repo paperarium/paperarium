@@ -1,5 +1,3 @@
-import { supabaseServerClient } from '@supabase/auth-helpers-nextjs';
-import { QueryClient } from '@tanstack/react-query';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
@@ -11,6 +9,7 @@ import {
 import OptimizedImage from '../../components/OptimizedImage/OptimizedImage';
 import s from '../../styles/admin/Admin.module.scss';
 import * as APIt from '../../supabase/types';
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 
 /**
  * The home page for admin activities
@@ -67,9 +66,9 @@ const AdminPage: NextPage = () => {
  * @returns
  */
 export async function getServerSideProps(context: any) {
-  const { data: isAdmin } = await supabaseServerClient(context).rpc<boolean>(
-    'get_is_admin'
-  );
+  const isAdmin = !!(
+    await createServerSupabaseClient(context).rpc('get_is_admin')
+  ).data![0];
 
   if (!isAdmin) {
     return {

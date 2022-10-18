@@ -19,6 +19,8 @@ import PapercraftDisplay from '../../PapercraftDisplay/PapercraftDisplay';
 import OptimizedImage from '../../OptimizedImage/OptimizedImage';
 import InfiniteScroll from 'react-infinite-scroller';
 import { PAGE_SIZE } from '../../../util/getPagination';
+import { useSessionContext } from '@supabase/auth-helpers-react';
+import getNextPageParam from '../../../util/getNextPageParam';
 
 /**
  * The home page for admin papercraft activities
@@ -28,6 +30,7 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
   activeProfile,
   activeCollective,
 }) => {
+  const { supabaseClient } = useSessionContext();
   // search for papercrafts
   const [search, setSearch] = useState<string>('');
   const [currentSearch, setCurrentSearch] = useState<string>(search);
@@ -37,35 +40,31 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
 
   // infinite scroll for papercrafts
   const list_q_params = { search: currentSearch };
-  const { data, hasNextPage, fetchNextPage } = useInfiniteQuery<
-    APIt.Papercraft[]
-  >(
+  const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
     papercraftKeys.list(list_q_params),
-    ({ pageParam = null }) => listPapercrafts(list_q_params, pageParam),
+    ({ pageParam = 0 }) =>
+      listPapercrafts(supabaseClient)(list_q_params, pageParam),
     {
-      getNextPageParam: (lastPage) =>
-        lastPage.length === PAGE_SIZE
-          ? lastPage[lastPage.length - 1].created_at
-          : null,
+      getNextPageParam: getNextPageParam(list_q_params),
     }
   );
   // get the currently-selected papercraft
   const selectedPapercraft = useQuery(
     papercraftKeys.get(currPapercraft?.id || ''),
-    () => getPapercraft(currPapercraft!.id),
+    () => getPapercraft(supabaseClient)(currPapercraft!.id),
     { enabled: !!currPapercraft }
   );
 
   // mutation for transferring ownership of a papercraft / updating it
   const queryClient = useQueryClient();
   const updatePapercraftMutation = useMutation(
-    async ({ id, input }: { id: string; input: Partial<APIt.Papercraft> }) => {
-      return updatePapercraft(id, input);
+    async ({ id, input }: { id: string; input: APIt.PapercraftUpdate }) => {
+      return updatePapercraft(supabaseClient)(id, input);
     },
     {
       onSuccess: (papercraft) => {
         queryClient.invalidateQueries(papercraftKeys.lists());
-        queryClient.invalidateQueries(papercraftKeys.get(papercraft[0].id));
+        queryClient.invalidateQueries(papercraftKeys.get(papercraft.id));
       },
     }
   );
@@ -106,7 +105,7 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
             >
               {data?.pages ? (
                 data.pages.flatMap((page) =>
-                  page.map((papercraft) => (
+                  page.data.map((papercraft) => (
                     <div
                       className={`${s.result} ${
                         currPapercraft && currPapercraft.id === papercraft.id
@@ -147,7 +146,7 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
               SELECTED PROFILE
               <div className={s.profile_picture}>
                 <OptimizedImage
-                  src={activeProfile.avatar_url}
+                  src={activeProfile.avatar_url || undefined}
                   className={s.inner_image}
                   sizes={`200px`}
                 />
@@ -186,7 +185,7 @@ const AdminPapercraftsPane: React.FC<AdminPaneProps> = ({
               SELECTED COLLECTIVE
               <div className={s.profile_picture}>
                 <OptimizedImage
-                  src={activeCollective.avatar_url}
+                  src={activeCollective.avatar_url || undefined}
                   className={s.inner_image}
                   sizes={`200px`}
                 />
