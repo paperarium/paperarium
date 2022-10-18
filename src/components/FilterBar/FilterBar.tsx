@@ -18,6 +18,7 @@ import {
   tagsKeys,
 } from '../../supabase/api/tags';
 import { IoPricetagOutline } from 'react-icons/io5';
+import { useSessionContext } from '@supabase/auth-helpers-react';
 
 type FilterBarProps = {
   user_id?: string;
@@ -37,6 +38,7 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
   collective_titlecode,
 }) {
   // statefuls
+  const { supabaseClient } = useSessionContext();
   const menuRef = useRef<HTMLDivElement>(null);
   const [search, setSearch] = useState('');
   const [tagSearch, setTagSearch] = useState('');
@@ -47,8 +49,8 @@ const FilterBar: React.FC<FilterBarProps> = function FilterBar({
     user_id,
     collective_titlecode,
   };
-  const tags = useQuery<APIt.Tag[]>(tagsKeys.list(qparams), () =>
-    listTags(qparams)
+  const tags = useQuery(tagsKeys.list(qparams), () =>
+    listTags(supabaseClient)(qparams)
   );
 
   return (

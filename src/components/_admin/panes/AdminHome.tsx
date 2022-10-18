@@ -1,4 +1,4 @@
-import { supabaseServerClient } from '@supabase/auth-helpers-nextjs';
+import { useSessionContext } from '@supabase/auth-helpers-react';
 import { QueryClient, useQuery } from '@tanstack/react-query';
 import type { NextPage } from 'next';
 import Head from 'next/head';
@@ -15,12 +15,13 @@ const AdminHomePane: React.FC<AdminPaneProps> = ({
   activeProfile,
   setActiveProfile,
 }) => {
+  const { supabaseClient } = useSessionContext();
   // search for profiles
   const [search, setSearch] = useState<string>('');
   const [currentSearch, setCurrentSearch] = useState<string>(search);
   const profiles = useQuery(
     ['admin', 'profiles', { search: currentSearch }],
-    () => listProfiles({ search: currentSearch })
+    () => listProfiles(supabaseClient)({ search: currentSearch })
   );
 
   return (

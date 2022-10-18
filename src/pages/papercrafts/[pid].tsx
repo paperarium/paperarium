@@ -14,6 +14,9 @@ import s from '../../components/PapercraftDisplay/PapercraftDisplay.module.scss'
 import { ParsedUrlQuery } from 'node:querystring';
 import { NextSeo } from 'next-seo';
 import FallbackOverlay from '../../components/FallbackOverlay/FallbackOverlay';
+import { useSessionContext } from '@supabase/auth-helpers-react';
+import { Database } from '../../supabase/API';
+import supabaseClient from '../../supabase/client';
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPING                                   */
@@ -32,12 +35,13 @@ interface QParams extends ParsedUrlQuery {
 const PapercraftPage: NextPage<PapercraftPageProps> = function PapercraftPage({
   pid,
 }) {
+  const { supabaseClient } = useSessionContext();
   // use a fallback loading indicator
   const router = useRouter();
   // get the cached papercraft query. we will also re-get the papercraft likes
   const papercraft = useQuery(
     papercraftKeys.get(pid),
-    () => getPapercraft(pid),
+    () => getPapercraft(supabaseClient)(pid),
     {
       enabled: !!pid,
     }
@@ -105,7 +109,7 @@ export const getStaticProps: GetStaticProps<
   const queryClient = new QueryClient();
   const pid = params!.pid!;
   await queryClient.prefetchQuery(papercraftKeys.get(pid), () =>
-    getPapercraft(pid)
+    getPapercraft(supabaseClient)(pid)
   );
   return {
     props: {

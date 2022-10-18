@@ -32,9 +32,14 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { DatePicker } from '../../misc/DatePicker';
 import MultiItemCreate from '../../MultiItemCreate/MultiItemCreate';
 import ItemRendererVariant from '../../MultiItemCreate/ItemRendererVariant';
+import {
+  SupabaseClient,
+  useSessionContext,
+} from '@supabase/auth-helpers-react';
 
 // debounce the fetch tags function
-const fetchTags = debounce(listTags, 300, { maxWait: 1200 });
+const fetchTags = (supabaseClient: SupabaseClient) =>
+  debounce(listTags(supabaseClient), 300, { maxWait: 1200 });
 
 /* -------------------------------------------------------------------------- */
 /*                                   TYPINGS                                  */
@@ -78,6 +83,7 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
   /*                                 INPUT FORM                                 */
   /* -------------------------------------------------------------------------- */
   // state managers for the state of the papercraft
+  const { supabaseClient } = useSessionContext();
   const queryClient = useQueryClient();
 
   // input form fields
@@ -151,6 +157,8 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
             id: '',
             created_at: '',
             updated_at: '',
+            description: null,
+            xlink: null,
             user_id: profile.id,
             papercraft_id: '',
             pictures: [],
@@ -166,26 +174,28 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
       updated_at: new Date().toDateString(),
       title: title,
       description: description,
+      collective_id: null,
+      build_id: null,
       glb_url: glb
         ? typeof glb === 'string'
           ? glb
           : URL.createObjectURL(glb)
-        : undefined,
+        : null,
       pdo_url: pdo
         ? typeof pdo === 'string'
           ? pdo
           : URL.createObjectURL(pdo)
-        : undefined,
+        : null,
       pdf_lineless_url: pdfLineless
         ? typeof pdfLineless === 'string'
           ? pdfLineless
           : URL.createObjectURL(pdfLineless)
-        : undefined,
+        : null,
       pdf_lined_url: pdfLined
         ? typeof pdfLined === 'string'
           ? pdfLined
           : URL.createObjectURL(pdfLined)
-        : undefined,
+        : null,
       pictures: images.map((img) =>
         (img as File & { blobURL?: string }).blobURL
           ? {
@@ -201,7 +211,7 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
           ? [dLength, dWidth, dHeight].map(
               (val) => val * (dUnits === 'cm' ? 1 : 2.54)
             )
-          : undefined,
+          : null,
       verified: false,
       xlink: xLink,
       display_build,
@@ -214,17 +224,17 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
           ? typeof variant.pdo_url !== 'string'
             ? URL.createObjectURL(variant.pdo_url)
             : variant.pdo_url
-          : undefined,
+          : null,
         pdf_lineless_url: variant.pdf_lineless_url
           ? typeof variant.pdf_lineless_url !== 'string'
             ? URL.createObjectURL(variant.pdf_lineless_url)
             : variant.pdf_lineless_url
-          : undefined,
+          : null,
         pdf_lined_url: variant.pdf_lined_url
           ? typeof variant.pdf_lined_url !== 'string'
             ? URL.createObjectURL(variant.pdf_lined_url)
             : variant.pdf_lined_url
-          : undefined,
+          : null,
       })),
       n_builds: 1,
       n_likes: 0,
@@ -272,7 +282,7 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
           /[^a-zA-Z0-9-_\.]/g,
           ''
         )}`;
-        pictures.push(await uploadImageFile(fileName, i_file));
+        pictures.push(await uploadImageFile(supabaseClient, fileName, i_file));
       }
 
       // 2. upload the papercraft files.
@@ -286,7 +296,7 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
             /[^a-zA-Z0-9-_\.]/g,
             ''
           )}`;
-          glb_url = await uploadFile(glb_file, glb);
+          glb_url = await uploadFile(supabaseClient, glb_file, glb);
         } else {
           glb_url = glb;
         }
@@ -300,7 +310,11 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
             /[^a-zA-Z0-9-_\.]/g,
             ''
           )}`;
-          pdf_lined_url = await uploadFile(pdf_lined_file, pdfLined);
+          pdf_lined_url = await uploadFile(
+            supabaseClient,
+            pdf_lined_file,
+            pdfLined
+          );
         } else {
           pdf_lined_url = pdfLined;
         }
@@ -314,7 +328,11 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
             /[^a-zA-Z0-9-_\.]/g,
             ''
           )}`;
-          pdf_lineless_url = await uploadFile(pdf_lineless_file, pdfLineless);
+          pdf_lineless_url = await uploadFile(
+            supabaseClient,
+            pdf_lineless_file,
+            pdfLineless
+          );
         } else {
           pdf_lineless_url = pdfLineless;
         }
@@ -328,7 +346,7 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
             /[^a-zA-Z0-9-_\.]/g,
             ''
           )}`;
-          pdo_url = await uploadFile(pdo_file, pdo);
+          pdo_url = await uploadFile(supabaseClient, pdo_file, pdo);
         } else {
           pdo_url = pdo;
         }
@@ -340,7 +358,7 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
       if (!papercraft) {
         setSubmissionMessage('Creating design entry...');
         papercraft = (
-          await createPapercraft({
+          await createPapercraft(supabaseClient)({
             user_id: profile.id,
             title,
             created_at: createdAt.toISOString(),
@@ -364,33 +382,31 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
         // otherwise, we're just updating the entry
       } else {
         setSubmissionMessage('Updating design entry...');
-        papercraft = (
-          await updatePapercraft(papercraft.id, {
-            title,
-            created_at: createdAt.toISOString(),
-            description,
-            glb_url,
-            pdo_url,
-            pdf_lineless_url,
-            pdf_lined_url,
-            pictures,
-            difficulty: difficulty,
-            xlink: xLink,
-            dimensions_cm:
-              dLength && dWidth && dHeight
-                ? [dLength, dWidth, dHeight].map(
-                    (val) => val * (dUnits === 'cm' ? 1 : 2.54)
-                  )
-                : undefined,
-          })
-        )[0];
+        papercraft = await updatePapercraft(supabaseClient)(papercraft.id, {
+          title,
+          created_at: createdAt.toISOString(),
+          description,
+          glb_url,
+          pdo_url,
+          pdf_lineless_url,
+          pdf_lined_url,
+          pictures,
+          difficulty: difficulty,
+          xlink: xLink,
+          dimensions_cm:
+            dLength && dWidth && dHeight
+              ? [dLength, dWidth, dHeight].map(
+                  (val) => val * (dUnits === 'cm' ? 1 : 2.54)
+                )
+              : undefined,
+        });
       }
 
       // 4. upload the variants' files. if the file is a string, it is already
       // uploaded. if not, then we need to create it.
       setSubmissionMessage('Uploading variant files...');
-      const variantCreates: Partial<APIt.PapercraftVariant>[] = [];
-      const variantUpserts: Partial<APIt.PapercraftVariant>[] = [];
+      const variantCreates: APIt.PapercraftVariantInput[] = [];
+      const variantUpserts: APIt.PapercraftVariantInput[] = [];
       for (let i = 0; i < variants.length; i++) {
         const variant = variants[i];
         if (
@@ -428,16 +444,20 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
                 /[^a-zA-Z0-9-_\.]/g,
                 ''
               )}`;
-              VARIANT_FILES[url_type] = await uploadFile(file_name, file);
+              VARIANT_FILES[url_type] = await uploadFile(
+                supabaseClient,
+                file_name,
+                file
+              );
           }
         }
 
         // add the upsert to the list
-        const newVariant: Partial<APIt.PapercraftVariant> = {
+        const newVariant: APIt.PapercraftVariantInput = {
           ...variant,
           ...VARIANT_FILES,
           user_id: profile.id,
-          papercraft_id: papercraft.id,
+          papercraft_id: papercraft!.id,
           id: !!variant.created_at ? variant.id : undefined,
         };
         // if this is a new variant, don't update
@@ -461,18 +481,18 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
 
       // 5. perform upserts + pruning
       setSubmissionMessage('Pruning variant entries...');
-      await deletePapercraftVariants(variantDeletes);
+      await deletePapercraftVariants(supabaseClient)(variantDeletes);
       setSubmissionMessage('Upserting variant entries...');
-      await insertPapercraftVariants(variantCreates);
-      await upsertPapercraftVariants(variantUpserts);
+      await insertPapercraftVariants(supabaseClient)(variantCreates);
+      await upsertPapercraftVariants(supabaseClient)(variantUpserts);
 
       // 6. if this was uploaded as a build, cross-post it to user's builds
       if (isBuild) {
         setSubmissionMessage('Creating build entry...');
         const build_id = (
-          await createBuild({
+          await createBuild(supabaseClient)({
             user_id: profile.id,
-            papercraft_id: papercraft.id,
+            papercraft_id: papercraft!.id,
             description: '',
             pictures,
             xlink: xLink,
@@ -480,7 +500,7 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
           })
         )[0].id;
         setSubmissionMessage('Linking build entry to papercraft...');
-        await updatePapercraft(papercraft.id, {
+        await updatePapercraft(supabaseClient)(papercraft!.id, {
           build_id,
         });
       }
@@ -491,7 +511,10 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
         const papercraft_tags_deletions = [];
         for (const papercraft_tag of defaultPapercraft.tags) {
           papercraft_tags_deletions.push(
-            deletePapercraftsTags(defaultPapercraft.id, papercraft_tag.id)
+            deletePapercraftsTags(supabaseClient)(
+              defaultPapercraft.id,
+              papercraft_tag.id
+            )
           );
         }
         await Promise.all(papercraft_tags_deletions);
@@ -502,11 +525,11 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
       const papercraft_tags_input: APIt.PapercraftsTagsInput[] = [];
       for (const papercraft_tag of tags) {
         papercraft_tags_input.push({
-          papercraft_id: papercraft.id,
+          papercraft_id: papercraft!.id,
           tag_id: papercraft_tag.id,
         });
       }
-      await createPapercraftsTags(papercraft_tags_input);
+      await createPapercraftsTags(supabaseClient)(papercraft_tags_input);
 
       // 6. Finished!
       setSubmissionMessage('Done!');
@@ -516,8 +539,8 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
       onSuccess: (papercraft) => {
         // use the query client to invalidate any papercraft searches
         queryClient.invalidateQueries(papercraftKeys.lists());
-        queryClient.invalidateQueries(papercraftKeys.get(papercraft.id));
-        onSuccess(papercraft);
+        queryClient.invalidateQueries(papercraftKeys.get(papercraft!.id));
+        onSuccess(papercraft!);
       },
     }
   );
@@ -587,7 +610,9 @@ const FormEditPapercraft: React.ForwardRefRenderFunction<
         </div>
         <AsyncSelect
           isMulti
-          loadOptions={async (search: string) => fetchTags({ search })}
+          loadOptions={async (search: string) =>
+            fetchTags(supabaseClient)({ search })
+          }
           className={s.tag_input}
           defaultValue={tags || []}
           getOptionLabel={(option: unknown) => (option as APIt.Tag).name}

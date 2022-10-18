@@ -18,6 +18,9 @@ import {
   papercraftKeys,
 } from '../supabase/api/papercrafts';
 import { PAGE_SIZE } from '../util/getPagination';
+import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { Database } from '../supabase/API';
+import supabaseClient from '../supabase/client';
 
 const Home: NextPage = () => {
   return (
@@ -105,15 +108,18 @@ export async function getStaticProps() {
   await Promise.all([
     queryClient.prefetchInfiniteQuery(
       papercraftKeys.list(params),
-      ({ pageParam = null }) => listPapercrafts(params, pageParam),
+      ({ pageParam = 0 }) => listPapercrafts(supabaseClient)(params, pageParam),
       { getNextPageParam: getNextPageParam(params) }
     ),
     queryClient.prefetchInfiniteQuery(
       buildKeys.list(params),
-      ({ pageParam = null }) => listBuilds(params, pageParam),
+      ({ pageParam = 0 }) => listBuilds(supabaseClient)(params, pageParam),
       { getNextPageParam: getNextPageParam(params) }
     ),
-    queryClient.prefetchQuery(['announcements'], listAnnouncements),
+    queryClient.prefetchQuery(
+      ['announcements'],
+      listAnnouncements(supabaseClient)
+    ),
   ]);
   return {
     props: {

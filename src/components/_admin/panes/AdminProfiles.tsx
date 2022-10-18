@@ -1,4 +1,3 @@
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Head from 'next/head';
 import { useState } from 'react';
@@ -17,6 +16,7 @@ import {
   collectiveKeys,
   createCollectivesProfiles,
 } from '../../../supabase/api/collectives';
+import { useSessionContext } from '@supabase/auth-helpers-react';
 
 /**
  * The home page for admin activities
@@ -27,6 +27,7 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
   setActiveProfile,
   activeCollective,
 }) => {
+  const { supabaseClient } = useSessionContext();
   // search for profiles
   const [search, setSearch] = useState<string>('');
   const [currProfile, setCurrProfile] = useState<APIt.Profile | null>(
@@ -38,7 +39,7 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
     show_all: true,
   };
   const profiles = useQuery(profileKeys.list(q_params), () =>
-    listProfiles(q_params)
+    listProfiles(supabaseClient)(q_params)
   );
 
   // mutation for adding a user to a collective
@@ -51,7 +52,7 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
       collective_id: number;
       profile_id: string;
     }) => {
-      return createCollectivesProfiles({
+      return createCollectivesProfiles(supabaseClient)({
         collective_id,
         profile_id,
       });
@@ -87,7 +88,7 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
           />
           <div className={s.results_container}>
             {profiles.data
-              ? profiles.data.map((profile) => (
+              ? profiles.data.data.map((profile) => (
                   <div
                     className={`${s.result} ${
                       currProfile && currProfile.id === profile.id
@@ -102,7 +103,7 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
                       style={{ borderRadius: '50%', overflow: 'hidden' }}
                     >
                       <OptimizedImage
-                        src={profile.avatar_url}
+                        src={profile.avatar_url || undefined}
                         className={s.inner_image}
                         sizes={`20px`}
                       />
@@ -143,7 +144,7 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
               SELECTED PROFILE
               <div className={s.profile_picture}>
                 <OptimizedImage
-                  src={activeProfile.avatar_url}
+                  src={activeProfile.avatar_url || undefined}
                   className={s.inner_image}
                   sizes={`200px`}
                 />
@@ -157,7 +158,7 @@ const AdminProfilesPane: React.FC<AdminPaneProps> = ({
               SELECTED COLLECTIVE
               <div className={s.profile_picture}>
                 <OptimizedImage
-                  src={activeCollective.avatar_url}
+                  src={activeCollective.avatar_url || undefined}
                   className={s.inner_image}
                   sizes={`200px`}
                 />

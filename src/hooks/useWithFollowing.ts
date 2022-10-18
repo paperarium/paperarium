@@ -13,6 +13,7 @@ import {
   profileKeys,
   unfollowProfile,
 } from '../supabase/api/profiles';
+import { useSessionContext } from '@supabase/auth-helpers-react';
 
 export default function useWithFollowing(
   user_id?: string,
@@ -20,11 +21,12 @@ export default function useWithFollowing(
 ) {
   // use the query client for invalidating queries
   const queryClient = useQueryClient();
+  const { supabaseClient } = useSessionContext();
   // get whether or not the logged-in user is following this profile
   const q_params = { user_id: user_id!, following_id: following_id! };
   const isFollowing = useQuery(
     profileKeys.getIsFollowing(q_params),
-    () => getIsFollowing(q_params),
+    () => getIsFollowing(supabaseClient)(q_params),
     {
       enabled: !!q_params.user_id && !!q_params.following_id,
     }
@@ -34,7 +36,7 @@ export default function useWithFollowing(
     async () => {
       if (follow.isLoading) return;
       // creates a link between user_id and following in the database
-      return followProfile(q_params);
+      return followProfile(supabaseClient)(q_params);
     },
     {
       onSuccess: (profilesFollowers) => {
@@ -53,7 +55,7 @@ export default function useWithFollowing(
     async () => {
       if (unfollow.isLoading) return;
       // creates a link between user_id and following in the database
-      return unfollowProfile(q_params);
+      return unfollowProfile(supabaseClient)(q_params);
     },
     {
       onSuccess: (profilesFollowers) => {

@@ -8,8 +8,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 // import { Auth } from "@supabase/ui";
 import Auth from '../components/Auth/Auth';
-import { useUser } from '@supabase/auth-helpers-react';
-import { supabaseClient } from '@supabase/auth-helpers-nextjs';
+import { useSessionContext, useUser } from '@supabase/auth-helpers-react';
 import s from '../styles/Login.module.scss';
 import Layout from '../components/Layout/Layout';
 import { useEffect } from 'react';
@@ -17,8 +16,9 @@ import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 
 const LoginPage: NextPage = () => {
+  const { supabaseClient } = useSessionContext();
   const router = useRouter();
-  const { user } = useUser();
+  const user = useUser();
   useEffect(() => {
     if (user) {
       router.push('/');

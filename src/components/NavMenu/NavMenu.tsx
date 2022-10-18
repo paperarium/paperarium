@@ -4,7 +4,7 @@
  * created on Tue Aug 23 2022
  * 2022 the nobot space,
  */
-import { useUser } from '@supabase/auth-helpers-react';
+import { useSessionContext, useUser } from '@supabase/auth-helpers-react';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -25,18 +25,22 @@ const NavMenu: React.FC<NavMenuProps> = function NavMenu({
   toggled,
   setToggled,
 }) {
+  const { supabaseClient } = useSessionContext();
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
-  const { user } = useUser();
+  const user = useUser();
   const { data: profile } = useQuery(
     ['profiles', { id: user?.id }],
-    () => getSelf(user!.id),
+    () => getSelf(supabaseClient)(user!.id),
     {
       enabled: !!user?.id,
     }
   );
-  const announcements = useQuery(['announcements'], listAnnouncements);
+  const announcements = useQuery(
+    ['announcements'],
+    listAnnouncements(supabaseClient)
+  );
 
   const closeMenu = () => setToggled(false);
 

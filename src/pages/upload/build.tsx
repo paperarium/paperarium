@@ -12,10 +12,12 @@ import { useRouter } from 'next/router';
 import { getIsAdmin } from '../../supabase/api/profiles';
 import { useQuery } from '@tanstack/react-query';
 import FlowBuild from '../../components/_flows/FlowBuild/FlowBuild';
+import { useSessionContext } from '@supabase/auth-helpers-react';
 
 const UploadBuildPage: NextPage<{ user: User }> = ({ user }) => {
+  const { supabaseClient } = useSessionContext();
   const router = useRouter();
-  const isAdmin = useQuery(['isAdmin'], () => getIsAdmin());
+  const isAdmin = useQuery(['isAdmin'], () => getIsAdmin(supabaseClient)());
 
   return (
     <>

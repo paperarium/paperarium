@@ -10,14 +10,19 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import { CgSpinnerTwoAlt } from 'react-icons/cg';
 import InfiniteScroll from 'react-infinite-scroller';
 import { EBuildable, ECommunity } from '../../util/enums';
-import getNextPageParam from '../../util/getNextPageParam';
+import getNextPageParam, {
+  InfiniteQueryPage,
+} from '../../util/getNextPageParam';
 import InfiniteTableView from '../InfiniteTableView/InfiniteTableView';
 import s from './SearchModal.module.scss';
 
-type SearchModalProps<T, S extends { search: string }> = {
+type SearchModalProps<
+  T extends Record<string, unknown>,
+  S extends { search: string }
+> = {
   entityType: EBuildable | ECommunity;
   defaultParams: S;
-  query: (arg0: S, arg1: any) => Promise<T[]>;
+  query: (arg0: S, arg1: any) => Promise<InfiniteQueryPage<T>>;
   keyFactory: { list: (arg0: S) => readonly any[] };
   onCellClick: (cell: T) => void;
 };
@@ -41,9 +46,9 @@ const SearchModal = function SearchModalProps<
     ...defaultParams,
     search,
   };
-  const { hasNextPage, data, fetchNextPage } = useInfiniteQuery<T[]>(
+  const { hasNextPage, data, fetchNextPage } = useInfiniteQuery(
     keyFactory.list(params),
-    ({ pageParam = null }) => query(params, pageParam),
+    ({ pageParam = 0 }) => query(params, pageParam),
     {
       getNextPageParam: getNextPageParam({}),
       keepPreviousData: true,

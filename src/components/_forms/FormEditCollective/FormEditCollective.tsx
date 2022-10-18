@@ -15,6 +15,7 @@ import { uploadFile } from '../../../util/uploadFile';
 import OptimizedImage from '../../OptimizedImage/OptimizedImage';
 import s from './FormEditCollective.module.scss';
 import { CSSTransition } from 'react-transition-group';
+import { useSessionContext } from '@supabase/auth-helpers-react';
 
 type FormEditCollectiveProps = {
   collective: APIt.Collective;
@@ -24,6 +25,7 @@ type FormEditCollectiveProps = {
 const FormEditCollective: React.FC<FormEditCollectiveProps> =
   function FormEditCollective({ collective, redirectOnSuccess }) {
     // meta statefuls
+    const { supabaseClient } = useSessionContext();
     const router = useRouter();
     const loadingOverlayRef = useRef<HTMLDivElement>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -50,11 +52,15 @@ const FormEditCollective: React.FC<FormEditCollectiveProps> =
           const avatar_file = `${
             collective.id
           }/avatars/${newAvatar.name.replace(/[^a-zA-Z0-9-_\.]/g, '')}`;
-          uploaded_avatar_url = await uploadFile(avatar_file, newAvatar);
+          uploaded_avatar_url = await uploadFile(
+            supabaseClient,
+            avatar_file,
+            newAvatar
+          );
         }
 
         // create the mutation input
-        const input: Partial<APIt.Collective> = {};
+        const input: Partial<APIt.CollectiveInput> = {};
         title && (input.title = title);
         titlecode !== undefined && (input.titlecode = titlecode);
         description !== undefined && (input.description = description);
@@ -63,7 +69,10 @@ const FormEditCollective: React.FC<FormEditCollectiveProps> =
           (input.avatar_url = uploaded_avatar_url);
 
         // perform the mutation
-        return await updateCollective(collective.id, input);
+        return await updateCollective(supabaseClient)(
+          collective.id,
+          input as APIt.CollectiveInput
+        );
       },
       {
         // on begin, start the loading spinner
@@ -112,7 +121,7 @@ const FormEditCollective: React.FC<FormEditCollectiveProps> =
             <img src={avatar_url} className={s.inner_image} alt="avatar" />
           ) : (
             <OptimizedImage
-              src={collective.avatar_url}
+              src={collective.avatar_url || undefined}
               className={s.inner_image}
               sizes={'150px'}
             />
