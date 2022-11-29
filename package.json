@@ -51,7 +51,7 @@
     "@types/react-imgix": "^9.5.0",
     "@types/react-pdf": "^5.7.2",
     "@types/react-transition-group": "^4.4.5",
-    "@types/uuid": "^8.3.4",
+    "@types/uuid": "^9.0.0",
     "eslint": "8.25.0",
     "eslint-config-next": "12.3.1",
     "eslint-config-prettier": "^8.5.0",
