@@ -38,7 +38,7 @@
     "react-select": "^5.5.1",
     "react-textarea-autosize": "^8.3.4",
     "react-transition-group": "^4.4.5",
-    "sass": "^1.55.0",
+    "sass": "^1.56.1",
     "swiper": "^8.4.4",
     "ts-debounce": "^4.0.0",
     "uuid": "^9.0.0"
