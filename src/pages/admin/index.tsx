@@ -68,7 +68,7 @@ const AdminPage: NextPage = () => {
 export async function getServerSideProps(context: any) {
   const isAdmin = !!(
     await createServerSupabaseClient(context).rpc('get_is_admin')
-  ).data![0];
+  ).data;
 
   if (!isAdmin) {
     return {

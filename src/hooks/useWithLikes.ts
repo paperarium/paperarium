@@ -53,20 +53,20 @@ export default function useWithLikes<T extends { id: string; n_likes: number }>(
       return !!data[0];
     },
     {
-      enabled: !!entity?.id && !is_preview,
+      enabled: !!user_id && !!entity?.id && !is_preview,
     }
   ).data;
   // mutations for liking / unliking
   const like = useMutation(
     async () => {
-      if (like.isLoading || isLiked || is_preview) return;
+      if (like.isLoading || isLiked || is_preview || !user_id) return;
       // creates a link between user_id and following in the database
+      console.log(q_params);
       const { data: like_entity, error } = await supabaseClient
         .from(`${entity_type}s_likes`)
-        .insert(q_params as any)
+        .insert(q_params)
         .select('*')
-        .limit(1)
-        .maybeSingle();
+        .single();
       if (error) throw error;
       return like_entity as T;
     },
@@ -99,15 +99,14 @@ export default function useWithLikes<T extends { id: string; n_likes: number }>(
   // mutations for liking / unliking
   const unlike = useMutation(
     async () => {
-      if (unlike.isLoading || !isLiked || is_preview) return;
+      if (unlike.isLoading || !isLiked || is_preview || !user_id) return;
       // creates a link between user_id and following in the database
       const { data: like_entity, error } = await supabaseClient
         .from(`${entity_type}s_likes`)
         .delete()
         .match(q_params as any)
         .select('*')
-        .limit(1)
-        .maybeSingle();
+        .single();
       if (error) throw error;
       return like_entity as T;
     },
