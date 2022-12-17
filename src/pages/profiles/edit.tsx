@@ -34,7 +34,7 @@ const EditProfilePage: NextPage = () => {
         {profile ? (
           <>
             <div className={s.sticky_header}>
-              <Link href={`/profiles/${profile.username}`}>
+              <Link href={`/profiles/${profile.username}`} legacyBehavior>
                 <div className={s.sticky_button}>
                   <BiArrowBack />
                   RETURN TO PROFILE

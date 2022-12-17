@@ -125,14 +125,14 @@ const Footer: React.FC<FooterProps> = function Footer({ marginLeft }) {
             corporation.
           </div>
           <div className={s.legal_row}>
-            <Link href="/policies/privacy" passHref>
-              <a className={s.legal_link}>Privacy</a>
+            <Link href="/policies/privacy" passHref className={s.legal_link}>
+              Privacy
             </Link>
-            <Link href="/policies/termsofuse" passHref>
-              <a className={s.legal_link}>Terms of Use</a>
+            <Link href="/policies/termsofuse" passHref className={s.legal_link}>
+              Terms of Use
             </Link>
-            <Link href="/policies/cookies" passHref>
-              <a className={s.legal_link}>Cookies</a>
+            <Link href="/policies/cookies" passHref className={s.legal_link}>
+              Cookies
             </Link>
             <div style={{ flex: 1 }}></div>
             <div className={s.website_version}>

@@ -29,32 +29,32 @@ const ProfileLink: React.FC<ProfileLinkProps> = function ProfileLink({
       {children}
       {full ? (
         <Link href={`/profiles/${user.username}`} prefetch={false}>
-          <a>
-            <div className={s.profile_picture}>
-              {user.avatar_url ? (
-                <OptimizedImage
-                  src={user.avatar_url}
-                  sizes={'20vw'}
-                  className={s.profile_pic_image}
-                />
-              ) : null}
-            </div>
-          </a>
+          <div className={s.profile_picture}>
+            {user.avatar_url ? (
+              <OptimizedImage
+                src={user.avatar_url}
+                sizes={'20vw'}
+                className={s.profile_pic_image}
+              />
+            ) : null}
+          </div>
         </Link>
       ) : null}
-      <Link href={`/profiles/${user.username}`} prefetch={false}>
-        <a className={s.profile_name}>
-          <span className={s.user_name}>
-            {withIcon}@{user.username}
-            {user.archived ? <HiOutlineArchive color="#dba000" /> : null}
-          </span>
-          {full ? (
-            <>
-              <span>{user.n_builds} builds</span>
-              <span>{user.n_papercrafts} papercrafts</span>
-            </>
-          ) : null}
-        </a>
+      <Link
+        href={`/profiles/${user.username}`}
+        prefetch={false}
+        className={s.profile_name}
+      >
+        <span className={s.user_name}>
+          {withIcon}@{user.username}
+          {user.archived ? <HiOutlineArchive color="#dba000" /> : null}
+        </span>
+        {full ? (
+          <>
+            <span>{user.n_builds} builds</span>
+            <span>{user.n_papercrafts} papercrafts</span>
+          </>
+        ) : null}
       </Link>
     </div>
   );

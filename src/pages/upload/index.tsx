@@ -16,7 +16,7 @@ const UploadPage: NextPage = () => {
         />
       </Head>
       <div className={s.container}>
-        <Link href="/upload/design">
+        <Link href="/upload/design" legacyBehavior>
           <div className={s.half}>
             <div className={s.choice_icon}>
               <IoShapesOutline />
@@ -24,7 +24,7 @@ const UploadPage: NextPage = () => {
             <a>upload a design</a>
           </div>
         </Link>
-        <Link href="/upload/build">
+        <Link href="/upload/build" legacyBehavior>
           <div className={s.half}>
             <div className={s.choice_icon}>
               <IoCubeOutline />

@@ -31,7 +31,11 @@ const PapercraftRow: React.FC<RowProps<APIt.Papercraft>> =
       !!onClick ? (
         rest
       ) : (
-        <Link href={`/papercrafts/${papercraft.id}`} prefetch={false}>
+        <Link
+          href={`/papercrafts/${papercraft.id}`}
+          prefetch={false}
+          legacyBehavior
+        >
           {rest}
         </Link>
       );
@@ -90,6 +94,7 @@ const BuildRow: React.FC<RowProps<APIt.Build>> = function BuildRow({
       <Link
         href={`/papercrafts/${build.papercraft_id}?build=${build.id}`}
         prefetch={false}
+        legacyBehavior
       >
         {rest}
       </Link>
@@ -146,7 +151,11 @@ const ProfileRow: React.FC<RowProps<APIt.Profile>> = function ProfileRow({
     !!onClick ? (
       rest
     ) : (
-      <Link href={`/profiles/${profile.username}`} prefetch={false}>
+      <Link
+        href={`/profiles/${profile.username}`}
+        prefetch={false}
+        legacyBehavior
+      >
         {rest}
       </Link>
     );
@@ -194,7 +203,11 @@ const CollectiveRow: React.FC<RowProps<APIt.Collective>> =
       !!onClick ? (
         rest
       ) : (
-        <Link href={`/collectives/${collective.titlecode}`} prefetch={false}>
+        <Link
+          href={`/collectives/${collective.titlecode}`}
+          prefetch={false}
+          legacyBehavior
+        >
           {rest}
         </Link>
       );

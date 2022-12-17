@@ -7,6 +7,7 @@
 
 import { PostgrestFilterBuilder } from '@supabase/postgrest-js';
 import { PAGE_SIZE } from './getPagination';
+import { Database } from '../supabase/API';
 export const ROW_PAGE_SIZE = 40;
 export const CARD_PAGE_SIZE = PAGE_SIZE;
 
@@ -32,7 +33,7 @@ export default function getNextPageParam<T extends Record<string, unknown>>(
 }
 
 export function applyNextPageParam<T extends Record<string, unknown>>(
-  req: PostgrestFilterBuilder<T, T>,
+  req: PostgrestFilterBuilder<Database['public'], T, T>,
   filter?: InfiniteQueryFilter<T>['filter'],
   pageParam: number | null = 0,
   page_size: number = PAGE_SIZE

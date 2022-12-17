@@ -28,13 +28,16 @@ const NavBar: React.FC = function NavBar() {
     <>
       <NavMenu toggled={navOpen} setToggled={setNavOpen} />
       <nav className={s.container}>
-        <Link href="/" passHref>
-          <a className={s.title_container} onClick={() => setNavOpen(false)}>
-            {/* eslint-disable @next/next/no-img-element */}
-            <RiScissorsCutLine />
-            {/* <img src={LOGO.src} alt={"logo"} className={s.logo} /> */}
-            <span>paperarium</span>
-          </a>
+        <Link
+          href="/"
+          passHref
+          className={s.title_container}
+          onClick={() => setNavOpen(false)}
+        >
+          {/* eslint-disable @next/next/no-img-element */}
+          <RiScissorsCutLine />
+          {/* <img src={LOGO.src} alt={"logo"} className={s.logo} /> */}
+          <span>paperarium</span>
         </Link>
         <div className={s.links_container}>
           <NavLink href={'/catalog'}>catalog</NavLink>
@@ -50,12 +53,12 @@ const NavBar: React.FC = function NavBar() {
         <div className={s.profile_buttons}>
           {profile ? (
             <>
-              <Link href={`/upload`}>
+              <Link href={`/upload`} legacyBehavior>
                 <div className={s.login_button}>
                   <a>upload</a>
                 </div>
               </Link>
-              <Link href={`/profiles/${profile.username}`}>
+              <Link href={`/profiles/${profile.username}`} legacyBehavior>
                 <div className={s.profile_container}>
                   <div className={s.profile_picture}>
                     {profile.avatar_url ? (
@@ -71,12 +74,12 @@ const NavBar: React.FC = function NavBar() {
             </>
           ) : (
             <>
-              <Link href={`/login`} passHref>
-                <a className={s.login_button}>login</a>
+              <Link href={`/login`} passHref className={s.login_button}>
+                login
               </Link>
               or
-              <Link href={`/login`} passHref>
-                <a className={s.login_button}>sign up</a>
+              <Link href={`/login`} passHref className={s.login_button}>
+                sign up
               </Link>
             </>
           )}

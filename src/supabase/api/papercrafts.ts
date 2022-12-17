@@ -65,7 +65,7 @@ export const listPapercrafts =
       filter,
     }: ListPapercraftsQueryVariables,
     pageParam: number = 0
-  ): Promise<InfiniteQueryPage<APIt.Papercraft>> => {
+  ) => {
     let req = (
       search
         ? supabaseClient.rpc('search_papercrafts', {
@@ -81,6 +81,7 @@ export const listPapercrafts =
     tags!${
       tags?.length ? 'inner' : 'left'
     }(id,name,code)`) as PostgrestFilterBuilder<
+      Database['public'],
       APIt.Papercraft,
       APIt.Papercraft
     >;

@@ -29,21 +29,21 @@ const NavLink: React.FC<NavLinkProps> = function NavLink({
   const { pathname } = useRouter();
   const isActive = exact ? pathname === href : pathname.startsWith(href);
   return (
-    <Link href={href} passHref={passHref}>
-      <a
-        className={`${alternate ? s.nav_link_alt : s.nav_link} ${
-          isActive ? 'active' : ''
-        }`}
-        onClick={onClick}
-        {...(passHref
-          ? {
-              target: '_blank',
-              rel: 'noopener noreferrer',
-            }
-          : {})}
-      >
-        {children}
-      </a>
+    <Link
+      href={href}
+      passHref={passHref}
+      className={`${alternate ? s.nav_link_alt : s.nav_link} ${
+        isActive ? 'active' : ''
+      }`}
+      onClick={onClick}
+      {...(passHref
+        ? {
+            target: '_blank',
+            rel: 'noopener noreferrer',
+          }
+        : {})}
+    >
+      {children}
     </Link>
   );
 };

@@ -61,7 +61,7 @@ const Home: NextPage = () => {
               <p>
                 want to see the full collection? click here and check it out ❦
               </p>
-              <Link href="/catalog">
+              <Link href="/catalog" legacyBehavior>
                 <div className={s.continue_button}>CATALOG</div>
               </Link>
             </div>

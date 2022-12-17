@@ -27,6 +27,7 @@ const BuildTitle: React.FC<BuildTitleProps> = function BuildTitle({
       <Link
         href={`/papercrafts/${build.papercraft_id}?build=${build.id}`}
         prefetch={false}
+        legacyBehavior
       >
         <div
           onClick={() => {

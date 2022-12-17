@@ -21,7 +21,11 @@ const PapercraftTitle: React.FC<PapercraftTitleProps> =
   function PapercraftTitle({ papercraft, onClick, style }) {
     return (
       <div className={s.info_col} style={style}>
-        <Link href={`/papercrafts/${papercraft.id}`} prefetch={false}>
+        <Link
+          href={`/papercrafts/${papercraft.id}`}
+          prefetch={false}
+          legacyBehavior
+        >
           <div
             onClick={() => {
               onClick && onClick(true);

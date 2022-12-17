@@ -36,40 +36,37 @@ const PapercraftCard = function PapercraftCard<
             : `/papercrafts/${entity.id}`
         }
         prefetch={false}
+        // className={s.container}
+        onClick={() => {
+          setClicked(true);
+        }}
       >
-        <a
-          // className={s.container}
-          onClick={() => {
-            setClicked(true);
+        <div
+          className={s.image_container}
+          style={{
+            aspectRatio: `${entity.pictures[0].width} / ${entity.pictures[0].height}`,
           }}
         >
-          <div
-            className={s.image_container}
-            style={{
-              aspectRatio: `${entity.pictures[0].width} / ${entity.pictures[0].height}`,
+          <OptimizedImage
+            src={entity.pictures[0].key}
+            className={s.inner_image}
+            dimensions={{
+              width: entity.pictures[0].width,
+              height: entity.pictures[0].height,
             }}
-          >
-            <OptimizedImage
-              src={entity.pictures[0].key}
-              className={s.inner_image}
-              dimensions={{
-                width: entity.pictures[0].width,
-                height: entity.pictures[0].height,
-              }}
-              sizes={`
-              (max-width: 480px) 50vw,
-              (max-width: 767px) 33vw,
-              (max-width: 992px) 25vw,
-              25vw 
-            `}
-            />
-            <div className={`${s.overlay} ${clicked ? `clicked` : ``}`}>
-              ...loading...
-              <br />
-              [σ﹏σ]
-            </div>
+            sizes={`
+            (max-width: 480px) 50vw,
+            (max-width: 767px) 33vw,
+            (max-width: 992px) 25vw,
+            25vw 
+          `}
+          />
+          <div className={`${s.overlay} ${clicked ? `clicked` : ``}`}>
+            ...loading...
+            <br />
+            [σ﹏σ]
           </div>
-        </a>
+        </div>
       </Link>
       <div className={s.info_card}>
         {entityType === EBuildable.Build ? (

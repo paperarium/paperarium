@@ -83,8 +83,8 @@ const ProfileDisplay: React.FC<ProfileDisplayProps> = function ProfileDisplay({
         </div>
         {user && user.id === profile.data?.id ? (
           <>
-            <Link href="/profiles/edit" passHref>
-              <a className={s.profile_button}>edit profile</a>
+            <Link href="/profiles/edit" passHref className={s.profile_button}>
+              edit profile
             </Link>
             <div
               className={s.profile_button}

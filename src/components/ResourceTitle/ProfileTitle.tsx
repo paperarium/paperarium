@@ -21,7 +21,7 @@ const ProfileTitle: React.FC<ProfileTitleProps> = function ProfileTitle({
 }) {
   return (
     <div className={s.info_col}>
-      <Link href={`/profiles/${profile.id}`} prefetch={false}>
+      <Link href={`/profiles/${profile.id}`} prefetch={false} legacyBehavior>
         <div
           onClick={() => {
             onClick && onClick(true);

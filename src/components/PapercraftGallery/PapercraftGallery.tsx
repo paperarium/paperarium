@@ -71,7 +71,7 @@ const PapercraftGallery: React.FC<PapercraftGalleryProps> =
     const [entityType, setEntityType] = useState<EBuildable>(displays[0]);
     useEffect(() => {
       setEntityType(displays[0]);
-      // @ts-ignore
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [displays.length]);
     const [currentSearch, setCurrentSearch] = useState<string>('');
     const [currentTags, setCurrentTags] = useState<APIt.Tag[]>([]);

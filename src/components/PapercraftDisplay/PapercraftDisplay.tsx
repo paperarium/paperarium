@@ -209,31 +209,28 @@ const PapercraftDisplay: React.FC<PapercraftDisplayProps> =
                       href={`/collectives/${papercraft.collective.titlecode}`}
                       passHref
                     >
-                      <a>
-                        <div className={s.profile_picture}>
-                          {papercraft.collective.avatar_url ? (
-                            <OptimizedImage
-                              src={papercraft.collective.avatar_url}
-                              sizes={'20vw'}
-                              className={s.profile_pic_image}
-                            />
-                          ) : null}
-                        </div>
-                      </a>
+                      <div className={s.profile_picture}>
+                        {papercraft.collective.avatar_url ? (
+                          <OptimizedImage
+                            src={papercraft.collective.avatar_url}
+                            sizes={'20vw'}
+                            className={s.profile_pic_image}
+                          />
+                        ) : null}
+                      </div>
                     </Link>
                     <Link
                       href={`/collectives/${papercraft.collective.titlecode}`}
                       passHref
+                      className={s.profile_name}
                     >
-                      <a className={s.profile_name}>
-                        <span className={s.user_name}>
-                          @{papercraft.collective.titlecode}
-                        </span>
-                        <span>{papercraft.collective.n_members} members</span>
-                        <span>
-                          {papercraft.collective.n_papercrafts} papercrafts
-                        </span>
-                      </a>
+                      <span className={s.user_name}>
+                        @{papercraft.collective.titlecode}
+                      </span>
+                      <span>{papercraft.collective.n_members} members</span>
+                      <span>
+                        {papercraft.collective.n_papercrafts} papercrafts
+                      </span>
                     </Link>
                   </div>
                 ) : null}

@@ -74,7 +74,7 @@ function MyApp({
           supabaseClient={supabaseClient}
           initialSession={pageProps.initialSession}
         >
-          <QueryClientProvider client={queryClient} contextSharing={true}>
+          <QueryClientProvider client={queryClient}>
             <Hydrate state={pageProps.dehydratedState}>
               {getLayout(<Component {...pageProps} />)}
             </Hydrate>

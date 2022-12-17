@@ -65,7 +65,7 @@ export const listBuilds =
       `*,
     user:user_id!inner(username,avatar_url,archived),
     papercraft:papercraft_id!inner(id,title,description,pictures,user_id,collective_id)`
-    ) as PostgrestFilterBuilder<APIt.Build, APIt.Build>;
+    ) as PostgrestFilterBuilder<Database['public'], APIt.Build, APIt.Build>;
     if (username) req = req.eq('user_id.username' as any, username);
     if (collective) req = req.eq('collective_titlecode' as any, collective);
     // now apply the filters using the next page param

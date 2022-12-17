@@ -73,7 +73,7 @@ const NavMenu: React.FC<NavMenuProps> = function NavMenu({
             <div className={s.nav_nav_column}>
               {profile ? (
                 <>
-                  <Link href={`/profiles/${profile.username}`}>
+                  <Link href={`/profiles/${profile.username}`} legacyBehavior>
                     <div className={s.profile_container} onClick={closeMenu}>
                       <div className={s.profile_picture}>
                         {profile.avatar_url ? (
@@ -91,7 +91,7 @@ const NavMenu: React.FC<NavMenuProps> = function NavMenu({
                       </div>
                     </div>
                   </Link>
-                  <Link href={`/upload`}>
+                  <Link href={`/upload`} legacyBehavior>
                     <div className={s.login_button} onClick={closeMenu}>
                       <a>upload</a>
                     </div>
@@ -100,12 +100,18 @@ const NavMenu: React.FC<NavMenuProps> = function NavMenu({
               ) : (
                 <>
                   join us and contribute!
-                  <Link href={`/login?redirect=${encodeURI(router.basePath)}`}>
+                  <Link
+                    href={`/login?redirect=${encodeURI(router.basePath)}`}
+                    legacyBehavior
+                  >
                     <div className={s.login_button} onClick={closeMenu}>
                       log in
                     </div>
                   </Link>
-                  <Link href={`/signup?redirect=${encodeURI(router.basePath)}`}>
+                  <Link
+                    href={`/signup?redirect=${encodeURI(router.basePath)}`}
+                    legacyBehavior
+                  >
                     <div className={s.signup_button} onClick={closeMenu}>
                       sign up
                     </div>
