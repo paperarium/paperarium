@@ -87,7 +87,11 @@ export const listProfiles =
             username_term: search,
           })
         : supabaseClient.from('profiles_view')
-    ).select(`*`) as PostgrestFilterBuilder<APIt.Profile, APIt.Profile>;
+    ).select(`*`) as PostgrestFilterBuilder<
+      Database['public'],
+      APIt.Profile,
+      APIt.Profile
+    >;
     if (!show_all) req = (req as any).filter('is_default', 'eq', 'false');
     // now apply the filters using the next page param
     const { data: profiles, error } = await applyNextPageParam(

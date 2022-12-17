@@ -52,7 +52,11 @@ export const listCollectives =
             collective_term: search,
           })
         : supabaseClient.from('collectives_view')
-    ).select(`*`) as PostgrestFilterBuilder<APIt.Collective, APIt.Collective>;
+    ).select(`*`) as PostgrestFilterBuilder<
+      Database['public'],
+      APIt.Collective,
+      APIt.Collective
+    >;
     // now apply the filters using the next page param
     const { data: collectives, error } = await applyNextPageParam(
       req,

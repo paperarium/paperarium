@@ -26,19 +26,20 @@ export type ListTagsQueryVariables = {
 export const listTags =
   (supabaseClient: SupabaseClient<Database>) =>
   async ({ search, user_id, collective_titlecode }: ListTagsQueryVariables) => {
-    let req: PostgrestTransformBuilder<APIt.Tag, APIt.Tag> = user_id
-      ? (supabaseClient.rpc('search_tags_user', {
-          tag_term: search || '',
-          p_user_id: user_id,
-        }) as any)
-      : collective_titlecode
-      ? (supabaseClient.rpc('search_tags_collective', {
-          tag_term: search || '',
-          p_collective_titlecode: collective_titlecode,
-        }) as any)
-      : (supabaseClient.rpc('search_tags', {
-          tag_term: search || '',
-        }) as any);
+    let req: PostgrestTransformBuilder<Database['public'], APIt.Tag, APIt.Tag> =
+      user_id
+        ? (supabaseClient.rpc('search_tags_user', {
+            tag_term: search || '',
+            p_user_id: user_id,
+          }) as any)
+        : collective_titlecode
+        ? (supabaseClient.rpc('search_tags_collective', {
+            tag_term: search || '',
+            p_collective_titlecode: collective_titlecode,
+          }) as any)
+        : (supabaseClient.rpc('search_tags', {
+            tag_term: search || '',
+          }) as any);
     req = req.select(`*`);
     const { data: tags, error } = await req;
     if (error) throw error;
