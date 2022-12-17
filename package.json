@@ -49,7 +49,7 @@
     "@types/react": "18.0.21",
     "@types/react-dom": "18.0.6",
     "@types/react-imgix": "^9.5.0",
-    "@types/react-pdf": "^5.7.2",
+    "@types/react-pdf": "^6.2.0",
     "@types/react-transition-group": "^4.4.5",
     "@types/uuid": "^8.3.4",
     "eslint": "8.25.0",
