@@ -39,7 +39,7 @@
     "react-textarea-autosize": "^8.4.0",
     "react-transition-group": "^4.4.5",
     "sass": "^1.59.2",
-    "swiper": "^9.0.4",
+    "swiper": "^9.2.0",
     "ts-debounce": "^4.0.0",
     "uuid": "^9.0.0"
   },
