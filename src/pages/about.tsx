@@ -1,6 +1,7 @@
 import type { NextPage } from 'next';
 import { NextSeo } from 'next-seo';
 import Head from 'next/head';
+import s from '../styles/About.module.scss';
 
 const AboutPage: NextPage = () => {
   return (
@@ -12,7 +13,9 @@ const AboutPage: NextPage = () => {
           description={'about paperarium itself.'}
         />
       </Head>
-      <h1> about page</h1>
+      <div className={s.login_page_container}>
+        <h1>The History of Papercrafting</h1>
+      </div>
     </>
   );
 };

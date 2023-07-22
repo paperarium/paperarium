@@ -1,0 +1,11 @@
+@import './mixins';
+
+.login_page_container {
+  padding: 20px 10px;
+  width: 100%;
+  min-height: calc(100vh - var(--header-height) - var(--notice-bar-height));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  @include grid-background;
+}
