@@ -26,7 +26,7 @@ export const uploadImageFile = async (
   if (error) throw error;
   if (!data) throw `no key when uploading file ${key}`;
   return {
-    key: data?.path,
+    key: `papercraftplace/${data.path}`,
     width,
     height,
   } as APIt.Picture;
@@ -45,5 +45,5 @@ export const uploadFile = async (
     });
   if (error) throw error;
   if (!data) throw `no key when uploading file ${key}`;
-  return data?.path;
+  return `papercraftplace/${data.path}`;
 };
