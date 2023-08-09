@@ -1,5 +1,5 @@
 /*
- * ProfileDisplay.tsx
+ * TimelineCard.tsx
  * author: evan kirkiles
  * created on Thu Sep 29 2022
  * 2022 the nobot space,

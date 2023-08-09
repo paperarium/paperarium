@@ -8,6 +8,7 @@ import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
+import TimelineCard from '../components/TimelineCard/TimelineCard';
 
 const AboutPage: NextPage = () => {
   return (
@@ -21,20 +22,15 @@ const AboutPage: NextPage = () => {
       </Head>
       <div className={s.login_page_container}>
         <h1>The History of Papercraftding</h1>
-        <div style={{ background: 'red' }}>
-          <div>Nintendo papercraft released</div>
-          <div>Haywan Lifesiez Link</div>
-          <div>Char Ganondorf</div>
-          <div>Nintendo papercrat contest</div>
-          <div>Ninjatoes</div>
-          <Timeline position="left">
+        <div>
+          <Timeline position="alternate-reverse">
             <TimelineItem>
               <TimelineSeparator>
                 <TimelineDot />
                 <TimelineConnector />
               </TimelineSeparator>
               <TimelineContent>
-                <div>Pepakura released</div>
+                <TimelineCard title={'Pepakura Launched'}></TimelineCard>
               </TimelineContent>
             </TimelineItem>
             <TimelineItem>
@@ -43,7 +39,7 @@ const AboutPage: NextPage = () => {
                 <TimelineConnector />
               </TimelineSeparator>
               <TimelineContent>
-                <div style={{ background: 'blue' }}>Paperpokes</div>
+                <TimelineCard title={'Paperpokes Founded'}></TimelineCard>
               </TimelineContent>
             </TimelineItem>
             <TimelineItem>
@@ -51,13 +47,22 @@ const AboutPage: NextPage = () => {
                 <TimelineDot />
                 <TimelineConnector />
               </TimelineSeparator>
-              <TimelineContent>Sleep</TimelineContent>
+              <TimelineContent>
+                <TimelineCard
+                  title={'Nintendo Papercraft Founded'}
+                ></TimelineCard>
+              </TimelineContent>
             </TimelineItem>
             <TimelineItem>
               <TimelineSeparator>
                 <TimelineDot />
+                <TimelineConnector />
               </TimelineSeparator>
-              <TimelineContent>Repeat</TimelineContent>
+              <TimelineContent>
+                <TimelineCard
+                  title={'Nintendo Papercraft Contest'}
+                ></TimelineCard>
+              </TimelineContent>
             </TimelineItem>
           </Timeline>
         </div>
